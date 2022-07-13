@@ -8,7 +8,7 @@ export default class Product extends Entity implements IAggregateRoot {
 
   private _description: string;
 
-  private _active: boolean;
+  private _active: boolean = false;
 
   private _amount: number;
 
@@ -18,7 +18,7 @@ export default class Product extends Entity implements IAggregateRoot {
 
   private _stockQuantity: number;
 
-  private _category: Category;
+  private _category?: Category;
 
   constructor(
     name: string,
@@ -67,6 +67,34 @@ export default class Product extends Entity implements IAggregateRoot {
 
   get category() {
     return this._category;
+  }
+
+  activeProduct() {
+    this._active = true;
+  }
+
+  deactiveProduct() {
+    this._active = false;
+  }
+
+  changeCategory(category: Category) {
+    this._category = category;
+  }
+
+  changeDescription(description: string) {
+    this._description = description;
+  }
+
+  removeFromStock(quantity: number) {
+    this._stockQuantity -= Math.abs(quantity);
+  }
+
+  addToStock(quantity: number) {
+    this._stockQuantity += quantity;
+  }
+
+  hasStockFor(quantity: number) {
+    return this._stockQuantity >= quantity;
   }
 
   validate(): boolean {
