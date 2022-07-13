@@ -18,8 +18,8 @@ export default abstract class Entity {
 
   toObject() {
     const self = this;
-    const propertiesNames = Object.getOwnPropertyNames(self);
-    return propertiesNames.reduce((acc, propertyName) => {
+    const names = Object.getOwnPropertyNames(self);
+    return names.reduce((acc, propertyName) => {
       const [, withoutUndescore] = propertyName.split('_');
 
       return {
