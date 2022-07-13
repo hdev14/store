@@ -4,38 +4,69 @@ import IAggregateRoot from '../shared/abstractions/IAggregateRoot';
 import Category from './Category';
 
 export default class Product extends Entity implements IAggregateRoot {
-  public name: string;
+  private _name: string;
 
-  public description: string;
+  private _description: string;
 
-  public active: boolean;
+  private _active: boolean;
 
-  public amount: number;
+  private _amount: number;
 
-  public createdAt: Date;
+  private _createdAt: Date;
 
-  public image: string;
+  private _image: string;
 
-  public stockQuantity: number;
+  private _stockQuantity: number;
 
-  public category: Category;
+  private _category: Category;
 
   constructor(
     name: string,
     description: string,
-    active: boolean,
     amount: number,
     image: string,
     stockQuantity: number,
     createdAt: Date,
   ) {
     super(uuid.v4());
-    this.name = name;
-    this.description = description;
-    this.amount = amount;
-    this.image = image;
-    this.stockQuantity = stockQuantity;
-    this.createdAt = createdAt;
+    this._name = name;
+    this._description = description;
+    this._amount = amount;
+    this._image = image;
+    this._stockQuantity = stockQuantity;
+    this._createdAt = createdAt;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  get description() {
+    return this._description;
+  }
+
+  get active() {
+    return this._active;
+  }
+
+  get amount() {
+    return this._amount;
+  }
+
+  get createdAt() {
+    return this._createdAt;
+  }
+
+  get image() {
+    return this._image;
+  }
+
+  get stockQuantity() {
+    return this._stockQuantity;
+  }
+
+  get category() {
+    return this._category;
   }
 
   validate(): boolean {
