@@ -11,6 +11,8 @@ export default class Category extends Entity {
     super(uuid.v4());
     this._name = name;
     this._code = code;
+
+    this.validate();
   }
 
   get name() {
