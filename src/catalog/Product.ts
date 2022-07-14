@@ -1,6 +1,7 @@
 import uuid from 'uuid';
 import Entity from '../shared/abstractions/Entity';
 import IAggregateRoot from '../shared/abstractions/IAggregateRoot';
+import EntityValidator from '../shared/utils/EntityValidator';
 import Category from './Category';
 
 export default class Product extends Entity implements IAggregateRoot {
@@ -35,6 +36,8 @@ export default class Product extends Entity implements IAggregateRoot {
     this._image = image;
     this._stockQuantity = stockQuantity;
     this._createdAt = createdAt;
+
+    this.validate();
   }
 
   get name() {
@@ -97,7 +100,14 @@ export default class Product extends Entity implements IAggregateRoot {
     return this._stockQuantity >= quantity;
   }
 
-  validate(): boolean {
-    return !!this;
+  validate(): void {
+    EntityValidator
+      .setData(this.toObject())
+      .setRule('name', ['required'])
+      .setRule('description', ['required'])
+      .setRule('category', ['required'])
+      .setRule('amount', ['required', 'min:0'])
+      .setRule('image', ['required'])
+      .validate();
   }
 }
