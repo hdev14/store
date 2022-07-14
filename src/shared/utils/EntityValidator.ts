@@ -1,6 +1,6 @@
-import { GenericError } from '../errors/ValidationEntityError';
+import ValidationEntityError, { GenericError } from '../errors/ValidationEntityError';
 
-const ruleFunctions = {
+const RULE_FUNCTIONS = {
   required: (value: any) => {
     switch (typeof value) {
       case 'number':
@@ -39,7 +39,7 @@ const ruleFunctions = {
   },
 };
 
-const ruleMessages = {
+const RULE_MESSAGES = {
   required: (field: string) => `The field ${field} must be a string`,
   max: (field: string, max: number) => `The field ${field} must be less than ${max}.`,
   min: (field: string, min: number) => `The field ${field} must be greater than ${min}.`,
@@ -78,9 +78,9 @@ export default class EntityValidator {
         const params = [field, value];
 
         // @ts-ignore
-        if (ruleFunctions[name](...params)) {
+        if (RULE_FUNCTIONS[name](...params)) {
           // @ts-ignore
-          messages.push(ruleMessages[name](fieldName, value));
+          messages.push(RULE_MESSAGES[name](fieldName, value));
         }
       });
 
@@ -88,10 +88,10 @@ export default class EntityValidator {
         this.addError({ field: fieldName, messages });
       }
     });
-  }
 
-  public hasErrors() {
-    return this.errors.length > 0;
+    if (this.errors.length > 0) {
+      throw new ValidationEntityError(this.errors);
+    }
   }
 
   private addError(error: GenericError) {
