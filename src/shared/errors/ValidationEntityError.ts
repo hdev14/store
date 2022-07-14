@@ -1,4 +1,4 @@
-type GenericError = {
+export type GenericError = {
   field: string;
   messages: string[];
 }
