@@ -27,12 +27,12 @@ const RULE_FUNCTIONS = {
         return true;
     }
   },
-  min: (value: any, max: number) => {
+  min: (value: any, min: number) => {
     switch (typeof value) {
       case 'number':
-        return value < max;
+        return value < min;
       case 'string':
-        return value.length < max;
+        return value.length < min;
       default:
         return true;
     }
@@ -66,10 +66,7 @@ export default class EntityValidator {
   }
 
   validate() {
-    this.rules.forEach((rule) => {
-      const fieldName = rule[0];
-      const fieldRules = rule[1].split('|');
-
+    this.rules.forEach((fieldRules, fieldName) => {
       const field = this.data[fieldName];
       const messages: string[] = [];
 
