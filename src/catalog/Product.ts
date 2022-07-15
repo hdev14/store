@@ -3,23 +3,26 @@ import Entity from '../shared/abstractions/Entity';
 import IAggregateRoot from '../shared/abstractions/IAggregateRoot';
 import EntityValidator from '../shared/utils/EntityValidator';
 import Category from './Category';
+import Dimensions from './Dimensions';
 
 export default class Product extends Entity implements IAggregateRoot {
-  public name: string;
+  private name: string;
 
-  public description: string;
+  private description: string;
 
-  public active: boolean = false;
+  private active: boolean = false;
 
-  public amount: number;
+  private amount: number;
 
-  public createdAt: Date;
+  private createdAt: Date;
 
-  public image: string;
+  private image: string;
 
-  public stockQuantity: number;
+  private stockQuantity: number;
 
-  public category?: Category;
+  private category?: Category;
+
+  private dimensions: Dimensions;
 
   constructor(
     name: string,
@@ -28,6 +31,7 @@ export default class Product extends Entity implements IAggregateRoot {
     image: string,
     stockQuantity: number,
     createdAt: Date,
+    dimensions: Dimensions,
   ) {
     super(uuid.v4());
     this.name = name;
@@ -36,6 +40,7 @@ export default class Product extends Entity implements IAggregateRoot {
     this.image = image;
     this.stockQuantity = stockQuantity;
     this.createdAt = createdAt;
+    this.dimensions = dimensions;
 
     this.validate();
   }
