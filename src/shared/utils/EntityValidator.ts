@@ -1,5 +1,8 @@
 import ValidationEntityError, { GenericError } from '../errors/ValidationEntityError';
 
+// eslint-disable-next-line no-useless-escape
+const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
+
 const RULE_FUNCTIONS = {
   required: (value: any) => {
     switch (typeof value) {
@@ -11,7 +14,7 @@ const RULE_FUNCTIONS = {
         return (
           value === undefined
           || value === null
-          || Object.keys(value).length > 0
+          || Object.keys(value).length === 0
         );
       default:
         return true;
@@ -37,12 +40,14 @@ const RULE_FUNCTIONS = {
         return true;
     }
   },
+  url: (value: any) => (typeof value === 'string' && !URL_REGEX.test(value)),
 };
 
 const RULE_MESSAGES = {
   required: (field: string) => `The field ${field} must be a string`,
   max: (field: string, max: number) => `The field ${field} must be less than ${max}.`,
   min: (field: string, min: number) => `The field ${field} must be greater than ${min}.`,
+  url: (field: string) => `The field ${field} must be an URL.`,
 };
 
 export default class EntityValidator {
