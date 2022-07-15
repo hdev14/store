@@ -6,7 +6,7 @@ describe('Dimenions Unit Tests', () => {
     const width = Math.random() * 100;
     const depth = Math.random() * 100;
 
-    const dimensions = new Dimensions(height, width, depth);
+    const dimensions = new Dimensions({ height, width, depth });
 
     expect(dimensions.toString()).toEqual(`LxAxP: ${width} x ${height} x ${depth}`);
   });
