@@ -1,4 +1,4 @@
-import Category from '../../src/catalog/Category';
+import Category from '../../src/catalog/domain/Category';
 import ValidationEntityError from '../../src/shared/errors/ValidationEntityError';
 
 describe("Category's Unit Tests", () => {

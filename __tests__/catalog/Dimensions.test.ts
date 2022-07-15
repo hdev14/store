@@ -1,4 +1,4 @@
-import Dimensions from '../../src/catalog/Dimensions';
+import Dimensions from '../../src/catalog/domain/Dimensions';
 
 describe('Dimenions Unit Tests', () => {
   it('returns the correct text, informing the height, width and depth of the dimensions', () => {

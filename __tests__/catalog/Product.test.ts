@@ -1,6 +1,6 @@
-import Category from '../../src/catalog/Category';
-import Dimensions from '../../src/catalog/Dimensions';
-import Product from '../../src/catalog/Product';
+import Category from '../../src/catalog/domain/Category';
+import Dimensions from '../../src/catalog/domain/Dimensions';
+import Product from '../../src/catalog/domain/Product';
 import ValidationEntityError from '../../src/shared/errors/ValidationEntityError';
 
 describe("Product's Unit Tests", () => {
