@@ -5,7 +5,7 @@ export default abstract class Entity {
     this.id = id;
   }
 
-  abstract validate(): boolean | void
+  protected abstract validate(): boolean | void
 
   public isEqual(obj: object) {
     return (JSON.stringify(this) === JSON.stringify(obj))
@@ -14,19 +14,5 @@ export default abstract class Entity {
 
   public toString() {
     return JSON.stringify(this, null, 2);
-  }
-
-  toObject() {
-    const self = this;
-    const names = Object.getOwnPropertyNames(self);
-    return names.reduce((acc, propertyName) => {
-      const [, withoutUndescore] = propertyName.split('_');
-
-      return {
-        ...acc,
-        // @ts-ignore
-        [withoutUndescore]: self[propertyName],
-      };
-    }, {});
   }
 }
