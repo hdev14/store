@@ -1,9 +1,20 @@
-import uuid from 'uuid';
 import Entity from '../shared/abstractions/Entity';
 import IAggregateRoot from '../shared/abstractions/IAggregateRoot';
 import EntityValidator from '../shared/utils/EntityValidator';
 import Category from './Category';
 import Dimensions from './Dimensions';
+
+type ProductParams = {
+  id: string;
+  name: string;
+  description: string;
+  amount: number;
+  image: string;
+  stockQuantity: number;
+  createdAt: Date;
+  dimensions: Dimensions;
+  category: Category;
+}
 
 export default class Product extends Entity implements IAggregateRoot {
   private name: string;
@@ -20,27 +31,20 @@ export default class Product extends Entity implements IAggregateRoot {
 
   private stockQuantity: number;
 
-  private category?: Category;
+  private category: Category;
 
   private dimensions: Dimensions;
 
-  constructor(
-    name: string,
-    description: string,
-    amount: number,
-    image: string,
-    stockQuantity: number,
-    createdAt: Date,
-    dimensions: Dimensions,
-  ) {
-    super(uuid.v4());
-    this.name = name;
-    this.description = description;
-    this.amount = amount;
-    this.image = image;
-    this.stockQuantity = stockQuantity;
-    this.createdAt = createdAt;
-    this.dimensions = dimensions;
+  constructor(params: ProductParams) {
+    super(params.id);
+    this.name = params.name;
+    this.description = params.description;
+    this.amount = params.amount;
+    this.image = params.image;
+    this.stockQuantity = params.stockQuantity;
+    this.createdAt = params.createdAt;
+    this.dimensions = params.dimensions;
+    this.category = params.category;
 
     this.validate();
   }
@@ -80,7 +84,7 @@ export default class Product extends Entity implements IAggregateRoot {
       .setRule('description', ['required'])
       .setRule('category', ['required'])
       .setRule('amount', ['required', 'min:0'])
-      .setRule('image', ['required'])
+      .setRule('image', ['required', 'url'])
       .validate();
   }
 }

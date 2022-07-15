@@ -1,16 +1,21 @@
-import uuid from 'uuid';
 import Entity from '../shared/abstractions/Entity';
 import EntityValidator from '../shared/utils/EntityValidator';
+
+type CategoryParams = {
+  id: string;
+  name: string;
+  code: number;
+};
 
 export default class Category extends Entity {
   public name: string;
 
   public code: number;
 
-  constructor(name: string, code: number) {
-    super(uuid.v4());
-    this.name = name;
-    this.code = code;
+  constructor(params: CategoryParams) {
+    super(params.id);
+    this.name = params.name;
+    this.code = params.code;
 
     this.validate();
   }
