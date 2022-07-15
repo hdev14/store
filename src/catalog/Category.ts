@@ -3,33 +3,25 @@ import Entity from '../shared/abstractions/Entity';
 import EntityValidator from '../shared/utils/EntityValidator';
 
 export default class Category extends Entity {
-  private _name: string;
+  public name: string;
 
-  private _code: number;
+  public code: number;
 
   constructor(name: string, code: number) {
     super(uuid.v4());
-    this._name = name;
-    this._code = code;
+    this.name = name;
+    this.code = code;
 
     this.validate();
   }
 
-  get name() {
-    return this._name;
-  }
-
-  get code() {
-    return this._code;
-  }
-
   toString() {
-    return `${this._name} - ${this._code}`;
+    return `${this.name} - ${this.code}`;
   }
 
-  validate(): void {
+  protected validate(): void {
     EntityValidator
-      .setData(this.toObject())
+      .setData(this)
       .setRule('name', ['required'])
       .setRule('code', ['required', 'min:1'])
       .validate();
