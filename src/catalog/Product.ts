@@ -17,23 +17,23 @@ type ProductParams = {
 }
 
 export default class Product extends Entity implements IAggregateRoot {
-  private name: string;
+  public name: string;
 
-  private description: string;
+  public description: string;
 
-  private active: boolean = false;
+  public active: boolean = false;
 
-  private amount: number;
+  public amount: number;
 
-  private createdAt: Date;
+  public createdAt: Date;
 
-  private image: string;
+  public image: string;
 
-  private stockQuantity: number;
+  public stockQuantity: number;
 
-  private category: Category;
+  public category: Category;
 
-  private dimensions: Dimensions;
+  public dimensions: Dimensions;
 
   constructor(params: ProductParams) {
     super(params.id);
