@@ -31,6 +31,11 @@ export class InMemoryProductRepository implements IProductRepository {
 
   private _products: InMemoryProduct[] = [];
 
+  constructor(products?: InMemoryProduct[], categories?: InMemoryCategory[]) {
+    this._products = products || [];
+    this._categories = categories || [];
+  }
+
   getAllProducts(): Promise<Product[]> {
     return Promise.resolve(this._products.map(this.mapProduct.bind(this)));
   }
@@ -70,7 +75,7 @@ export class InMemoryProductRepository implements IProductRepository {
   updateProduct(product: Product): void {
     const inMemoryProduct = this._products.find((p) => p._id === product.id);
 
-    if (!inMemoryProduct) {
+    if (inMemoryProduct === undefined) {
       throw new Error('Product doens\'t exist');
     }
 
@@ -103,10 +108,10 @@ export class InMemoryProductRepository implements IProductRepository {
   }
 
   updateCategory(category: Category): void {
-    const inMemoryCategory = this._products.find((p) => p._id === category.id);
+    const inMemoryCategory = this._categories.find((c) => c._id === category.id);
 
     if (!inMemoryCategory) {
-      throw new Error('Product doens\'t exist');
+      throw new Error('Category doens\'t exist');
     }
 
     const newInMemoryCategory: InMemoryCategory = {
