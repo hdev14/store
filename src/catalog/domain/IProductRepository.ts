@@ -5,19 +5,19 @@ import Product from './Product';
 interface IProductRepository {
   getAllProducts(): Promise<Product[]>;
 
-  getProductById(): Promise<Product>;
+  getProductById(id: string): Promise<Product | null>;
 
-  getProductByCategory(): Promise<Product>;
+  getProductByCategory(category: Category): Promise<Product | null>;
 
   getAllCategories(): Promise<Category[]>;
 
-  addProduct(product: Product): void;
+  addProduct(product: Product): Promise<void> | void;
 
-  updateProduct(product: Product): void;
+  updateProduct(product: Product): Promise<void> | void;
 
-  addCategory(category: Category): void;
+  addCategory(category: Category): Promise<void> | void;
 
-  updateCategory(category: Category): void;
+  updateCategory(category: Category): Promise<void> | void;
 }
 
 export default IProductRepository;
