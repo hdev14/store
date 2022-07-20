@@ -25,7 +25,7 @@ export default class StockService implements IStockService {
   async removeFromStock(productId: string, quantity: number): Promise<boolean> {
     const product = await this.productRepository.getProductById(productId);
 
-    if (!product) {
+    if (!product || !product.hasStockFor(quantity)) {
       return false;
     }
 
