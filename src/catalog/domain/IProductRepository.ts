@@ -7,17 +7,17 @@ interface IProductRepository {
 
   getProductById(id: string): Promise<Product | null>;
 
-  getProductByCategory(category: Category): Promise<Product | null>;
+  getProductsByCategory(category: Category): Promise<Product[]>;
 
   getAllCategories(): Promise<Category[]>;
 
-  addProduct(product: Product): Promise<void> | void;
+  addProduct(product: Product): Promise<Product> | Product;
 
-  updateProduct(product: Product): Promise<void> | void;
+  updateProduct(product: Product): Promise<Product> | Product;
 
-  addCategory(category: Category): Promise<void> | void;
+  addCategory(category: Category): Promise<Category> | Category;
 
-  updateCategory(category: Category): Promise<void> | void;
+  updateCategory(category: Category): Promise<Category> | Category;
 }
 
 export default IProductRepository;
