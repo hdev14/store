@@ -23,7 +23,7 @@ class ProductRepositoryMock implements IProductRepository {
     return Promise.resolve(fakeProduct);
   }
 
-  getProductByCategory(_: Category): Promise<Product | null> {
+  getProductsByCategory(_: Category): Promise<Product[]> {
     throw new Error('Method not implemented.');
   }
 
@@ -31,19 +31,19 @@ class ProductRepositoryMock implements IProductRepository {
     throw new Error('Method not implemented.');
   }
 
-  addProduct(_: Product): void | Promise<void> {
+  addProduct(_: Product): Product | Promise<Product> {
     throw new Error('Method not implemented.');
   }
 
-  updateProduct(_: Product): void | Promise<void> {
+  updateProduct(_: Product): Product | Promise<Product> {
     throw new Error('Method not implemented.');
   }
 
-  addCategory(_: Category): void | Promise<void> {
+  addCategory(_: Category): Category | Promise<Category> {
     throw new Error('Method not implemented.');
   }
 
-  updateCategory(_: Category): void | Promise<void> {
+  updateCategory(_: Category): Category | Promise<Category> {
     throw new Error('Method not implemented.');
   }
 }
@@ -72,7 +72,7 @@ describe('StockService\'s Unit Tests', () => {
 
     it('removes a quantity of products from stock', async () => {
       const productRepositoryMock = new ProductRepositoryMock();
-      productRepositoryMock.updateProduct = jest.fn(() => Promise.resolve());
+      productRepositoryMock.updateProduct = jest.fn(() => Promise.resolve({} as Product));
       const removeFromStockSpy = jest.spyOn(fakeProduct, 'removeFromStock');
 
       const stockService = new StockService(productRepositoryMock);
@@ -97,7 +97,7 @@ describe('StockService\'s Unit Tests', () => {
 
     it('removes a quantity of products from stock', async () => {
       const productRepositoryMock = new ProductRepositoryMock();
-      productRepositoryMock.updateProduct = jest.fn(() => Promise.resolve());
+      productRepositoryMock.updateProduct = jest.fn(() => Promise.resolve({} as Product));
       const addToStockSpy = jest.spyOn(fakeProduct, 'addToStock');
 
       const stockService = new StockService(productRepositoryMock);

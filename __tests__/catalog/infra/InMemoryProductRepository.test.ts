@@ -5,7 +5,15 @@ import { InMemoryProductRepository } from '../../../src/catalog/infra/persistenc
 
 describe('InMemoryProductRepository\'s Unit Tests', () => {
   it('adds a new product', () => {
-    const productRepository = new InMemoryProductRepository();
+    const fakeCategories = [{
+      _id: 'category_testid',
+      name: 'category_test',
+      code: 123,
+    },
+    ];
+
+    const productRepository = new InMemoryProductRepository([], fakeCategories);
+
     const product = new Product({
       id: 'testid',
       name: 'test',
@@ -14,7 +22,11 @@ describe('InMemoryProductRepository\'s Unit Tests', () => {
       dimensions: new Dimensions({ height: 1, width: 1, depth: 1 }),
       image: 'http://test.com/jpg',
       stockQuantity: 10,
-      category: new Category({ id: 'category_testid', name: 'category_test', code: 123 }),
+      category: new Category({
+        id: fakeCategories[0]._id,
+        name: fakeCategories[0].name,
+        code: fakeCategories[0].code,
+      }),
       createdAt: new Date(),
     });
 
