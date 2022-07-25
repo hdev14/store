@@ -46,18 +46,18 @@ export class InMemoryProductRepository implements IProductRepository {
     return Promise.resolve(inMemoryProduct ? this.mapProduct(inMemoryProduct) : null);
   }
 
-  getProductByCategory(category: Category): Promise<Product | null> {
-    const inMemoryProduct = this._products.find((p) => p.category === category.id);
+  getProductsByCategory(category: Category): Promise<Product[]> {
+    const inMemoryProducts = this._products.filter((p) => p.category === category.id);
 
-    return Promise.resolve(inMemoryProduct ? this.mapProduct(inMemoryProduct) : null);
+    return Promise.resolve(inMemoryProducts.map(this.mapProduct.bind(this)));
   }
 
   getAllCategories(): Promise<Category[]> {
     return Promise.resolve(this._categories.map(this.mapCategory.bind(this)));
   }
 
-  addProduct(product: Product): void {
-    this._products.push({
+  addProduct(product: Product): Product {
+    const length = this._products.push({
       _id: product.id,
       name: product.name,
       description: product.description,
@@ -70,9 +70,11 @@ export class InMemoryProductRepository implements IProductRepository {
       stockQuantity: product.stockQuantity,
       category: product.category.id,
     });
+
+    return this.mapProduct(this._products[length - 1]);
   }
 
-  updateProduct(product: Product): void {
+  updateProduct(product: Product): Product {
     const inMemoryProduct = this._products.find((p) => p._id === product.id);
 
     if (inMemoryProduct === undefined) {
@@ -97,17 +99,21 @@ export class InMemoryProductRepository implements IProductRepository {
       ...this._products.filter((p) => p._id !== product.id),
       newInMemoryProduct,
     ];
+
+    return this.mapProduct(newInMemoryProduct);
   }
 
-  addCategory(category: Category): void {
-    this._categories.push({
+  addCategory(category: Category): Category {
+    const length = this._categories.push({
       _id: category.id,
       name: category.name,
       code: category.code,
     });
+
+    return this.mapCategory(this._categories[length - 1]);
   }
 
-  updateCategory(category: Category): void {
+  updateCategory(category: Category): Category {
     const inMemoryCategory = this._categories.find((c) => c._id === category.id);
 
     if (!inMemoryCategory) {
@@ -124,6 +130,8 @@ export class InMemoryProductRepository implements IProductRepository {
       ...this._categories.filter((p) => p._id !== category.id),
       newInMemoryCategory,
     ];
+
+    return this.mapCategory(newInMemoryCategory);
   }
 
   get products() {
