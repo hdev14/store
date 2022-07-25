@@ -33,17 +33,13 @@ export default class PrismaProductRepository implements IProductRepository {
     return null;
   }
 
-  async getProductByCategory(category: Category): Promise<Product | null> {
-    const product = await this.connection.product.findFirst({
+  async getProductsByCategory(category: Category): Promise<Product[]> {
+    const products = await this.connection.product.findMany({
       where: { categoryId: category.id },
       include: { category: true },
     });
 
-    if (product) {
-      return this.mapProduct(product);
-    }
-
-    return null;
+    return products.map(this.mapProduct.bind(this));
   }
 
   async getAllCategories(): Promise<Category[]> {
@@ -52,8 +48,8 @@ export default class PrismaProductRepository implements IProductRepository {
     return categories.map(this.mapCategory.bind(this));
   }
 
-  async addProduct(product: Product): Promise<void> {
-    await this.connection.product.create({
+  async addProduct(product: Product): Promise<Product> {
+    const createdProduct = await this.connection.product.create({
       data: {
         id: product.id,
         name: product.name,
@@ -68,11 +64,14 @@ export default class PrismaProductRepository implements IProductRepository {
         categoryId: product.category.id,
         createdAt: product.createdAt,
       },
+      include: { category: true },
     });
+
+    return this.mapProduct(createdProduct);
   }
 
-  async updateProduct(product: Product): Promise<void> {
-    await this.connection.product.update({
+  async updateProduct(product: Product): Promise<Product> {
+    const updatedProduct = await this.connection.product.update({
       where: {
         id: product.id,
       },
@@ -89,27 +88,34 @@ export default class PrismaProductRepository implements IProductRepository {
         categoryId: product.category.id,
         createdAt: product.createdAt,
       },
+      include: { category: true },
     });
+
+    return this.mapProduct(updatedProduct);
   }
 
-  async addCategory(category: Category): Promise<void> {
-    await this.connection.category.create({
+  async addCategory(category: Category): Promise<Category> {
+    const addedCategory = await this.connection.category.create({
       data: {
         id: category.id,
         name: category.name,
         code: category.code,
       },
     });
+
+    return this.mapCategory(addedCategory);
   }
 
-  async updateCategory(category: Category): Promise<void> {
-    await this.connection.category.update({
+  async updateCategory(category: Category): Promise<Category> {
+    const updatedCategory = await this.connection.category.update({
       where: { id: category.id },
       data: {
         name: category.name,
         code: category.code,
       },
     });
+
+    return this.mapCategory(updatedCategory);
   }
 
   private mapProduct(product: PrismaProduct & { category: PrismaCategory }): Product {
