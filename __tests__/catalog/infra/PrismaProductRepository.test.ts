@@ -8,29 +8,7 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
   it('adds a new product', async () => {
     expect.assertions(3);
 
-    const productRepository = new PrismaProductRepository();
-
-    prismaMock.product.create.mockResolvedValue({
-      id: 'testid',
-      name: 'test',
-      active: false,
-      description: 'test description',
-      amount: Math.random() * 100,
-      height: 1,
-      width: 1,
-      depth: 1,
-      image: 'http://test.com/jpg',
-      stockQuantity: 10,
-      categoryId: 'category_testid',
-      category: {
-        id: 'test',
-        name: 'test',
-        code: 1234,
-      },
-      createdAt: new Date(),
-    } as any);
-
-    const product = await productRepository.addProduct(new Product({
+    const product = new Product({
       id: 'test',
       name: 'test',
       description: 'test',
@@ -48,11 +26,51 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         code: 1234,
       }),
       createdAt: new Date(),
-    }));
+    });
 
+    const productRepository = new PrismaProductRepository();
+
+    prismaMock.product.create.mockResolvedValue({
+      id: product.id,
+      name: product.name,
+      active: product.active,
+      description: product.description,
+      amount: product.amount,
+      height: product.dimensions.height,
+      width: product.dimensions.width,
+      depth: product.dimensions.depth,
+      image: product.image,
+      stockQuantity: product.stockQuantity,
+      categoryId: product.category.id,
+      category: {
+        id: product.category.id,
+        name: product.category.name,
+        code: product.category.code,
+      },
+      createdAt: product.createdAt,
+    } as any);
+
+    const result = await productRepository.addProduct(product);
+
+    expect(result.id).toEqual(product.id);
     expect(prismaMock.product.create).toHaveBeenCalled();
-    expect(product).toEqual(0);
-    expect(prismaMock.product.create).toHaveBeenCalledWith('asdf');
+    expect(prismaMock.product.create).toHaveBeenCalledWith({
+      data: {
+        id: product.id,
+        name: product.name,
+        active: product.active,
+        description: product.description,
+        amount: product.amount,
+        height: product.dimensions.height,
+        width: product.dimensions.width,
+        depth: product.dimensions.depth,
+        image: product.image,
+        stockQuantity: product.stockQuantity,
+        categoryId: product.category.id,
+        createdAt: product.createdAt,
+      },
+      include: { category: true },
+    });
   });
 
   // it('updates a existing product', () => {
