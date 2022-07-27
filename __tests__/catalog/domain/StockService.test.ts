@@ -14,7 +14,7 @@ const fakeProduct: any = {
   hasStockFor: jest.fn(() => true),
 };
 
-class ProductRepositoryMock implements IProductRepository {
+class ProductRepositoryStub implements IProductRepository {
   getAllProducts(): Promise<Product[]> {
     throw new Error('Method not implemented.');
   }
@@ -51,61 +51,61 @@ class ProductRepositoryMock implements IProductRepository {
 describe('StockService\'s Unit Tests', () => {
   describe('StockService.removeFromStock', () => {
     it('returns false if product doesn\'t exist', async () => {
-      const productRepositoryMock = new ProductRepositoryMock();
-      productRepositoryMock.getProductById = jest.fn(() => Promise.resolve(null));
+      const productRepositoryStub = new ProductRepositoryStub();
+      productRepositoryStub.getProductById = jest.fn(() => Promise.resolve(null));
 
-      const stockService = new StockService(productRepositoryMock);
+      const stockService = new StockService(productRepositoryStub);
       const result = await stockService.removeFromStock('test_product_id', 1);
 
       expect(result).toBe(false);
     });
 
     it('returns false if product doesn\'t have stock', async () => {
-      const productRepositoryMock = new ProductRepositoryMock();
+      const productRepositoryStub = new ProductRepositoryStub();
       (fakeProduct.hasStockFor as jest.Mock).mockReturnValueOnce(false);
 
-      const stockService = new StockService(productRepositoryMock);
+      const stockService = new StockService(productRepositoryStub);
       const result = await stockService.removeFromStock('test_product_id', 1);
 
       expect(result).toBe(false);
     });
 
     it('removes a quantity of products from stock', async () => {
-      const productRepositoryMock = new ProductRepositoryMock();
-      productRepositoryMock.updateProduct = jest.fn(() => Promise.resolve({} as Product));
+      const productRepositoryStub = new ProductRepositoryStub();
+      productRepositoryStub.updateProduct = jest.fn(() => Promise.resolve({} as Product));
       const removeFromStockSpy = jest.spyOn(fakeProduct, 'removeFromStock');
 
-      const stockService = new StockService(productRepositoryMock);
+      const stockService = new StockService(productRepositoryStub);
       const result = await stockService.removeFromStock('test_product_id', 1);
 
       expect(result).toBe(true);
       expect(removeFromStockSpy).toHaveBeenCalledWith(1);
-      expect(productRepositoryMock.updateProduct).toHaveBeenCalledWith(fakeProduct);
+      expect(productRepositoryStub.updateProduct).toHaveBeenCalledWith(fakeProduct);
     });
   });
 
   describe('StockService.addToStock', () => {
     it('returns false if product doesn\'t exist', async () => {
-      const productRepositoryMock = new ProductRepositoryMock();
-      productRepositoryMock.getProductById = jest.fn(() => Promise.resolve(null));
+      const productRepositoryStub = new ProductRepositoryStub();
+      productRepositoryStub.getProductById = jest.fn(() => Promise.resolve(null));
 
-      const stockService = new StockService(productRepositoryMock);
+      const stockService = new StockService(productRepositoryStub);
       const result = await stockService.addToStock('test_product_id', 1);
 
       expect(result).toBe(false);
     });
 
     it('removes a quantity of products from stock', async () => {
-      const productRepositoryMock = new ProductRepositoryMock();
-      productRepositoryMock.updateProduct = jest.fn(() => Promise.resolve({} as Product));
+      const productRepositoryStub = new ProductRepositoryStub();
+      productRepositoryStub.updateProduct = jest.fn(() => Promise.resolve({} as Product));
       const addToStockSpy = jest.spyOn(fakeProduct, 'addToStock');
 
-      const stockService = new StockService(productRepositoryMock);
+      const stockService = new StockService(productRepositoryStub);
       const result = await stockService.addToStock('test_product_id', 1);
 
       expect(result).toBe(true);
       expect(addToStockSpy).toHaveBeenCalledWith(1);
-      expect(productRepositoryMock.updateProduct).toHaveBeenCalledWith(fakeProduct);
+      expect(productRepositoryStub.updateProduct).toHaveBeenCalledWith(fakeProduct);
     });
   });
 });
