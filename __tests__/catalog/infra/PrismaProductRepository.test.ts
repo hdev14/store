@@ -169,58 +169,70 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
     });
   });
 
-  // it('updates a existing category', () => {
-  //   const fakeCategories = [{
-  //     _id: 'testid',
-  //     name: 'test',
-  //     code: 1234,
-  //   }];
+  it('updates a existing category', async () => {
+    expect.assertions(2);
 
-  //   const productRepository = new InMemoryProductRepository([], fakeCategories);
+    const productRepository = new PrismaProductRepository();
 
-  //   const category = new Category({
-  //     id: fakeCategories[0]._id,
-  //     name: fakeCategories[0].name,
-  //     code: fakeCategories[0].code,
-  //   });
+    const category = new Category({
+      id: 'testid',
+      name: 'test',
+      code: 1234,
+    });
 
-  //   category.name = 'updated test';
+    prismaMock.category.update.mockResolvedValue({
+      id: category.id,
+      name: category.name,
+      code: category.code,
+    });
 
-  //   productRepository.updateCategory(category);
+    await productRepository.updateCategory(category);
 
-  //   const inMemoryCategory = productRepository.categories.find((p) => p._id === category.id);
+    expect(prismaMock.category.update).toHaveBeenCalled();
+    expect(prismaMock.category.update).toHaveBeenCalledWith({
+      where: { id: category.id },
+      data: {
+        name: category.name,
+        code: category.code,
+      },
+    });
+  });
 
-  //   expect(inMemoryCategory).toBeTruthy();
-  //   expect(inMemoryCategory!.name).toEqual('updated test');
-  // });
+  it('returns all products', async () => {
+    expect.assertions(4);
 
-  // it('returns all products', async () => {
-  //   expect.assertions(1);
+    const fakeCategory = {
+      id: 'category_testid',
+      name: 'category_test',
+      code: 1234,
+    };
 
-  //   const fakeCategories = [{
-  //     _id: 'category_testid',
-  //     name: 'category_test',
-  //     code: 1234,
-  //   }];
+    const fakeProducts = [1, 2, 3].map((index) => ({
+      id: `testid${index}`,
+      name: `test ${index}`,
+      description: `test description ${index}`,
+      amount: Math.random() * 100,
+      height: index,
+      width: index,
+      depth: index,
+      image: `http://test.com/${index}.jpg`,
+      stockQuantity: 10,
+      categoryId: fakeCategory.id,
+      category: fakeCategory,
+      createdAt: new Date().toISOString(),
+    }));
 
-  //   const fakeProducts = [1, 2, 3].map((index) => ({
-  //     _id: `testid${index}`,
-  //     name: `test ${index}`,
-  //     description: `test description ${index}`,
-  //     amount: Math.random() * 100,
-  //     height: index,
-  //     width: index,
-  //     depth: index,
-  //     image: `http://test.com/${index}.jpg`,
-  //     stockQuantity: 10,
-  //     category: fakeCategories[0]._id,
-  //     createdAt: new Date().toISOString(),
-  //   }));
+    prismaMock.product.findMany.mockResolvedValue(fakeProducts as any);
 
-  //   const productRepository = new InMemoryProductRepository(fakeProducts, fakeCategories);
+    const productRepository = new PrismaProductRepository();
 
-  //   const products = await productRepository.getAllProducts();
+    const products = await productRepository.getAllProducts();
 
-  //   expect(products).toHaveLength(3);
-  // });
+    expect(products.every((p) => (p instanceof Product))).toBe(true);
+    expect(products).toHaveLength(3);
+    expect(prismaMock.product.findMany).toHaveBeenCalled();
+    expect(prismaMock.product.findMany).toHaveBeenCalledWith({
+      include: { category: true },
+    });
+  });
 });
