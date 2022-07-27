@@ -140,22 +140,34 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
     });
   });
 
-  // it('adds a new category', () => {
-  //   const productRepository = new InMemoryProductRepository();
-  //   const category = new Category({
-  //     id: 'testid',
-  //     name: 'test',
-  //     code: 123,
-  //   });
+  it('adds a new category', async () => {
+    expect.assertions(3);
 
-  //   productRepository.addCategory(category);
+    const productRepository = new PrismaProductRepository();
+    const category = new Category({
+      id: 'testid',
+      name: 'test',
+      code: 123,
+    });
 
-  //   const inMemoryCategory = productRepository.categories.find((p) => p._id === category.id);
+    prismaMock.category.create.mockResolvedValue({
+      id: category.id,
+      name: category.name,
+      code: category.code,
+    });
 
-  //   expect(inMemoryCategory).toBeTruthy();
-  //   expect(inMemoryCategory!.name).toEqual(category.name);
-  //   expect(inMemoryCategory!.code).toEqual(category.code);
-  // });
+    const result = await productRepository.addCategory(category);
+
+    expect(result.isEqual(category)).toBe(true);
+    expect(prismaMock.category.create).toHaveBeenCalled();
+    expect(prismaMock.category.create).toHaveBeenCalledWith({
+      data: {
+        id: category.id,
+        name: category.name,
+        code: category.code,
+      },
+    });
+  });
 
   // it('updates a existing category', () => {
   //   const fakeCategories = [{
