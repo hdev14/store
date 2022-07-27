@@ -73,55 +73,72 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
     });
   });
 
-  // it('updates a existing product', () => {
-  //   const createdAt = new Date();
-  //   const fakeProducts = [{
-  //     _id: 'testid',
-  //     name: 'test',
-  //     description: 'test description',
-  //     amount: Math.random() * 100,
-  //     height: 1,
-  //     width: 1,
-  //     depth: 1,
-  //     image: 'http://test.com/jpg',
-  //     stockQuantity: 10,
-  //     category: 'category_testid',
-  //     createdAt: createdAt.toISOString(),
-  //   }];
+  it('updates a existing product', async () => {
+    expect.assertions(2);
 
-  //   const fakeCategories = [{ _id: 'category_testid', name: 'category_test', code: 123 }];
+    const product = new Product({
+      id: 'test',
+      name: 'test',
+      description: 'test',
+      amount: 123,
+      dimensions: new Dimensions({
+        height: 1,
+        width: 2,
+        depth: 3,
+      }),
+      image: 'https://example.com',
+      stockQuantity: 10,
+      category: new Category({
+        id: 'test',
+        name: 'test',
+        code: 1234,
+      }),
+      createdAt: new Date(),
+    });
 
-  //   const productRepository = new InMemoryProductRepository(fakeProducts, fakeCategories);
+    prismaMock.product.update.mockResolvedValue({
+      id: product.id,
+      name: product.name,
+      active: product.active,
+      description: product.description,
+      amount: product.amount,
+      height: product.dimensions.height,
+      width: product.dimensions.width,
+      depth: product.dimensions.depth,
+      image: product.image,
+      stockQuantity: product.stockQuantity,
+      categoryId: product.category.id,
+      category: {
+        id: product.category.id,
+        name: product.category.name,
+        code: product.category.code,
+      },
+      createdAt: product.createdAt,
+    } as any);
 
-  //   const product = new Product({
-  //     id: fakeProducts[0]._id,
-  //     name: fakeProducts[0].name,
-  //     description: fakeProducts[0].description,
-  //     amount: fakeProducts[0].amount,
-  //     dimensions: new Dimensions({
-  //       height: fakeProducts[0].height,
-  //       width: fakeProducts[0].width,
-  //       depth: fakeProducts[0].depth,
-  //     }),
-  //     image: fakeProducts[0].image,
-  //     stockQuantity: fakeProducts[0].stockQuantity,
-  //     category: new Category({
-  //       id: fakeCategories[0]._id,
-  //       name: fakeCategories[0].name,
-  //       code: fakeCategories[0].code,
-  //     }),
-  //     createdAt,
-  //   });
+    const productRepository = new PrismaProductRepository();
 
-  //   product.name = 'updated test';
+    await productRepository.updateProduct(product);
 
-  //   productRepository.updateProduct(product);
-
-  //   const inMemoryProduct = productRepository.products.find((p) => p._id === product.id);
-
-  //   expect(inMemoryProduct).toBeTruthy();
-  //   expect(inMemoryProduct!.name).toEqual('updated test');
-  // });
+    expect(prismaMock.product.update).toHaveBeenCalled();
+    expect(prismaMock.product.update).toHaveBeenCalledWith({
+      where: { id: product.id },
+      data: {
+        name: product.name,
+        active: product.active,
+        description: product.description,
+        amount: product.amount,
+        height: product.dimensions.height,
+        width: product.dimensions.width,
+        depth: product.dimensions.depth,
+        image: product.image,
+        stockQuantity: product.stockQuantity,
+        categoryId: product.category.id,
+        createdAt: product.createdAt,
+      },
+      include: { category: true },
+    });
+  });
 
   // it('adds a new category', () => {
   //   const productRepository = new InMemoryProductRepository();
