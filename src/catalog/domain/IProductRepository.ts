@@ -2,22 +2,26 @@
 import Category from './Category';
 import Product from './Product';
 
-interface IProductRepository {
+export interface ICategoryOperations {
+  getAllCategories(): Promise<Category[]>;
+
+  addCategory(category: Category): Promise<Category> | Category;
+
+  updateCategory(category: Category): Promise<Category> | Category;
+}
+
+export interface IProductOperations {
   getAllProducts(): Promise<Product[]>;
 
   getProductById(id: string): Promise<Product | null>;
 
   getProductsByCategory(category: Category): Promise<Product[]>;
 
-  getAllCategories(): Promise<Category[]>;
-
   addProduct(product: Product): Promise<Product> | Product;
 
   updateProduct(product: Product): Promise<Product> | Product;
-
-  addCategory(category: Category): Promise<Category> | Category;
-
-  updateCategory(category: Category): Promise<Category> | Category;
 }
+
+interface IProductRepository extends IProductOperations, ICategoryOperations {}
 
 export default IProductRepository;
