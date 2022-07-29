@@ -23,7 +23,7 @@ class ProductRepositoryStub implements IProductRepository {
     return Promise.resolve(fakeProduct);
   }
 
-  getProductsByCategory(_: Category): Promise<Product[]> {
+  getProductsByCategory(_: string): Promise<Product[]> {
     throw new Error('Method not implemented.');
   }
 
