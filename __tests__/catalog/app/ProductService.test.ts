@@ -2,6 +2,7 @@ import ProductService from '../../../src/catalog/app/ProductService';
 import Category from '../../../src/catalog/domain/Category';
 import { IProductOperations } from '../../../src/catalog/domain/IProductRepository';
 import Product from '../../../src/catalog/domain/Product';
+import ProductNotFound from './ProductNotFound';
 
 const fakeProducts = [{
   id: 'test_product_id_1',
@@ -63,5 +64,19 @@ describe('ProductsService\'s unit tests', () => {
     expect(product.createdAt).toEqual(fakeProducts[0].createdAt);
     expect(product.dimensions).toEqual(fakeProducts[0].dimensions);
     expect(product.category).toEqual(fakeProducts[0].category);
+  });
+
+  it('throws an exception of type ProductNotFound if the product is null', async () => {
+    expect.assertions(2);
+
+    const repositoryStub = new RepositoryStub();
+    const productService = new ProductService(repositoryStub);
+
+    try {
+      await productService.getProductById('wrong_id');
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(ProductNotFound);
+      expect(e.message).toEqual('O produto não foi encontrado.');
+    }
   });
 });

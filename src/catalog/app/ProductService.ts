@@ -1,3 +1,4 @@
+import ProductNotFound from './ProductNotFound';
 import { IProductOperations } from '../domain/IProductRepository';
 import Product from '../domain/Product';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
@@ -12,7 +13,11 @@ export default class ProductService implements IProductService {
   async getProductById(productId: string): Promise<Product> {
     const product = await this.repository.getProductById(productId);
 
-    return product!;
+    if (!product) {
+      throw new ProductNotFound();
+    }
+
+    return product;
   }
 
   getAllProducts(): Promise<Product[]> {
