@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import Category from '../domain/Category';
 import Dimensions from '../domain/Dimensions';
 import Product from '../domain/Product';
 
@@ -8,9 +9,8 @@ export type DefaultProductParams = {
   amount: number;
   image: string;
   stockQuantity: number;
-  createdAt: Date;
   dimensions: Dimensions;
-  categoryId: string;
+  category: Category;
 }
 
 export type UpdateProductParams = Partial<DefaultProductParams>;
