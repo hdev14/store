@@ -2,7 +2,7 @@ import ProductService from '../../../src/catalog/app/ProductService';
 import Category from '../../../src/catalog/domain/Category';
 import { IProductOperations } from '../../../src/catalog/domain/IProductRepository';
 import Product from '../../../src/catalog/domain/Product';
-import ProductNotFound from './ProductNotFound';
+import ProductNotFound from '../../../src/catalog/app/ProductNotFound';
 
 const fakeProducts = [{
   id: 'test_product_id_1',
