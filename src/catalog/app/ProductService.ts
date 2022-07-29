@@ -20,8 +20,10 @@ export default class ProductService implements IProductService {
     return product;
   }
 
-  getAllProducts(): Promise<Product[]> {
-    throw new Error('Method not implemented.');
+  async getAllProducts(): Promise<Product[]> {
+    const products = await this.repository.getAllProducts();
+
+    return products;
   }
 
   getProductsByCategory(categoryId: string): Promise<Product[]> {
