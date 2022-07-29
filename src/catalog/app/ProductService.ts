@@ -1,9 +1,18 @@
+import { IProductOperations } from '../domain/IProductRepository';
 import Product from '../domain/Product';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
 
 export default class ProductService implements IProductService {
-  getProductById(productId: string): Promise<Product> {
-    throw new Error('Method not implemented.');
+  private repository: IProductOperations;
+
+  constructor(repository: IProductOperations) {
+    this.repository = repository;
+  }
+
+  async getProductById(productId: string): Promise<Product> {
+    const product = await this.repository.getProductById(productId);
+
+    return product!;
   }
 
   getAllProducts(): Promise<Product[]> {
