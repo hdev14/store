@@ -15,7 +15,7 @@ export interface IProductOperations {
 
   getProductById(id: string): Promise<Product | null>;
 
-  getProductsByCategory(category: Category): Promise<Product[]>;
+  getProductsByCategory(categoryId: string): Promise<Product[]>;
 
   addProduct(product: Product): Promise<Product> | Product;
 

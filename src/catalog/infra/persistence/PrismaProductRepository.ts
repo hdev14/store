@@ -33,9 +33,9 @@ export default class PrismaProductRepository implements IProductRepository {
     return null;
   }
 
-  async getProductsByCategory(category: Category): Promise<Product[]> {
+  async getProductsByCategory(categoryId: string): Promise<Product[]> {
     const products = await this.connection.product.findMany({
-      where: { categoryId: category.id },
+      where: { categoryId },
       include: { category: true },
     });
 

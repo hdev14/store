@@ -46,8 +46,8 @@ export class InMemoryProductRepository implements IProductRepository {
     return Promise.resolve(inMemoryProduct ? this.mapProduct(inMemoryProduct) : null);
   }
 
-  getProductsByCategory(category: Category): Promise<Product[]> {
-    const inMemoryProducts = this._products.filter((p) => p.category === category.id);
+  getProductsByCategory(categoryId: string): Promise<Product[]> {
+    const inMemoryProducts = this._products.filter((p) => p.category === categoryId);
 
     return Promise.resolve(inMemoryProducts.map(this.mapProduct.bind(this)));
   }
