@@ -2,7 +2,7 @@ import ProductService from '../../../src/catalog/app/ProductService';
 import { IProductOperations } from '../../../src/catalog/domain/IProductRepository';
 import Product from '../../../src/catalog/domain/Product';
 import ProductNotFound from '../../../src/catalog/app/ProductNotFound';
-import { DefaultProductParams } from '../../../src/catalog/app/IProductService';
+import { DefaultProductParams, UpdateProductParams } from '../../../src/catalog/app/IProductService';
 import IGenerateID from '../../../src/catalog/app/IGenerateID';
 import Category from '../../../src/catalog/domain/Category';
 
@@ -85,8 +85,12 @@ class RepositoryStub implements IProductOperations {
     return product;
   }
 
-  updateProduct(_: Product): Product | Promise<Product> {
-    throw new Error('Method not implemented.');
+  updateProduct(product: Product): Product | Promise<Product> {
+    const index = fakeProducts.findIndex((p) => p.id === product.id);
+
+    fakeProducts[index] = product;
+
+    return product;
   }
 }
 
@@ -198,9 +202,46 @@ describe('ProductsService\'s unit tests', () => {
       expect(addProductSpy).toHaveBeenCalled();
       expect(generateIDMock).toHaveBeenCalled();
     });
+  });
 
-    // it('throws an exception of type ValidationEntityError if data is invalid', async () => {
+  describe('ProductService.updateProduct', () => {
+    it('updates an existing product', async () => {
+      expect.assertions(11);
 
-    // });
+      const repositoryStub = new RepositoryStub();
+      const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
+      const updateProductSpy = jest.spyOn(repositoryStub, 'updateProduct');
+
+      const productService = new ProductService(repositoryStub, generateIDMock);
+
+      const params: UpdateProductParams = {
+        name: 'test_product_updated',
+        amount: Math.random() * 100,
+        category: fakeCategories[0] as Category,
+        description: 'test_product_updated',
+        dimensions: {
+          height: Math.random() * 50,
+          width: Math.random() * 50,
+          depth: Math.random() * 50,
+        },
+        image: 'http://example.com/product_updated.jpg',
+        stockQuantity: parseInt((Math.random() * 10).toString(), 10),
+      };
+
+      await productService.updateProduct('test_product_id_1', params);
+      const updatedProduct = fakeProducts.find((p) => p.id === 'test_product_id_1');
+
+      expect(updatedProduct).toBeTruthy();
+      expect(updatedProduct!.name).toEqual(params.name);
+      expect(updatedProduct!.amount).toEqual(params.amount);
+      expect(updatedProduct!.description).toEqual(params.description);
+      expect(updatedProduct!.image).toEqual(params.image);
+      expect(updatedProduct!.stockQuantity).toEqual(params.stockQuantity);
+      expect(updatedProduct!.category.id).toEqual(params.category!.id);
+      expect(updatedProduct!.category.name).toEqual(params.category!.name);
+      expect(updatedProduct!.category.code).toEqual(params.category!.code);
+      expect(getProductByIdSpy).toHaveBeenCalled();
+      expect(updateProductSpy).toHaveBeenCalled();
+    });
   });
 });
