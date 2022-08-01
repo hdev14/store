@@ -1,6 +1,6 @@
 import IValueObject from '../../shared/abstractions/IValueObject';
 
-type DimensionsParams = {
+export type DimensionsParams = {
   height: number;
   width: number;
   depth: number;

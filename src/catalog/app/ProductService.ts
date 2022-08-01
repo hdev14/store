@@ -1,6 +1,6 @@
 import ProductNotFound from './ProductNotFound';
 import { IProductOperations } from '../domain/IProductRepository';
-import Product from '../domain/Product';
+import Product, { ProductParams } from '../domain/Product';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
 import IGenerateID from './IGenerateID';
 
@@ -52,8 +52,19 @@ export default class ProductService implements IProductService {
     return product;
   }
 
-  updateProduct(productId: string, params: UpdateProductParams): Promise<Product> {
-    throw new Error('Method not implemented.');
+  async updateProduct(productId: string, params: UpdateProductParams): Promise<Product> {
+    const currentProduct = await this.repository.getProductById(productId);
+
+    const productParams = {
+      ...currentProduct,
+      ...params,
+    } as ProductParams;
+
+    const product = new Product(productParams);
+
+    const updatedProduct = await this.repository.updateProduct(product);
+
+    return updatedProduct;
   }
 
   updateProductStock(productId: string, quantity: number): Promise<boolean> {

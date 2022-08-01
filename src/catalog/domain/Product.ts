@@ -4,7 +4,7 @@ import EntityValidator from '../../shared/utils/EntityValidator';
 import Category from './Category';
 import Dimensions from './Dimensions';
 
-type ProductParams = {
+export type ProductParams = {
   id: string;
   name: string;
   description: string;
@@ -85,6 +85,7 @@ export default class Product extends Entity implements IAggregateRoot {
       .setRule('category', ['required'])
       .setRule('amount', ['required', 'min:0'])
       .setRule('image', ['required', 'url'])
+      .setRule('stockQuantity', ['required', 'min:0'])
       .validate();
   }
 }

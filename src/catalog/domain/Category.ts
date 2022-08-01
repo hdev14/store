@@ -1,7 +1,7 @@
 import Entity from '../../shared/abstractions/Entity';
 import EntityValidator from '../../shared/utils/EntityValidator';
 
-type CategoryParams = {
+export type CategoryParams = {
   id: string;
   name: string;
   code: number;
