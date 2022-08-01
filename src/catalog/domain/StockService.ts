@@ -1,10 +1,10 @@
-import IProductRepository from './IProductRepository';
+import { IProductOperations } from './IProductRepository';
 import IStockService from './IStockService';
 
 export default class StockService implements IStockService {
-  private productRepository: IProductRepository;
+  private productRepository: IProductOperations;
 
-  constructor(productRepository: IProductRepository) {
+  constructor(productRepository: IProductOperations) {
     this.productRepository = productRepository;
   }
 

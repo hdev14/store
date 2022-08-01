@@ -3,15 +3,23 @@ import { IProductOperations } from '../domain/IProductRepository';
 import Product, { ProductParams } from '../domain/Product';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
 import IGenerateID from './IGenerateID';
+import IStockService from '../domain/IStockService';
 
 export default class ProductService implements IProductService {
   private repository: IProductOperations;
 
   private generateID: IGenerateID;
 
-  constructor(repository: IProductOperations, generateID: IGenerateID) {
+  private stockService: IStockService;
+
+  constructor(
+    repository: IProductOperations,
+    generateID: IGenerateID,
+    stockService: IStockService,
+  ) {
     this.repository = repository;
     this.generateID = generateID;
+    this.stockService = stockService;
   }
 
   async getProductById(productId: string): Promise<Product> {
@@ -55,6 +63,10 @@ export default class ProductService implements IProductService {
   async updateProduct(productId: string, params: UpdateProductParams): Promise<Product> {
     const currentProduct = await this.repository.getProductById(productId);
 
+    if (!currentProduct) {
+      throw new ProductNotFound();
+    }
+
     const productParams = {
       ...currentProduct,
       ...params,
@@ -67,7 +79,11 @@ export default class ProductService implements IProductService {
     return updatedProduct;
   }
 
-  updateProductStock(productId: string, quantity: number): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async updateProductStock(productId: string, quantity: number): Promise<boolean> {
+    if (quantity < 0) {
+      return this.stockService.removeFromStock(productId, Math.abs(quantity));
+    }
+
+    return true;
   }
 }
