@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import ProductService from '../../../src/catalog/app/ProductService';
 import { IProductOperations } from '../../../src/catalog/domain/IProductRepository';
 import Product from '../../../src/catalog/domain/Product';
@@ -5,6 +6,7 @@ import ProductNotFound from '../../../src/catalog/app/ProductNotFound';
 import { DefaultProductParams, UpdateProductParams } from '../../../src/catalog/app/IProductService';
 import IGenerateID from '../../../src/catalog/app/IGenerateID';
 import Category from '../../../src/catalog/domain/Category';
+import IStockService from '../../../src/catalog/domain/IStockService';
 
 const fakeCategories = [
   {
@@ -94,6 +96,24 @@ class RepositoryStub implements IProductOperations {
   }
 }
 
+class StockServiceStub implements IStockService {
+  addToStock(productId: string, quantity: number): Promise<boolean> {
+    const index = fakeProducts.findIndex((p) => p.id === productId);
+
+    fakeProducts[index].stockQuantity += quantity;
+
+    return Promise.resolve(true);
+  }
+
+  removeFromStock(productId: string, quantity: number): Promise<boolean> {
+    const index = fakeProducts.findIndex((p) => p.id === productId);
+
+    fakeProducts[index].stockQuantity -= quantity;
+
+    return Promise.resolve(true);
+  }
+}
+
 const generateIDMock: IGenerateID = jest.fn(() => `test_product_id_${fakeProducts.length + 1}`);
 
 describe('ProductsService\'s unit tests', () => {
@@ -103,8 +123,9 @@ describe('ProductsService\'s unit tests', () => {
 
       const repositoryStub = new RepositoryStub();
       const getAllProductsSpy = jest.spyOn(repositoryStub, 'getAllProducts');
+      const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock);
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
       const products = await productService.getAllProducts();
 
       expect(products).toHaveLength(fakeProducts.length);
@@ -118,9 +139,10 @@ describe('ProductsService\'s unit tests', () => {
 
       const repositoryStub = new RepositoryStub();
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
+      const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock);
-      const product = await productService.getProductById('test_product_id_1');
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const product = await productService.getProductById(fakeProducts[0].id);
 
       expect(getProductByIdSpy).toHaveBeenCalled();
       expect(product.id).toEqual(fakeProducts[0].id);
@@ -139,8 +161,9 @@ describe('ProductsService\'s unit tests', () => {
 
       const repositoryStub = new RepositoryStub();
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
+      const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock);
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
 
       try {
         await productService.getProductById('wrong_id');
@@ -158,8 +181,9 @@ describe('ProductsService\'s unit tests', () => {
 
       const repositoryStub = new RepositoryStub();
       const getProductsByCategorySpy = jest.spyOn(repositoryStub, 'getProductsByCategory');
+      const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock);
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
       const firstCategoryProducts = await productService
         .getProductsByCategory(fakeCategories[0].id);
       const secondCategoryProducts = await productService
@@ -177,8 +201,9 @@ describe('ProductsService\'s unit tests', () => {
 
       const repositoryStub = new RepositoryStub();
       const addProductSpy = jest.spyOn(repositoryStub, 'addProduct');
+      const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock);
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
 
       const params: DefaultProductParams = {
         name: 'test_new_product',
@@ -211,8 +236,9 @@ describe('ProductsService\'s unit tests', () => {
       const repositoryStub = new RepositoryStub();
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
       const updateProductSpy = jest.spyOn(repositoryStub, 'updateProduct');
+      const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock);
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
 
       const params: UpdateProductParams = {
         name: 'test_product_updated',
@@ -228,7 +254,7 @@ describe('ProductsService\'s unit tests', () => {
         stockQuantity: parseInt((Math.random() * 10).toString(), 10),
       };
 
-      await productService.updateProduct('test_product_id_1', params);
+      await productService.updateProduct(fakeProducts[0].id, params);
       const updatedProduct = fakeProducts.find((p) => p.id === 'test_product_id_1');
 
       expect(updatedProduct).toBeTruthy();
@@ -242,6 +268,57 @@ describe('ProductsService\'s unit tests', () => {
       expect(updatedProduct!.category.code).toEqual(params.category!.code);
       expect(getProductByIdSpy).toHaveBeenCalled();
       expect(updateProductSpy).toHaveBeenCalled();
+    });
+
+    it('throws an ProductNotFound if repository.getProductById returns null', async () => {
+      expect.assertions(2);
+
+      const repositoryStub = new RepositoryStub();
+      const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
+      const stockServiceStub = new StockServiceStub();
+
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+
+      const params: UpdateProductParams = {
+        name: 'test_product_updated',
+        amount: Math.random() * 100,
+        category: fakeCategories[0] as Category,
+        description: 'test_product_updated',
+        dimensions: {
+          height: Math.random() * 50,
+          width: Math.random() * 50,
+          depth: Math.random() * 50,
+        },
+        image: 'http://example.com/product_updated.jpg',
+        stockQuantity: parseInt((Math.random() * 10).toString(), 10),
+      };
+
+      try {
+        await productService.updateProduct('wrong_id', params);
+      } catch (e) {
+        expect(e).toBeInstanceOf(ProductNotFound);
+        expect(getProductByIdSpy).toHaveBeenCalled();
+      }
+    });
+  });
+
+  describe('ProductService.updateProductStock', () => {
+    it('removes products if is passed a negative quantity', async () => {
+      expect.assertions(3);
+
+      const repositoryStub = new RepositoryStub();
+      const stockServiceStub = new StockServiceStub();
+      const removeFromStockSpy = jest.spyOn(stockServiceStub, 'removeFromStock');
+
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+
+      const currentQty = fakeProducts[2].stockQuantity;
+
+      await productService.updateProductStock(fakeProducts[2].id, -1);
+
+      expect(fakeProducts[2].stockQuantity).toEqual(currentQty - 1);
+      expect(removeFromStockSpy).toHaveBeenCalledTimes(1);
+      expect(removeFromStockSpy).toHaveBeenCalledWith(fakeProducts[2].id, 1);
     });
   });
 });

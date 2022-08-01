@@ -1,5 +1,4 @@
-import Category from '../../../src/catalog/domain/Category';
-import IProductRepository from '../../../src/catalog/domain/IProductRepository';
+import { IProductOperations } from '../../../src/catalog/domain/IProductRepository';
 import Product from '../../../src/catalog/domain/Product';
 import StockService from '../../../src/catalog/domain/StockService';
 
@@ -14,7 +13,11 @@ const fakeProduct: any = {
   hasStockFor: jest.fn(() => true),
 };
 
-class ProductRepositoryStub implements IProductRepository {
+class ProductRepositoryStub implements IProductOperations {
+  getProductsByCategory(_: string): Promise<Product[]> {
+    throw new Error('Method not implemented.');
+  }
+
   getAllProducts(): Promise<Product[]> {
     throw new Error('Method not implemented.');
   }
@@ -23,27 +26,11 @@ class ProductRepositoryStub implements IProductRepository {
     return Promise.resolve(fakeProduct);
   }
 
-  getProductsByCategory(_: string): Promise<Product[]> {
-    throw new Error('Method not implemented.');
-  }
-
-  getAllCategories(): Promise<Category[]> {
-    throw new Error('Method not implemented.');
-  }
-
   addProduct(_: Product): Product | Promise<Product> {
     throw new Error('Method not implemented.');
   }
 
   updateProduct(_: Product): Product | Promise<Product> {
-    throw new Error('Method not implemented.');
-  }
-
-  addCategory(_: Category): Category | Promise<Category> {
-    throw new Error('Method not implemented.');
-  }
-
-  updateCategory(_: Category): Category | Promise<Category> {
     throw new Error('Method not implemented.');
   }
 }
