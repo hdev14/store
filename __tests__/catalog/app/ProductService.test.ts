@@ -3,9 +3,9 @@ import ProductNotFoundError from '../../../src/catalog/app/ProductNotFoundError'
 import { DefaultProductParams, UpdateProductParams } from '../../../src/catalog/app/IProductService';
 import Category from '../../../src/catalog/domain/Category';
 import StockError from '../../../src/catalog/app/StockError';
-import RepositoryStub from '../../mocks/ProductRepositoryStub';
-import StockServiceStub from '../../mocks/StockServiceStub';
-import createGenerateIDMock from '../../mocks/createGenerateIDMock';
+import RepositoryStub from '../../stubs/ProductRepositoryStub';
+import StockServiceStub from '../../stubs/StockServiceStub';
+import createGenerateIDMock from '../../stubs/createGenerateIDMock';
 import { fakeCategories, fakeProducts } from '../../fakes';
 
 describe('ProductsService\'s unit tests', () => {
