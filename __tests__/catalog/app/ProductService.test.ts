@@ -5,7 +5,7 @@ import Category from '../../../src/catalog/domain/Category';
 import StockError from '../../../src/catalog/app/StockError';
 import RepositoryStub from '../../mocks/ProductRepositoryStub';
 import StockServiceStub from '../../mocks/StockServiceStub';
-import generateIDMock from '../../mocks/generateIDMock';
+import createGenerateIDMock from '../../mocks/createGenerateIDMock';
 import { fakeCategories, fakeProducts } from '../../fakes';
 
 describe('ProductsService\'s unit tests', () => {
@@ -17,7 +17,11 @@ describe('ProductsService\'s unit tests', () => {
       const getAllProductsSpy = jest.spyOn(repositoryStub, 'getAllProducts');
       const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
       const products = await productService.getAllProducts();
 
       expect(products).toHaveLength(fakeProducts.length);
@@ -33,7 +37,11 @@ describe('ProductsService\'s unit tests', () => {
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
       const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
       const product = await productService.getProductById(fakeProducts[0].id);
 
       expect(getProductByIdSpy).toHaveBeenCalled();
@@ -55,7 +63,11 @@ describe('ProductsService\'s unit tests', () => {
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
       const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
 
       try {
         await productService.getProductById('wrong_id');
@@ -75,7 +87,11 @@ describe('ProductsService\'s unit tests', () => {
       const getProductsByCategorySpy = jest.spyOn(repositoryStub, 'getProductsByCategory');
       const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
       const firstCategoryProducts = await productService
         .getProductsByCategory(fakeCategories[0].id);
       const secondCategoryProducts = await productService
@@ -94,6 +110,7 @@ describe('ProductsService\'s unit tests', () => {
       const repositoryStub = new RepositoryStub();
       const addProductSpy = jest.spyOn(repositoryStub, 'addProduct');
       const stockServiceStub = new StockServiceStub();
+      const generateIDMock = createGenerateIDMock(fakeProducts);
 
       const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
 
@@ -130,7 +147,11 @@ describe('ProductsService\'s unit tests', () => {
       const updateProductSpy = jest.spyOn(repositoryStub, 'updateProduct');
       const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
 
       const params: UpdateProductParams = {
         name: 'test_product_updated',
@@ -169,7 +190,11 @@ describe('ProductsService\'s unit tests', () => {
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
       const stockServiceStub = new StockServiceStub();
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
 
       const params: UpdateProductParams = {
         name: 'test_product_updated',
@@ -202,7 +227,11 @@ describe('ProductsService\'s unit tests', () => {
       const stockServiceStub = new StockServiceStub();
       const removeFromStockSpy = jest.spyOn(stockServiceStub, 'removeFromStock');
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
 
       const currentQty = fakeProducts[2].stockQuantity;
 
@@ -220,7 +249,11 @@ describe('ProductsService\'s unit tests', () => {
       const stockServiceStub = new StockServiceStub();
       const addToStockSpy = jest.spyOn(stockServiceStub, 'addToStock');
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
 
       const currentQty = fakeProducts[2].stockQuantity;
 
@@ -238,7 +271,11 @@ describe('ProductsService\'s unit tests', () => {
       const stockServiceStub = new StockServiceStub();
       stockServiceStub.removeFromStock = jest.fn(() => Promise.resolve(false));
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
 
       try {
         await productService.updateProductStock(fakeProducts[2].id, -1);
@@ -255,7 +292,11 @@ describe('ProductsService\'s unit tests', () => {
       const stockServiceStub = new StockServiceStub();
       stockServiceStub.addToStock = jest.fn(() => Promise.resolve(false));
 
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
 
       try {
         await productService.updateProductStock(fakeProducts[2].id, 1);
