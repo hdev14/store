@@ -320,5 +320,23 @@ describe('ProductsService\'s unit tests', () => {
       expect(removeFromStockSpy).toHaveBeenCalledTimes(1);
       expect(removeFromStockSpy).toHaveBeenCalledWith(fakeProducts[2].id, 1);
     });
+
+    it('adds products if is passed a positive quantity', async () => {
+      expect.assertions(3);
+
+      const repositoryStub = new RepositoryStub();
+      const stockServiceStub = new StockServiceStub();
+      const addToStockSpy = jest.spyOn(stockServiceStub, 'addToStock');
+
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+
+      const currentQty = fakeProducts[2].stockQuantity;
+
+      await productService.updateProductStock(fakeProducts[2].id, 1);
+
+      expect(fakeProducts[2].stockQuantity).toEqual(currentQty + 1);
+      expect(addToStockSpy).toHaveBeenCalledTimes(1);
+      expect(addToStockSpy).toHaveBeenCalledWith(fakeProducts[2].id, 1);
+    });
   });
 });
