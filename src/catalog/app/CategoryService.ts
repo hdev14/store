@@ -1,4 +1,4 @@
-import Category from '../domain/Category';
+import Category, { CategoryParams } from '../domain/Category';
 import { ICategoryOperations } from '../domain/IProductRepository';
 import ICategoryService, { CreateCategoryParams, UpdateCategoryParams } from './ICategoryService';
 import IGenerateID from './IGenerateID';
@@ -31,7 +31,18 @@ export default class CategoryService implements ICategoryService {
     return category;
   }
 
-  updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<Category> {
-    throw new Error('Method not implemented.');
+  async updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<Category> {
+    const currentCategory = await this.repository.getCategoryById(categoryId);
+
+    const categoryParams = {
+      ...currentCategory,
+      ...params,
+    } as CategoryParams;
+
+    const category = new Category(categoryParams);
+
+    const updatedCategory = await this.repository.updateCategory(category);
+
+    return updatedCategory;
   }
 }

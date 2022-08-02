@@ -3,6 +3,8 @@ import Category from './Category';
 import Product from './Product';
 
 export interface ICategoryOperations {
+  getCategoryById(categoryId: string): Promise<Category | null> | Category | null;
+
   getAllCategories(): Promise<Category[]>;
 
   addCategory(category: Category): Promise<Category> | Category;
@@ -13,7 +15,7 @@ export interface ICategoryOperations {
 export interface IProductOperations {
   getAllProducts(): Promise<Product[]>;
 
-  getProductById(id: string): Promise<Product | null>;
+  getProductById(id: string): Promise<Product | null> | Product | null;
 
   getProductsByCategory(categoryId: string): Promise<Product[]>;
 
@@ -22,6 +24,6 @@ export interface IProductOperations {
   updateProduct(product: Product): Promise<Product> | Product;
 }
 
-interface IProductRepository extends IProductOperations, ICategoryOperations {}
+interface IProductRepository extends IProductOperations, ICategoryOperations { }
 
 export default IProductRepository;
