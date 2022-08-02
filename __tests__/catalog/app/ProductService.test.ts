@@ -356,5 +356,22 @@ describe('ProductsService\'s unit tests', () => {
         expect(stockServiceStub.removeFromStock).toHaveBeenCalled();
       }
     });
+
+    it('throws an expection of type StockError if StockService.addToStock returns false', async () => {
+      expect.assertions(2);
+
+      const repositoryStub = new RepositoryStub();
+      const stockServiceStub = new StockServiceStub();
+      stockServiceStub.addToStock = jest.fn(() => Promise.resolve(false));
+
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+
+      try {
+        await productService.updateProductStock(fakeProducts[2].id, 1);
+      } catch (e) {
+        expect(e).toBeInstanceOf(StockError);
+        expect(stockServiceStub.addToStock).toHaveBeenCalled();
+      }
+    });
   });
 });
