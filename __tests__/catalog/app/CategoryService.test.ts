@@ -47,4 +47,28 @@ describe('CategoryService.getAllCategories', () => {
       expect(addCategorySpy).toHaveBeenCalled();
     });
   });
+
+  describe('CategoryService.updateCategory', () => {
+    it('updates a specific category', async () => {
+      expect.assertions(4);
+
+      const repositoryStub = new RepositoryStub();
+      const getCategoryByIdSpy = jest.spyOn(repositoryStub, 'getCategoryById');
+      const updateCategorySpy = jest.spyOn(repositoryStub, 'updateCategory');
+
+      const categoryService = new CategoryService(
+        repositoryStub,
+        createGenerateIDMock(fakeCategories),
+      );
+
+      const category = await categoryService.updateCategory(fakeCategories[1].id, {
+        name: 'test_category_updated',
+      });
+
+      expect(category.name).toEqual('test_category_updated');
+      expect(fakeCategories[1].name).toEqual('test_category_updated');
+      expect(getCategoryByIdSpy).toHaveBeenCalledWith(fakeCategories[1].id);
+      expect(updateCategorySpy).toHaveBeenCalled();
+    });
+  });
 });
