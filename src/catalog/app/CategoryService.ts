@@ -19,8 +19,16 @@ export default class CategoryService implements ICategoryService {
     return categories;
   }
 
-  createCategory(params: CreateCategoryParams): Promise<Category> {
-    throw new Error('Method not implemented.');
+  async createCategory(params: CreateCategoryParams): Promise<Category> {
+    const allCategories = await this.repository.getAllCategories();
+
+    const category = await this.repository.addCategory(new Category({
+      id: this.generateID(),
+      name: params.name,
+      code: allCategories.length + 1,
+    }));
+
+    return category;
   }
 
   updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<Category> {
