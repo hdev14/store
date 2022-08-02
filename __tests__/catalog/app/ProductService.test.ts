@@ -2,11 +2,12 @@
 import ProductService from '../../../src/catalog/app/ProductService';
 import { IProductOperations } from '../../../src/catalog/domain/IProductRepository';
 import Product from '../../../src/catalog/domain/Product';
-import ProductNotFound from '../../../src/catalog/app/ProductNotFound';
+import ProductNotFoundError from '../../../src/catalog/app/ProductNotFoundError';
 import { DefaultProductParams, UpdateProductParams } from '../../../src/catalog/app/IProductService';
 import IGenerateID from '../../../src/catalog/app/IGenerateID';
 import Category from '../../../src/catalog/domain/Category';
 import IStockService from '../../../src/catalog/domain/IStockService';
+import StockError from '../../../src/catalog/app/StockError';
 
 const fakeCategories = [
   {
@@ -156,7 +157,7 @@ describe('ProductsService\'s unit tests', () => {
       expect(product.category).toEqual(fakeProducts[0].category);
     });
 
-    it('throws an exception of type ProductNotFound if the product is null', async () => {
+    it('throws an exception of type ProductNotFoundError if the product is null', async () => {
       expect.assertions(3);
 
       const repositoryStub = new RepositoryStub();
@@ -168,7 +169,7 @@ describe('ProductsService\'s unit tests', () => {
       try {
         await productService.getProductById('wrong_id');
       } catch (e: any) {
-        expect(e).toBeInstanceOf(ProductNotFound);
+        expect(e).toBeInstanceOf(ProductNotFoundError);
         expect(e.message).toEqual('O produto não foi encontrado.');
         expect(getProductByIdSpy).toHaveBeenCalled();
       }
@@ -270,7 +271,7 @@ describe('ProductsService\'s unit tests', () => {
       expect(updateProductSpy).toHaveBeenCalled();
     });
 
-    it('throws an ProductNotFound if repository.getProductById returns null', async () => {
+    it('throws an ProductNotFoundError if repository.getProductById returns null', async () => {
       expect.assertions(2);
 
       const repositoryStub = new RepositoryStub();
@@ -296,7 +297,7 @@ describe('ProductsService\'s unit tests', () => {
       try {
         await productService.updateProduct('wrong_id', params);
       } catch (e) {
-        expect(e).toBeInstanceOf(ProductNotFound);
+        expect(e).toBeInstanceOf(ProductNotFoundError);
         expect(getProductByIdSpy).toHaveBeenCalled();
       }
     });
@@ -337,6 +338,23 @@ describe('ProductsService\'s unit tests', () => {
       expect(fakeProducts[2].stockQuantity).toEqual(currentQty + 1);
       expect(addToStockSpy).toHaveBeenCalledTimes(1);
       expect(addToStockSpy).toHaveBeenCalledWith(fakeProducts[2].id, 1);
+    });
+
+    it('throws an expection of type StockError if StockService.removeFromStock returns false', async () => {
+      expect.assertions(2);
+
+      const repositoryStub = new RepositoryStub();
+      const stockServiceStub = new StockServiceStub();
+      stockServiceStub.removeFromStock = jest.fn(() => Promise.resolve(false));
+
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+
+      try {
+        await productService.updateProductStock(fakeProducts[2].id, -1);
+      } catch (e) {
+        expect(e).toBeInstanceOf(StockError);
+        expect(stockServiceStub.removeFromStock).toHaveBeenCalled();
+      }
     });
   });
 });
