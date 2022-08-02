@@ -1,3 +1,4 @@
+import CategoryNotFoundError from '../../../src/catalog/app/CategoryNotFoundError';
 import CategoryService from '../../../src/catalog/app/CategoryService';
 import { CreateCategoryParams } from '../../../src/catalog/app/ICategoryService';
 import { fakeCategories } from '../../fakes';
@@ -69,6 +70,25 @@ describe('CategoryService.getAllCategories', () => {
       expect(fakeCategories[1].name).toEqual('test_category_updated');
       expect(getCategoryByIdSpy).toHaveBeenCalledWith(fakeCategories[1].id);
       expect(updateCategorySpy).toHaveBeenCalled();
+    });
+
+    it('throws an exception of type CategoryNotFoundError if repository.getCategoryById returns null', async () => {
+      expect.assertions(1);
+
+      const repositoryStub = new RepositoryStub();
+
+      const categoryService = new CategoryService(
+        repositoryStub,
+        createGenerateIDMock(fakeCategories),
+      );
+
+      try {
+        await categoryService.updateCategory('wrong_id', {
+          name: 'test_category_updated',
+        });
+      } catch (e) {
+        expect(e).toBeInstanceOf(CategoryNotFoundError);
+      }
     });
   });
 });
