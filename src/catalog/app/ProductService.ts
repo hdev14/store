@@ -81,7 +81,9 @@ export default class ProductService implements IProductService {
 
   async updateProductStock(productId: string, quantity: number): Promise<boolean> {
     if (quantity < 0) {
-      return this.stockService.removeFromStock(productId, Math.abs(quantity));
+      await this.stockService.removeFromStock(productId, Math.abs(quantity));
+    } else {
+      await this.stockService.addToStock(productId, Math.abs(quantity));
     }
 
     return true;
