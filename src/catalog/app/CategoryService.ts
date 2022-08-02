@@ -13,8 +13,10 @@ export default class CategoryService implements ICategoryService {
     this.generateID = generateID;
   }
 
-  getAllCategories(): Promise<Category[]> {
-    throw new Error('Method not implemented.');
+  async getAllCategories(): Promise<Category[]> {
+    const categories = await this.repository.getAllCategories();
+
+    return categories;
   }
 
   createCategory(params: CreateCategoryParams): Promise<Category> {
