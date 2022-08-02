@@ -1,5 +1,6 @@
 import Category, { CategoryParams } from '../domain/Category';
 import { ICategoryOperations } from '../domain/IProductRepository';
+import CategoryNotFoundError from './CategoryNotFoundError';
 import ICategoryService, { CreateCategoryParams, UpdateCategoryParams } from './ICategoryService';
 import IGenerateID from './IGenerateID';
 
@@ -33,6 +34,10 @@ export default class CategoryService implements ICategoryService {
 
   async updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<Category> {
     const currentCategory = await this.repository.getCategoryById(categoryId);
+
+    if (!currentCategory) {
+      throw new CategoryNotFoundError();
+    }
 
     const categoryParams = {
       ...currentCategory,
