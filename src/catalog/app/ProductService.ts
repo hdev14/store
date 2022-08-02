@@ -1,9 +1,10 @@
-import ProductNotFound from './ProductNotFound';
+import ProductNotFoundError from './ProductNotFoundError';
 import { IProductOperations } from '../domain/IProductRepository';
 import Product, { ProductParams } from '../domain/Product';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
 import IGenerateID from './IGenerateID';
 import IStockService from '../domain/IStockService';
+import StockError from './StockError';
 
 export default class ProductService implements IProductService {
   private repository: IProductOperations;
@@ -26,7 +27,7 @@ export default class ProductService implements IProductService {
     const product = await this.repository.getProductById(productId);
 
     if (!product) {
-      throw new ProductNotFound();
+      throw new ProductNotFoundError();
     }
 
     return product;
@@ -64,7 +65,7 @@ export default class ProductService implements IProductService {
     const currentProduct = await this.repository.getProductById(productId);
 
     if (!currentProduct) {
-      throw new ProductNotFound();
+      throw new ProductNotFoundError();
     }
 
     const productParams = {
@@ -80,12 +81,14 @@ export default class ProductService implements IProductService {
   }
 
   async updateProductStock(productId: string, quantity: number): Promise<boolean> {
-    if (quantity < 0) {
-      await this.stockService.removeFromStock(productId, Math.abs(quantity));
-    } else {
-      await this.stockService.addToStock(productId, Math.abs(quantity));
+    const result = (quantity < 0)
+      ? await this.stockService.removeFromStock(productId, Math.abs(quantity))
+      : await this.stockService.addToStock(productId, Math.abs(quantity));
+
+    if (!result) {
+      throw new StockError();
     }
 
-    return true;
+    return result;
   }
 }
