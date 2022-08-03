@@ -191,4 +191,28 @@ describe('InMemoryProductRepository\'s Unit Tests', () => {
 
     expect(categories).toHaveLength(2);
   });
+
+  it('returns a specific category', async () => {
+    expect.assertions(2);
+
+    const fakeCategories = [
+      {
+        _id: 'test_category_id_1',
+        name: 'test_category_1',
+        code: 123,
+      },
+      {
+        _id: 'test_category_id_2',
+        name: 'test_category_2',
+        code: 321,
+      },
+    ];
+
+    const productRepository = new InMemoryProductRepository([], fakeCategories);
+
+    const category = await productRepository.getCategoryById('test_category_id_1');
+
+    expect(category.name).toEqual('test_category_1');
+    expect(category.code).toEqual(123);
+  });
 });
