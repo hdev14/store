@@ -70,9 +70,12 @@ export default class PrismaProductRepository implements IProductRepository {
     return this.mapProduct(createdProduct);
   }
 
-  // TODO: Implementar o método
-  getCategoryById(categoryId: string): Category | Promise<Category> {
-    throw new Error('Method not implemented.');
+  async getCategoryById(categoryId: string): Promise<Category | null> {
+    const category = await this.connection.category.findUnique({
+      where: { id: categoryId },
+    });
+
+    return category ? this.mapCategory(category) : null;
   }
 
   async updateProduct(product: Product): Promise<Product> {
