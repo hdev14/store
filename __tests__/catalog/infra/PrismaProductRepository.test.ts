@@ -235,4 +235,26 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       include: { category: true },
     });
   });
+
+  it('returns a specific category', async () => {
+    expect.assertions(3);
+
+    const fakeCategory = {
+      id: 'test_category_id_1',
+      name: 'test_category_1',
+      code: 1234,
+    };
+
+    prismaMock.category.findUnique.mockResolvedValue(fakeCategory);
+
+    const productRepository = new PrismaProductRepository();
+
+    const category = await productRepository.getCategoryById('test_category_id_1');
+
+    expect(category!.id).toEqual(fakeCategory.id);
+    expect(prismaMock.category.findUnique).toHaveBeenCalled();
+    expect(prismaMock.category.findUnique).toHaveBeenCalledWith({
+      where: { id: 'test_category_id_1' },
+    });
+  });
 });
