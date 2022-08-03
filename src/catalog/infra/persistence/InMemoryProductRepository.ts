@@ -52,9 +52,10 @@ export class InMemoryProductRepository implements IProductRepository {
     return Promise.resolve(inMemoryProducts.map(this.mapProduct.bind(this)));
   }
 
-  // TODO: Implementar o método
   getCategoryById(categoryId: string): Category | Promise<Category> {
-    throw new Error('Method not implemented.');
+    const category = this._categories.find((c) => c._id === categoryId);
+
+    return this.mapCategory(category!);
   }
 
   getAllCategories(): Promise<Category[]> {
