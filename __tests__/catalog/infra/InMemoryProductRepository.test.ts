@@ -215,4 +215,47 @@ describe('InMemoryProductRepository\'s Unit Tests', () => {
     expect(category.name).toEqual('test_category_1');
     expect(category.code).toEqual(123);
   });
+
+  it('returns a specific product', async () => {
+    expect.assertions(9);
+
+    const createdAt = new Date();
+    const fakeProducts = [{
+      _id: 'testid',
+      name: 'test',
+      description: 'test description',
+      amount: Math.random() * 100,
+      height: 1,
+      width: 1,
+      depth: 1,
+      image: 'http://test.com/jpg',
+      stockQuantity: 10,
+      category: 'category_testid',
+      createdAt: createdAt.toISOString(),
+    }];
+
+    const fakeCategories = [{ _id: 'category_testid', name: 'category_test', code: 123 }];
+
+    const productRepository = new InMemoryProductRepository(fakeProducts, fakeCategories);
+
+    const product = await productRepository.getProductById('testid');
+
+    expect(product!.id).toEqual(fakeProducts[0]._id);
+    expect(product!.name).toEqual(fakeProducts[0].name);
+    expect(product!.description).toEqual(fakeProducts[0].description);
+    expect(product!.amount).toEqual(fakeProducts[0].amount);
+    expect(product!.image).toEqual(fakeProducts[0].image);
+    expect(product!.stockQuantity).toEqual(fakeProducts[0].stockQuantity);
+    expect(product!.createdAt).toEqual(createdAt);
+    expect(product!.category).toEqual({
+      id: fakeCategories[0]._id,
+      name: fakeCategories[0].name,
+      code: fakeCategories[0].code,
+    });
+    expect(product!.dimensions).toEqual({
+      height: fakeProducts[0].height,
+      width: fakeProducts[0].width,
+      depth: fakeProducts[0].depth,
+    });
+  });
 });
