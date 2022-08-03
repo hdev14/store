@@ -257,4 +257,42 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       where: { id: 'test_category_id_1' },
     });
   });
+
+  it('returns a specific product', async () => {
+    expect.assertions(3);
+
+    const fakeCategory = {
+      id: 'category_testid',
+      name: 'category_test',
+      code: 1234,
+    };
+
+    const fakeProduct = {
+      id: 'testid',
+      name: 'test',
+      description: 'test description',
+      amount: Math.random() * 100,
+      height: Math.random() * 10,
+      width: Math.random() * 10,
+      depth: Math.random() * 10,
+      image: 'http://test.com/test.jpg',
+      stockQuantity: 10,
+      categoryId: fakeCategory.id,
+      category: fakeCategory,
+      createdAt: new Date().toISOString(),
+    };
+
+    prismaMock.product.findUnique.mockResolvedValue(fakeProduct as any);
+
+    const productRepository = new PrismaProductRepository();
+
+    const product = await productRepository.getProductById('testid');
+
+    expect(product!.id).toEqual(fakeProduct.id);
+    expect(prismaMock.product.findUnique).toHaveBeenCalled();
+    expect(prismaMock.product.findUnique).toHaveBeenCalledWith({
+      where: { id: 'testid' },
+      include: { category: true },
+    });
+  });
 });
