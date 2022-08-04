@@ -1,5 +1,5 @@
-import Category from '../../../src/catalog/domain/Category';
-import ValidationEntityError from '../../../src/shared/errors/ValidationEntityError';
+import Category from '@catalog/domain/Category';
+import ValidationEntityError from '@shared/errors/ValidationEntityError';
 
 describe("Category's Unit Tests", () => {
   it('doesn\'t throw any error if params are correct', () => {

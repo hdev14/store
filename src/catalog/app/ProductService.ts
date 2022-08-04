@@ -1,9 +1,9 @@
+import { IProductOperations } from '@catalog/domain/IProductRepository';
+import Product, { ProductParams } from '@catalog/domain/Product';
+import IStockService from '@catalog/domain/IStockService';
 import ProductNotFoundError from './ProductNotFoundError';
-import { IProductOperations } from '../domain/IProductRepository';
-import Product, { ProductParams } from '../domain/Product';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
 import IGenerateID from './IGenerateID';
-import IStockService from '../domain/IStockService';
 import StockError from './StockError';
 
 export default class ProductService implements IProductService {

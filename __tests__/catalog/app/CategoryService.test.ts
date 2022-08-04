@@ -1,9 +1,9 @@
-import CategoryNotFoundError from '../../../src/catalog/app/CategoryNotFoundError';
-import CategoryService from '../../../src/catalog/app/CategoryService';
-import { CreateCategoryParams } from '../../../src/catalog/app/ICategoryService';
-import { fakeCategories } from '../../fakes';
-import RepositoryStub from '../../stubs/CategoryRepositoryStub';
-import createGenerateIDMock from '../../stubs/createGenerateIDMock';
+import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
+import CategoryService from '@catalog/app/CategoryService';
+import { CreateCategoryParams } from '@catalog/app/ICategoryService';
+import { fakeCategories } from '@tests/fakes';
+import RepositoryStub from '@tests/stubs/CategoryRepositoryStub';
+import createGenerateIDMock from '@tests/stubs/createGenerateIDMock';
 
 describe('CategoryService.getAllCategories', () => {
   describe('CategoryService.getAllCategories', () => {

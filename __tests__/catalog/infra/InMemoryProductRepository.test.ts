@@ -1,7 +1,7 @@
-import Category from '../../../src/catalog/domain/Category';
-import Dimensions from '../../../src/catalog/domain/Dimensions';
-import Product from '../../../src/catalog/domain/Product';
-import { InMemoryProductRepository } from '../../../src/catalog/infra/persistence/InMemoryProductRepository';
+import Category from '@catalog/domain/Category';
+import Dimensions from '@catalog/domain/Dimensions';
+import Product from '@catalog/domain/Product';
+import { InMemoryProductRepository } from '@catalog/infra/persistence/InMemoryProductRepository';
 
 describe('InMemoryProductRepository\'s Unit Tests', () => {
   it('adds a new product', () => {

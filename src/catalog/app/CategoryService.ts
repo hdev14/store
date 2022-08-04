@@ -1,5 +1,5 @@
-import Category, { CategoryParams } from '../domain/Category';
-import { ICategoryOperations } from '../domain/IProductRepository';
+import Category, { CategoryParams } from '@catalog/domain/Category';
+import { ICategoryOperations } from '@catalog/domain/IProductRepository';
 import CategoryNotFoundError from './CategoryNotFoundError';
 import ICategoryService, { CreateCategoryParams, UpdateCategoryParams } from './ICategoryService';
 import IGenerateID from './IGenerateID';

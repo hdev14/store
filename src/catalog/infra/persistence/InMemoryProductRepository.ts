@@ -1,6 +1,6 @@
-import Category from '../../domain/Category';
-import IProductRepository from '../../domain/IProductRepository';
-import Product from '../../domain/Product';
+import Category from '@catalog/domain/Category';
+import IProductRepository from '@catalog/domain/IProductRepository';
+import Product from '@catalog/domain/Product';
 
 type InMemoryID = string;
 

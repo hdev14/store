@@ -1,5 +1,5 @@
-import { IProductOperations } from '../../src/catalog/domain/IProductRepository';
-import Product from '../../src/catalog/domain/Product';
+import { IProductOperations } from '@catalog/domain/IProductRepository';
+import Product from '@catalog/domain/Product';
 import { fakeProducts } from '../fakes';
 
 export default class RepositoryStub implements IProductOperations {

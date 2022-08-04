@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import Category from '../domain/Category';
+import Category from '@catalog/domain/Category';
 
 export type DefaultCategoryParams = {
   name: string;

@@ -1,4 +1,4 @@
-import IStockService from '../../src/catalog/domain/IStockService';
+import IStockService from '@catalog/domain/IStockService';
 import { fakeProducts } from '../fakes';
 
 export default class StockServiceStub implements IStockService {

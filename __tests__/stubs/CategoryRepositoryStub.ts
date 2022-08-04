@@ -1,5 +1,5 @@
-import Category from '../../src/catalog/domain/Category';
-import { ICategoryOperations } from '../../src/catalog/domain/IProductRepository';
+import Category from '@catalog/domain/Category';
+import { ICategoryOperations } from '@catalog/domain/IProductRepository';
 import { fakeCategories } from '../fakes';
 
 export default class RepositoryStub implements ICategoryOperations {

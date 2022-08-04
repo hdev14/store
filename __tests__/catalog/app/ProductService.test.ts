@@ -1,12 +1,12 @@
-import ProductService from '../../../src/catalog/app/ProductService';
-import ProductNotFoundError from '../../../src/catalog/app/ProductNotFoundError';
-import { DefaultProductParams, UpdateProductParams } from '../../../src/catalog/app/IProductService';
-import Category from '../../../src/catalog/domain/Category';
-import StockError from '../../../src/catalog/app/StockError';
-import RepositoryStub from '../../stubs/ProductRepositoryStub';
-import StockServiceStub from '../../stubs/StockServiceStub';
-import createGenerateIDMock from '../../stubs/createGenerateIDMock';
-import { fakeCategories, fakeProducts } from '../../fakes';
+import ProductService from '@catalog/app/ProductService';
+import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
+import { DefaultProductParams, UpdateProductParams } from '@catalog/app/IProductService';
+import Category from '@catalog/domain/Category';
+import StockError from '@catalog/app/StockError';
+import RepositoryStub from '@tests/stubs/ProductRepositoryStub';
+import StockServiceStub from '@tests/stubs/StockServiceStub';
+import createGenerateIDMock from '@tests/stubs/createGenerateIDMock';
+import { fakeCategories, fakeProducts } from '@tests/fakes';
 
 describe('ProductsService\'s unit tests', () => {
   describe('ProductService.getAllProducts', () => {

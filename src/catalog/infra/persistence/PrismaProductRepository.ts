@@ -1,9 +1,9 @@
 import { PrismaClient, Product as PrismaProduct, Category as PrismaCategory } from '@prisma/client';
-import Prisma from '../../../shared/Prisma';
-import Category from '../../domain/Category';
-import Dimensions from '../../domain/Dimensions';
-import IProductRepository from '../../domain/IProductRepository';
-import Product from '../../domain/Product';
+import Prisma from '@shared/Prisma';
+import Category from '@catalog/domain/Category';
+import Dimensions from '@catalog/domain/Dimensions';
+import IProductRepository from '@catalog/domain/IProductRepository';
+import Product from '@catalog/domain/Product';
 
 export default class PrismaProductRepository implements IProductRepository {
   private connection: PrismaClient;

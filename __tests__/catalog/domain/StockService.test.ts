@@ -1,6 +1,6 @@
-import { IProductOperations } from '../../../src/catalog/domain/IProductRepository';
-import Product from '../../../src/catalog/domain/Product';
-import StockService from '../../../src/catalog/domain/StockService';
+import { IProductOperations } from '@catalog/domain/IProductRepository';
+import Product from '@catalog/domain/Product';
+import StockService from '@catalog/domain/StockService';
 
 const fakeProduct: any = {
   stockQuantity: 10,
