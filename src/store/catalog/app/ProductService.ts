@@ -1,6 +1,6 @@
-import { IProductOperations } from '@catalog/domain/IProductRepository';
-import Product, { ProductParams } from '@catalog/domain/Product';
-import IStockService from '@catalog/domain/IStockService';
+import { IProductOperations } from 'src/store/catalog/domain/IProductRepository';
+import Product, { ProductParams } from 'src/store/catalog/domain/Product';
+import IStockService from 'src/store/catalog/domain/IStockService';
 import ProductNotFoundError from './ProductNotFoundError';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
 import IGenerateID from './IGenerateID';

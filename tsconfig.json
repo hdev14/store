@@ -30,12 +30,12 @@
     // "moduleResolution": "node",                       /* Specify how TypeScript looks up a file from a given module specifier. */
     "baseUrl": ".",                                  /* Specify the base directory to resolve non-relative module names. */
     "paths": {
-      "@catalog/*": ["src/catalog/*"],
-      "@fiscal/*": ["src/fiscal/*"],
-      "@payment/*": ["src/payment/*"],
-      "@registration/*": ["src/registration/*"],
-      "@sales/*": ["src/sales/*"],
-      "@shared/*": ["src/shared/*"],
+      "@catalog/*": ["src/store/catalog/*"],
+      "@fiscal/*": ["src/store/fiscal/*"],
+      "@payment/*": ["src/store/payment/*"],
+      "@registration/*": ["src/store/registration/*"],
+      "@sales/*": ["src/store/sales/*"],
+      "@shared/*": ["src/store/shared/*"],
       "@mocks/*": ["__mocks__/*"],
       "@tests/*": ["__tests__/*"],
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */

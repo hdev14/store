@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import Category from '@catalog/domain/Category';
-import Dimensions from '@catalog/domain/Dimensions';
-import Product from '@catalog/domain/Product';
+import Category from 'src/store/catalog/domain/Category';
+import Dimensions from 'src/store/catalog/domain/Dimensions';
+import Product from 'src/store/catalog/domain/Product';
 
 export type DefaultProductParams = {
   name: string;

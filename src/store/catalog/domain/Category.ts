@@ -1,5 +1,5 @@
-import Entity from '@shared/abstractions/Entity';
-import EntityValidator from '@shared/utils/EntityValidator';
+import Entity from 'src/store/shared/abstractions/Entity';
+import EntityValidator from 'src/store/shared/utils/EntityValidator';
 
 export type CategoryParams = {
   id: string;

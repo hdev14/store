@@ -1,4 +1,4 @@
-import IValueObject from '@shared/abstractions/IValueObject';
+import IValueObject from 'src/store/shared/abstractions/IValueObject';
 
 export type DimensionsParams = {
   height: number;
