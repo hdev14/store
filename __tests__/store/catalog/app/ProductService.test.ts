@@ -3,10 +3,10 @@ import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
 import { DefaultProductParams, UpdateProductParams } from '@catalog/app/IProductService';
 import Category from '@catalog/domain/Category';
 import StockError from '@catalog/app/StockError';
-import RepositoryStub from '@tests/stubs/ProductRepositoryStub';
-import StockServiceStub from '@tests/stubs/StockServiceStub';
-import createGenerateIDMock from '@tests/stubs/createGenerateIDMock';
-import { fakeCategories, fakeProducts } from '@tests/fakes';
+import RepositoryStub from '@tests/store/stubs/ProductRepositoryStub';
+import StockServiceStub from '@tests/store/stubs/StockServiceStub';
+import createGenerateIDMock from '@tests/store/stubs/createGenerateIDMock';
+import { fakeCategories, fakeProducts } from '@tests/store/fakes';
 
 describe('ProductsService\'s unit tests', () => {
   describe('ProductService.getAllProducts', () => {
