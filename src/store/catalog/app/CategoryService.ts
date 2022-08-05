@@ -1,8 +1,8 @@
 import Category, { CategoryParams } from '@catalog/domain/Category';
 import { ICategoryOperations } from '@catalog/domain/IProductRepository';
+import IGenerateID from '@shared/utils/IGenerateID';
 import CategoryNotFoundError from './CategoryNotFoundError';
 import ICategoryService, { CreateCategoryParams, UpdateCategoryParams } from './ICategoryService';
-import IGenerateID from './IGenerateID';
 
 export default class CategoryService implements ICategoryService {
   private repository: ICategoryOperations;
