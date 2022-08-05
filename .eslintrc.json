@@ -18,7 +18,9 @@
   ],
   "settings": {
     "import/parses": {
-      "@typescript-eslint/parser": [".ts"]
+      "@typescript-eslint/parser": [
+        ".ts"
+      ]
     },
     "import/resolver": {
       "typescript": {
@@ -35,6 +37,16 @@
       "error",
       {
         "argsIgnorePattern": "^_"
+      }
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "warn",
+          "error",
+          "info"
+        ]
       }
     ]
   }
