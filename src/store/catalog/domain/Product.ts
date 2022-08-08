@@ -1,6 +1,6 @@
-import Entity from 'src/store/shared/abstractions/Entity';
-import IAggregateRoot from 'src/store/shared/abstractions/IAggregateRoot';
-import EntityValidator from 'src/store/shared/utils/EntityValidator';
+import Entity from '@shared/abstractions/Entity';
+import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
+import EntityValidator from '@shared/utils/EntityValidator';
 import Category from './Category';
 import Dimensions from './Dimensions';
 
