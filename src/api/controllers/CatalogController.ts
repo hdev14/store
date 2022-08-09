@@ -1,5 +1,6 @@
 import ICategoryService from '@catalog/app/ICategoryService';
 import IProductService from '@catalog/app/IProductService';
+import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
 import { NextFunction, Request, Response } from 'express';
 
 export default class CatalogController {
@@ -13,8 +14,15 @@ export default class CatalogController {
   }
 
   async getProductById(request: Request, response: Response, next: NextFunction) {
-    console.info(request, response, next);
-    response.status(200).json({ messages: 'hello' });
+    try {
+      const { id } = request.params;
+
+      const product = await this.productService.getProductById(id);
+
+      return response.status(200).json(product);
+    } catch (e) {
+      return next(e);
+    }
   }
 
   async getAllProducts(request: Request, response: Response, next: NextFunction) {
