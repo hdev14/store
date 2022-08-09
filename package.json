@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx jest --watch",
+    "test:unit": "npx jest unit --passWithNoTests --watch",
+    "test:int": "npx jest int --passWithNoTests --watch",
     "dev": "ts-node-dev -r tsconfig-paths/register src/api/index.ts"
   },
   "repository": {
