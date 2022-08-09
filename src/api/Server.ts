@@ -1,4 +1,5 @@
 import express from 'express';
+import errorHandler from './middlewares/errorHandler';
 import catalog from './routers/catalog';
 
 export class Server {
@@ -6,20 +7,25 @@ export class Server {
 
   constructor() {
     this._application = express();
-    this.globalMiddlewares();
-    this.routes();
+    this.setTopMiddlewares();
+    this.setRoutes();
+    this.setBottomMiddlewares();
   }
 
   get application() {
     return this._application;
   }
 
-  private routes() {
+  private setRoutes() {
     this._application.use('/catalog', catalog);
   }
 
-  private globalMiddlewares() {
+  private setTopMiddlewares() {
     this._application.use(express.json());
+  }
+
+  private setBottomMiddlewares() {
+    this._application.use(errorHandler);
   }
 }
 
