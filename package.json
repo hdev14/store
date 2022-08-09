@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test:unit": "npx jest unit --passWithNoTests --watch",
-    "test:int": "npx jest int --passWithNoTests --watch",
-    "dev": "ts-node-dev -r tsconfig-paths/register src/api/index.ts"
+    "test:int": "dotenv -e .env.test -- npx jest int --passWithNoTests --watch",
+    "dev": "dotenv -e .env.dev -- npx ts-node-dev -r tsconfig-paths/register src/api/index.ts"
   },
   "repository": {
     "type": "git",
