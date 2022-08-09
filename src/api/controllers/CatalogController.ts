@@ -13,47 +13,47 @@ export default class CatalogController {
   }
 
   async getProductById(request: Request, response: Response, next: NextFunction) {
-    console.log(request, response, next);
+    console.info(request, response, next);
     response.status(200).json({ messages: 'hello' });
   }
 
   async getAllProducts(request: Request, response: Response, next: NextFunction) {
-    console.log(request, response, next);
+    console.info(request, response, next);
     response.status(200).json({ messages: 'hello' });
   }
 
   async getProductsByCategory(request: Request, response: Response, next: NextFunction) {
-    console.log(request, response, next);
+    console.info(request, response, next);
     response.status(200).json({ messages: 'hello' });
   }
 
   async createProduct(request: Request, response: Response, next: NextFunction) {
-    console.log(request, response, next);
+    console.info(request, response, next);
     response.status(200).json({ messages: 'hello' });
   }
 
   async updateProduct(request: Request, response: Response, next: NextFunction) {
-    console.log(request, response, next);
+    console.info(request, response, next);
     response.status(200).json({ messages: 'hello' });
   }
 
   async updateProductStock(request: Request, response: Response, next: NextFunction) {
-    console.log(request, response, next);
+    console.info(request, response, next);
     response.status(200).json({ messages: 'hello' });
   }
 
   async getAllCategories(request: Request, response: Response, next: NextFunction) {
-    console.log(request, response, next);
+    console.info(request, response, next);
     response.status(200).json({ messages: 'hello' });
   }
 
   async createCategory(request: Request, response: Response, next: NextFunction) {
-    console.log(request, response, next);
+    console.info(request, response, next);
     response.status(200).json({ messages: 'hello' });
   }
 
   async updateCategory(request: Request, response: Response, next: NextFunction) {
-    console.log(request, response, next);
+    console.info(request, response, next);
     response.status(200).json({ messages: 'hello' });
   }
 }
