@@ -1,8 +1,20 @@
-import { prismaMock } from '@mocks/@prisma/client';
+/* eslint-disable import/prefer-default-export */
 import PrismaProductRepository from '@catalog/infra/persistence/PrismaProductRepository';
 import Product from '@catalog/domain/Product';
 import Category from '@catalog/domain/Category';
 import Dimensions from '@catalog/domain/Dimensions';
+import { PrismaClient } from '@prisma/client';
+import { DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended';
+
+const prismaMock = mockDeep<PrismaClient>() as unknown as DeepMockProxy<PrismaClient>;
+
+jest.mock('@prisma/client/index', () => ({
+  PrismaClient: jest.fn().mockImplementation(() => prismaMock),
+}));
+
+beforeEach(() => {
+  mockReset(prismaMock);
+});
 
 describe('PrismaProductRepository\'s Unit Tests', () => {
   it('adds a new product', async () => {
