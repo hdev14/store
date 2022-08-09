@@ -1,5 +1,6 @@
-/* eslint-disable func-names */
-export default async function (globalConfig: any, projectConfig: any) {
-  console.info(globalConfig);
-  console.info(projectConfig);
-}
+import { Server } from '@api/Server';
+import supertest from 'supertest';
+
+beforeAll(() => {
+  globalThis.request = supertest(new Server());
+});
