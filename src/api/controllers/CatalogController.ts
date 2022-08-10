@@ -19,7 +19,7 @@ export default class CatalogController {
 
       const product = await this.productService.getProductById(id);
 
-      return response.status(200).json(product);
+      return response.status(200).json({ product });
     } catch (e) {
       return next(e);
     }
