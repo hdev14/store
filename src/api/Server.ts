@@ -7,24 +7,24 @@ export class Server {
 
   constructor() {
     this._application = express();
-    this.setTopMiddlewares();
-    this.setRoutes();
-    this.setBottomMiddlewares();
+    this.setGlobalTopMiddlewares();
+    this.setApplicationRoutes();
+    this.setGlobalBottomMiddlewares();
   }
 
   get application() {
     return this._application;
   }
 
-  private setRoutes() {
+  private setApplicationRoutes() {
     this._application.use('/catalog', catalog);
   }
 
-  private setTopMiddlewares() {
+  private setGlobalTopMiddlewares() {
     this._application.use(express.json());
   }
 
-  private setBottomMiddlewares() {
+  private setGlobalBottomMiddlewares() {
     this._application.use(errorHandler);
   }
 }
