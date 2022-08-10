@@ -36,8 +36,15 @@ export default class CatalogController {
   }
 
   async getProductsByCategory(request: Request, response: Response, next: NextFunction) {
-    console.info(request, response, next);
-    response.status(200).json({ messages: 'hello' });
+    try {
+      const categoryId = request.params.id;
+
+      const products = await this.productService.getProductsByCategory(categoryId);
+
+      return response.status(200).json({ results: products });
+    } catch (e) {
+      return next(e);
+    }
   }
 
   async createProduct(request: Request, response: Response, next: NextFunction) {
