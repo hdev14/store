@@ -238,5 +238,17 @@ describe('Catalog\'s Integration Tests', () => {
       expect(response.status).toEqual(200);
       expect(response.body.results).toHaveLength(1);
     });
+
+    it("returns an empty array if category doesn't exist", async () => {
+      expect.assertions(2);
+      const fakeCategoryId = faker.datatype.uuid();
+
+      const response = await globalThis.request
+        .get(`/catalog/products/categories/${fakeCategoryId}`)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toEqual(200);
+      expect(response.body.results).toHaveLength(0);
+    });
   });
 });
