@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 
 describe('Catalog\'s Integration Tests', () => {
-  describe('/catalog/products/:id', () => {
+  describe('GET: /catalog/products/:id', () => {
     let category: any;
     let product: any;
 
@@ -65,8 +65,7 @@ describe('Catalog\'s Integration Tests', () => {
     });
   });
 
-  // TODO: test GET: '/catalog/products'
-  describe('/catalog/products', () => {
+  describe('GET: /catalog/products', () => {
     beforeAll(async () => {
       const category = await globalThis.dbConnection.category.create({
         data: {
@@ -133,7 +132,7 @@ describe('Catalog\'s Integration Tests', () => {
       ]);
     });
 
-    it('returns all product with category data associated', async () => {
+    it('returns all products with category data associated', async () => {
       expect.assertions(3);
 
       const response = await globalThis.request
@@ -143,6 +142,101 @@ describe('Catalog\'s Integration Tests', () => {
       expect(response.status).toEqual(200);
       expect(response.body.results).toHaveLength(3);
       expect(response.body.results.every((p: any) => !!p.category.id)).toBe(true);
+    });
+  });
+
+  describe('GET: /catalog/products/categories/:id', () => {
+    const categoryId1 = faker.datatype.uuid();
+    const categoryId2 = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      const categories = [
+        {
+          id: categoryId1,
+          code: parseInt(faker.random.numeric(5), 10),
+          name: faker.word.adjective(),
+        },
+        {
+          id: categoryId2,
+          code: parseInt(faker.random.numeric(5), 10),
+          name: faker.word.adjective(),
+        },
+      ];
+
+      const products = [
+        {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          description: faker.commerce.productDescription(),
+          amount: faker.datatype.float(100),
+          active: faker.datatype.boolean(),
+          depth: faker.datatype.number(50),
+          height: faker.datatype.number(50),
+          width: faker.datatype.number(50),
+          stockQuantity: faker.datatype.number(100),
+          image: faker.internet.url(),
+          createdAt: new Date(),
+          categoryId: categoryId1,
+        },
+        {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          description: faker.commerce.productDescription(),
+          amount: faker.datatype.float(100),
+          active: faker.datatype.boolean(),
+          depth: faker.datatype.number(50),
+          height: faker.datatype.number(50),
+          width: faker.datatype.number(50),
+          stockQuantity: faker.datatype.number(100),
+          image: faker.internet.url(),
+          createdAt: new Date(),
+          categoryId: categoryId1,
+        },
+        {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          description: faker.commerce.productDescription(),
+          amount: faker.datatype.float(100),
+          active: faker.datatype.boolean(),
+          depth: faker.datatype.number(50),
+          height: faker.datatype.number(50),
+          width: faker.datatype.number(50),
+          stockQuantity: faker.datatype.number(100),
+          image: faker.internet.url(),
+          createdAt: new Date(),
+          categoryId: categoryId2,
+        },
+      ];
+
+      await globalThis.dbConnection.$transaction([
+        ...categories.map((data) => globalThis.dbConnection.category.create({ data })),
+        ...products.map((data) => globalThis.dbConnection.product.create({ data })),
+      ]);
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.$transaction([
+        globalThis.dbConnection.product.deleteMany(),
+        globalThis.dbConnection.category.deleteMany(),
+      ]);
+    });
+
+    it('returns any products related to a specific category', async () => {
+      expect.assertions(4);
+
+      let response = await globalThis.request
+        .get(`/catalog/products/categories/${categoryId1}`)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toEqual(200);
+      expect(response.body.results).toHaveLength(2);
+
+      response = await globalThis.request
+        .get(`/catalog/products/categories/${categoryId2}`)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toEqual(200);
+      expect(response.body.results).toHaveLength(1);
     });
   });
 });
