@@ -25,9 +25,14 @@ export default class CatalogController {
     }
   }
 
-  async getAllProducts(request: Request, response: Response, next: NextFunction) {
-    console.info(request, response, next);
-    response.status(200).json({ messages: 'hello' });
+  async getAllProducts(_: Request, response: Response, next: NextFunction) {
+    try {
+      const products = await this.productService.getAllProducts();
+
+      return response.status(200).json({ results: products });
+    } catch (e) {
+      return next(e);
+    }
   }
 
   async getProductsByCategory(request: Request, response: Response, next: NextFunction) {
