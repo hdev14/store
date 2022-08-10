@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 export default class Prisma {
   private static connection?: PrismaClient;
 
-  protected constructor() {
+  private constructor() {
     Prisma.connection = new PrismaClient();
   }
 
