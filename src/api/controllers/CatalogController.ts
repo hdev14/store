@@ -1,5 +1,6 @@
 import ICategoryService from '@catalog/app/ICategoryService';
 import IProductService from '@catalog/app/IProductService';
+import StockError from '@catalog/app/StockError';
 import { NextFunction, Request, Response } from 'express';
 
 export default class CatalogController {
@@ -65,6 +66,10 @@ export default class CatalogController {
 
       return response.status(204).json({});
     } catch (e) {
+      if (e instanceof StockError) {
+        return response.status(422).json({ message: e.message });
+      }
+
       return next(e);
     }
   }
