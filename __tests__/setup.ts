@@ -1,10 +1,13 @@
-import 'tsconfig-paths/register';
 import supertest from 'supertest';
 import Server from '@api/Server';
 import Prisma from '@shared/Prisma';
 
-export default function setup() {
+beforeAll(() => {
   console.info('--- Global Setup ---');
   globalThis.request = supertest(Server.application);
   globalThis.dbConnection = Prisma.connect();
-}
+});
+
+afterAll(async () => {
+  await globalThis.dbConnection.$disconnect();
+});
