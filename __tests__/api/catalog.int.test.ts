@@ -266,40 +266,54 @@ describe("Catalog's Integration Tests", () => {
       });
 
       products.push(
-        ...await globalThis.dbConnection.$transaction([
-          globalThis.dbConnection.product.create({
-            data: {
-              id: faker.datatype.uuid(),
-              name: faker.commerce.product(),
-              description: faker.commerce.productDescription(),
-              amount: faker.datatype.float(100),
-              active: faker.datatype.boolean(),
-              depth: faker.datatype.number(50),
-              height: faker.datatype.number(50),
-              width: faker.datatype.number(50),
-              stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
-              image: faker.internet.url(),
-              createdAt: new Date(),
-              categoryId: category.id,
-            },
-          }),
-          globalThis.dbConnection.product.create({
-            data: {
-              id: faker.datatype.uuid(),
-              name: faker.commerce.product(),
-              description: faker.commerce.productDescription(),
-              amount: faker.datatype.float(100),
-              active: faker.datatype.boolean(),
-              depth: faker.datatype.number(50),
-              height: faker.datatype.number(50),
-              width: faker.datatype.number(50),
-              stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
-              image: faker.internet.url(),
-              createdAt: new Date(),
-              categoryId: category.id,
-            },
-          }),
-        ]),
+        await globalThis.dbConnection.product.create({
+          data: {
+            id: faker.datatype.uuid(),
+            name: faker.commerce.product(),
+            description: faker.commerce.productDescription(),
+            amount: faker.datatype.float(100),
+            active: faker.datatype.boolean(),
+            depth: faker.datatype.number(50),
+            height: faker.datatype.number(50),
+            width: faker.datatype.number(50),
+            stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+            image: faker.internet.url(),
+            createdAt: new Date(),
+            categoryId: category.id,
+          },
+        }),
+        await globalThis.dbConnection.product.create({
+          data: {
+            id: faker.datatype.uuid(),
+            name: faker.commerce.product(),
+            description: faker.commerce.productDescription(),
+            amount: faker.datatype.float(100),
+            active: faker.datatype.boolean(),
+            depth: faker.datatype.number(50),
+            height: faker.datatype.number(50),
+            width: faker.datatype.number(50),
+            stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+            image: faker.internet.url(),
+            createdAt: new Date(),
+            categoryId: category.id,
+          },
+        }),
+        await globalThis.dbConnection.product.create({
+          data: {
+            id: faker.datatype.uuid(),
+            name: faker.commerce.product(),
+            description: faker.commerce.productDescription(),
+            amount: faker.datatype.float(100),
+            active: faker.datatype.boolean(),
+            depth: faker.datatype.number(50),
+            height: faker.datatype.number(50),
+            width: faker.datatype.number(50),
+            stockQuantity: 0,
+            image: faker.internet.url(),
+            createdAt: new Date(),
+            categoryId: category.id,
+          },
+        }),
       );
     });
 
@@ -346,6 +360,21 @@ describe("Catalog's Integration Tests", () => {
 
       expect(response.status).toEqual(204);
       expect(product!.stockQuantity).toEqual(products[1].stockQuantity + qtyToAdd);
+    });
+
+    it("returns 422 if product doesn't have stock enough", async () => {
+      expect.assertions(2);
+
+      const qtyToRemove = parseInt((Math.random() * 10).toString(), 10);
+
+      const response = await globalThis.request
+        .patch(`/catalog/products/${products[2].id}/stock`)
+        .set('Accept', 'application/json')
+        .set('Content-Type', 'application/json')
+        .send({ quantity: qtyToRemove * -1 });
+
+      expect(response.status).toEqual(422);
+      expect(response.body.message).toEqual('Não foi possível atualizar o estoque do produto.');
     });
   });
 });
