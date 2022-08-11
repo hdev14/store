@@ -1,6 +1,6 @@
 import 'tsconfig-paths/register';
-import Server from '@api/Server';
 import supertest from 'supertest';
+import Server from '@api/Server';
 import Prisma from '@shared/Prisma';
 
 export default function setup() {

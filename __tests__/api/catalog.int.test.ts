@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { Product } from '@prisma/client';
 
 describe("Catalog's Integration Tests", () => {
   describe('GET: /catalog/products/:id', () => {
@@ -253,35 +254,53 @@ describe("Catalog's Integration Tests", () => {
   });
 
   describe('PATCH: /catalog/products/:id/stock', () => {
-    const productId = faker.datatype.uuid();
-    const stockQuantity = parseInt(faker.datatype.number(100).toString(), 10);
+    const products: Array<Product> = [];
 
     beforeAll(async () => {
-      const category = {
-        id: faker.datatype.uuid(),
-        code: parseInt(faker.random.numeric(5), 10),
-        name: faker.word.adjective(),
-      };
+      const category = await globalThis.dbConnection.category.create({
+        data: {
+          id: faker.datatype.uuid(),
+          code: parseInt(faker.random.numeric(5), 10),
+          name: faker.word.adjective(),
+        },
+      });
 
-      const product = {
-        id: productId,
-        name: faker.commerce.product(),
-        description: faker.commerce.productDescription(),
-        amount: faker.datatype.float(100),
-        active: faker.datatype.boolean(),
-        depth: faker.datatype.number(50),
-        height: faker.datatype.number(50),
-        width: faker.datatype.number(50),
-        stockQuantity,
-        image: faker.internet.url(),
-        createdAt: new Date(),
-        categoryId: category.id,
-      };
-
-      await globalThis.dbConnection.$transaction([
-        globalThis.dbConnection.category.create({ data: category }),
-        globalThis.dbConnection.product.create({ data: product }),
-      ]);
+      products.push(
+        ...await globalThis.dbConnection.$transaction([
+          globalThis.dbConnection.product.create({
+            data: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              description: faker.commerce.productDescription(),
+              amount: faker.datatype.float(100),
+              active: faker.datatype.boolean(),
+              depth: faker.datatype.number(50),
+              height: faker.datatype.number(50),
+              width: faker.datatype.number(50),
+              stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+              image: faker.internet.url(),
+              createdAt: new Date(),
+              categoryId: category.id,
+            },
+          }),
+          globalThis.dbConnection.product.create({
+            data: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              description: faker.commerce.productDescription(),
+              amount: faker.datatype.float(100),
+              active: faker.datatype.boolean(),
+              depth: faker.datatype.number(50),
+              height: faker.datatype.number(50),
+              width: faker.datatype.number(50),
+              stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+              image: faker.internet.url(),
+              createdAt: new Date(),
+              categoryId: category.id,
+            },
+          }),
+        ]),
+      );
     });
 
     afterAll(async () => {
@@ -291,23 +310,42 @@ describe("Catalog's Integration Tests", () => {
       ]);
     });
 
-    it('removes a quantity of product from stock', async () => {
+    it('removes a quantity of products from stock', async () => {
       expect.assertions(2);
 
       const qtyToRemove = parseInt((Math.random() * 10).toString(), 10);
 
       const response = await globalThis.request
-        .patch(`/catalog/products/${productId}/stock`)
+        .patch(`/catalog/products/${products[0].id}/stock`)
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
         .send({ quantity: qtyToRemove * -1 });
 
       const product = await globalThis.dbConnection.product.findUnique({
-        where: { id: productId },
+        where: { id: products[0].id },
       });
 
       expect(response.status).toEqual(204);
-      expect(product!.stockQuantity).toEqual(stockQuantity - qtyToRemove);
+      expect(product!.stockQuantity).toEqual(products[0].stockQuantity - qtyToRemove);
+    });
+
+    it('adds a quantity of products to stock', async () => {
+      expect.assertions(2);
+
+      const qtyToAdd = parseInt((Math.random() * 10).toString(), 10);
+
+      const response = await globalThis.request
+        .patch(`/catalog/products/${products[1].id}/stock`)
+        .set('Accept', 'application/json')
+        .set('Content-Type', 'application/json')
+        .send({ quantity: qtyToAdd });
+
+      const product = await globalThis.dbConnection.product.findUnique({
+        where: { id: products[1].id },
+      });
+
+      expect(response.status).toEqual(204);
+      expect(product!.stockQuantity).toEqual(products[1].stockQuantity + qtyToAdd);
     });
   });
 });
