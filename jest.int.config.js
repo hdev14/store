@@ -4,7 +4,8 @@ module.exports = {
   ...rootConfig,
   ...{
     displayName: "Integration Tests",
-    setupFilesAfterEnv: ["<rootDir>/__tests__/setup.ts"],
+    globalSetup: "<rootDir>/__tests__/setup.ts",
+    globalTeardown: "<rootDir>/__tests__/teardown.ts",
     testMatch: [
       "**/__tests__/**/*.int.(spec|test).[jt]s?(x)"
     ]
