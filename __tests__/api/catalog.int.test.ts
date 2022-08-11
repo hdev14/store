@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-describe('Catalog\'s Integration Tests', () => {
+describe("Catalog's Integration Tests", () => {
   describe('GET: /catalog/products/:id', () => {
     let category: any;
     let product: any;
