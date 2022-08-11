@@ -376,5 +376,21 @@ describe("Catalog's Integration Tests", () => {
       expect(response.status).toEqual(422);
       expect(response.body.message).toEqual('Não foi possível atualizar o estoque do produto.');
     });
+
+    it("returns 422 if product doesn't exists", async () => {
+      expect.assertions(2);
+
+      const qtyToRemove = parseInt((Math.random() * 10).toString(), 10);
+      const fakeProductId = faker.datatype.uuid();
+
+      const response = await globalThis.request
+        .patch(`/catalog/products/${fakeProductId}/stock`)
+        .set('Accept', 'application/json')
+        .set('Content-Type', 'application/json')
+        .send({ quantity: qtyToRemove * -1 });
+
+      expect(response.status).toEqual(422);
+      expect(response.body.message).toEqual('Não foi possível atualizar o estoque do produto.');
+    });
   });
 });
