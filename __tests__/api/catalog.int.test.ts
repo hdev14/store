@@ -393,4 +393,33 @@ describe("Catalog's Integration Tests", () => {
       expect(response.body.message).toEqual('Não foi possível atualizar o estoque do produto.');
     });
   });
+
+  describe('GET: /catalogs/categories', () => {
+    beforeAll(async () => {
+      const categories = [1, 2, 3].map((n) => ({
+        id: faker.datatype.uuid(),
+        code: parseInt(faker.random.numeric(5), 10),
+        name: faker.word.adjective() + n,
+      }));
+
+      await globalThis.dbConnection.$transaction(
+        categories.map((data) => globalThis.dbConnection.category.create({ data })),
+      );
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.category.deleteMany({});
+    });
+
+    it('returns all categories', async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get('/catalog/categories')
+        .set('Accept', 'application/json');
+
+      expect(response.status).toEqual(200);
+      expect(response.body.results).toHaveLength(3);
+    });
+  });
 });
