@@ -1,6 +1,5 @@
 import ICategoryService from '@catalog/app/ICategoryService';
 import IProductService from '@catalog/app/IProductService';
-import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
 import { NextFunction, Request, Response } from 'express';
 
 export default class CatalogController {
@@ -58,8 +57,16 @@ export default class CatalogController {
   }
 
   async updateProductStock(request: Request, response: Response, next: NextFunction) {
-    console.info(request, response, next);
-    response.status(200).json({ messages: 'hello' });
+    try {
+      const productId = request.params.id;
+      const { quantity } = request.body;
+
+      await this.productService.updateProductStock(productId, quantity);
+
+      return response.status(204).json({});
+    } catch (e) {
+      return next(e);
+    }
   }
 
   async getAllCategories(request: Request, response: Response, next: NextFunction) {
