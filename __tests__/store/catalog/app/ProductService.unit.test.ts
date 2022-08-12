@@ -1,7 +1,6 @@
 import ProductService from '@catalog/app/ProductService';
 import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
 import { DefaultProductParams, UpdateProductParams } from '@catalog/app/IProductService';
-import Category from '@catalog/domain/Category';
 import StockError from '@catalog/app/StockError';
 import RepositoryStub from '@tests/store/stubs/ProductRepositoryStub';
 import StockServiceStub from '@tests/store/stubs/StockServiceStub';
@@ -117,7 +116,7 @@ describe('ProductsService\'s unit tests', () => {
       const params: DefaultProductParams = {
         name: 'test_new_product',
         amount: Math.random() * 100,
-        category: fakeCategories[0] as Category,
+        categoryId: fakeCategories[0].id,
         description: 'test_new_product',
         dimensions: {
           height: Math.random() * 50,
@@ -156,7 +155,7 @@ describe('ProductsService\'s unit tests', () => {
       const params: UpdateProductParams = {
         name: 'test_product_updated',
         amount: Math.random() * 100,
-        category: fakeCategories[0] as Category,
+        categoryId: fakeCategories[0].id,
         description: 'test_product_updated',
         dimensions: {
           height: Math.random() * 50,
@@ -176,9 +175,9 @@ describe('ProductsService\'s unit tests', () => {
       expect(updatedProduct!.description).toEqual(params.description);
       expect(updatedProduct!.image).toEqual(params.image);
       expect(updatedProduct!.stockQuantity).toEqual(params.stockQuantity);
-      expect(updatedProduct!.category.id).toEqual(params.category!.id);
-      expect(updatedProduct!.category.name).toEqual(params.category!.name);
-      expect(updatedProduct!.category.code).toEqual(params.category!.code);
+      expect(updatedProduct!.category.id).toEqual(fakeCategories[0].id);
+      expect(updatedProduct!.category.name).toEqual(fakeCategories[0].name);
+      expect(updatedProduct!.category.code).toEqual(fakeCategories[0].code);
       expect(getProductByIdSpy).toHaveBeenCalled();
       expect(updateProductSpy).toHaveBeenCalled();
     });
@@ -199,7 +198,7 @@ describe('ProductsService\'s unit tests', () => {
       const params: UpdateProductParams = {
         name: 'test_product_updated',
         amount: Math.random() * 100,
-        category: fakeCategories[0] as Category,
+        categoryId: fakeCategories[0].id,
         description: 'test_product_updated',
         dimensions: {
           height: Math.random() * 50,
