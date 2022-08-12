@@ -473,5 +473,32 @@ describe("Catalog's Integration Tests", () => {
       expect(response.body.name).toEqual(data.name);
       expect(response.body.category.id).toEqual(categoryId);
     });
+
+    it("returns 400 if category doesn't exist", async () => {
+      expect.assertions(2);
+
+      const fakeCategoryId = faker.datatype.uuid();
+
+      const data = {
+        name: faker.commerce.product(),
+        description: faker.commerce.productDescription(),
+        amount: faker.datatype.float(100),
+        depth: faker.datatype.number(50),
+        height: faker.datatype.number(50),
+        width: faker.datatype.number(50),
+        stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+        image: faker.internet.url(),
+        categoryId: fakeCategoryId,
+      };
+
+      const response = await globalThis.request
+        .post('/catalog/products')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(400);
+      expect(response.body.message).toEqual('A category não foi encontrada.');
+    });
   });
 });
