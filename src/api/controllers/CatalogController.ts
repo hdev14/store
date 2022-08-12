@@ -48,8 +48,27 @@ export default class CatalogController {
   }
 
   async createProduct(request: Request, response: Response, next: NextFunction) {
-    console.info(request, response, next);
-    response.status(200).json({ messages: 'hello' });
+    try {
+      const {
+        height,
+        width,
+        depth,
+        ...rest
+      } = request.body;
+
+      const product = await this.productService.createProduct({
+        ...rest,
+        dimensions: {
+          height,
+          width,
+          depth,
+        },
+      });
+
+      return response.status(201).json(product);
+    } catch (e) {
+      return next(e);
+    }
   }
 
   async updateProduct(request: Request, response: Response, next: NextFunction) {
