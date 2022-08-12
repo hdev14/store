@@ -6,6 +6,8 @@ import RepositoryStub from '@tests/store/stubs/ProductRepositoryStub';
 import StockServiceStub from '@tests/store/stubs/StockServiceStub';
 import createGenerateIDMock from '@tests/store/stubs/createGenerateIDMock';
 import { fakeCategories, fakeProducts } from '@tests/store/fakes';
+import { faker } from '@faker-js/faker';
+import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 
 describe('ProductsService\'s unit tests', () => {
   describe('ProductService.getAllProducts', () => {
@@ -134,6 +136,40 @@ describe('ProductsService\'s unit tests', () => {
       expect(fakeProducts.find((p) => p.id === product.id)).toBeTruthy();
       expect(addProductSpy).toHaveBeenCalled();
       expect(generateIDMock).toHaveBeenCalled();
+    });
+
+    it("throws an exception of CategoryNotFoundError if category doesn't exist", async () => {
+      expect.assertions(3);
+
+      const fakeCategoryId = faker.datatype.uuid();
+      const repositoryStub = new RepositoryStub();
+      const getCategoryByIdSpy = jest.spyOn(repositoryStub, 'getCategoryById');
+      const stockServiceStub = new StockServiceStub();
+      const generateIDMock = createGenerateIDMock(fakeProducts);
+
+      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+
+      const params: DefaultProductParams = {
+        name: 'test_new_product',
+        amount: Math.random() * 100,
+        categoryId: fakeCategoryId,
+        description: 'test_new_product',
+        dimensions: {
+          height: Math.random() * 50,
+          width: Math.random() * 50,
+          depth: Math.random() * 50,
+        },
+        image: 'http://example.com/new_product.jpg',
+        stockQuantity: parseInt((Math.random() * 10).toString(), 10),
+      };
+
+      try {
+        await productService.createProduct(params);
+      } catch (e) {
+        expect(getCategoryByIdSpy).toHaveBeenCalled();
+        expect(getCategoryByIdSpy).toHaveBeenCalledWith(fakeCategoryId);
+        expect(e).toBeInstanceOf(CategoryNotFoundError);
+      }
     });
   });
 
