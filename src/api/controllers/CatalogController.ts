@@ -1,3 +1,4 @@
+import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 import ICategoryService from '@catalog/app/ICategoryService';
 import IProductService from '@catalog/app/IProductService';
 import StockError from '@catalog/app/StockError';
@@ -67,6 +68,10 @@ export default class CatalogController {
 
       return response.status(201).json(product);
     } catch (e) {
+      if (e instanceof CategoryNotFoundError) {
+        return response.status(400).json({ message: e.message });
+      }
+
       return next(e);
     }
   }
