@@ -5,6 +5,7 @@ import IGenerateID from '@shared/utils/IGenerateID';
 import ProductNotFoundError from './ProductNotFoundError';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
 import StockError from './StockError';
+import CategoryNotFoundError from './CategoryNotFoundError';
 
 export default class ProductService implements IProductService {
   private repository: IProductRepository;
@@ -48,16 +49,20 @@ export default class ProductService implements IProductService {
   async createProduct(params: DefaultProductParams): Promise<Product> {
     const category = await this.repository.getCategoryById(params.categoryId);
 
+    if (!category) {
+      throw new CategoryNotFoundError();
+    }
+
     const product = await this.repository.addProduct(new Product({
       id: this.generateID(),
       name: params.name,
       description: params.description,
       amount: params.amount,
-      category: category!,
       dimensions: params.dimensions,
       image: params.image,
       stockQuantity: params.stockQuantity,
       createdAt: new Date(),
+      category,
     }));
 
     return product;
