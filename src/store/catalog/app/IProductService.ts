@@ -10,7 +10,7 @@ export type DefaultProductParams = {
   image: string;
   stockQuantity: number;
   dimensions: Dimensions;
-  category: Category;
+  categoryId: string;
 }
 
 export type UpdateProductParams = Partial<DefaultProductParams>;

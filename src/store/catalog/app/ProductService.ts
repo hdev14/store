@@ -1,4 +1,4 @@
-import { IProductOperations } from '@catalog/domain/IProductRepository';
+import IProductRepository from '@catalog/domain/IProductRepository';
 import Product, { ProductParams } from '@catalog/domain/Product';
 import IStockService from '@catalog/domain/IStockService';
 import IGenerateID from '@shared/utils/IGenerateID';
@@ -7,14 +7,14 @@ import IProductService, { DefaultProductParams, UpdateProductParams } from './IP
 import StockError from './StockError';
 
 export default class ProductService implements IProductService {
-  private repository: IProductOperations;
+  private repository: IProductRepository;
 
   private generateID: IGenerateID;
 
   private stockService: IStockService;
 
   constructor(
-    repository: IProductOperations,
+    repository: IProductRepository,
     generateID: IGenerateID,
     stockService: IStockService,
   ) {
@@ -46,12 +46,14 @@ export default class ProductService implements IProductService {
   }
 
   async createProduct(params: DefaultProductParams): Promise<Product> {
+    const category = await this.repository.getCategoryById(params.categoryId);
+
     const product = await this.repository.addProduct(new Product({
       id: this.generateID(),
       name: params.name,
       description: params.description,
       amount: params.amount,
-      category: params.category,
+      category: category!,
       dimensions: params.dimensions,
       image: params.image,
       stockQuantity: params.stockQuantity,
