@@ -11,7 +11,7 @@ describe("Catalog's Integration Tests", () => {
         data: {
           id: faker.datatype.uuid(),
           code: parseInt(faker.random.numeric(5), 10),
-          name: faker.word.adjective(),
+          name: faker.word.verb(),
         },
       });
 
@@ -72,7 +72,7 @@ describe("Catalog's Integration Tests", () => {
         data: {
           id: faker.datatype.uuid(),
           code: parseInt(faker.random.numeric(5), 10),
-          name: faker.word.adjective(),
+          name: faker.word.verb(),
         },
       });
 
@@ -155,12 +155,12 @@ describe("Catalog's Integration Tests", () => {
         {
           id: categoryId1,
           code: parseInt(faker.random.numeric(5), 10),
-          name: faker.word.adjective(),
+          name: faker.word.verb(),
         },
         {
           id: categoryId2,
           code: parseInt(faker.random.numeric(5), 10),
-          name: faker.word.adjective(),
+          name: faker.word.verb(),
         },
       ];
 
@@ -261,7 +261,7 @@ describe("Catalog's Integration Tests", () => {
         data: {
           id: faker.datatype.uuid(),
           code: parseInt(faker.random.numeric(5), 10),
-          name: faker.word.adjective(),
+          name: faker.word.verb(),
         },
       });
 
@@ -282,6 +282,9 @@ describe("Catalog's Integration Tests", () => {
             categoryId: category.id,
           },
         }),
+      );
+
+      products.push(
         await globalThis.dbConnection.product.create({
           data: {
             id: faker.datatype.uuid(),
@@ -298,6 +301,9 @@ describe("Catalog's Integration Tests", () => {
             categoryId: category.id,
           },
         }),
+      );
+
+      products.push(
         await globalThis.dbConnection.product.create({
           data: {
             id: faker.datatype.uuid(),
@@ -399,7 +405,7 @@ describe("Catalog's Integration Tests", () => {
       const categories = [1, 2, 3].map((n) => ({
         id: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(5), 10),
-        name: faker.word.adjective() + n,
+        name: faker.word.verb() + n,
       }));
 
       await globalThis.dbConnection.$transaction(
@@ -420,6 +426,52 @@ describe("Catalog's Integration Tests", () => {
 
       expect(response.status).toEqual(200);
       expect(response.body.results).toHaveLength(3);
+    });
+  });
+
+  describe('POST: /catalog/products', () => {
+    const categoryId = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      await globalThis.dbConnection.category.create({
+        data: {
+          id: categoryId,
+          name: faker.word.verb(),
+          code: parseInt(faker.random.numeric(5), 10),
+        },
+      });
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.product.deleteMany({});
+      await globalThis.dbConnection.category.deleteMany({});
+    });
+
+    it('creates a new product', async () => {
+      expect.assertions(4);
+
+      const data = {
+        name: faker.commerce.product(),
+        description: faker.commerce.productDescription(),
+        amount: faker.datatype.float(100),
+        depth: faker.datatype.number(50),
+        height: faker.datatype.number(50),
+        width: faker.datatype.number(50),
+        stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+        image: faker.internet.url(),
+        categoryId,
+      };
+
+      const response = await globalThis.request
+        .post('/catalog/products')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(201);
+      expect(response.body.id).toBeTruthy();
+      expect(response.body.name).toEqual(data.name);
+      expect(response.body.category.id).toEqual(categoryId);
     });
   });
 });
