@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "dotenv -e .env.test -- npx jest --passWithNoTests --watch",
     "test:unit": "npx jest unit --passWithNoTests --watch --config=jest.unit.config.js",
     "test:int": "dotenv -e .env.test -- npx jest int --passWithNoTests --watch --config=jest.int.config.js",
     "dev": "dotenv -e .env.dev -- npx ts-node-dev -r tsconfig-paths/register src/api/index.ts"

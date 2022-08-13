@@ -4,6 +4,7 @@ module.exports = {
   ...rootConfig,
   ...{
     displayName: "Unit Tests",
+    setupFilesAfterEnv: [],
     testMatch: [
       "**/__tests__/**/*.unit.(spec|test).[jt]s?(x)"
     ]
