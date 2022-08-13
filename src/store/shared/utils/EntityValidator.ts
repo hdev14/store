@@ -41,17 +41,36 @@ const RULE_FUNCTIONS = {
     }
   },
   url: (value: any) => (typeof value === 'string' && !URL_REGEX.test(value)),
+  string: (value: any) => typeof value !== 'string',
+  number: (value: any) => typeof value !== 'number',
+  integer: (value: any) => typeof value === 'number' && !Number.isInteger(value),
+  float: (value: any) => typeof value === 'number' && Number.isInteger(value),
 };
 
 const RULE_MESSAGES = {
-  required: (field: string) => `The field ${field} must be a string`,
-  max: (field: string, max: number) => `The field ${field} must be less than ${max}.`,
-  min: (field: string, min: number) => `The field ${field} must be greater than ${min}.`,
+  required: (field: string) => `The field ${field} is required.`,
+  max: (field: string, max: number, isString: boolean) => {
+    if (isString) {
+      return `The text must have less or equal to ${max} caracters.`;
+    }
+    return `The field ${field} must be less than or equal to ${max}.`;
+  },
+  min: (field: string, min: number, isString: boolean) => {
+    if (isString) {
+      return `The text must have more or equal to ${min} caracters.`;
+    }
+
+    return `The field ${field} must be greater than or equal to ${min}.`;
+  },
   url: (field: string) => `The field ${field} must be an URL.`,
+  string: (field: string) => `The field ${field} must be a text.`,
+  number: (field: string) => `The field ${field} must be a number.`,
+  integer: (field: string) => `The field ${field} must be an integer.`,
+  float: (field: string) => `The field ${field} must be a float.`,
 };
 
 export default class EntityValidator {
-  private data: any;
+  private data: Record<string, unknown>;
 
   private rules: Map<string, string[]> = new Map<string, string[]>();
 
@@ -82,7 +101,7 @@ export default class EntityValidator {
         // @ts-ignore
         if (RULE_FUNCTIONS[name](...params)) {
           // @ts-ignore
-          messages.push(RULE_MESSAGES[name](fieldName, value));
+          messages.push(RULE_MESSAGES[name](fieldName, value, typeof field === 'string'));
         }
       });
 
