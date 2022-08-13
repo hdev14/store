@@ -500,5 +500,38 @@ describe("Catalog's Integration Tests", () => {
       expect(response.status).toEqual(400);
       expect(response.body.message).toEqual('A category não foi encontrada.');
     });
+
+    it('returns 400 if data is invalid', async () => {
+      expect.assertions(10);
+
+      const invalidData = {
+        name: '', // required
+        description: '', // required
+        amount: 'abc', // number
+        depth: 'abc', // number
+        height: 'abc', // number
+        width: 'abc', // number
+        stockQuantity: 'abc', // number
+        image: 'wrong_url',
+        categoryId,
+      };
+
+      const response = await globalThis.request
+        .post('/catalog/products')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(invalidData);
+
+      expect(response.status).toEqual(400);
+      expect(response.body.errors).toHaveLength(8);
+      expect(response.body.errors[0].field).toEqual('name');
+      expect(response.body.errors[1].field).toEqual('description');
+      expect(response.body.errors[2].field).toEqual('amount');
+      expect(response.body.errors[3].field).toEqual('depth');
+      expect(response.body.errors[4].field).toEqual('height');
+      expect(response.body.errors[5].field).toEqual('width');
+      expect(response.body.errors[6].field).toEqual('stockQuantity');
+      expect(response.body.errors[7].field).toEqual('image');
+    });
   });
 });

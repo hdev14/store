@@ -2,6 +2,7 @@ import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 import ICategoryService from '@catalog/app/ICategoryService';
 import IProductService from '@catalog/app/IProductService';
 import StockError from '@catalog/app/StockError';
+import ValidationEntityError from '@shared/errors/ValidationEntityError';
 import { NextFunction, Request, Response } from 'express';
 
 export default class CatalogController {
@@ -70,6 +71,10 @@ export default class CatalogController {
     } catch (e) {
       if (e instanceof CategoryNotFoundError) {
         return response.status(400).json({ message: e.message });
+      }
+
+      if (e instanceof ValidationEntityError) {
+        return response.status(400).json({ errors: e.errors });
       }
 
       return next(e);
