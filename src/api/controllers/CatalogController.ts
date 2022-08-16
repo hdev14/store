@@ -87,9 +87,9 @@ export default class CatalogController {
       const productId = request.params.id;
       const data = request.body;
 
-      await this.productService.updateProduct(productId, data);
+      const product = await this.productService.updateProduct(productId, data);
 
-      return response.status(200).json();
+      return response.status(200).json(product);
     } catch (e) {
       if (e instanceof ProductNotFoundError) {
         return response.status(404).json({ message: e.message });
