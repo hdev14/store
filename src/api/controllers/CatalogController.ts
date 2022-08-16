@@ -1,6 +1,7 @@
 import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 import ICategoryService from '@catalog/app/ICategoryService';
 import IProductService from '@catalog/app/IProductService';
+import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
 import StockError from '@catalog/app/StockError';
 import ValidationEntityError from '@shared/errors/ValidationEntityError';
 import { NextFunction, Request, Response } from 'express';
@@ -82,8 +83,19 @@ export default class CatalogController {
   }
 
   async updateProduct(request: Request, response: Response, next: NextFunction) {
-    console.info(request, response, next);
-    response.status(200).json({ messages: 'hello' });
+    try {
+      const productId = request.params.id;
+      const data = request.body;
+
+      await this.productService.updateProduct(productId, data);
+
+      return response.status(200).json();
+    } catch (e) {
+      if (e instanceof ProductNotFoundError) {
+        return response.status(404).json({ message: e.message });
+      }
+      return next(e);
+    }
   }
 
   async updateProductStock(request: Request, response: Response, next: NextFunction) {
@@ -103,7 +115,7 @@ export default class CatalogController {
     }
   }
 
-  async getAllCategories(request: Request, response: Response, next: NextFunction) {
+  async getAllCategories(_: Request, response: Response, next: NextFunction) {
     try {
       const categories = await this.categoryService.getAllCategories();
 
