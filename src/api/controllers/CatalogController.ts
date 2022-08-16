@@ -126,8 +126,15 @@ export default class CatalogController {
   }
 
   async createCategory(request: Request, response: Response, next: NextFunction) {
-    console.info(request, response, next);
-    response.status(200).json({ messages: 'hello' });
+    try {
+      const data = request.body;
+
+      const category = await this.categoryService.createCategory(data);
+
+      return response.status(201).json(category);
+    } catch (e) {
+      return next(e);
+    }
   }
 
   async updateCategory(request: Request, response: Response, next: NextFunction) {
