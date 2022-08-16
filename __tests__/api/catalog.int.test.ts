@@ -335,18 +335,20 @@ describe("Catalog's Integration Tests", () => {
 
       const qtyToRemove = parseInt((Math.random() * 10).toString(), 10);
 
+      const productWithStock = products.find((p) => p.stockQuantity > 0);
+
       const response = await globalThis.request
-        .patch(`/catalog/products/${products[0].id}/stock`)
+        .patch(`/catalog/products/${productWithStock!.id}/stock`)
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
         .send({ quantity: qtyToRemove * -1 });
 
       const product = await globalThis.dbConnection.product.findUnique({
-        where: { id: products[0].id },
+        where: { id: productWithStock!.id },
       });
 
       expect(response.status).toEqual(204);
-      expect(product!.stockQuantity).toEqual(products[0].stockQuantity - qtyToRemove);
+      expect(product!.stockQuantity).toEqual(productWithStock!.stockQuantity - qtyToRemove);
     });
 
     it('adds a quantity of products to stock', async () => {
@@ -634,5 +636,105 @@ describe("Catalog's Integration Tests", () => {
       expect(response.body.image).toEqual(data.image);
       expect(response.body.dimensions).toEqual(data.dimensions);
     });
+  });
+
+  describe('POST: /catalog/categories', () => {
+    const categoryId = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      await globalThis.dbConnection.category.create({
+        data: {
+          id: categoryId,
+          name: faker.word.verb(),
+          code: parseInt(faker.random.numeric(5), 10),
+        },
+      });
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.category.deleteMany({});
+    });
+
+    it('creates a new category', async () => {
+      expect.assertions(4);
+
+      const data = {
+        name: faker.word.verb(),
+      };
+
+      const response = await globalThis.request
+        .post('/catalog/categories')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(201);
+      expect(response.body.id).toBeTruthy();
+      expect(response.body.code).toBeTruthy();
+      expect(response.body.name).toEqual(data.name);
+    });
+
+    // it("returns 400 if category doesn't exist", async () => {
+    //   expect.assertions(2);
+
+    //   const fakeCategoryId = faker.datatype.uuid();
+
+    //   const data = {
+    //     name: faker.commerce.product(),
+    //     description: faker.commerce.productDescription(),
+    //     amount: faker.datatype.float(100),
+    //     depth: faker.datatype.number(50),
+    //     height: faker.datatype.number(50),
+    //     width: faker.datatype.number(50),
+    //     stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+    //     image: faker.internet.url(),
+    //     categoryId: fakeCategoryId,
+    //   };
+
+    //   const response = await globalThis.request
+    //     .post('/catalog/products')
+    //     .set('Content-Type', 'application/json')
+    //     .set('Accept', 'application/json')
+    //     .send(data);
+
+    //   expect(response.status).toEqual(400);
+    //   expect(response.body.message).toEqual('A category não foi encontrada.');
+    // });
+
+    // it('returns 400 if data is invalid', async () => {
+    //   expect.assertions(10);
+
+    //   const invalidData = {
+    //     name: '', // required
+    //     description: '', // required
+    //     amount: 'abc', // number
+    //     depth: 'abc', // number
+    //     height: 'abc', // number
+    //     width: 'abc', // number
+    //     stockQuantity: 'abc', // number
+    //     image: 'wrong_url',
+    //     categoryId,
+    //   };
+
+    //   const response = await globalThis.request
+    //     .post('/catalog/products')
+    //     .set('Content-Type', 'application/json')
+    //     .set('Accept', 'application/json')
+    //     .send(invalidData);
+
+    //   expect(response.status).toEqual(400);
+    //   expect(response.body.errors).toHaveLength(8);
+
+    //   const allFields = response.body.errors.map((e: any) => e.field);
+
+    //   expect(allFields.includes('name')).toBe(true);
+    //   expect(allFields.includes('description')).toBe(true);
+    //   expect(allFields.includes('amount')).toBe(true);
+    //   expect(allFields.includes('depth')).toBe(true);
+    //   expect(allFields.includes('height')).toBe(true);
+    //   expect(allFields.includes('width')).toBe(true);
+    //   expect(allFields.includes('stockQuantity')).toBe(true);
+    //   expect(allFields.includes('image')).toBe(true);
+    // });
   });
 });
