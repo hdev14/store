@@ -674,67 +674,24 @@ describe("Catalog's Integration Tests", () => {
       expect(response.body.name).toEqual(data.name);
     });
 
-    // it("returns 400 if category doesn't exist", async () => {
-    //   expect.assertions(2);
+    it('returns 400 if data is invalid', async () => {
+      expect.assertions(3);
 
-    //   const fakeCategoryId = faker.datatype.uuid();
+      const invalidData = {
+        name: '', // required
+      };
 
-    //   const data = {
-    //     name: faker.commerce.product(),
-    //     description: faker.commerce.productDescription(),
-    //     amount: faker.datatype.float(100),
-    //     depth: faker.datatype.number(50),
-    //     height: faker.datatype.number(50),
-    //     width: faker.datatype.number(50),
-    //     stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
-    //     image: faker.internet.url(),
-    //     categoryId: fakeCategoryId,
-    //   };
+      const response = await globalThis.request
+        .post('/catalog/categories')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(invalidData);
 
-    //   const response = await globalThis.request
-    //     .post('/catalog/products')
-    //     .set('Content-Type', 'application/json')
-    //     .set('Accept', 'application/json')
-    //     .send(data);
+      expect(response.status).toEqual(400);
+      expect(response.body.errors).toHaveLength(1);
 
-    //   expect(response.status).toEqual(400);
-    //   expect(response.body.message).toEqual('A category não foi encontrada.');
-    // });
-
-    // it('returns 400 if data is invalid', async () => {
-    //   expect.assertions(10);
-
-    //   const invalidData = {
-    //     name: '', // required
-    //     description: '', // required
-    //     amount: 'abc', // number
-    //     depth: 'abc', // number
-    //     height: 'abc', // number
-    //     width: 'abc', // number
-    //     stockQuantity: 'abc', // number
-    //     image: 'wrong_url',
-    //     categoryId,
-    //   };
-
-    //   const response = await globalThis.request
-    //     .post('/catalog/products')
-    //     .set('Content-Type', 'application/json')
-    //     .set('Accept', 'application/json')
-    //     .send(invalidData);
-
-    //   expect(response.status).toEqual(400);
-    //   expect(response.body.errors).toHaveLength(8);
-
-    //   const allFields = response.body.errors.map((e: any) => e.field);
-
-    //   expect(allFields.includes('name')).toBe(true);
-    //   expect(allFields.includes('description')).toBe(true);
-    //   expect(allFields.includes('amount')).toBe(true);
-    //   expect(allFields.includes('depth')).toBe(true);
-    //   expect(allFields.includes('height')).toBe(true);
-    //   expect(allFields.includes('width')).toBe(true);
-    //   expect(allFields.includes('stockQuantity')).toBe(true);
-    //   expect(allFields.includes('image')).toBe(true);
-    // });
+      const allFields = response.body.errors.map((e: any) => e.field);
+      expect(allFields.includes('name')).toBe(true);
+    });
   });
 });
