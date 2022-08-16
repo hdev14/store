@@ -542,15 +542,34 @@ describe("Catalog's Integration Tests", () => {
 
   describe('PUT: /catalog/products/:id', () => {
     const categoryId = faker.datatype.uuid();
+    const productId = faker.datatype.uuid();
 
     beforeAll(async () => {
-      await globalThis.dbConnection.category.create({
-        data: {
-          id: categoryId,
-          name: faker.word.verb(),
-          code: parseInt(faker.random.numeric(5), 10),
-        },
-      });
+      await globalThis.dbConnection.$transaction([
+        globalThis.dbConnection.category.create({
+          data: {
+            id: categoryId,
+            name: faker.word.verb(),
+            code: parseInt(faker.random.numeric(5), 10),
+          },
+        }),
+        globalThis.dbConnection.product.create({
+          data: {
+            id: productId,
+            name: faker.commerce.product(),
+            description: faker.commerce.productDescription(),
+            amount: faker.datatype.float(100),
+            active: faker.datatype.boolean(),
+            depth: faker.datatype.number(50),
+            height: faker.datatype.number(50),
+            width: faker.datatype.number(50),
+            stockQuantity: 0,
+            image: faker.internet.url(),
+            createdAt: new Date(),
+            categoryId,
+          },
+        }),
+      ]);
     });
 
     afterAll(async () => {
@@ -583,6 +602,37 @@ describe("Catalog's Integration Tests", () => {
 
       expect(response.status).toEqual(404);
       expect(response.body.message).toEqual('O produto não foi encontrado.');
+    });
+
+    it('updates a product', async () => {
+      expect.assertions(7);
+
+      const data = {
+        name: faker.commerce.product(),
+        description: faker.commerce.productDescription(),
+        amount: faker.datatype.float(100),
+        dimensions: {
+          depth: faker.datatype.number(50),
+          height: faker.datatype.number(50),
+          width: faker.datatype.number(50),
+        },
+        stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+        image: faker.internet.url(),
+      };
+
+      const response = await globalThis.request
+        .put(`/catalog/products/${productId}`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(200);
+      expect(response.body.name).toEqual(data.name);
+      expect(response.body.description).toEqual(data.description);
+      expect(response.body.amount).toEqual(data.amount);
+      expect(response.body.stockQuantity).toEqual(data.stockQuantity);
+      expect(response.body.image).toEqual(data.image);
+      expect(response.body.dimensions).toEqual(data.dimensions);
     });
   });
 });
