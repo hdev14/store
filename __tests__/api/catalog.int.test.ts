@@ -524,14 +524,17 @@ describe("Catalog's Integration Tests", () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.errors).toHaveLength(8);
-      expect(response.body.errors[0].field).toEqual('name');
-      expect(response.body.errors[1].field).toEqual('description');
-      expect(response.body.errors[2].field).toEqual('amount');
-      expect(response.body.errors[3].field).toEqual('depth');
-      expect(response.body.errors[4].field).toEqual('height');
-      expect(response.body.errors[5].field).toEqual('width');
-      expect(response.body.errors[6].field).toEqual('stockQuantity');
-      expect(response.body.errors[7].field).toEqual('image');
+
+      const allFields = response.body.errors.map((e: any) => e.field);
+
+      expect(allFields.includes('name')).toBe(true);
+      expect(allFields.includes('description')).toBe(true);
+      expect(allFields.includes('amount')).toBe(true);
+      expect(allFields.includes('depth')).toBe(true);
+      expect(allFields.includes('height')).toBe(true);
+      expect(allFields.includes('width')).toBe(true);
+      expect(allFields.includes('stockQuantity')).toBe(true);
+      expect(allFields.includes('image')).toBe(true);
     });
   });
 });
