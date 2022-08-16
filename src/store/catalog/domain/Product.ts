@@ -79,13 +79,16 @@ export default class Product extends Entity implements IAggregateRoot {
 
   protected validate(): void {
     EntityValidator
-      .setData(this)
-      .setRule('name', ['required'])
-      .setRule('description', ['required'])
+      .setData({ ...this, ...this.dimensions })
+      .setRule('name', ['required', 'string'])
+      .setRule('description', ['required', 'string'])
       .setRule('category', ['required'])
-      .setRule('amount', ['required', 'min:0'])
-      .setRule('image', ['required', 'url'])
-      .setRule('stockQuantity', ['required', 'min:0'])
+      .setRule('amount', ['required', 'number', 'min:0'])
+      .setRule('image', ['required', 'string', 'url'])
+      .setRule('stockQuantity', ['required', 'number', 'integer', 'min:0'])
+      .setRule('height', ['required', 'number', 'min:0'])
+      .setRule('depth', ['required', 'number', 'min:0'])
+      .setRule('width', ['required', 'number', 'min:0'])
       .validate();
   }
 }
