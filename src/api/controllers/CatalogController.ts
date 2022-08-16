@@ -133,6 +133,10 @@ export default class CatalogController {
 
       return response.status(201).json(category);
     } catch (e) {
+      if (e instanceof ValidationEntityError) {
+        return response.status(400).json({ errors: e.errors });
+      }
+
       return next(e);
     }
   }
