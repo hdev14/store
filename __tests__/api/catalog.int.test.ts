@@ -373,8 +373,10 @@ describe("Catalog's Integration Tests", () => {
 
       const qtyToRemove = parseInt((Math.random() * 10).toString(), 10);
 
+      const productWithZeroStock = products.find((p) => p.stockQuantity === 0);
+
       const response = await globalThis.request
-        .patch(`/catalog/products/${products[2].id}/stock`)
+        .patch(`/catalog/products/${productWithZeroStock!.id}/stock`)
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
         .send({ quantity: qtyToRemove * -1 });
@@ -535,6 +537,52 @@ describe("Catalog's Integration Tests", () => {
       expect(allFields.includes('width')).toBe(true);
       expect(allFields.includes('stockQuantity')).toBe(true);
       expect(allFields.includes('image')).toBe(true);
+    });
+  });
+
+  describe('PUT: /catalog/products/:id', () => {
+    const categoryId = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      await globalThis.dbConnection.category.create({
+        data: {
+          id: categoryId,
+          name: faker.word.verb(),
+          code: parseInt(faker.random.numeric(5), 10),
+        },
+      });
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.product.deleteMany({});
+      await globalThis.dbConnection.category.deleteMany({});
+    });
+
+    it("returns 404 if product doesn't exist", async () => {
+      expect.assertions(2);
+
+      const fakeProductId = faker.datatype.uuid();
+
+      const data = {
+        name: faker.commerce.product(),
+        description: faker.commerce.productDescription(),
+        amount: faker.datatype.float(100),
+        depth: faker.datatype.number(50),
+        height: faker.datatype.number(50),
+        width: faker.datatype.number(50),
+        stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+        image: faker.internet.url(),
+        categoryId,
+      };
+
+      const response = await globalThis.request
+        .put(`/catalog/products/${fakeProductId}`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('O produto não foi encontrado.');
     });
   });
 });
