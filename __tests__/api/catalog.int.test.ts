@@ -502,7 +502,7 @@ describe("Catalog's Integration Tests", () => {
         .send(data);
 
       expect(response.status).toEqual(400);
-      expect(response.body.message).toEqual('A category não foi encontrada.');
+      expect(response.body.message).toEqual('A categoria não foi encontrada.');
     });
 
     it('returns 400 if data is invalid', async () => {
@@ -692,6 +692,43 @@ describe("Catalog's Integration Tests", () => {
 
       const allFields = response.body.errors.map((e: any) => e.field);
       expect(allFields.includes('name')).toBe(true);
+    });
+  });
+
+  describe('PUT: /catalog/categories/:id', () => {
+    const categoryId = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      await globalThis.dbConnection.category.create({
+        data: {
+          id: categoryId,
+          name: faker.word.verb(),
+          code: parseInt(faker.random.numeric(5), 10),
+        },
+      });
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.category.deleteMany({});
+    });
+
+    it("returns 404 if category doesn't exist", async () => {
+      expect.assertions(2);
+
+      const fakeCategoryId = faker.datatype.uuid();
+
+      const data = {
+        name: faker.word.verb(),
+      };
+
+      const response = await globalThis.request
+        .put(`/catalog/categories/${fakeCategoryId}`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('A categoria não foi encontrada.');
     });
   });
 });
