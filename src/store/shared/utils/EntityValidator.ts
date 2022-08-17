@@ -47,6 +47,7 @@ const RULE_FUNCTIONS = {
   float: (value: any) => typeof value === 'number' && Number.isInteger(value),
 };
 
+// TODO: Change messages to pt-BR.
 const RULE_MESSAGES = {
   required: (field: string) => `The field ${field} is required.`,
   max: (field: string, max: number, isString: boolean) => {

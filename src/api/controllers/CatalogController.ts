@@ -142,7 +142,19 @@ export default class CatalogController {
   }
 
   async updateCategory(request: Request, response: Response, next: NextFunction) {
-    console.info(request, response, next);
-    response.status(200).json({ messages: 'hello' });
+    try {
+      const categoryId = request.params.id;
+      const data = request.body;
+
+      await this.categoryService.updateCategory(categoryId, data);
+
+      return response.status(200).json();
+    } catch (e) {
+      if (e instanceof CategoryNotFoundError) {
+        return response.status(404).json({ message: e.message });
+      }
+
+      return next(e);
+    }
   }
 }
