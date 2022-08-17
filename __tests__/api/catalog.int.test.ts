@@ -748,5 +748,27 @@ describe("Catalog's Integration Tests", () => {
       expect(response.body.errors).toHaveLength(1);
       expect(response.body.errors[0].field).toEqual('name');
     });
+
+    it('updates a category', async () => {
+      expect.assertions(3);
+
+      const data = {
+        name: faker.word.verb(),
+      };
+
+      const response = await globalThis.request
+        .put(`/catalog/categories/${categoryId}`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      const category = await globalThis.dbConnection.category.findUnique({
+        where: { id: categoryId },
+      });
+
+      expect(response.status).toEqual(200);
+      expect(response.body.name).toEqual(data.name);
+      expect(category!.name).toEqual(data.name);
+    });
   });
 });
