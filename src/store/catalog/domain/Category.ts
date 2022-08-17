@@ -27,8 +27,8 @@ export default class Category extends Entity {
   protected validate(): void {
     EntityValidator
       .setData(this)
-      .setRule('name', ['required'])
-      .setRule('code', ['required', 'min:1'])
+      .setRule('name', ['required', 'string'])
+      .setRule('code', ['required', 'number', 'integer', 'min:1'])
       .validate();
   }
 }

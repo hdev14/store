@@ -150,6 +150,10 @@ export default class CatalogController {
 
       return response.status(200).json();
     } catch (e) {
+      if (e instanceof ValidationEntityError) {
+        return response.status(400).json({ errors: e.errors });
+      }
+
       if (e instanceof CategoryNotFoundError) {
         return response.status(404).json({ message: e.message });
       }
