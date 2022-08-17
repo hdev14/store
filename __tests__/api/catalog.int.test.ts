@@ -730,5 +730,23 @@ describe("Catalog's Integration Tests", () => {
       expect(response.status).toEqual(404);
       expect(response.body.message).toEqual('A categoria não foi encontrada.');
     });
+
+    it('returns 400 if data are invalid', async () => {
+      expect.assertions(3);
+
+      const invalidData = {
+        name: 123, // number
+      };
+
+      const response = await globalThis.request
+        .put(`/catalog/categories/${categoryId}`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(invalidData);
+
+      expect(response.status).toEqual(400);
+      expect(response.body.errors).toHaveLength(1);
+      expect(response.body.errors[0].field).toEqual('name');
+    });
   });
 });
