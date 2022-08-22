@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-export type Event<T extends Record<string, any> = {}> = T;
+export type EventData<T extends Record<string, any> = {}> = T;
 
 export type EventHandlerReturn<R> = void | Promise<void> | R | Promise<R>
 export interface IEventHandler {
-  handle<R = {}>(event: Event): EventHandlerReturn<R>;
+  handle<R = {}>(data: EventData): EventHandlerReturn<R>;
 }
 
 export abstract class EventMediator {
@@ -17,7 +17,7 @@ export abstract class EventMediator {
     return this._handlers;
   }
 
-  abstract send<R, T = {}>(name: string, event: Event<T>): EventHandlerReturn<R>;
+  abstract send<R, T = {}>(name: string, data: EventData<T>): EventHandlerReturn<R>;
 
   protected hasHandler(name: string): IEventHandler {
     if (!this.handlers.has(name)) {
