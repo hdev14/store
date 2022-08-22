@@ -252,6 +252,42 @@ describe('ProductsService\'s unit tests', () => {
         expect(getProductByIdSpy).toHaveBeenCalled();
       }
     });
+
+    it('throws an CategoryNotFound if repository.getCategoryById returns null', async () => {
+      expect.assertions(2);
+
+      const repositoryStub = new RepositoryStub();
+      const getCategoryByIdSpy = jest.spyOn(repositoryStub, 'getCategoryById');
+      const stockServiceStub = new StockServiceStub();
+
+      const productService = new ProductService(
+        repositoryStub,
+        createGenerateIDMock(fakeProducts),
+        stockServiceStub,
+      );
+      const fakeCategoryId = faker.datatype.uuid();
+
+      const params: UpdateProductParams = {
+        name: 'test_product_updated',
+        amount: Math.random() * 100,
+        categoryId: fakeCategoryId,
+        description: 'test_product_updated',
+        dimensions: {
+          height: Math.random() * 50,
+          width: Math.random() * 50,
+          depth: Math.random() * 50,
+        },
+        image: 'http://example.com/product_updated.jpg',
+        stockQuantity: parseInt((Math.random() * 10).toString(), 10),
+      };
+
+      try {
+        await productService.updateProduct(fakeProducts[0].id, params);
+      } catch (e) {
+        expect(e).toBeInstanceOf(CategoryNotFoundError);
+        expect(getCategoryByIdSpy).toHaveBeenCalled();
+      }
+    });
   });
 
   describe('ProductService.updateProductStock', () => {
