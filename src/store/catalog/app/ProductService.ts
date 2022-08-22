@@ -71,7 +71,10 @@ export default class ProductService implements IProductService {
   async updateProduct(productId: string, params: UpdateProductParams): Promise<Product> {
     const currentProduct = await this.repository.getProductById(productId);
 
-    // TODO: check category id
+    if (params.categoryId && !this.repository.getCategoryById(params.categoryId)) {
+      throw new CategoryNotFoundError();
+    }
+
     if (!currentProduct) {
       throw new ProductNotFoundError();
     }
