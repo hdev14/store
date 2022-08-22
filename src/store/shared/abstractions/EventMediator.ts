@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 export type Event<T extends Record<string, any> = {}> = T;
 
+export type EventHandlerReturn<R> = void | Promise<void> | R | Promise<R>
 export interface IEventHandler {
-  handle<R = {}>(event: Event): void | R | Promise<R>;
+  handle<R = {}>(event: Event): EventHandlerReturn<R>;
 }
 
 export abstract class EventMediator {
@@ -16,9 +17,9 @@ export abstract class EventMediator {
     return this._handlers;
   }
 
-  abstract send<R, T = {}>(name: string, event: Event<T>): R | Promise<R>;
+  abstract send<R, T = {}>(name: string, event: Event<T>): EventHandlerReturn<R>;
 
-  private hasHandler(name: string): IEventHandler {
+  protected hasHandler(name: string): IEventHandler {
     if (!this.handlers.has(name)) {
       throw new Error('There is no event with this name.');
     }
