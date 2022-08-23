@@ -1,11 +1,15 @@
+import Event from '@shared/abstractions/Event';
 import { IProductOperations } from './IProductRepository';
 import IStockService from './IStockService';
 
 export default class StockService implements IStockService {
   private productRepository: IProductOperations;
 
-  constructor(productRepository: IProductOperations) {
+  private lowStockProductEvent: Event;
+
+  constructor(productRepository: IProductOperations, lowStockProductEvent: Event) {
     this.productRepository = productRepository;
+    this.lowStockProductEvent = lowStockProductEvent;
   }
 
   async addToStock(productId: string, quantity: number): Promise<boolean> {
@@ -32,6 +36,13 @@ export default class StockService implements IStockService {
     product.removeFromStock(quantity);
 
     await this.productRepository.updateProduct(product);
+
+    if (product.stockQuantity < 5) {
+      await this.lowStockProductEvent.send({
+        productId: product.id,
+        quantity: product.stockQuantity,
+      });
+    }
 
     return true;
   }
