@@ -91,6 +91,7 @@ describe('StockService\'s Unit Tests', () => {
       productRepositoryStub.updateProduct = jest.fn(() => Promise.resolve({} as Product));
       productRepositoryStub.getProductById = jest.fn(() => Promise.resolve({
         id: 'test_product_id_test',
+        name: 'test_product',
         stockQuantity: 10,
         addToStock(quantity: number) {
           this.stockQuantity += quantity;
@@ -110,7 +111,8 @@ describe('StockService\'s Unit Tests', () => {
       expect(sendSpy).toHaveBeenCalledTimes(1);
       expect(sendSpy).toHaveBeenCalledWith({
         productId: 'test_product_id_test',
-        quantity: 4,
+        productName: 'test_product',
+        productQuantity: 4,
       });
     });
   });
