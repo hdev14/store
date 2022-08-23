@@ -1,4 +1,5 @@
 import { EventData, IEventHandler } from '@shared/@types/events';
+import EventMediatorError from '@shared/errors/EventMediatorError';
 import StoreMediator from '@shared/StoreMediator';
 
 const handleMock = jest.fn(() => { });
@@ -23,15 +24,29 @@ describe("StoreMediator's unit tests", () => {
     expect(storeMediator.handlers.size).toEqual(3);
   });
 
-  it('calls EventHandler.handle when is passed the event name', () => {
+  it('calls EventHandler.handle when is passed the event name', async () => {
+    expect.assertions(2);
+
     const storeMediator = new StoreMediator();
 
     const expectedEvent = { test: 'test event handler' };
 
     storeMediator.addEvent('test1', new EventHandlerMock());
-    storeMediator.send('test1', expectedEvent);
+    await storeMediator.send('test1', expectedEvent);
 
     expect(handleMock).toHaveBeenCalled();
     expect(handleMock).toHaveBeenCalledWith(expectedEvent);
+  });
+
+  it("throws an exception of type EventMediatorError if event name doesn't exist", async () => {
+    expect.assertions(2);
+    try {
+      const storeMediator = new StoreMediator();
+
+      await storeMediator.send('test1', {});
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(EventMediatorError);
+      expect(e.message).toEqual('There is no event with this name.');
+    }
   });
 });
