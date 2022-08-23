@@ -1,12 +1,7 @@
 /* eslint-disable no-unused-vars */
-export type EventData<T extends Record<string, any> = {}> = T;
+import { EventData, IEventHandler } from '@shared/@types/events';
 
-export type EventHandlerReturn<R> = void | Promise<void> | R | Promise<R>
-export interface IEventHandler {
-  handle<R = {}>(data: EventData): EventHandlerReturn<R>;
-}
-
-export abstract class EventMediator {
+export default abstract class EventMediator {
   protected _handlers: Map<string, IEventHandler> = new Map<string, IEventHandler>();
 
   addEvent(name: string, handler: IEventHandler) {
@@ -17,7 +12,7 @@ export abstract class EventMediator {
     return this._handlers;
   }
 
-  abstract send<R, T = {}>(name: string, data: EventData<T>): EventHandlerReturn<R>;
+  abstract send<R, T = {}>(name: string, data: EventData<T>): void | R | Promise<void | R>;
 
   protected hasHandler(name: string): IEventHandler {
     if (!this.handlers.has(name)) {
