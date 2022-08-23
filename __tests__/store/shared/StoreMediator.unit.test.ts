@@ -1,4 +1,4 @@
-import { EventData, EventHandlerReturn, IEventHandler } from '@shared/abstractions/EventMediator';
+import { EventData, IEventHandler } from '@shared/@types/events';
 import StoreMediator from '@shared/StoreMediator';
 
 const handleMock = jest.fn(() => { });
@@ -7,7 +7,7 @@ const EventHandlerMock = jest.fn().mockImplementation(() => ({
 }));
 
 class EventHandlerStub implements IEventHandler {
-  handle<R = {}>(data: EventData<{}>): EventHandlerReturn<R> {
+  handle(data: EventData<{}>): void {
     console.info(data);
   }
 }
