@@ -30,7 +30,7 @@ describe("StoreMediator's unit tests", () => {
     const storeMediator = new StoreMediator();
 
     const expectedEventData: EventData = {
-      principalId: 'test', datetime: new Date().toISOString(),
+      principalId: 'test', timestamp: new Date().toISOString(),
     };
 
     storeMediator.addEvent('test1', new EventHandlerMock());
@@ -47,7 +47,7 @@ describe("StoreMediator's unit tests", () => {
 
       await storeMediator.send('test1', {
         principalId: 'test',
-        datetime: new Date().toISOString(),
+        timestamp: new Date().toISOString(),
       });
     } catch (e: any) {
       expect(e).toBeInstanceOf(EventMediatorError);

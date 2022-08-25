@@ -113,7 +113,7 @@ describe('StockService\'s Unit Tests', () => {
       expect(sendSpy.mock.calls[0][0].principalId).toEqual('test_product_id_test');
       expect(sendSpy.mock.calls[0][0].productName).toEqual('test_product');
       expect(sendSpy.mock.calls[0][0].productQuantity).toEqual(4);
-      expect(sendSpy.mock.calls[0][0].datetime).toBeTruthy();
+      expect(sendSpy.mock.calls[0][0].timestamp).toBeTruthy();
     });
   });
 

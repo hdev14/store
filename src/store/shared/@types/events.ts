@@ -3,7 +3,7 @@ type ISODate = string;
 
 export type EventData<T = {}> = T & {
   principalId: string;
-  datetime: ISODate;
+  timestamp: ISODate;
 };
 
 export interface IEventHandler {

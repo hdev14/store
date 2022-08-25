@@ -44,7 +44,7 @@ export default class StockService implements IStockService {
     if (product.stockQuantity < 5) {
       await this.lowStockProductEvent.send({
         principalId: product.id,
-        datetime: new Date().toISOString(),
+        timestamp: new Date().toISOString(),
         productName: product.name,
         productQuantity: product.stockQuantity,
       });
