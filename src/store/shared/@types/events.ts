@@ -2,7 +2,7 @@
 type ISODate = string;
 
 export type EventData<T = {}> = T & {
-  pricinpalId: string;
+  principalId: string;
   datetime: ISODate;
 };
 

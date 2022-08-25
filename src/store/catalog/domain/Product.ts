@@ -77,7 +77,7 @@ export default class Product extends Entity implements IAggregateRoot {
     return this.stockQuantity >= quantity;
   }
 
-  protected validate(): void {
+  public validate(): void {
     EntityValidator
       .setData({ ...this, ...this.dimensions })
       .setRule('name', ['required', 'string'])

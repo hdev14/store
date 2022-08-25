@@ -38,7 +38,7 @@ export default class PurchaseOrderItem extends Entity {
     this.quantity = newQuantity;
   }
 
-  protected validate(): boolean | void {
+  public validate(): boolean | void {
     throw new Error('Method not implemented.');
   }
 }

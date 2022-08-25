@@ -24,7 +24,7 @@ export default class Category extends Entity {
     return `${this.name} - ${this.code}`;
   }
 
-  protected validate(): void {
+  public validate(): void {
     EntityValidator
       .setData(this)
       .setRule('name', ['required', 'string'])

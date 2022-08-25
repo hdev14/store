@@ -156,7 +156,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
     this.status = PurchaseOrderStatus.CANCELED;
   }
 
-  protected validate(): boolean | void {
+  public validate(): boolean | void {
     throw new Error('Method not implemented.');
   }
 }

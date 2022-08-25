@@ -53,7 +53,7 @@ export default class Voucher extends Entity {
     this.active = params.active;
   }
 
-  protected validate(): boolean | void {
+  public validate(): boolean | void {
     throw new Error('Method not implemented.');
   }
 }
