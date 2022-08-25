@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker';
-import ValidationEntityError from '@shared/errors/ValidationEntityError';
-import EntityValidator from '@shared/utils/EntityValidator';
+import ValidationEntityError from '@shared/errors/ValidationError';
+import Validator from '@shared/utils/Validator';
 
 // TODO: Test with doNotThrows
-describe("EntityValidator's unit tests", () => {
+describe("Validator's unit tests", () => {
   describe('Strings', () => {
     it('throws a ValidationEntityError if field is not a string', () => {
       expect.assertions(3);
       try {
-        EntityValidator
+        Validator
           .setData({ test: faker.datatype.float() })
           .setRule('test', ['string'])
           .validate();
@@ -22,7 +22,7 @@ describe("EntityValidator's unit tests", () => {
     it('throws a ValidationEntityError if field is required', () => {
       expect.assertions(3);
       try {
-        EntityValidator
+        Validator
           .setData({ test: '' })
           .setRule('test', ['string', 'required'])
           .validate();
@@ -36,7 +36,7 @@ describe("EntityValidator's unit tests", () => {
     it('throws a ValidationEntityError if field is greater than max length', () => {
       expect.assertions(3);
       try {
-        EntityValidator
+        Validator
           .setData({ test: faker.datatype.string(6) })
           .setRule('test', ['string', 'max:5'])
           .validate();
@@ -50,7 +50,7 @@ describe("EntityValidator's unit tests", () => {
     it('throws a ValidationEntityError if field is less than min length', () => {
       expect.assertions(3);
       try {
-        EntityValidator
+        Validator
           .setData({ test: faker.datatype.string(3) })
           .setRule('test', ['string', 'min:5'])
           .validate();
@@ -64,7 +64,7 @@ describe("EntityValidator's unit tests", () => {
     it('throws a ValidationEntityError if field is not a url', () => {
       expect.assertions(3);
       try {
-        EntityValidator
+        Validator
           .setData({ test: faker.word.adjective() })
           .setRule('test', ['string', 'url'])
           .validate();
@@ -80,7 +80,7 @@ describe("EntityValidator's unit tests", () => {
     it('throws a ValidationEntityError if field is not a number', () => {
       expect.assertions(3);
       try {
-        EntityValidator
+        Validator
           .setData({ test: faker.datatype.string() })
           .setRule('test', ['number'])
           .validate();
@@ -94,7 +94,7 @@ describe("EntityValidator's unit tests", () => {
     it('throws a ValidationEntityError if field is required', () => {
       expect.assertions(4);
       try {
-        EntityValidator
+        Validator
           .setData({ test: undefined })
           .setRule('test', ['required', 'number'])
           .validate();
@@ -109,7 +109,7 @@ describe("EntityValidator's unit tests", () => {
     it('throws a ValidationEntityError if field is not a integer', () => {
       expect.assertions(3);
       try {
-        EntityValidator
+        Validator
           .setData({ test: faker.datatype.float() })
           .setRule('test', ['number', 'integer'])
           .validate();
@@ -123,7 +123,7 @@ describe("EntityValidator's unit tests", () => {
     it('throws a ValidationEntityError if field is not a float', () => {
       expect.assertions(3);
       try {
-        EntityValidator
+        Validator
           .setData({ test: parseInt(faker.datatype.number().toString(), 10) })
           .setRule('test', ['number', 'float'])
           .validate();
@@ -138,7 +138,7 @@ describe("EntityValidator's unit tests", () => {
       expect.assertions(3);
 
       try {
-        EntityValidator
+        Validator
           .setData({ test: Math.random() * 10 * 10 })
           .setRule('test', ['number', 'max:10'])
           .validate();
@@ -153,7 +153,7 @@ describe("EntityValidator's unit tests", () => {
       expect.assertions(3);
 
       try {
-        EntityValidator
+        Validator
           .setData({ test: Math.random() * 10 * -1 })
           .setRule('test', ['number', 'min:10'])
           .validate();

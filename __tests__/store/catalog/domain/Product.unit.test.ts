@@ -1,10 +1,10 @@
 import Category from '@catalog/domain/Category';
 import Dimensions from '@catalog/domain/Dimensions';
 import Product from '@catalog/domain/Product';
-import ValidationEntityError from '@shared/errors/ValidationEntityError';
+import ValidationError from '@shared/errors/ValidationError';
 
 describe("Product's Unit Tests", () => {
-  it('doesn\'t throw a ValidationEntityError if params are correct', () => {
+  it('doesn\'t throw a ValidationError if params are correct', () => {
     const dimensions = new Dimensions({ height: 1, width: 1, depth: 1 });
     const category = new Category({ id: 'testid', name: 'test', code: 1 });
 
@@ -18,10 +18,10 @@ describe("Product's Unit Tests", () => {
       createdAt: new Date(),
       image: 'http://example.com/test',
       stockQuantity: 10,
-    })).not.toThrow(ValidationEntityError);
+    })).not.toThrow(ValidationError);
   });
 
-  it('throws a ValidationEntityError if params are invalid', () => {
+  it('throws a ValidationError if params are invalid', () => {
     const dimensions = new Dimensions({ height: 1, width: 1, depth: 1 });
     const category = new Category({ id: 'testid', name: 'test', code: 1 });
 
@@ -35,7 +35,7 @@ describe("Product's Unit Tests", () => {
       image: 'http://example.com/test',
       stockQuantity: 10,
       category,
-    })).toThrow(ValidationEntityError);
+    })).toThrow(ValidationError);
 
     expect(() => new Product({
       id: 'testid',
@@ -47,7 +47,7 @@ describe("Product's Unit Tests", () => {
       image: 'http://example.com/test',
       stockQuantity: 10,
       category,
-    })).toThrow(ValidationEntityError);
+    })).toThrow(ValidationError);
 
     expect(() => new Product({
       id: 'testid',
@@ -59,7 +59,7 @@ describe("Product's Unit Tests", () => {
       image: 'http://example.com/test',
       stockQuantity: 10,
       category: {} as Category,
-    })).toThrow(ValidationEntityError);
+    })).toThrow(ValidationError);
 
     expect(() => new Product({
       id: 'testid',
@@ -71,7 +71,7 @@ describe("Product's Unit Tests", () => {
       image: 'invalid',
       stockQuantity: 10,
       category,
-    })).toThrow(ValidationEntityError);
+    })).toThrow(ValidationError);
   });
 
   it('actives the product', () => {
