@@ -110,7 +110,7 @@ describe('StockService\'s Unit Tests', () => {
       await stockService.removeFromStock('test_product_id_test', 6);
 
       expect(sendSpy).toHaveBeenCalledTimes(1);
-      expect(sendSpy.mock.calls[0][0].pricinpalId).toEqual('test_product_id_test');
+      expect(sendSpy.mock.calls[0][0].principalId).toEqual('test_product_id_test');
       expect(sendSpy.mock.calls[0][0].productName).toEqual('test_product');
       expect(sendSpy.mock.calls[0][0].productQuantity).toEqual(4);
       expect(sendSpy.mock.calls[0][0].datetime).toBeTruthy();

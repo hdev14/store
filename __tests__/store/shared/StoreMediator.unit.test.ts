@@ -29,13 +29,15 @@ describe("StoreMediator's unit tests", () => {
 
     const storeMediator = new StoreMediator();
 
-    const expectedEvent = { test: 'test event handler' };
+    const expectedEventData: EventData = {
+      principalId: 'test', datetime: new Date().toISOString(),
+    };
 
     storeMediator.addEvent('test1', new EventHandlerMock());
-    await storeMediator.send('test1', expectedEvent);
+    await storeMediator.send('test1', expectedEventData);
 
     expect(handleMock).toHaveBeenCalled();
-    expect(handleMock).toHaveBeenCalledWith(expectedEvent);
+    expect(handleMock).toHaveBeenCalledWith(expectedEventData);
   });
 
   it("throws an exception of type EventMediatorError if event name doesn't exist", async () => {
@@ -43,7 +45,10 @@ describe("StoreMediator's unit tests", () => {
     try {
       const storeMediator = new StoreMediator();
 
-      await storeMediator.send('test1', {});
+      await storeMediator.send('test1', {
+        principalId: 'test',
+        datetime: new Date().toISOString(),
+      });
     } catch (e: any) {
       expect(e).toBeInstanceOf(EventMediatorError);
       expect(e.message).toEqual('There is no event with this name.');
