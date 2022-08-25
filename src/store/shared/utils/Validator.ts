@@ -1,4 +1,4 @@
-import ValidationEntityError, { GenericError } from '../errors/ValidationEntityError';
+import ValidationError, { GenericError } from '../errors/ValidationError';
 
 // eslint-disable-next-line no-useless-escape
 const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
@@ -114,7 +114,7 @@ export default class EntityValidator {
     const hasErrors = this.errors.length > 0;
 
     if (hasErrors && !doNotThrows) {
-      throw new ValidationEntityError(this.errors);
+      throw new ValidationError(this.errors);
     }
 
     return this.errors;

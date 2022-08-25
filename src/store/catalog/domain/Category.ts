@@ -1,5 +1,5 @@
 import Entity from '@shared/abstractions/Entity';
-import EntityValidator from '@shared/utils/EntityValidator';
+import Validator from '@shared/utils/Validator';
 
 export type CategoryParams = {
   id: string;
@@ -25,7 +25,7 @@ export default class Category extends Entity {
   }
 
   public validate(): void {
-    EntityValidator
+    Validator
       .setData(this)
       .setRule('name', ['required', 'string'])
       .setRule('code', ['required', 'number', 'integer', 'min:1'])

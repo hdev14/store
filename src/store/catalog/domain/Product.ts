@@ -1,6 +1,6 @@
 import Entity from '@shared/abstractions/Entity';
 import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
-import EntityValidator from '@shared/utils/EntityValidator';
+import Validator from '@shared/utils/Validator';
 import Category from './Category';
 import Dimensions from './Dimensions';
 
@@ -78,7 +78,7 @@ export default class Product extends Entity implements IAggregateRoot {
   }
 
   public validate(): void {
-    EntityValidator
+    Validator
       .setData({ ...this, ...this.dimensions })
       .setRule('name', ['required', 'string'])
       .setRule('description', ['required', 'string'])

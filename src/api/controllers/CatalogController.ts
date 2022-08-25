@@ -3,7 +3,7 @@ import ICategoryService from '@catalog/app/ICategoryService';
 import IProductService from '@catalog/app/IProductService';
 import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
 import StockError from '@catalog/app/StockError';
-import ValidationEntityError from '@shared/errors/ValidationEntityError';
+import ValidationError from '@shared/errors/ValidationError';
 import { NextFunction, Request, Response } from 'express';
 
 export default class CatalogController {
@@ -74,7 +74,7 @@ export default class CatalogController {
         return response.status(400).json({ message: e.message });
       }
 
-      if (e instanceof ValidationEntityError) {
+      if (e instanceof ValidationError) {
         return response.status(400).json({ errors: e.errors });
       }
 
@@ -133,7 +133,7 @@ export default class CatalogController {
 
       return response.status(201).json(category);
     } catch (e) {
-      if (e instanceof ValidationEntityError) {
+      if (e instanceof ValidationError) {
         return response.status(400).json({ errors: e.errors });
       }
 
@@ -150,7 +150,7 @@ export default class CatalogController {
 
       return response.status(200).json(category);
     } catch (e) {
-      if (e instanceof ValidationEntityError) {
+      if (e instanceof ValidationError) {
         return response.status(400).json({ errors: e.errors });
       }
 
