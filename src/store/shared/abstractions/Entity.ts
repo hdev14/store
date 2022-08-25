@@ -5,7 +5,7 @@ export default abstract class Entity {
     this.id = id;
   }
 
-  protected abstract validate(): boolean | void
+  public abstract validate(): boolean | void
 
   public isEqual(obj: object) {
     return (JSON.stringify(this) === JSON.stringify(obj))

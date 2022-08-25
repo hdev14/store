@@ -8,7 +8,7 @@ export default abstract class Event<R = {}, E = {}> {
     this.mediator = mediator;
   }
 
-  async send(data: EventData<E>): Promise<void | R> {
+  public async send(data: EventData<E>): Promise<void | R> {
     return this.mediator.send<R>(this.constructor.name, data);
   }
 }

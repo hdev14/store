@@ -5,7 +5,7 @@ import EventMediatorError from '@shared/errors/EventMediatorError';
 export default abstract class EventMediator {
   protected _handlers: Map<string, IEventHandler> = new Map<string, IEventHandler>();
 
-  addEvent(name: string, handler: IEventHandler) {
+  public addEvent(name: string, handler: IEventHandler) {
     this._handlers.set(name, handler);
   }
 
@@ -13,7 +13,7 @@ export default abstract class EventMediator {
     return this._handlers;
   }
 
-  abstract send<R, T = {}>(name: string, data: EventData<T>): void | R | Promise<void | R>;
+  public abstract send<R, T = {}>(name: string, data: EventData<T>): void | R | Promise<void | R>;
 
   protected hasHandler(name: string): IEventHandler {
     if (!this.handlers.has(name)) {
