@@ -1,3 +1,8 @@
 import Event from '@shared/abstractions/Event';
 
-export default class LowStockProductEvent extends Event {}
+export type LowStockProductData = {
+  productName: string;
+  productQuantity: number;
+}
+
+export default class LowStockProductEvent extends Event<void, LowStockProductData> {}

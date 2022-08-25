@@ -1,13 +1,17 @@
 import Event from '@shared/abstractions/Event';
 import { IProductOperations } from './IProductRepository';
 import IStockService from './IStockService';
+import { LowStockProductData } from './LowStockProductEvent';
 
 export default class StockService implements IStockService {
   private productRepository: IProductOperations;
 
-  private lowStockProductEvent: Event;
+  private lowStockProductEvent: Event<void, LowStockProductData>;
 
-  constructor(productRepository: IProductOperations, lowStockProductEvent: Event) {
+  constructor(
+    productRepository: IProductOperations,
+    lowStockProductEvent: Event<void, LowStockProductData>,
+  ) {
     this.productRepository = productRepository;
     this.lowStockProductEvent = lowStockProductEvent;
   }
@@ -39,7 +43,8 @@ export default class StockService implements IStockService {
 
     if (product.stockQuantity < 5) {
       await this.lowStockProductEvent.send({
-        productId: product.id,
+        pricinpalId: product.id,
+        datetime: new Date().toISOString(),
         productName: product.name,
         productQuantity: product.stockQuantity,
       });

@@ -1,5 +1,10 @@
 /* eslint-disable no-unused-vars */
-export type EventData<T extends Record<string, any> = {}> = T;
+type ISODate = string;
+
+export type EventData<T = {}> = T & {
+  pricinpalId: string;
+  datetime: ISODate;
+};
 
 export interface IEventHandler {
   handle<R = {}>(data: EventData): void | R | Promise<void | R>;
