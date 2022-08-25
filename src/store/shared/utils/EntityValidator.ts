@@ -90,7 +90,7 @@ export default class EntityValidator {
     return this;
   }
 
-  validate() {
+  validate(doNotThrows: boolean = false) {
     this.rules.forEach((fieldRules, fieldName) => {
       const field = this.data[fieldName];
       const messages: string[] = [];
@@ -111,9 +111,13 @@ export default class EntityValidator {
       }
     });
 
-    if (this.errors.length > 0) {
+    const hasErrors = this.errors.length > 0;
+
+    if (hasErrors && !doNotThrows) {
       throw new ValidationEntityError(this.errors);
     }
+
+    return this.errors;
   }
 
   private addError(error: GenericError) {

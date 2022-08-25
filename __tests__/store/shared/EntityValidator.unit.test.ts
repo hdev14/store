@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import ValidationEntityError from '@shared/errors/ValidationEntityError';
 import EntityValidator from '@shared/utils/EntityValidator';
 
+// TODO: Test with doNotThrows
 describe("EntityValidator's unit tests", () => {
   describe('Strings', () => {
     it('throws a ValidationEntityError if field is not a string', () => {
