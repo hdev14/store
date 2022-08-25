@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { IProductOperations } from '@catalog/domain/IProductRepository';
+import { LowStockProductData } from '@catalog/domain/LowStockProductEvent';
 import Product from '@catalog/domain/Product';
 import StockService from '@catalog/domain/StockService';
 import { EventData } from '@shared/@types/events';
@@ -16,12 +17,12 @@ const fakeProduct: any = {
   hasStockFor: jest.fn(() => true),
 };
 
-class LowStockProductEventStub extends Event {
+class LowStockProductEventStub extends Event<void, LowStockProductData> {
   constructor() {
     super({} as any);
   }
 
-  send<R>(eventData: EventData): Promise<void | R> {
+  send(eventData: EventData<LowStockProductData>): Promise<void> {
     console.info(eventData);
     return Promise.resolve();
   }
@@ -85,7 +86,7 @@ describe('StockService\'s Unit Tests', () => {
     });
 
     it('calls LowStockProductEvent.send if stockQuantity is less then 5', async () => {
-      expect.assertions(2);
+      expect.assertions(5);
 
       const productRepositoryStub = new ProductRepositoryStub();
       productRepositoryStub.updateProduct = jest.fn(() => Promise.resolve({} as Product));
@@ -109,11 +110,10 @@ describe('StockService\'s Unit Tests', () => {
       await stockService.removeFromStock('test_product_id_test', 6);
 
       expect(sendSpy).toHaveBeenCalledTimes(1);
-      expect(sendSpy).toHaveBeenCalledWith({
-        productId: 'test_product_id_test',
-        productName: 'test_product',
-        productQuantity: 4,
-      });
+      expect(sendSpy.mock.calls[0][0].pricinpalId).toEqual('test_product_id_test');
+      expect(sendSpy.mock.calls[0][0].productName).toEqual('test_product');
+      expect(sendSpy.mock.calls[0][0].productQuantity).toEqual(4);
+      expect(sendSpy.mock.calls[0][0].datetime).toBeTruthy();
     });
   });
 
