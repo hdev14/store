@@ -20,7 +20,7 @@ export default class Category extends Entity {
     this.validate();
   }
 
-  toString() {
+  public toString() {
     return `${this.name} - ${this.code}`;
   }
 

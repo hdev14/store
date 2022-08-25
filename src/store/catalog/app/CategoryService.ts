@@ -14,13 +14,13 @@ export default class CategoryService implements ICategoryService {
     this.generateID = generateID;
   }
 
-  async getAllCategories(): Promise<Category[]> {
+  public async getAllCategories(): Promise<Category[]> {
     const categories = await this.repository.getAllCategories();
 
     return categories;
   }
 
-  async createCategory(params: CreateCategoryParams): Promise<Category> {
+  public async createCategory(params: CreateCategoryParams): Promise<Category> {
     const allCategories = await this.repository.getAllCategories();
 
     const category = await this.repository.addCategory(new Category({
@@ -32,7 +32,7 @@ export default class CategoryService implements ICategoryService {
     return category;
   }
 
-  async updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<Category> {
+  public async updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<Category> {
     const currentCategory = await this.repository.getCategoryById(categoryId);
 
     if (!currentCategory) {

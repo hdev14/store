@@ -7,7 +7,7 @@ type LowStocKProductType = {
 }
 
 export default class LowStockProductEventHandler implements IEventHandler {
-  handle<R = {}>(data: EventData<LowStocKProductType>): void | R | Promise<void | R> {
+  public handle<R = {}>(data: EventData<LowStocKProductType>): void | R | Promise<void | R> {
     console.info(data);
 
     // TODO: Send a notification(E-mail, SMS, etc);

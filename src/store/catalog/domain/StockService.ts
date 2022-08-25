@@ -12,7 +12,7 @@ export default class StockService implements IStockService {
     this.lowStockProductEvent = lowStockProductEvent;
   }
 
-  async addToStock(productId: string, quantity: number): Promise<boolean> {
+  public async addToStock(productId: string, quantity: number): Promise<boolean> {
     const product = await this.productRepository.getProductById(productId);
 
     if (!product) {
@@ -26,7 +26,7 @@ export default class StockService implements IStockService {
     return true;
   }
 
-  async removeFromStock(productId: string, quantity: number): Promise<boolean> {
+  public async removeFromStock(productId: string, quantity: number): Promise<boolean> {
     const product = await this.productRepository.getProductById(productId);
 
     if (!product || !product.hasStockFor(quantity)) {

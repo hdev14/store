@@ -49,31 +49,31 @@ export default class Product extends Entity implements IAggregateRoot {
     this.validate();
   }
 
-  activeProduct() {
+  public activeProduct() {
     this.active = true;
   }
 
-  deactiveProduct() {
+  public deactiveProduct() {
     this.active = false;
   }
 
-  changeCategory(category: Category) {
+  public changeCategory(category: Category) {
     this.category = category;
   }
 
-  changeDescription(description: string) {
+  public changeDescription(description: string) {
     this.description = description;
   }
 
-  removeFromStock(quantity: number) {
+  public removeFromStock(quantity: number) {
     this.stockQuantity -= Math.abs(quantity);
   }
 
-  addToStock(quantity: number) {
+  public addToStock(quantity: number) {
     this.stockQuantity += quantity;
   }
 
-  hasStockFor(quantity: number) {
+  public hasStockFor(quantity: number) {
     return this.stockQuantity >= quantity;
   }
 

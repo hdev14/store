@@ -24,7 +24,7 @@ export default class ProductService implements IProductService {
     this.stockService = stockService;
   }
 
-  async getProductById(productId: string): Promise<Product> {
+  public async getProductById(productId: string): Promise<Product> {
     const product = await this.repository.getProductById(productId);
 
     if (!product) {
@@ -34,19 +34,19 @@ export default class ProductService implements IProductService {
     return product;
   }
 
-  async getAllProducts(): Promise<Product[]> {
+  public async getAllProducts(): Promise<Product[]> {
     const products = await this.repository.getAllProducts();
 
     return products;
   }
 
-  async getProductsByCategory(categoryId: string): Promise<Product[]> {
+  public async getProductsByCategory(categoryId: string): Promise<Product[]> {
     const products = await this.repository.getProductsByCategory(categoryId);
 
     return products;
   }
 
-  async createProduct(params: DefaultProductParams): Promise<Product> {
+  public async createProduct(params: DefaultProductParams): Promise<Product> {
     const category = await this.repository.getCategoryById(params.categoryId);
 
     if (!category) {
@@ -68,7 +68,7 @@ export default class ProductService implements IProductService {
     return product;
   }
 
-  async updateProduct(productId: string, params: UpdateProductParams): Promise<Product> {
+  public async updateProduct(productId: string, params: UpdateProductParams): Promise<Product> {
     const currentProduct = await this.repository.getProductById(productId);
 
     if (params.categoryId && !this.repository.getCategoryById(params.categoryId)) {
@@ -91,7 +91,7 @@ export default class ProductService implements IProductService {
     return updatedProduct;
   }
 
-  async updateProductStock(productId: string, quantity: number): Promise<boolean> {
+  public async updateProductStock(productId: string, quantity: number): Promise<boolean> {
     const result = (quantity < 0)
       ? await this.stockService.removeFromStock(productId, Math.abs(quantity))
       : await this.stockService.addToStock(productId, Math.abs(quantity));

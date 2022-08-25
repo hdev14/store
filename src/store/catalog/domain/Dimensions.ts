@@ -19,7 +19,7 @@ export default class Dimensions implements IValueObject {
     this.depth = params.depth;
   }
 
-  toString() {
+  public toString() {
     return `LxAxP: ${this.width} x ${this.height} x ${this.depth}`;
   }
 }
