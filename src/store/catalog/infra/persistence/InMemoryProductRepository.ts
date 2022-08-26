@@ -52,17 +52,17 @@ export class InMemoryProductRepository implements IProductRepository {
     return Promise.resolve(inMemoryProducts.map(this.mapProduct.bind(this)));
   }
 
-  public getCategoryById(categoryId: string): Category | Promise<Category> {
+  public getCategoryById(categoryId: string): Promise<Category> {
     const category = this._categories.find((c) => c._id === categoryId);
 
-    return this.mapCategory(category!);
+    return Promise.resolve(this.mapCategory(category!));
   }
 
   public getAllCategories(): Promise<Category[]> {
     return Promise.resolve(this._categories.map(this.mapCategory.bind(this)));
   }
 
-  public addProduct(product: Product): Product {
+  public addProduct(product: Product): Promise<Product> {
     const length = this._products.push({
       _id: product.id,
       name: product.name,
@@ -77,10 +77,10 @@ export class InMemoryProductRepository implements IProductRepository {
       category: product.category.id,
     });
 
-    return this.mapProduct(this._products[length - 1]);
+    return Promise.resolve(this.mapProduct(this._products[length - 1]));
   }
 
-  public updateProduct(product: Product): Product {
+  public updateProduct(product: Product): Promise<Product> {
     const inMemoryProduct = this._products.find((p) => p._id === product.id);
 
     if (inMemoryProduct === undefined) {
@@ -106,20 +106,20 @@ export class InMemoryProductRepository implements IProductRepository {
       newInMemoryProduct,
     ];
 
-    return this.mapProduct(newInMemoryProduct);
+    return Promise.resolve(this.mapProduct(newInMemoryProduct));
   }
 
-  public addCategory(category: Category): Category {
+  public addCategory(category: Category): Promise<Category> {
     const length = this._categories.push({
       _id: category.id,
       name: category.name,
       code: category.code,
     });
 
-    return this.mapCategory(this._categories[length - 1]);
+    return Promise.resolve(this.mapCategory(this._categories[length - 1]));
   }
 
-  public updateCategory(category: Category): Category {
+  public updateCategory(category: Category): Promise<Category> {
     const inMemoryCategory = this._categories.find((c) => c._id === category.id);
 
     if (!inMemoryCategory) {
@@ -137,7 +137,7 @@ export class InMemoryProductRepository implements IProductRepository {
       newInMemoryCategory,
     ];
 
-    return this.mapCategory(newInMemoryCategory);
+    return Promise.resolve(this.mapCategory(newInMemoryCategory));
   }
 
   get products() {
