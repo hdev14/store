@@ -265,6 +265,7 @@ describe('ProductsService\'s unit tests', () => {
         createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
+
       const fakeCategoryId = faker.datatype.uuid();
 
       const params: UpdateProductParams = {

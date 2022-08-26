@@ -3,31 +3,31 @@ import { ICategoryOperations } from '@catalog/domain/IProductRepository';
 import { fakeCategories } from '../fakes';
 
 export default class RepositoryStub implements ICategoryOperations {
-  getCategoryById(categoryId: string): Promise<Category | null> | Category | null {
+  getCategoryById(categoryId: string): Promise<Category | null> {
     const category = fakeCategories.find((c) => c.id === categoryId);
 
     if (!category) {
-      return null;
+      return Promise.resolve(null);
     }
 
-    return category as Category;
+    return Promise.resolve(category as Category);
   }
 
   getAllCategories(): Promise<Category[]> {
     return Promise.resolve(fakeCategories as any);
   }
 
-  addCategory(category: Category): Category | Promise<Category> {
+  addCategory(category: Category): Promise<Category> {
     fakeCategories.push(category);
 
-    return category;
+    return Promise.resolve(category);
   }
 
-  updateCategory(category: Category): Category | Promise<Category> {
+  updateCategory(category: Category): Promise<Category> {
     const index = fakeCategories.findIndex((c) => c.id === category.id);
 
     fakeCategories[index] = category;
 
-    return category;
+    return Promise.resolve(category);
   }
 }

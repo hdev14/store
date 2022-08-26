@@ -41,11 +41,11 @@ class ProductRepositoryStub implements IProductOperations {
     return Promise.resolve(fakeProduct);
   }
 
-  addProduct(_: Product): Product | Promise<Product> {
+  addProduct(_: Product): Promise<Product> {
     throw new Error('Method not implemented.');
   }
 
-  updateProduct(_: Product): Product | Promise<Product> {
+  updateProduct(_: Product): Promise<Product> {
     throw new Error('Method not implemented.');
   }
 }
