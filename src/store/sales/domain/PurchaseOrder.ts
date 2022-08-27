@@ -27,7 +27,6 @@ type PurchaseOrderParams = {
 type DraftPurchaseOrderParams = {
   id: string;
   clientId: string;
-  totalAmount: number;
   createdAt: Date;
   code: number;
 }
@@ -76,11 +75,11 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
     item.setPurchaseOrder(this.id);
 
     if (this.hasItem(item)) {
-      const index = this._items.findIndex((i) => i.id === item.id);
+      const index = this._items.findIndex((i) => i.product.id === item.product.id);
       const currentItem = this._items[index];
 
       item.addQuantity(currentItem.quantity);
-      this._items = this._items.filter((i) => i.id !== item.id);
+      this._items = this._items.filter((_, idx) => idx !== index);
     }
 
     item.calculateAmount();
@@ -137,7 +136,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   }
 
   public hasItem(item: PurchaseOrderItem) {
-    return this._items.some((i) => i.id === item.id);
+    return this._items.some((i) => i.product.id === item.product.id);
   }
 
   public makeDraft() {

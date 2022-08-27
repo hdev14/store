@@ -3,9 +3,9 @@ import Product from './Product';
 
 export type PurchaseOrderItemParams = {
   id: string;
-  purchaseOrderId: string;
   product: Product;
   quantity: number;
+  purchaseOrderId?: string;
 }
 
 export default class PurchaseOrderItem extends Entity {
@@ -17,9 +17,9 @@ export default class PurchaseOrderItem extends Entity {
 
   constructor(params: PurchaseOrderItemParams) {
     super(params.id);
-    this.purchaseOrderId = params.purchaseOrderId;
     this.product = params.product;
     this.quantity = params.quantity;
+    this.purchaseOrderId = params.purchaseOrderId || '';
   }
 
   public setPurchaseOrder(purchaseOrderId: string) {
