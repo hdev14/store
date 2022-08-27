@@ -18,9 +18,15 @@ export default class AddPurchaseItemCommand extends Command<boolean, AddPurchase
     return this._errors;
   }
 
-  public send(data: EventData<AddPurchaseItemData>): Promise<boolean | void> {
-    console.info(data);
-    return Promise.resolve(true);
+  public async send(data: EventData<AddPurchaseItemData>): Promise<boolean | void> {
+    if (!this.validate(data)) {
+      // TODO: throws an error
+      return false;
+    }
+
+    const result = await this.mediator.send<boolean>(this.constructor.name, data);
+
+    return result;
   }
 
   public validate(data: EventData<AddPurchaseItemData>): boolean {
