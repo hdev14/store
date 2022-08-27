@@ -2,7 +2,7 @@ import { EventData } from '@shared/@types/events';
 import EventMediator from './EventMediator';
 
 export default abstract class Event<R = {}, T = {}> {
-  private mediator: EventMediator;
+  protected mediator: EventMediator;
 
   constructor(mediator: EventMediator) {
     this.mediator = mediator;

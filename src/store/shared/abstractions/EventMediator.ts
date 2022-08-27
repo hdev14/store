@@ -13,7 +13,7 @@ export default abstract class EventMediator {
     return this._handlers;
   }
 
-  public abstract send<R, T = {}>(name: string, data: EventData<T>): void | R | Promise<void | R>;
+  public abstract send<R, T = {}>(name: string, data: EventData<T>): Promise<void | R>;
 
   protected hasHandler(name: string): IEventHandler {
     if (!this.handlers.has(name)) {
