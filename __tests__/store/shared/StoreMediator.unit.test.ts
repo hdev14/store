@@ -8,8 +8,9 @@ const EventHandlerMock = jest.fn().mockImplementation(() => ({
 }));
 
 class EventHandlerStub implements IEventHandler {
-  handle(data: EventData<{}>): void {
+  async handle(data: EventData<{}>): Promise<void> {
     console.info(data);
+    return Promise.resolve();
   }
 }
 
