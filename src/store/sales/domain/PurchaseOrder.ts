@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import Entity from '@shared/abstractions/Entity';
 import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
+import DomainError from '@shared/errors/DomainError';
 import Validator from '@shared/utils/Validator';
 import PurchaseOrderItem from './PurchaseOrderItem';
 import Voucher, { VoucherDiscountTypes } from './Voucher';
@@ -82,11 +83,10 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   }
 
   public removeItem(item: PurchaseOrderItem) {
-    // TODO: public isValid
     const exists = this._items.some((i) => i.id === item.id);
 
     if (!exists) {
-      throw new Error('Item not found.');
+      throw new DomainError('Item do pedido não encontrado.');
     }
 
     this._items = this._items.filter((i) => i.id !== item.id);
