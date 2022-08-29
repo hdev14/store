@@ -45,6 +45,7 @@ const RULE_FUNCTIONS = {
   number: (value: any) => typeof value !== 'number',
   integer: (value: any) => typeof value === 'number' && !Number.isInteger(value),
   float: (value: any) => typeof value === 'number' && Number.isInteger(value),
+  // TODO: validate Date
 };
 
 // TODO: Change messages to pt-BR.

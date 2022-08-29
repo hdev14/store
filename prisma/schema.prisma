@@ -55,7 +55,7 @@ model PurchaseOrder {
 
 model Voucher {
   id                String          @id
-  code              String
+  code              Int
   percentageAmount  Float           @default(0)
   rawDiscountAmount Float           @default(0)
   quantity          Int
