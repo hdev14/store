@@ -61,6 +61,8 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
     this.discountAmount = params.discountAmount || 0;
     this.status = params.status || PurchaseOrderStatus.DRAFT;
     this._items = [];
+
+    this.validate();
   }
 
   public static createDraft(params: DraftPurchaseOrderParams) {

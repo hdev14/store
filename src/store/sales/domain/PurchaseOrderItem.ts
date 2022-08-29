@@ -21,6 +21,8 @@ export default class PurchaseOrderItem extends Entity {
     this.product = params.product;
     this.quantity = params.quantity;
     this.purchaseOrderId = params.purchaseOrderId || '';
+
+    this.validate();
   }
 
   public setPurchaseOrder(purchaseOrderId: string) {

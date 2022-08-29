@@ -52,6 +52,8 @@ export default class Voucher extends Entity {
     this.usedAt = params.usedAt;
     this.expiresAt = params.expiresAt;
     this.active = params.active;
+
+    this.validate();
   }
 
   public validate(): boolean | void {
