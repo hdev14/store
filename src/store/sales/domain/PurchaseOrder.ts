@@ -14,7 +14,7 @@ export enum PurchaseOrderStatus {
   CANCELED = 'canceled',
 }
 
-type PurchaseOrderParams = {
+export type PurchaseOrderParams = {
   id: string;
   clientId: string;
   voucher: Voucher;
@@ -25,7 +25,7 @@ type PurchaseOrderParams = {
   code: number;
 }
 
-type DraftPurchaseOrderParams = {
+export type DraftPurchaseOrderParams = {
   id: string;
   clientId: string;
   createdAt: Date;
@@ -54,9 +54,9 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   constructor(params: PurchaseOrderParams) {
     super(params.id);
     this.clientId = params.clientId;
-    this.totalAmount = params.totalAmount;
     this.createdAt = params.createdAt;
     this.code = params.code;
+    this.totalAmount = params.totalAmount || 0;
     this.voucher = params.voucher || undefined;
     this.discountAmount = params.discountAmount || 0;
     this.status = params.status || PurchaseOrderStatus.DRAFT;
@@ -161,10 +161,10 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   public validate(): boolean | void {
     Validator.setData(this)
       .setRule('code', ['number', 'integer'])
-      .setRule('clientId', ['string', 'required'])
-      .setRule('discountAmount', ['number', 'float', 'required'])
-      .setRule('totalAmount', ['number', 'float', 'required'])
-      .setRule('status', ['string', 'required'])
+      .setRule('clientId', ['required', 'string'])
+      .setRule('discountAmount', ['number'])
+      .setRule('totalAmount', ['number'])
+      .setRule('status', ['required', 'string'])
       .validate();
   }
 }
