@@ -11,24 +11,67 @@ datasource db {
 }
 
 model Product {
-  id String @id
-  name String
-  description String
-  active Boolean
-  amount Float
-  image String
-  stockQuantity Int
-  category Category @relation(fields: [categoryId], references: [id])
-  categoryId String
-  height Float
-  width Float
-  depth Float
-  createdAt DateTime
+  id                 String              @id
+  name               String
+  description        String
+  active             Boolean
+  amount             Float
+  image              String
+  stockQuantity      Int
+  category           Category            @relation(fields: [categoryId], references: [id])
+  categoryId         String
+  height             Float
+  width              Float
+  depth              Float
+  createdAt          DateTime
+  purchaseOrderItems PurchaseOrderItem[]
 }
 
 model Category {
-  id String @id
-  name String
-  code Int
+  id       String    @id
+  name     String
+  code     Int
   products Product[]
+}
+
+model User {
+  id             String          @id
+  purchaseOrders PurchaseOrder[]
+}
+
+model PurchaseOrder {
+  id             String              @id
+  code           Int
+  clientId       String
+  client         User                @relation(fields: [clientId], references: [id])
+  voucherId      String
+  voucher        Voucher             @relation(fields: [voucherId], references: [id])
+  discountAmount Float
+  totalAmount    Float
+  status         String
+  items          PurchaseOrderItem[]
+  createdAt      DateTime
+}
+
+model Voucher {
+  id                String          @id
+  code              String
+  percentageAmount  Float           @default(0)
+  rawDiscountAmount Float           @default(0)
+  quantity          Int
+  type              Int
+  active            Boolean
+  createdAt         DateTime
+  expiresAt         DateTime
+  usedAt            DateTime?
+  purchaseOrders    PurchaseOrder[]
+}
+
+model PurchaseOrderItem {
+  id              String        @id
+  quantity        Int
+  purchaseOrderId String
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  productId       String
+  product         Product       @relation(fields: [productId], references: [id])
 }
