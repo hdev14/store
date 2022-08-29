@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import Entity from '@shared/abstractions/Entity';
 import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
+import Validator from '@shared/utils/Validator';
 import PurchaseOrderItem from './PurchaseOrderItem';
 import Voucher, { VoucherDiscountTypes } from './Voucher';
 
@@ -156,6 +157,12 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   }
 
   public validate(): boolean | void {
-    throw new Error('Method not implemented.');
+    Validator.setData(this)
+      .setRule('code', ['number', 'integer'])
+      .setRule('clientId', ['string', 'required'])
+      .setRule('discountAmount', ['number', 'float', 'required'])
+      .setRule('totalAmount', ['number', 'float', 'required'])
+      .setRule('status', ['string', 'required'])
+      .validate();
   }
 }

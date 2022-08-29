@@ -1,4 +1,5 @@
 import Entity from '@shared/abstractions/Entity';
+import Validator from '@shared/utils/Validator';
 import Product from './Product';
 
 export type PurchaseOrderItemParams = {
@@ -39,6 +40,9 @@ export default class PurchaseOrderItem extends Entity {
   }
 
   public validate(): boolean | void {
-    throw new Error('Method not implemented.');
+    Validator.setData(this)
+      .setRule('purchaseOrderId', ['string', 'required'])
+      .setRule('quantity', ['number', 'required'])
+      .validate();
   }
 }

@@ -1,4 +1,5 @@
 import Entity from '@shared/abstractions/Entity';
+import Validator from '@shared/utils/Validator';
 
 export default class Product extends Entity {
   public name: string;
@@ -9,9 +10,15 @@ export default class Product extends Entity {
     super(id);
     this.name = name;
     this.amount = amount;
+
+    this.validate();
   }
 
   public validate(): boolean | void {
-    throw new Error('Method not implemented.');
+    Validator.setData(this)
+      .setRule('id', ['string', 'required'])
+      .setRule('name', ['string', 'required'])
+      .setRule('amount', ['number', 'float', 'required'])
+      .validate();
   }
 }

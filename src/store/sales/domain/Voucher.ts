@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import Entity from '@shared/abstractions/Entity';
+import Validator from '@shared/utils/Validator';
 
 /* eslint-disable no-shadow */
 export enum VoucherDiscountTypes {
@@ -10,7 +11,7 @@ export enum VoucherDiscountTypes {
 
 export type VoucherParams = {
   id: string;
-  code: string;
+  code: number;
   percentageAmount: number;
   rawDiscountAmount: number;
   quantity: number;
@@ -22,7 +23,7 @@ export type VoucherParams = {
 }
 
 export default class Voucher extends Entity {
-  public code: string;
+  public code: number;
 
   public percentageAmount: number;
 
@@ -54,6 +55,13 @@ export default class Voucher extends Entity {
   }
 
   public validate(): boolean | void {
-    throw new Error('Method not implemented.');
+    Validator.setData(this)
+      .setRule('code', ['number', 'integer', 'required'])
+      .setRule('percentageAmount', ['number'])
+      .setRule('rawDiscountAmount', ['number'])
+      .setRule('quantity', ['number', 'integer', 'required'])
+      .setRule('type', ['number', 'integer', 'min:1', 'max:2'])
+      .setRule('active', ['boolean'])
+      .validate();
   }
 }
