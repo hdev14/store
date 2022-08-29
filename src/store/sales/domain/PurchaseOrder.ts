@@ -17,19 +17,12 @@ export enum PurchaseOrderStatus {
 export type PurchaseOrderParams = {
   id: string;
   clientId: string;
-  voucher: Voucher;
-  discountAmount: number;
-  totalAmount: number;
-  status: PurchaseOrderStatus;
-  createdAt: Date;
   code: number;
-}
-
-export type DraftPurchaseOrderParams = {
-  id: string;
-  clientId: string;
   createdAt: Date;
-  code: number;
+  voucher?: Voucher;
+  discountAmount?: number;
+  totalAmount?: number;
+  status?: PurchaseOrderStatus;
 }
 
 export default class PurchaseOrder extends Entity implements IAggregateRoot {
@@ -37,7 +30,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
 
   public clientId: string;
 
-  public voucher: Voucher;
+  public voucher?: Voucher;
 
   public discountAmount: number;
 
@@ -48,8 +41,6 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   public status: PurchaseOrderStatus;
 
   private _items: Array<PurchaseOrderItem>;
-
-  constructor(params: DraftPurchaseOrderParams);
 
   constructor(params: PurchaseOrderParams) {
     super(params.id);
@@ -65,7 +56,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
     this.validate();
   }
 
-  public static createDraft(params: DraftPurchaseOrderParams) {
+  public static createDraft(params: PurchaseOrderParams) {
     return new PurchaseOrder(params);
   }
 
