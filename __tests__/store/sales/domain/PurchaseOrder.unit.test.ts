@@ -360,4 +360,20 @@ describe("PurchaseOrder's unit tests", () => {
       expect(purchaseOrder.status).toEqual(PurchaseOrderStatus.PAID);
     });
   });
+
+  describe('PurchaseOrder.cancel()', () => {
+    it('changes status to canceled', () => {
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        clientId: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        createdAt: new Date(),
+        status: PurchaseOrderStatus.STARTED,
+      });
+
+      purchaseOrder.cancel();
+
+      expect(purchaseOrder.status).toEqual(PurchaseOrderStatus.CANCELED);
+    });
+  });
 });
