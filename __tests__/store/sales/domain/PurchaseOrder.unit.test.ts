@@ -130,8 +130,6 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
       });
 
-      const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
-
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
@@ -144,10 +142,13 @@ describe("PurchaseOrder's unit tests", () => {
       });
 
       purchaseOrder.addItem(purchaseOrderItem);
+
+      const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
+
       purchaseOrder.removeItem(purchaseOrderItem);
 
       expect(purchaseOrder.items).toHaveLength(0);
-      expect(calculateTotalAmountSpy).toHaveBeenCalledTimes(2);
+      expect(calculateTotalAmountSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -170,6 +171,35 @@ describe("PurchaseOrder's unit tests", () => {
         expect(e).toBeInstanceOf(DomainError);
         expect(e.message).toEqual('Item do pedido não encontrado.');
       }
+    });
+
+    it('updates purchase order item quantity', () => {
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        clientId: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        createdAt: new Date(),
+      });
+
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: faker.datatype.uuid(),
+        product: new Product(
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          faker.datatype.float(),
+        ),
+      });
+
+      purchaseOrder.addItem(purchaseOrderItem);
+
+      const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
+
+      purchaseOrder.updateItemQuantity(purchaseOrderItem.id, 10);
+
+      expect(purchaseOrder.items[0].quantity).toEqual(10);
+      expect(calculateTotalAmountSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
