@@ -66,7 +66,6 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   }
 
   public addItem(item: PurchaseOrderItem) {
-    // TODO: public isValid
     item.setPurchaseOrder(this.id);
 
     if (this.hasItem(item)) {
