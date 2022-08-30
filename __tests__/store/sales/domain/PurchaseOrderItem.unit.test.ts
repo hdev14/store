@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
+import DomainError from '@shared/errors/DomainError';
 
 describe("PurchaseOrderItem's unit tests", () => {
   describe('PurchaseOrderItem.setPurchaseOrder()', () => {
@@ -40,6 +41,29 @@ describe("PurchaseOrderItem's unit tests", () => {
       const amount = purchaseOrderItem.calculateAmount();
 
       expect(amount).toEqual(expectedAmount);
+    });
+  });
+
+  describe('PurchaseOrderItem.addQuantity()', () => {
+    it('throws an exception of type DomainError if quantity is negative', () => {
+      expect.assertions(2);
+
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+        product: new Product(
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          10,
+        ),
+      });
+
+      try {
+        purchaseOrderItem.addQuantity(faker.datatype.number() * (-1));
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(DomainError);
+        expect(e.message).toEqual('Não é possível adiconar um quantidade negativa de itens.');
+      }
     });
   });
 });
