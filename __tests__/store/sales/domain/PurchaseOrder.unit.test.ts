@@ -202,4 +202,62 @@ describe("PurchaseOrder's unit tests", () => {
       expect(calculateTotalAmountSpy).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('calculateTotalAmount', () => {
+    it('calculates the total amount of all items', () => {
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        clientId: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        createdAt: new Date(),
+      });
+
+      const purchaseOrderItems = [
+        new PurchaseOrderItem({
+          id: faker.datatype.uuid(),
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          purchaseOrderId: faker.datatype.uuid(),
+          product: new Product(
+            faker.datatype.uuid(),
+            faker.commerce.product(),
+            faker.datatype.float(),
+          ),
+        }),
+        new PurchaseOrderItem({
+          id: faker.datatype.uuid(),
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          purchaseOrderId: faker.datatype.uuid(),
+          product: new Product(
+            faker.datatype.uuid(),
+            faker.commerce.product(),
+            faker.datatype.float(),
+          ),
+        }),
+        new PurchaseOrderItem({
+          id: faker.datatype.uuid(),
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          purchaseOrderId: faker.datatype.uuid(),
+          product: new Product(
+            faker.datatype.uuid(),
+            faker.commerce.product(),
+            faker.datatype.float(),
+          ),
+        }),
+      ];
+
+      purchaseOrderItems.forEach((item) => purchaseOrder.addItem(item));
+
+      const expectedTotalAmount = purchaseOrderItems.reduce(
+        (acc, item) => acc + (item.quantity * item.product.amount),
+        0,
+      );
+
+      const calculateTotalDiscountAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalDiscountAmount');
+
+      purchaseOrder.calculateTotalAmount();
+
+      expect(purchaseOrder.totalAmount).toEqual(expectedTotalAmount);
+      expect(calculateTotalDiscountAmountSpy).toHaveBeenCalledTimes(1);
+    });
+  });
 });
