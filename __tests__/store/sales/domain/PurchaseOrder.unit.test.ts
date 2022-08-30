@@ -36,6 +36,8 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
       });
 
+      const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
+
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
@@ -51,6 +53,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       expect(purchaseOrder.items).toHaveLength(1);
       expect(purchaseOrder.items[0]).toEqual(purchaseOrderItem);
+      expect(calculateTotalAmountSpy).toHaveBeenCalledTimes(1);
     });
 
     it('increments the quantity of an existing purchase order item', () => {
@@ -60,6 +63,8 @@ describe("PurchaseOrder's unit tests", () => {
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
       });
+
+      const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
 
       const params = {
         id: faker.datatype.uuid(),
@@ -83,6 +88,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       expect(purchaseOrder.items).toHaveLength(1);
       expect(purchaseOrder.items[0].quantity).toEqual(params.quantity + 1);
+      expect(calculateTotalAmountSpy).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -124,6 +130,8 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
       });
 
+      const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
+
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
@@ -139,6 +147,7 @@ describe("PurchaseOrder's unit tests", () => {
       purchaseOrder.removeItem(purchaseOrderItem);
 
       expect(purchaseOrder.items).toHaveLength(0);
+      expect(calculateTotalAmountSpy).toHaveBeenCalledTimes(2);
     });
   });
 });
