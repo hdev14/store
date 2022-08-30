@@ -5,7 +5,7 @@ import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import DomainError from '@shared/errors/DomainError';
 
 describe("PurchaseOrder's unit tests", () => {
-  describe('createDraft', () => {
+  describe('PurchaseOrder.createDraft()', () => {
     it('creates a draft purchase order', () => {
       const params: PurchaseOrderParams = {
         id: faker.datatype.uuid(),
@@ -27,7 +27,7 @@ describe("PurchaseOrder's unit tests", () => {
     });
   });
 
-  describe('addItem', () => {
+  describe('PurchaseOrder.addItem()', () => {
     it('adds a new purchase order item', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
@@ -92,7 +92,7 @@ describe("PurchaseOrder's unit tests", () => {
     });
   });
 
-  describe('removeItem', () => {
+  describe('PurchaseOrder.removeItem()', () => {
     it("throws an exception of type DomainError if purchase order item doesn't exist", () => {
       expect.assertions(2);
 
@@ -152,7 +152,7 @@ describe("PurchaseOrder's unit tests", () => {
     });
   });
 
-  describe('updateItemQuantity', () => {
+  describe('PurchaseOrder.updateItemQuantity()', () => {
     it("throws an exception of type DomainError if item does't exist", () => {
       expect.assertions(2);
 
@@ -203,7 +203,7 @@ describe("PurchaseOrder's unit tests", () => {
     });
   });
 
-  describe('calculateTotalAmount', () => {
+  describe('PurchaseOrder.calculateTotalAmount()', () => {
     it('calculates the total amount of all items', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
@@ -261,7 +261,7 @@ describe("PurchaseOrder's unit tests", () => {
     });
   });
 
-  describe('hasItem', () => {
+  describe('PurchaseOrder.hasItem()', () => {
     it('returns TRUE if purchase order item exists', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
@@ -313,7 +313,7 @@ describe("PurchaseOrder's unit tests", () => {
     });
   });
 
-  describe('makeDraft', () => {
+  describe('PurchaseOrder.makeDraft()', () => {
     it('changes status to draft', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
@@ -329,7 +329,7 @@ describe("PurchaseOrder's unit tests", () => {
     });
   });
 
-  describe('start', () => {
+  describe('PurchaseOrder.start()', () => {
     it('changes status to started', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
