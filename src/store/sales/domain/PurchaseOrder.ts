@@ -77,7 +77,6 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
       this._items = this._items.filter((_, idx) => idx !== index);
     }
 
-    item.calculateAmount();
     this._items.push(item);
     this.calculateTotalAmount();
   }
