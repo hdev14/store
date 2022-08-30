@@ -344,4 +344,20 @@ describe("PurchaseOrder's unit tests", () => {
       expect(purchaseOrder.status).toEqual(PurchaseOrderStatus.STARTED);
     });
   });
+
+  describe('PurchaseOrder.finish()', () => {
+    it('changes status to paid', () => {
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        clientId: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        createdAt: new Date(),
+        status: PurchaseOrderStatus.STARTED,
+      });
+
+      purchaseOrder.finish();
+
+      expect(purchaseOrder.status).toEqual(PurchaseOrderStatus.PAID);
+    });
+  });
 });
