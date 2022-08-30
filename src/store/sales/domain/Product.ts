@@ -18,7 +18,7 @@ export default class Product extends Entity {
     Validator.setData(this)
       .setRule('id', ['string', 'required'])
       .setRule('name', ['string', 'required'])
-      .setRule('amount', ['number', 'float', 'required'])
+      .setRule('amount', ['number', 'required'])
       .validate();
   }
 }
