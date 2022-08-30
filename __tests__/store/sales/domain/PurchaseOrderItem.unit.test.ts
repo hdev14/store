@@ -62,7 +62,7 @@ describe("PurchaseOrderItem's unit tests", () => {
         purchaseOrderItem.addQuantity(faker.datatype.number() * (-1));
       } catch (e: any) {
         expect(e).toBeInstanceOf(DomainError);
-        expect(e.message).toEqual('Não é possível adiconar um quantidade negativa de itens.');
+        expect(e.message).toEqual('Não é possível adicionar uma quantidade negativa de itens.');
       }
     });
 
@@ -82,6 +82,45 @@ describe("PurchaseOrderItem's unit tests", () => {
       purchaseOrderItem.addQuantity(10);
 
       expect(purchaseOrderItem.quantity).toEqual(currentQuantity + 10);
+    });
+  });
+
+  describe('PurchaseOrderItem.updateQuantity()', () => {
+    it('throws an exception of type DomainError if quantity is negative', () => {
+      expect.assertions(2);
+
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+        product: new Product(
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          10,
+        ),
+      });
+
+      try {
+        purchaseOrderItem.updateQuantity(faker.datatype.number() * (-1));
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(DomainError);
+        expect(e.message).toEqual('Não é possível adicionar uma quantidade negativa de itens.');
+      }
+    });
+
+    it("updates the purchase order item's quantity", () => {
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+        product: new Product(
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          10,
+        ),
+      });
+
+      purchaseOrderItem.updateQuantity(10);
+
+      expect(purchaseOrderItem.quantity).toEqual(10);
     });
   });
 });
