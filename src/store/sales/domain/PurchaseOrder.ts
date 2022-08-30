@@ -93,12 +93,10 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   }
 
   public updateItemQuantity(itemId: string, quantity: number) {
-    // TODO: public isValid
-
     const index = this._items.findIndex((i) => i.id === itemId);
 
     if (index === -1) {
-      throw new Error('Item not found.');
+      throw new DomainError('Item do pedido não encontrado.');
     }
 
     this._items[index].updateQuantity(quantity);
