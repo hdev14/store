@@ -150,4 +150,26 @@ describe("PurchaseOrder's unit tests", () => {
       expect(calculateTotalAmountSpy).toHaveBeenCalledTimes(2);
     });
   });
+
+  describe('updateItemQuantity', () => {
+    it("throws an exception of type DomainError if item does't exist", () => {
+      expect.assertions(2);
+
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        clientId: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        createdAt: new Date(),
+      });
+
+      const fakePurchaseOrderItemId = faker.datatype.uuid();
+
+      try {
+        purchaseOrder.updateItemQuantity(fakePurchaseOrderItemId, 10);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(DomainError);
+        expect(e.message).toEqual('Item do pedido não encontrado.');
+      }
+    });
+  });
 });
