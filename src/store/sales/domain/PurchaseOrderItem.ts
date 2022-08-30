@@ -43,7 +43,7 @@ export default class PurchaseOrderItem extends Entity {
 
   public validate(): boolean | void {
     Validator.setData(this)
-      .setRule('purchaseOrderId', ['string', 'required'])
+      .setRule('purchaseOrderId', ['string'])
       .setRule('quantity', ['number', 'required'])
       .validate();
   }
