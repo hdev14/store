@@ -260,4 +260,56 @@ describe("PurchaseOrder's unit tests", () => {
       expect(calculateTotalDiscountAmountSpy).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('hasItem', () => {
+    it('returns TRUE if purchase order item exists', () => {
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        clientId: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        createdAt: new Date(),
+      });
+
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: faker.datatype.uuid(),
+        product: new Product(
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          faker.datatype.float(),
+        ),
+      });
+
+      purchaseOrder.addItem(purchaseOrderItem);
+
+      const result = purchaseOrder.hasItem(purchaseOrderItem);
+
+      expect(result).toEqual(true);
+    });
+
+    it("returns FALSE if purchase order item doesn't exist", () => {
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        clientId: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        createdAt: new Date(),
+      });
+
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: faker.datatype.uuid(),
+        product: new Product(
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          faker.datatype.float(),
+        ),
+      });
+
+      const result = purchaseOrder.hasItem(purchaseOrderItem);
+
+      expect(result).toEqual(false);
+    });
+  });
 });
