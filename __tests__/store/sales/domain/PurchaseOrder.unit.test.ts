@@ -314,7 +314,7 @@ describe("PurchaseOrder's unit tests", () => {
   });
 
   describe('makeDraft', () => {
-    it('changes status do draft', () => {
+    it('changes status to draft', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
         clientId: faker.datatype.uuid(),
@@ -326,6 +326,22 @@ describe("PurchaseOrder's unit tests", () => {
       purchaseOrder.makeDraft();
 
       expect(purchaseOrder.status).toEqual(PurchaseOrderStatus.DRAFT);
+    });
+  });
+
+  describe('start', () => {
+    it('changes status to started', () => {
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        clientId: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        createdAt: new Date(),
+        status: PurchaseOrderStatus.DRAFT,
+      });
+
+      purchaseOrder.start();
+
+      expect(purchaseOrder.status).toEqual(PurchaseOrderStatus.STARTED);
     });
   });
 });
