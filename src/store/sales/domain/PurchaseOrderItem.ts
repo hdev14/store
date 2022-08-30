@@ -1,4 +1,5 @@
 import Entity from '@shared/abstractions/Entity';
+import DomainError from '@shared/errors/DomainError';
 import Validator from '@shared/utils/Validator';
 import Product from './Product';
 
@@ -34,6 +35,10 @@ export default class PurchaseOrderItem extends Entity {
   }
 
   public addQuantity(quantity: number) {
+    if (quantity < 0) {
+      throw new DomainError('Não é possível adiconar um quantidade negativa de itens.');
+    }
+
     this.quantity += quantity;
   }
 
