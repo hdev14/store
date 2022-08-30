@@ -36,13 +36,17 @@ export default class PurchaseOrderItem extends Entity {
 
   public addQuantity(quantity: number) {
     if (quantity < 0) {
-      throw new DomainError('Não é possível adiconar um quantidade negativa de itens.');
+      throw new DomainError('Não é possível adicionar uma quantidade negativa de itens.');
     }
 
     this.quantity += quantity;
   }
 
   public updateQuantity(newQuantity: number) {
+    if (newQuantity < 0) {
+      throw new DomainError('Não é possível adicionar uma quantidade negativa de itens.');
+    }
+
     this.quantity = newQuantity;
   }
 
