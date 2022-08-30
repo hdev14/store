@@ -65,5 +65,23 @@ describe("PurchaseOrderItem's unit tests", () => {
         expect(e.message).toEqual('Não é possível adiconar um quantidade negativa de itens.');
       }
     });
+
+    it('adds quantity to a purchase order item', () => {
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+        product: new Product(
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          10,
+        ),
+      });
+
+      const currentQuantity = purchaseOrderItem.quantity;
+
+      purchaseOrderItem.addQuantity(10);
+
+      expect(purchaseOrderItem.quantity).toEqual(currentQuantity + 10);
+    });
   });
 });
