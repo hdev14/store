@@ -40,7 +40,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number().toString(), 10),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
         product: new Product(
           faker.datatype.uuid(),
@@ -68,7 +68,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       const params = {
         id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number().toString(), 10),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
         product: new Product(
           faker.datatype.uuid(),
@@ -105,7 +105,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number().toString(), 10),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
         product: new Product(
           faker.datatype.uuid(),
@@ -132,7 +132,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number().toString(), 10),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
         product: new Product(
           faker.datatype.uuid(),
@@ -183,7 +183,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number().toString(), 10),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
         product: new Product(
           faker.datatype.uuid(),
@@ -215,7 +215,7 @@ describe("PurchaseOrder's unit tests", () => {
       const purchaseOrderItems = [
         new PurchaseOrderItem({
           id: faker.datatype.uuid(),
-          quantity: parseInt(faker.datatype.number().toString(), 10),
+          quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
           purchaseOrderId: faker.datatype.uuid(),
           product: new Product(
             faker.datatype.uuid(),
@@ -225,7 +225,7 @@ describe("PurchaseOrder's unit tests", () => {
         }),
         new PurchaseOrderItem({
           id: faker.datatype.uuid(),
-          quantity: parseInt(faker.datatype.number().toString(), 10),
+          quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
           purchaseOrderId: faker.datatype.uuid(),
           product: new Product(
             faker.datatype.uuid(),
@@ -235,7 +235,7 @@ describe("PurchaseOrder's unit tests", () => {
         }),
         new PurchaseOrderItem({
           id: faker.datatype.uuid(),
-          quantity: parseInt(faker.datatype.number().toString(), 10),
+          quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
           purchaseOrderId: faker.datatype.uuid(),
           product: new Product(
             faker.datatype.uuid(),
@@ -272,7 +272,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number().toString(), 10),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
         product: new Product(
           faker.datatype.uuid(),
@@ -298,7 +298,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number().toString(), 10),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
         product: new Product(
           faker.datatype.uuid(),
