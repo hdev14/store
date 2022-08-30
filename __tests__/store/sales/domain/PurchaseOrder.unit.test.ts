@@ -115,5 +115,30 @@ describe("PurchaseOrder's unit tests", () => {
         expect(e.message).toEqual('Item do pedido não encontrado.');
       }
     });
+
+    it('removes a purchase order item', () => {
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        clientId: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        createdAt: new Date(),
+      });
+
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: faker.datatype.uuid(),
+        product: new Product(
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          faker.datatype.float(),
+        ),
+      });
+
+      purchaseOrder.addItem(purchaseOrderItem);
+      purchaseOrder.removeItem(purchaseOrderItem);
+
+      expect(purchaseOrder.items).toHaveLength(0);
+    });
   });
 });
