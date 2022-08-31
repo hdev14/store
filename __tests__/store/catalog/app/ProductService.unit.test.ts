@@ -10,7 +10,7 @@ import { faker } from '@faker-js/faker';
 import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 
 describe('ProductsService\'s unit tests', () => {
-  describe('ProductService.getAllProducts', () => {
+  describe('ProductService.getAllProducts()', () => {
     it('returns all products', async () => {
       expect.assertions(2);
 
@@ -30,7 +30,7 @@ describe('ProductsService\'s unit tests', () => {
     });
   });
 
-  describe('ProductService.getProductById', () => {
+  describe('ProductService.getProductById()', () => {
     it('returns a product by id', async () => {
       expect.assertions(10);
 
@@ -80,7 +80,7 @@ describe('ProductsService\'s unit tests', () => {
     });
   });
 
-  describe('ProductService.getProductsByCategory', () => {
+  describe('ProductService.getProductsByCategory()', () => {
     it('reutrns all products related to one specific category', async () => {
       expect.assertions(3);
 
@@ -104,7 +104,7 @@ describe('ProductsService\'s unit tests', () => {
     });
   });
 
-  describe('ProductService.createProduct', () => {
+  describe('ProductService.createProduct()', () => {
     it('creates a new product', async () => {
       expect.assertions(5);
 
@@ -173,7 +173,7 @@ describe('ProductsService\'s unit tests', () => {
     });
   });
 
-  describe('ProductService.updateProduct', () => {
+  describe('ProductService.updateProduct()', () => {
     it('updates an existing product', async () => {
       expect.assertions(11);
 
@@ -291,7 +291,7 @@ describe('ProductsService\'s unit tests', () => {
     });
   });
 
-  describe('ProductService.updateProductStock', () => {
+  describe('ProductService.updateProductStock()', () => {
     it('removes products if is passed a negative quantity', async () => {
       expect.assertions(3);
 

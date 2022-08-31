@@ -51,7 +51,7 @@ class ProductRepositoryStub implements IProductOperations {
 }
 
 describe('StockService\'s Unit Tests', () => {
-  describe('StockService.removeFromStock', () => {
+  describe('StockService.removeFromStock()', () => {
     it('returns false if product doesn\'t exist', async () => {
       const productRepositoryStub = new ProductRepositoryStub();
       productRepositoryStub.getProductById = jest.fn(() => Promise.resolve(null));
@@ -117,7 +117,7 @@ describe('StockService\'s Unit Tests', () => {
     });
   });
 
-  describe('StockService.addToStock', () => {
+  describe('StockService.addToStock()', () => {
     it('returns false if product doesn\'t exist', async () => {
       const productRepositoryStub = new ProductRepositoryStub();
       productRepositoryStub.getProductById = jest.fn(() => Promise.resolve(null));

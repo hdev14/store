@@ -6,7 +6,7 @@ import RepositoryStub from '@tests/store/stubs/CategoryRepositoryStub';
 import createGenerateIDMock from '@tests/store/stubs/createGenerateIDMock';
 
 describe('CategoryService.getAllCategories', () => {
-  describe('CategoryService.getAllCategories', () => {
+  describe('CategoryService.getAllCategories()', () => {
     it('returns all categories', async () => {
       expect.assertions(2);
 
@@ -24,7 +24,7 @@ describe('CategoryService.getAllCategories', () => {
     });
   });
 
-  describe('CategoryService.createCategory', () => {
+  describe('CategoryService.createCategory()', () => {
     it('creates a new category', async () => {
       expect.assertions(5);
 
@@ -49,7 +49,7 @@ describe('CategoryService.getAllCategories', () => {
     });
   });
 
-  describe('CategoryService.updateCategory', () => {
+  describe('CategoryService.updateCategory()', () => {
     it('updates a specific category', async () => {
       expect.assertions(4);
 
