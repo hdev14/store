@@ -12,6 +12,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       };
 
       const draftPurchaseOrder = PurchaseOrder.createDraft(params);
@@ -19,7 +21,7 @@ describe("PurchaseOrder's unit tests", () => {
       expect(draftPurchaseOrder).toEqual({
         ...params,
         status: PurchaseOrderStatus.DRAFT,
-        voucher: undefined,
+        voucher: null,
         discountAmount: 0,
         totalAmount: 0,
         _items: [],
@@ -34,6 +36,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       });
 
       const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
@@ -62,6 +66,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       });
 
       const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
@@ -101,6 +107,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
@@ -128,6 +136,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
@@ -161,6 +171,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       });
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
@@ -179,6 +191,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
@@ -210,6 +224,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       });
 
       const purchaseOrderItems = [
@@ -268,6 +284,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
@@ -294,6 +312,8 @@ describe("PurchaseOrder's unit tests", () => {
         clientId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
+        voucher: null,
+        status: null,
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
@@ -321,6 +341,7 @@ describe("PurchaseOrder's unit tests", () => {
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         status: PurchaseOrderStatus.STARTED,
+        voucher: null,
       });
 
       purchaseOrder.makeDraft();
@@ -337,6 +358,7 @@ describe("PurchaseOrder's unit tests", () => {
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         status: PurchaseOrderStatus.DRAFT,
+        voucher: null,
       });
 
       purchaseOrder.start();
@@ -353,6 +375,7 @@ describe("PurchaseOrder's unit tests", () => {
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         status: PurchaseOrderStatus.STARTED,
+        voucher: null,
       });
 
       purchaseOrder.finish();
@@ -369,6 +392,7 @@ describe("PurchaseOrder's unit tests", () => {
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         status: PurchaseOrderStatus.STARTED,
+        voucher: null,
       });
 
       purchaseOrder.cancel();
