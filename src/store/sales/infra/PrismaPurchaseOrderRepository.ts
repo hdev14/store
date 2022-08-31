@@ -36,6 +36,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     const purchaseOrder = await this.connection.purchaseOrder.findUnique({
       where: { id },
       include: {
+        voucher: true,
         items: {
           include: {
             product: {
@@ -47,15 +48,32 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
             },
           },
         },
-        voucher: true,
       },
     });
 
     return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
   }
 
-  public getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]> {
-    throw new Error('Method not implemented.');
+  public async getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]> {
+    const purchaseOrders = await this.connection.purchaseOrder.findMany({
+      where: { clientId: id },
+      include: {
+        voucher: true,
+        items: {
+          include: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+                amount: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
   }
 
   public getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null> {
