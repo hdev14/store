@@ -1,50 +1,61 @@
+import { PrismaClient } from '@prisma/client';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
+import Prisma from '@shared/Prisma';
 
 export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepository {
-  getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
+  private connection: PrismaClient;
+
+  constructor() {
+    this.connection = Prisma.connect();
+  }
+
+  public getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
     throw new Error('Method not implemented.');
   }
 
-  getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]> {
+  public getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]> {
     throw new Error('Method not implemented.');
   }
 
-  getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null> {
+  public getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null> {
     throw new Error('Method not implemented.');
   }
 
-  addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+  public addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
     throw new Error('Method not implemented.');
   }
 
-  updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+  public updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
     throw new Error('Method not implemented.');
   }
 
-  getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
+  public getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
     throw new Error('Method not implemented.');
   }
 
-  getPurchaseOrderItem(purchaseOrderId: string, productId: string): Promise<PurchaseOrderItem | null> {
+  public getPurchaseOrderItem(
+    purchaseOrderId: string,
+    productId: string,
+  ): Promise<PurchaseOrderItem | null> {
     throw new Error('Method not implemented.');
   }
 
-  addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
+  public addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
     throw new Error('Method not implemented.');
   }
 
-  updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
+  public updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
     throw new Error('Method not implemented.');
   }
 
-  deletePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<boolean> {
+  public deletePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 
-  getVoucherByCode(code: string): Promise<Voucher | null> {
+  public getVoucherByCode(code: string): Promise<Voucher | null> {
     throw new Error('Method not implemented.');
   }
 }
