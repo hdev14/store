@@ -19,7 +19,7 @@ export type VoucherParams = {
   createdAt: Date;
   expiresAt: Date;
   active: boolean;
-  usedAt?: Date;
+  usedAt: Date | null;
 }
 
 export default class Voucher extends Entity {
@@ -39,7 +39,7 @@ export default class Voucher extends Entity {
 
   public active: boolean;
 
-  public usedAt?: Date;
+  public usedAt: Date | null;
 
   constructor(params: VoucherParams) {
     super(params.id);
@@ -49,7 +49,7 @@ export default class Voucher extends Entity {
     this.quantity = params.quantity;
     this.type = params.type;
     this.createdAt = params.createdAt;
-    this.usedAt = params.usedAt;
+    this.usedAt = params.usedAt || null;
     this.expiresAt = params.expiresAt;
     this.active = params.active;
 
@@ -57,13 +57,13 @@ export default class Voucher extends Entity {
   }
 
   public validate(): boolean | void {
-    Validator.setData(this)
-      .setRule('code', ['number', 'integer', 'required'])
-      .setRule('percentageAmount', ['number'])
-      .setRule('rawDiscountAmount', ['number'])
-      .setRule('quantity', ['number', 'integer', 'required'])
-      .setRule('type', ['number', 'integer', 'min:1', 'max:2'])
-      .setRule('active', ['boolean'])
-      .validate();
+    // Validator.setData(this)
+    //   .setRule('code', ['number', 'integer', 'required'])
+    //   .setRule('percentageAmount', ['number'])
+    //   .setRule('rawDiscountAmount', ['number'])
+    //   .setRule('quantity', ['number', 'integer', 'required'])
+    //   .setRule('type', ['number', 'integer', 'min:1', 'max:2'])
+    //   .setRule('active', ['boolean'])
+    //   .validate();
   }
 }

@@ -20,10 +20,10 @@ export type PurchaseOrderParams = {
   clientId: string;
   code: number;
   createdAt: Date;
-  voucher?: Voucher;
+  voucher: Voucher | null;
   discountAmount?: number;
   totalAmount?: number;
-  status?: PurchaseOrderStatus;
+  status: PurchaseOrderStatus | null;
 }
 
 export default class PurchaseOrder extends Entity implements IAggregateRoot {
@@ -31,7 +31,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
 
   public clientId: string;
 
-  public voucher?: Voucher;
+  public voucher: Voucher | null;
 
   public discountAmount: number;
 
@@ -49,7 +49,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
     this.createdAt = params.createdAt;
     this.code = params.code;
     this.totalAmount = params.totalAmount || 0;
-    this.voucher = params.voucher || undefined;
+    this.voucher = params.voucher || null;
     this.discountAmount = params.discountAmount || 0;
     this.status = params.status || PurchaseOrderStatus.DRAFT;
     this._items = [];
@@ -146,12 +146,12 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   }
 
   public validate(): boolean | void {
-    Validator.setData(this)
-      .setRule('code', ['number', 'integer'])
-      .setRule('clientId', ['required', 'string'])
-      .setRule('discountAmount', ['number'])
-      .setRule('totalAmount', ['number'])
-      .setRule('status', ['required', 'string'])
-      .validate();
+    // Validator.setData(this)
+    //   .setRule('code', ['number', 'integer'])
+    //   .setRule('clientId', ['required', 'string'])
+    //   .setRule('discountAmount', ['number'])
+    //   .setRule('totalAmount', ['number'])
+    //   .setRule('status', ['required', 'string'])
+    //   .validate();
   }
 }
