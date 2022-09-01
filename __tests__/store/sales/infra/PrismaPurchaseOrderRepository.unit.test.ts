@@ -121,7 +121,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
   });
 
   describe('PrismaPurchaseOrderRepository.getPurchaseOrdersByClientId()', () => {
-    it('returns a purchase order by client id', async () => {
+    it('returns purchase orders by client id', async () => {
       expect.assertions(28);
 
       const clientId = faker.datatype.uuid();
@@ -229,7 +229,75 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
   });
 
   describe('PrismaPurchaseOrderRepository.getDraftPurchaseOrderByClientId()', () => {
+    it('returns a draft purchase order by client id', async () => {
+      expect.assertions(13);
 
+      const clientId = faker.datatype.uuid();
+      const purchaseOrderId = faker.datatype.uuid();
+
+      const fakeDraftPurchaseOrder = {
+        id: purchaseOrderId,
+        clientId,
+        code: parseInt(faker.datatype.number().toString(), 10),
+        status: PurchaseOrderStatus.DRAFT,
+        totalAmount: 0,
+        discountAmount: 0,
+        createdAt: new Date(),
+        voucher: null,
+        items: [
+          {
+            id: faker.datatype.uuid(),
+            quantity: parseInt(faker.datatype.number().toString(), 10),
+            purchaseOrderId,
+            product: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              amount: faker.datatype.float(),
+            },
+          },
+        ],
+      };
+
+      prismaMock.purchaseOrder.findFirst.mockResolvedValueOnce(fakeDraftPurchaseOrder as any);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const purchaseOrder = await repository.getDraftPurchaseOrderByClientId(clientId);
+
+      expect(purchaseOrder!.id).toEqual(fakeDraftPurchaseOrder.id);
+      expect(purchaseOrder!.clientId).toEqual(fakeDraftPurchaseOrder.clientId);
+      expect(purchaseOrder!.code).toEqual(fakeDraftPurchaseOrder.code);
+      expect(purchaseOrder!.createdAt).toEqual(fakeDraftPurchaseOrder.createdAt);
+      expect(purchaseOrder!.discountAmount).toEqual(fakeDraftPurchaseOrder.discountAmount);
+
+      purchaseOrder!.items.forEach((item, idx) => {
+        expect(item.id).toEqual(fakeDraftPurchaseOrder.items[idx].id);
+        expect(item.product.id).toEqual(fakeDraftPurchaseOrder.items[idx].product.id);
+        expect(item.product.name).toEqual(fakeDraftPurchaseOrder.items[idx].product.name);
+        expect(item.product.amount).toEqual(fakeDraftPurchaseOrder.items[idx].product.amount);
+        expect(item.quantity).toEqual(fakeDraftPurchaseOrder.items[idx].quantity);
+        expect(item.purchaseOrderId)
+          .toEqual(fakeDraftPurchaseOrder.items[idx].purchaseOrderId);
+      });
+
+      expect(prismaMock.purchaseOrder.findFirst).toHaveBeenCalledTimes(1);
+      expect(prismaMock.purchaseOrder.findFirst).toHaveBeenCalledWith({
+        where: { clientId, status: PurchaseOrderStatus.DRAFT },
+        include: {
+          items: {
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  amount: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    });
   });
 
   describe('PrismaPurchaseOrderRepository.addPurchaseOrder()', () => {
