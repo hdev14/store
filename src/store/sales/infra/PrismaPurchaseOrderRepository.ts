@@ -21,7 +21,7 @@ type ItemsWithProduct = Array<PrismaPurchaseOrderItem & {
 }>;
 
 type PurchaseOrderWithVoucherAndItems = PrismaPurchaseOrder & {
-  voucher: PrismaVoucher;
+  voucher?: PrismaVoucher;
   items: ItemsWithProduct;
 };
 
@@ -76,8 +76,25 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
   }
 
-  public getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null> {
-    throw new Error('Method not implemented.');
+  public async getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null> {
+    const purchaseOrder = await this.connection.purchaseOrder.findFirst({
+      where: { clientId: id, status: PurchaseOrderStatus.DRAFT },
+      include: {
+        items: {
+          include: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+                amount: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
   }
 
   public addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
