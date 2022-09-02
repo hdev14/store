@@ -21,7 +21,7 @@ type ItemsWithProduct = Array<PrismaPurchaseOrderItem & {
 }>;
 
 type PurchaseOrderWithVoucherAndItems = PrismaPurchaseOrder & {
-  voucher?: PrismaVoucher;
+  voucher?: PrismaVoucher | null;
   items?: ItemsWithProduct;
 };
 
@@ -106,7 +106,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
         discountAmount: purchaseOrder.discountAmount,
         status: purchaseOrder.status,
         clientId: purchaseOrder.clientId,
-        voucherId: purchaseOrder.voucher!.id,
+        voucherId: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
         createdAt: purchaseOrder.createdAt,
       },
       include: {
