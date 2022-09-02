@@ -44,8 +44,8 @@ model PurchaseOrder {
   code           Int
   clientId       String
   client         User                @relation(fields: [clientId], references: [id])
-  voucherId      String
-  voucher        Voucher             @relation(fields: [voucherId], references: [id])
+  voucherId      String?
+  voucher        Voucher?             @relation(fields: [voucherId], references: [id])
   discountAmount Float
   totalAmount    Float
   status         String
