@@ -22,7 +22,7 @@ type ItemsWithProduct = Array<PrismaPurchaseOrderItem & {
 
 type PurchaseOrderWithVoucherAndItems = PrismaPurchaseOrder & {
   voucher?: PrismaVoucher;
-  items: ItemsWithProduct;
+  items?: ItemsWithProduct;
 };
 
 export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepository {
@@ -97,8 +97,24 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
   }
 
-  public addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    throw new Error('Method not implemented.');
+  public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+    const createdPurchaseOrder = await this.connection.purchaseOrder.create({
+      data: {
+        id: purchaseOrder.id,
+        code: purchaseOrder.code,
+        totalAmount: purchaseOrder.totalAmount,
+        discountAmount: purchaseOrder.discountAmount,
+        status: purchaseOrder.status,
+        clientId: purchaseOrder.clientId,
+        voucherId: purchaseOrder.voucher!.id,
+        createdAt: purchaseOrder.createdAt,
+      },
+      include: {
+        voucher: true,
+      },
+    });
+
+    return this.mapPurchaseOrder(createdPurchaseOrder);
   }
 
   public updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
@@ -161,18 +177,20 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
 
     const po = new PurchaseOrder(params);
 
-    purchaseOrder.items.forEach((item) => {
-      po.addItem(new PurchaseOrderItem({
-        id: item.id,
-        quantity: item.quantity,
-        purchaseOrderId: item.purchaseOrderId,
-        product: new Product(
-          item.product.id,
-          item.product.name,
-          item.product.amount,
-        ),
-      }));
-    });
+    if (purchaseOrder.items) {
+      purchaseOrder.items.forEach((item) => {
+        po.addItem(new PurchaseOrderItem({
+          id: item.id,
+          quantity: item.quantity,
+          purchaseOrderId: item.purchaseOrderId,
+          product: new Product(
+            item.product.id,
+            item.product.name,
+            item.product.amount,
+          ),
+        }));
+      });
+    }
 
     return po;
   }
