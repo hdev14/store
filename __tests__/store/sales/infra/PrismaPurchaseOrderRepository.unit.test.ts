@@ -388,6 +388,64 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         },
       });
     });
+
+    it('creates a new purchase order without voucher', async () => {
+      expect.assertions(8);
+
+      const clientId = faker.datatype.uuid();
+      const purchaseOrderId = faker.datatype.uuid();
+
+      const fakePurchaseOrder = {
+        id: purchaseOrderId,
+        clientId,
+        code: parseInt(faker.datatype.number().toString(), 10),
+        status: PurchaseOrderStatus.DRAFT,
+        totalAmount: 0,
+        discountAmount: 0,
+        createdAt: new Date(),
+        voucher: null,
+        items: [],
+      };
+
+      prismaMock.purchaseOrder.create.mockResolvedValueOnce(fakePurchaseOrder as any);
+
+      const purchaseOrder = new PurchaseOrder({
+        id: fakePurchaseOrder.id,
+        clientId: fakePurchaseOrder.clientId,
+        code: fakePurchaseOrder.code,
+        status: fakePurchaseOrder.status,
+        voucher: null,
+        createdAt: fakePurchaseOrder.createdAt,
+      });
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const result = await repository.addPurchaseOrder(purchaseOrder);
+
+      expect(result.id).toEqual(purchaseOrder.id);
+      expect(result.clientId).toEqual(purchaseOrder.clientId);
+      expect(result.code).toEqual(purchaseOrder.code);
+      expect(result.createdAt).toEqual(purchaseOrder.createdAt);
+      expect(result.discountAmount).toEqual(purchaseOrder.discountAmount);
+      expect(result.voucher).toBe(null);
+
+      expect(prismaMock.purchaseOrder.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.purchaseOrder.create).toHaveBeenCalledWith({
+        data: {
+          id: fakePurchaseOrder.id,
+          clientId: fakePurchaseOrder.clientId,
+          code: fakePurchaseOrder.code,
+          status: fakePurchaseOrder.status,
+          voucherId: undefined,
+          createdAt: fakePurchaseOrder.createdAt,
+          totalAmount: fakePurchaseOrder.totalAmount,
+          discountAmount: fakePurchaseOrder.discountAmount,
+        },
+        include: {
+          voucher: true,
+        },
+      });
+    });
   });
 
   describe('PrismaPurchaseOrderRepository.updatePurchaseOrder()', () => {
