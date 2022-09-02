@@ -301,7 +301,93 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
   });
 
   describe('PrismaPurchaseOrderRepository.addPurchaseOrder()', () => {
+    it('creates a new purchase order', async () => {
+      expect.assertions(17);
 
+      const clientId = faker.datatype.uuid();
+      const purchaseOrderId = faker.datatype.uuid();
+
+      const fakePurchaseOrder = {
+        id: purchaseOrderId,
+        clientId,
+        code: parseInt(faker.datatype.number().toString(), 10),
+        status: PurchaseOrderStatus.DRAFT,
+        totalAmount: 0,
+        discountAmount: 0,
+        createdAt: new Date(),
+        voucher: {
+          id: faker.datatype.uuid(),
+          percentageAmount: 0,
+          rawDiscountAmount: 0,
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          type: VoucherDiscountTypes.ABSOLUTE,
+          active: faker.datatype.boolean(),
+          code: parseInt(faker.datatype.number().toString(), 10),
+          expiresAt: new Date(),
+          createdAt: new Date(),
+        },
+        items: [],
+      };
+
+      prismaMock.purchaseOrder.create.mockResolvedValueOnce(fakePurchaseOrder as any);
+
+      const purchaseOrder = new PurchaseOrder({
+        id: fakePurchaseOrder.id,
+        clientId: fakePurchaseOrder.clientId,
+        code: fakePurchaseOrder.code,
+        status: fakePurchaseOrder.status,
+        voucher: new Voucher({
+          id: fakePurchaseOrder.voucher.id,
+          active: fakePurchaseOrder.voucher.active,
+          code: fakePurchaseOrder.voucher.code,
+          percentageAmount: fakePurchaseOrder.voucher.percentageAmount,
+          rawDiscountAmount: fakePurchaseOrder.voucher.rawDiscountAmount,
+          quantity: fakePurchaseOrder.voucher.quantity,
+          type: fakePurchaseOrder.voucher.type,
+          createdAt: fakePurchaseOrder.voucher.createdAt,
+          expiresAt: fakePurchaseOrder.voucher.expiresAt,
+          usedAt: null,
+        }),
+        createdAt: fakePurchaseOrder.createdAt,
+      });
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const result = await repository.addPurchaseOrder(purchaseOrder);
+
+      expect(result.id).toEqual(purchaseOrder.id);
+      expect(result.clientId).toEqual(purchaseOrder.clientId);
+      expect(result.code).toEqual(purchaseOrder.code);
+      expect(result.createdAt).toEqual(purchaseOrder.createdAt);
+      expect(result.discountAmount).toEqual(purchaseOrder.discountAmount);
+      expect(result.voucher!.id).toEqual(purchaseOrder.voucher!.id);
+      expect(result.voucher!.active).toEqual(purchaseOrder.voucher!.active);
+      expect(result.voucher!.code).toEqual(purchaseOrder.voucher!.code);
+      expect(result.voucher!.percentageAmount).toEqual(purchaseOrder.voucher!.percentageAmount);
+      expect(result.voucher!.rawDiscountAmount).toEqual(purchaseOrder.voucher!.rawDiscountAmount);
+      expect(result.voucher!.quantity).toEqual(purchaseOrder.voucher!.quantity);
+      expect(result.voucher!.type).toEqual(purchaseOrder.voucher!.type);
+      expect(result.voucher!.createdAt).toEqual(purchaseOrder.voucher!.createdAt);
+      expect(result.voucher!.expiresAt).toEqual(purchaseOrder.voucher!.expiresAt);
+      expect(result.voucher!.usedAt).toEqual(null);
+
+      expect(prismaMock.purchaseOrder.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.purchaseOrder.create).toHaveBeenCalledWith({
+        data: {
+          id: fakePurchaseOrder.id,
+          clientId: fakePurchaseOrder.clientId,
+          code: fakePurchaseOrder.code,
+          status: fakePurchaseOrder.status,
+          voucherId: fakePurchaseOrder.voucher.id,
+          createdAt: fakePurchaseOrder.createdAt,
+          totalAmount: fakePurchaseOrder.totalAmount,
+          discountAmount: fakePurchaseOrder.discountAmount,
+        },
+        include: {
+          voucher: true,
+        },
+      });
+    });
   });
 
   describe('PrismaPurchaseOrderRepository.updatePurchaseOrder()', () => {
