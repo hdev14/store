@@ -3,7 +3,6 @@ import {
   PurchaseOrder as PrismaPurchaseOrder,
   Voucher as PrismaVoucher,
   PurchaseOrderItem as PrismaPurchaseOrderItem,
-  Product as PrismaProduct,
 } from '@prisma/client';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';
@@ -12,17 +11,17 @@ import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
 import Prisma from '@shared/Prisma';
 
-type ItemsWithProduct = Array<PrismaPurchaseOrderItem & {
+type ItemWithProduct = PrismaPurchaseOrderItem & {
   product: {
     id: string;
     name: string;
     amount: number;
   }
-}>;
+};
 
 type PurchaseOrderWithVoucherAndItems = PrismaPurchaseOrder & {
   voucher?: PrismaVoucher | null;
-  items?: ItemsWithProduct;
+  items?: Array<ItemWithProduct>;
 };
 
 export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepository {
@@ -117,12 +116,64 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return this.mapPurchaseOrder(createdPurchaseOrder);
   }
 
-  public updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    throw new Error('Method not implemented.');
+  public async updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+    const updatedPurchaseOrder = await this.connection.purchaseOrder.update({
+      where: { id: purchaseOrder.id },
+      data: {
+        clientId: purchaseOrder.clientId,
+        code: purchaseOrder.code,
+        totalAmount: purchaseOrder.totalAmount,
+        discountAmount: purchaseOrder.discountAmount,
+        status: purchaseOrder.status,
+        voucherId: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
+      },
+      include: {
+        voucher: true,
+        items: {
+          include: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+                amount: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return this.mapPurchaseOrder(updatedPurchaseOrder);
   }
 
-  public getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
-    throw new Error('Method not implemented.');
+  public async getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
+    const purchaseOrderItem = await this.connection.purchaseOrderItem.findUnique({
+      where: { id },
+      include: {
+        product: {
+          select: {
+            id: true,
+            name: true,
+            amount: true,
+          },
+        },
+      },
+    });
+
+    return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
+  }
+
+  mapPurchaseOrderItem(purchaseOrderItem: ItemWithProduct) {
+    return new PurchaseOrderItem({
+      id: purchaseOrderItem.id,
+      quantity: purchaseOrderItem.quantity,
+      purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+      product: new Product(
+        purchaseOrderItem.product.id,
+        purchaseOrderItem.product.name,
+        purchaseOrderItem.product.amount,
+      ),
+    });
   }
 
   public getPurchaseOrderItem(
