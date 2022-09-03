@@ -163,19 +163,6 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
   }
 
-  mapPurchaseOrderItem(purchaseOrderItem: ItemWithProduct) {
-    return new PurchaseOrderItem({
-      id: purchaseOrderItem.id,
-      quantity: purchaseOrderItem.quantity,
-      purchaseOrderId: purchaseOrderItem.purchaseOrderId,
-      product: new Product(
-        purchaseOrderItem.product.id,
-        purchaseOrderItem.product.name,
-        purchaseOrderItem.product.amount,
-      ),
-    });
-  }
-
   public getPurchaseOrderItem(
     purchaseOrderId: string,
     productId: string,
@@ -208,41 +195,45 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
       discountAmount: purchaseOrder.discountAmount,
       status: purchaseOrder.status as PurchaseOrderStatus,
       createdAt: purchaseOrder.createdAt,
-      voucher: null,
+      voucher: purchaseOrder.voucher ? this.mapVoucher(purchaseOrder.voucher) : null,
     };
-
-    if (purchaseOrder.voucher) {
-      params.voucher = new Voucher({
-        id: purchaseOrder.voucher.id,
-        active: purchaseOrder.voucher.active,
-        code: purchaseOrder.voucher.code,
-        percentageAmount: purchaseOrder.voucher.percentageAmount,
-        rawDiscountAmount: purchaseOrder.voucher.rawDiscountAmount,
-        type: purchaseOrder.voucher.type,
-        quantity: purchaseOrder.voucher.quantity,
-        createdAt: purchaseOrder.voucher.createdAt,
-        expiresAt: purchaseOrder.voucher.expiresAt,
-        usedAt: purchaseOrder.voucher.usedAt,
-      });
-    }
 
     const po = new PurchaseOrder(params);
 
     if (purchaseOrder.items) {
       purchaseOrder.items.forEach((item) => {
-        po.addItem(new PurchaseOrderItem({
-          id: item.id,
-          quantity: item.quantity,
-          purchaseOrderId: item.purchaseOrderId,
-          product: new Product(
-            item.product.id,
-            item.product.name,
-            item.product.amount,
-          ),
-        }));
+        po.addItem(this.mapPurchaseOrderItem(item));
       });
     }
 
     return po;
+  }
+
+  private mapVoucher(voucher: PrismaVoucher) {
+    return new Voucher({
+      id: voucher.id,
+      active: voucher.active,
+      code: voucher.code,
+      percentageAmount: voucher.percentageAmount,
+      rawDiscountAmount: voucher.rawDiscountAmount,
+      type: voucher.type,
+      quantity: voucher.quantity,
+      createdAt: voucher.createdAt,
+      expiresAt: voucher.expiresAt,
+      usedAt: voucher.usedAt,
+    });
+  }
+
+  private mapPurchaseOrderItem(purchaseOrderItem: ItemWithProduct) {
+    return new PurchaseOrderItem({
+      id: purchaseOrderItem.id,
+      quantity: purchaseOrderItem.quantity,
+      purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+      product: new Product(
+        purchaseOrderItem.product.id,
+        purchaseOrderItem.product.name,
+        purchaseOrderItem.product.amount,
+      ),
+    });
   }
 }
