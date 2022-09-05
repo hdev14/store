@@ -165,7 +165,10 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
 
   // eslint-disable-next-line max-len
   public async getPurchaseOrderItem(params: { purchaseOrderId?: string, productId?: string }): Promise<PurchaseOrderItem | null> {
-    const where = params.purchaseOrderId ? { purchaseOrderId: params.purchaseOrderId } : {};
+    const where = params.purchaseOrderId
+      ? { purchaseOrderId: params.purchaseOrderId }
+      : { productId: params.productId };
+
     const purchaseOrderItem = await this.connection.purchaseOrderItem.findFirst({
       where,
       include: {
