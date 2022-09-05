@@ -702,6 +702,18 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         },
       });
     });
+
+    it('throws a generic exception if neither purchaseOrderId or productId is passed', async () => {
+      expect.assertions(1);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      try {
+        await repository.getPurchaseOrderItem({});
+      } catch (e: any) {
+        expect(e.message).toEqual('É preciso passar o ID do pedido ou do produto.');
+      }
+    });
   });
 
   describe('PrismaPurchaseOrderRepository.addPurchaseOrderItem()', () => {
