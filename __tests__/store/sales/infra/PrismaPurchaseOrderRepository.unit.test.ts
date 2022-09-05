@@ -605,7 +605,54 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
   });
 
   describe('PrismaPurchaseOrderRepository.getPurchaseOrderItem()', () => {
+    it('gets a purchase order item by purchase order id', async () => {
+      expect.assertions(7);
 
+      const fakePurchaseOrderId = faker.datatype.uuid();
+
+      const fakePurchaseOrderItem = {
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: fakePurchaseOrderId,
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
+      };
+
+      prismaMock.purchaseOrderItem.findFirst.mockResolvedValueOnce(fakePurchaseOrderItem as any);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const purchaseOrderItem = await repository.getPurchaseOrderItem({
+        purchaseOrderId: fakePurchaseOrderId,
+      });
+
+      expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
+      expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
+      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
+      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
+      expect(purchaseOrderItem!.product).toEqual(new Product(
+        fakePurchaseOrderItem.product.id,
+        fakePurchaseOrderItem.product.name,
+        fakePurchaseOrderItem.product.amount,
+      ));
+
+      expect(prismaMock.purchaseOrderItem.findFirst).toHaveBeenCalledTimes(1);
+      expect(prismaMock.purchaseOrderItem.findFirst).toHaveBeenCalledWith({
+        where: { purchaseOrderId: fakePurchaseOrderId },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              amount: true,
+            },
+          },
+        },
+      });
+    });
   });
 
   describe('PrismaPurchaseOrderRepository.addPurchaseOrderItem()', () => {
