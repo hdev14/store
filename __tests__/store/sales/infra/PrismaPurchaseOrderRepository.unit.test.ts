@@ -843,7 +843,32 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
   });
 
   describe('PrismaPurchaseOrderRepository.deletePurchaseOrderItem()', () => {
+    it('deletes a purchas order item by id', async () => {
+      expect.assertions(3);
 
+      const fakePurchaseOrderItem = {
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: faker.datatype.uuid(),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
+      };
+
+      prismaMock.purchaseOrderItem.update.mockResolvedValueOnce(fakePurchaseOrderItem as any);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItem.id);
+
+      expect(result).toBe(true);
+      expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledTimes(1);
+      expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledWith({
+        where: { id: fakePurchaseOrderItem.id },
+      });
+    });
   });
 
   describe('PrismaPurchaseOrderRepository.getVoucherByCode()', () => {
