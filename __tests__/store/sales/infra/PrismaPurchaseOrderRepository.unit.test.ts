@@ -857,7 +857,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         },
       };
 
-      prismaMock.purchaseOrderItem.update.mockResolvedValueOnce(fakePurchaseOrderItem as any);
+      prismaMock.purchaseOrderItem.delete.mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
       const repository = new PrismaPurchaseOrderRepository();
 
@@ -867,6 +867,24 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledTimes(1);
       expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledWith({
         where: { id: fakePurchaseOrderItem.id },
+      });
+    });
+
+    it('returns FALSE if occur an expected error', async () => {
+      expect.assertions(3);
+
+      const fakePurchaseOrderItemId = faker.datatype.uuid();
+
+      prismaMock.purchaseOrderItem.delete.mockRejectedValueOnce(new Error('Test'));
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
+
+      expect(result).toBe(false);
+      expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledTimes(1);
+      expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledWith({
+        where: { id: fakePurchaseOrderItemId },
       });
     });
   });
