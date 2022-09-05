@@ -25,7 +25,7 @@ interface IPurchaseOrderRepository {
 
   updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem>;
 
-  deletePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<boolean>;
+  deletePurchaseOrderItem(purchasOrderItemId: string): Promise<boolean>;
 
   getVoucherByCode(code: string): Promise<Voucher | null>;
 }

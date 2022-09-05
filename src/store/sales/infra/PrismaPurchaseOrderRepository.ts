@@ -242,8 +242,12 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return this.mapPurchaseOrderItem(updatedPurchaseOrderItem);
   }
 
-  public deletePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  public async deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<boolean> {
+    await this.connection.purchaseOrderItem.delete({
+      where: { id: purchaseOrderItemId },
+    });
+
+    return true;
   }
 
   public getVoucherByCode(code: string): Promise<Voucher | null> {
