@@ -17,7 +17,9 @@ interface IPurchaseOrderRepository {
 
   getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null>;
 
-  getPurchaseOrderItem(params: { purchaseOrderId: string, productId: string }): Promise<PurchaseOrderItem | null>;
+  getPurchaseOrderItem(params: { purchaseOrderId: string }): Promise<PurchaseOrderItem | null>;
+  getPurchaseOrderItem(params: { productId: string }): Promise<PurchaseOrderItem | null>;
+  getPurchaseOrderItem(params: { purchaseOrderId?: string, productId?: string }): Promise<PurchaseOrderItem | null>;
 
   addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem>;
 

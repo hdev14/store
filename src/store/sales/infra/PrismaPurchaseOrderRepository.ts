@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {
   PrismaClient,
   PurchaseOrder as PrismaPurchaseOrder,
@@ -163,8 +164,20 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
   }
 
-  // eslint-disable-next-line max-len
-  public async getPurchaseOrderItem(params: { purchaseOrderId?: string, productId?: string }): Promise<PurchaseOrderItem | null> {
+  // eslint-disable-next-line no-unused-vars
+  public async getPurchaseOrderItem(params: { purchaseOrderId: string; }): Promise<PurchaseOrderItem | null>;
+
+  // eslint-disable-next-line no-unused-vars
+  public async getPurchaseOrderItem(params: { productId: string; }): Promise<PurchaseOrderItem | null>;
+
+  // eslint-disable-next-line no-unused-vars
+  public async getPurchaseOrderItem(params: { purchaseOrderId?: string; productId?: string; }): Promise<PurchaseOrderItem | null>;
+
+  public async getPurchaseOrderItem(params: { purchaseOrderId?: string; productId?: string; }): Promise<PurchaseOrderItem | null> {
+    if (!params.purchaseOrderId && !params.productId) {
+      throw new Error('É preciso passar o ID do pedido ou do produto.');
+    }
+
     const where = params.purchaseOrderId
       ? { purchaseOrderId: params.purchaseOrderId }
       : { productId: params.productId };
