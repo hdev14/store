@@ -163,11 +163,23 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
   }
 
-  public getPurchaseOrderItem(
-    purchaseOrderId: string,
-    productId: string,
-  ): Promise<PurchaseOrderItem | null> {
-    throw new Error('Method not implemented.');
+  // eslint-disable-next-line max-len
+  public async getPurchaseOrderItem(params: { purchaseOrderId?: string, productId?: string }): Promise<PurchaseOrderItem | null> {
+    const where = params.purchaseOrderId ? { purchaseOrderId: params.purchaseOrderId } : {};
+    const purchaseOrderItem = await this.connection.purchaseOrderItem.findFirst({
+      where,
+      include: {
+        product: {
+          select: {
+            id: true,
+            name: true,
+            amount: true,
+          },
+        },
+      },
+    });
+
+    return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
   }
 
   public addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
