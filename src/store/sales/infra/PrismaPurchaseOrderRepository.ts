@@ -243,11 +243,17 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
   }
 
   public async deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<boolean> {
-    await this.connection.purchaseOrderItem.delete({
-      where: { id: purchaseOrderItemId },
-    });
+    try {
+      await this.connection.purchaseOrderItem.delete({
+        where: { id: purchaseOrderItemId },
+      });
 
-    return true;
+      return true;
+    } catch (e) {
+      console.error(e);
+
+      return false;
+    }
   }
 
   public getVoucherByCode(code: string): Promise<Voucher | null> {
