@@ -717,7 +717,66 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
   });
 
   describe('PrismaPurchaseOrderRepository.addPurchaseOrderItem()', () => {
+    it('creates a new purchase order item', async () => {
+      expect.assertions(7);
 
+      const fakePurchaseOrderItem = {
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: faker.datatype.uuid(),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
+      };
+
+      prismaMock.purchaseOrderItem.create.mockResolvedValueOnce(fakePurchaseOrderItem as any);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const purchaseOrderItem = await repository.addPurchaseOrderItem(
+        new PurchaseOrderItem({
+          id: fakePurchaseOrderItem.id,
+          purchaseOrderId: fakePurchaseOrderItem.purchaseOrderId,
+          quantity: fakePurchaseOrderItem.quantity,
+          product: new Product(
+            fakePurchaseOrderItem.product.id,
+            fakePurchaseOrderItem.product.name,
+            fakePurchaseOrderItem.product.amount,
+          ),
+        }),
+      );
+
+      expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
+      expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
+      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
+      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
+      expect(purchaseOrderItem!.product).toEqual(new Product(
+        fakePurchaseOrderItem.product.id,
+        fakePurchaseOrderItem.product.name,
+        fakePurchaseOrderItem.product.amount,
+      ));
+
+      expect(prismaMock.purchaseOrderItem.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.purchaseOrderItem.create).toHaveBeenCalledWith({
+        data: {
+          id: fakePurchaseOrderItem.id,
+          purchaseOrderId: fakePurchaseOrderItem.purchaseOrderId,
+          quantity: fakePurchaseOrderItem.quantity,
+          productId: fakePurchaseOrderItem.product.id,
+        },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              amount: true,
+            },
+          },
+        },
+      });
+    });
   });
 
   describe('PrismaPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
