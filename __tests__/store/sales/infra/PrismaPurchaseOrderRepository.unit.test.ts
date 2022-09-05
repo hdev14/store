@@ -574,6 +574,34 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         },
       });
     });
+
+    it("returns null if purchase order item doesn't exist", async () => {
+      expect.assertions(3);
+
+      const fakePurchaseOrderItemId = faker.datatype.uuid();
+
+      prismaMock.purchaseOrderItem.findUnique.mockResolvedValueOnce(null);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const purchaseOrderItem = await repository.getPurchaseOrderItemById(fakePurchaseOrderItemId);
+
+      expect(purchaseOrderItem).toBeNull();
+
+      expect(prismaMock.purchaseOrderItem.findUnique).toHaveBeenCalledTimes(1);
+      expect(prismaMock.purchaseOrderItem.findUnique).toHaveBeenCalledWith({
+        where: { id: fakePurchaseOrderItemId },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              amount: true,
+            },
+          },
+        },
+      });
+    });
   });
 
   describe('PrismaPurchaseOrderRepository.getPurchaseOrderItem()', () => {
