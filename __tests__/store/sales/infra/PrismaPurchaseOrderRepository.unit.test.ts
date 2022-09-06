@@ -4,7 +4,7 @@ import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
-import PrismaPurchaseOrderRepository from '@sales/infra/PrismaPurchaseOrderRepository';
+import PrismaPurchaseOrderRepository from '@sales/infra/persistence/PrismaPurchaseOrderRepository';
 import { DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended';
 
 const prismaMock = mockDeep<PrismaClient>() as unknown as DeepMockProxy<PrismaClient>;
