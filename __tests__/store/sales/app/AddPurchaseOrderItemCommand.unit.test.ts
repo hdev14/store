@@ -1,11 +1,12 @@
-import AddPurchaseOrderItemCommand from '@sales/app/AddPurchaseOrderItemCommand';
+import { faker } from '@faker-js/faker';
+import AddPurchaseOrderItemCommand, { AddPurchaseOrderItemData } from '@sales/app/AddPurchaseOrderItemCommand';
 import { EventData } from '@shared/@types/events';
 import EventMediator from '@shared/abstractions/EventMediator';
 import ValidationError from '@shared/errors/ValidationError';
 
 class MediatorStub extends EventMediator {
   public send<R, T = {}>(_name: string, _data: EventData<T>): Promise<void | R> {
-    throw new Error('Method not implemented.');
+    return Promise.resolve();
   }
 }
 
@@ -30,5 +31,29 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
       expect(e).toBeInstanceOf(ValidationError);
       expect(e.errors).toHaveLength(6);
     }
+  });
+
+  it('calls Mediator.send method with correct params', async () => {
+    expect.assertions(2);
+
+    const mediator = new MediatorStub();
+    const sendSpy = jest.spyOn(mediator, 'send');
+
+    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediator);
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    await addPurchaseOrderItemCommand.send(data);
+
+    expect(sendSpy).toHaveBeenCalledTimes(1);
+    expect(sendSpy).toHaveBeenCalledWith('AddPurchaseOrderItemCommand', data);
   });
 });
