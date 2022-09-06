@@ -2,6 +2,7 @@ import ValidationError, { GenericError } from '../errors/ValidationError';
 
 // eslint-disable-next-line no-useless-escape
 const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const RULE_FUNCTIONS = {
   required: (value: any) => {
@@ -45,8 +46,8 @@ const RULE_FUNCTIONS = {
   number: (value: any) => typeof value !== 'number',
   integer: (value: any) => typeof value === 'number' && !Number.isInteger(value),
   float: (value: any) => typeof value === 'number' && Number.isInteger(value),
+  uuid: (value: any) => typeof value === 'string' && !UUID_REGEX.test(value),
   // TODO: validate Date
-  // TODO: validate uuid
 };
 
 // TODO: Change messages to pt-BR.
@@ -70,6 +71,7 @@ const RULE_MESSAGES = {
   number: (field: string) => `The field ${field} must be a number.`,
   integer: (field: string) => `The field ${field} must be an integer.`,
   float: (field: string) => `The field ${field} must be a float.`,
+  uuid: (field: string) => `The field ${field} must be an UUID.`,
 };
 
 export default class EntityValidator {
