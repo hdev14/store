@@ -256,8 +256,12 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     }
   }
 
-  public getVoucherByCode(code: string): Promise<Voucher | null> {
-    throw new Error('Method not implemented.');
+  public async getVoucherByCode(code: number): Promise<Voucher | null> {
+    const voucher = await this.connection.voucher.findFirst({
+      where: { code },
+    });
+
+    return voucher ? this.mapVoucher(voucher) : null;
   }
 
   private mapPurchaseOrder(purchaseOrder: PurchaseOrderWithVoucherAndItems) {
