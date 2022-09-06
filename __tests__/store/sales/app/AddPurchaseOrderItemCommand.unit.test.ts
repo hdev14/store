@@ -56,4 +56,52 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
     expect(sendSpy).toHaveBeenCalledTimes(1);
     expect(sendSpy).toHaveBeenCalledWith('AddPurchaseOrderItemCommand', data);
   });
+
+  it('returns TRUE if mediator.send execute successfully', async () => {
+    expect.assertions(1);
+
+    const mediator = new MediatorStub();
+
+    mediator.send = jest.fn().mockResolvedValueOnce(true);
+
+    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediator);
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const result = await addPurchaseOrderItemCommand.send(data);
+
+    expect(result).toBe(true);
+  });
+
+  it('returns FALSE if mediator.send fails', async () => {
+    expect.assertions(1);
+
+    const mediator = new MediatorStub();
+
+    mediator.send = jest.fn().mockResolvedValueOnce(false);
+
+    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediator);
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const result = await addPurchaseOrderItemCommand.send(data);
+
+    expect(result).toBe(false);
+  });
 });
