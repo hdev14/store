@@ -927,5 +927,23 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         where: { code: fakeVoucher.code },
       });
     });
+
+    it("returns null if voucher doesn't exist", async () => {
+      expect.assertions(3);
+
+      const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
+
+      prismaMock.voucher.findFirst.mockResolvedValueOnce(null);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const voucher = await repository.getVoucherByCode(fakeVoucherCode);
+
+      expect(voucher).toBeNull();
+      expect(prismaMock.voucher.findFirst).toHaveBeenCalledTimes(1);
+      expect(prismaMock.voucher.findFirst).toHaveBeenCalledWith({
+        where: { code: fakeVoucherCode },
+      });
+    });
   });
 });
