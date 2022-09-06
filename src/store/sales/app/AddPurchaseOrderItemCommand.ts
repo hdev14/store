@@ -3,7 +3,7 @@ import Command from '@shared/abstractions/Command';
 import { GenericError } from '@shared/errors/ValidationError';
 import Validator from '@shared/utils/Validator';
 
-export type AddPurchaseItemData = {
+export type AddPurchaseOrderItemData = {
   clientId: string;
   productId: string;
   productName: string;
@@ -11,14 +11,15 @@ export type AddPurchaseItemData = {
   quantity: number;
 }
 
-export default class AddPurchaseItemCommand extends Command<boolean, AddPurchaseItemData> {
+// eslint-disable-next-line max-len
+export default class AddPurchaseOrderItemCommand extends Command<boolean, AddPurchaseOrderItemData> {
   private _errors: GenericError[] = [];
 
   get errors() {
     return this._errors;
   }
 
-  public async send(data: EventData<AddPurchaseItemData>): Promise<boolean | void> {
+  public async send(data: EventData<AddPurchaseOrderItemData>): Promise<boolean | void> {
     if (!this.validate(data)) {
       // TODO: throws an error
       return false;
@@ -29,7 +30,7 @@ export default class AddPurchaseItemCommand extends Command<boolean, AddPurchase
     return result;
   }
 
-  public validate(data: EventData<AddPurchaseItemData>): boolean {
+  public validate(data: EventData<AddPurchaseOrderItemData>): boolean {
     const errors = Validator.setData(data)
       .setRule('clientId', ['required', 'string'])
       .setRule('productId', ['required', 'string'])

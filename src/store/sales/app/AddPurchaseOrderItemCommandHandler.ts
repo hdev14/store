@@ -3,7 +3,7 @@ import Product from '@sales/domain/Product';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import { EventData, IEventHandler } from '@shared/@types/events';
-import { AddPurchaseItemData } from './AddPurchaseItemCommand';
+import { AddPurchaseOrderItemData } from './AddPurchaseOrderItemCommand';
 
 export default class AddPurchaseItemCommandHandler implements IEventHandler<boolean> {
   private repository: IPurchaseOrderRepository;
@@ -12,7 +12,7 @@ export default class AddPurchaseItemCommandHandler implements IEventHandler<bool
     this.repository = repository;
   }
 
-  public async handle(data: EventData<AddPurchaseItemData>): Promise<void | boolean> {
+  public async handle(data: EventData<AddPurchaseOrderItemData>): Promise<void | boolean> {
     // TODO: improve this logic
 
     console.info(data);
@@ -27,10 +27,12 @@ export default class AddPurchaseItemCommandHandler implements IEventHandler<bool
 
     if (!draftPurchaseOrder) {
       const newDraftPurchaseOrder = PurchaseOrder.createDraft({
+        id: 'asdfs',
         clientId: data.clientId,
         createdAt: new Date(),
         code: 123,
-        id: 'asdfs',
+        voucher: null,
+        status: null,
       });
 
       newDraftPurchaseOrder.addItem(purchaseOrderItem);
