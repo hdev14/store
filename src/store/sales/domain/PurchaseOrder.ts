@@ -48,8 +48,8 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
     this.clientId = params.clientId;
     this.createdAt = params.createdAt;
     this.code = params.code;
+    this.voucher = params.voucher;
     this.totalAmount = params.totalAmount || 0;
-    this.voucher = params.voucher || null;
     this.discountAmount = params.discountAmount || 0;
     this.status = params.status || PurchaseOrderStatus.DRAFT;
     this._items = [];

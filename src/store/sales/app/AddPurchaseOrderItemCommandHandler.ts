@@ -23,18 +23,19 @@ export default class AddPurchaseItemCommandHandler implements IEventHandler<bool
     const draftPurchaseOrder = await this.repository.getDraftPurchaseOrderByClientId(data.clientId);
 
     const purchaseOrderItem = new PurchaseOrderItem({
-      id: this.generateID(),
-      purchaseOrderId: data.principalId,
+      id: data.principalId,
       product: new Product(data.productId, data.productName, data.productAmount),
       quantity: data.quantity,
     });
 
     if (!draftPurchaseOrder) {
+      const code = await this.repository.countPurchaseOrders() + 1;
+
       const newDraftPurchaseOrder = PurchaseOrder.createDraft({
-        id: 'asdfs',
+        id: this.generateID(),
         clientId: data.clientId,
         createdAt: new Date(),
-        code: 123,
+        code,
         voucher: null,
         status: null,
       });
@@ -44,19 +45,19 @@ export default class AddPurchaseItemCommandHandler implements IEventHandler<bool
       return true;
     }
 
-    const exists = draftPurchaseOrder.hasItem(purchaseOrderItem);
-    draftPurchaseOrder.addItem(purchaseOrderItem);
+    // const exists = draftPurchaseOrder.hasItem(purchaseOrderItem);
+    // draftPurchaseOrder.addItem(purchaseOrderItem);
 
-    if (exists) {
-      await this.repository.updatePurchaseOrderItem(
-        draftPurchaseOrder.items.find((i) => i.product.id === purchaseOrderItem.product.id)!,
-      );
+    // if (exists) {
+    //   await this.repository.updatePurchaseOrderItem(
+    //     draftPurchaseOrder.items.find((i) => i.product.id === purchaseOrderItem.product.id)!,
+    //   );
 
-      return true;
-    }
+    //   return true;
+    // }
 
-    await this.repository.addPurchaseOrderItem(purchaseOrderItem);
+    // await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
-    return true;
+    // return true;
   }
 }
