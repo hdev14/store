@@ -28,6 +28,8 @@ interface IPurchaseOrderRepository {
   deletePurchaseOrderItem(purchasOrderItemId: string): Promise<boolean>;
 
   getVoucherByCode(code: number): Promise<Voucher | null>;
+
+  countPurchaseOrders(): Promise<number>;
 }
 
 export default IPurchaseOrderRepository;

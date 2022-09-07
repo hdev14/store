@@ -314,4 +314,9 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
       ),
     });
   }
+
+  countPurchaseOrders(): Promise<number> {
+    // TODO: add logic
+    throw new Error('Method not implemented.');
+  }
 }
