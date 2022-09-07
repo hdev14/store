@@ -118,4 +118,8 @@ export default class RepositoryStub implements IPurchaseOrderRepository {
       }),
     );
   }
+
+  countPurchaseOrders(): Promise<number> {
+    return Promise.resolve(parseInt(faker.random.numeric(), 10));
+  }
 }
