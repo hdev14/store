@@ -7,11 +7,10 @@ type LowStocKProductType = {
 }
 
 export default class LowStockProductEventHandler implements IEventHandler {
-  public handle<R = {}>(data: EventData<LowStocKProductType>): void | R | Promise<void | R> {
+  public handle<R = {}>(data: EventData<LowStocKProductType>): Promise<void | R> {
     console.info(data);
 
     // TODO: Send a notification(E-mail, SMS, etc);
-
-    throw new Error('Method not implemented.');
+    return Promise.resolve();
   }
 }
