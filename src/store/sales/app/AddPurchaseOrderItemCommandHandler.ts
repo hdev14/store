@@ -6,7 +6,7 @@ import { EventData, IEventHandler } from '@shared/@types/events';
 import IGenerateID from '@shared/utils/IGenerateID';
 import { AddPurchaseOrderItemData } from './AddPurchaseOrderItemCommand';
 
-export default class AddPurchaseItemCommandHandler implements IEventHandler<boolean> {
+export default class AddPurchaseOrderItemCommandHandler implements IEventHandler<boolean> {
   private repository: IPurchaseOrderRepository;
 
   private generateID: IGenerateID;
