@@ -946,4 +946,55 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       });
     });
   });
+
+  describe('PrismaPurchaseOrderRepository.countPurchaseOrders()', () => {
+    it('counts all the purchase orders', async () => {
+      expect.assertions(2);
+
+      const fakeQuantityOfPuchaseOrders = parseInt(faker.datatype.number().toString(), 10);
+
+      prismaMock.purchaseOrder.count.mockResolvedValueOnce(fakeQuantityOfPuchaseOrders);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const result = await repository.countPurchaseOrders();
+
+      expect(prismaMock.purchaseOrder.count).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(fakeQuantityOfPuchaseOrders);
+    });
+  });
+
+  describe('PrismaPurchaseOrderRepository.countPurchaseOrderItems()', () => {
+    it('counts all the purchase order items', async () => {
+      expect.assertions(2);
+
+      const fakeQuantityOfPuchaseOrderItems = parseInt(faker.datatype.number().toString(), 10);
+
+      prismaMock.purchaseOrderItem.count.mockResolvedValueOnce(fakeQuantityOfPuchaseOrderItems);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const result = await repository.countPurchaseOrderItems();
+
+      expect(prismaMock.purchaseOrderItem.count).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(fakeQuantityOfPuchaseOrderItems);
+    });
+  });
+
+  describe('PrismaPurchaseOrderRepository.countVouchers()', () => {
+    it('counts all the vouchers', async () => {
+      expect.assertions(2);
+
+      const fakeQuantityOfVouchers = parseInt(faker.datatype.number().toString(), 10);
+
+      prismaMock.voucher.count.mockResolvedValueOnce(fakeQuantityOfVouchers);
+
+      const repository = new PrismaPurchaseOrderRepository();
+
+      const result = await repository.countVouchers();
+
+      expect(prismaMock.voucher.count).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(fakeQuantityOfVouchers);
+    });
+  });
 });

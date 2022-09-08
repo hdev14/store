@@ -120,6 +120,14 @@ export default class RepositoryStub implements IPurchaseOrderRepository {
   }
 
   countPurchaseOrders(): Promise<number> {
-    return Promise.resolve(parseInt(faker.random.numeric(), 10));
+    return Promise.resolve(parseInt(faker.datatype.number().toString(), 10));
+  }
+
+  countPurchaseOrderItems(): Promise<number> {
+    return Promise.resolve(parseInt(faker.datatype.number().toString(), 10));
+  }
+
+  countVouchers(): Promise<number> {
+    return Promise.resolve(parseInt(faker.datatype.number().toString(), 10));
   }
 }
