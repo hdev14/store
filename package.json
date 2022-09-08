@@ -9,7 +9,8 @@
     "test:int": "dotenv -e .env.test -- npx jest int --passWithNoTests --watch --config=jest.int.config.js",
     "test:int:cov": "dotenv -e .env.test -- npx jest int --coverage --config=jest.int.config.js",
     "dev": "dotenv -e .env.dev -- npx ts-node-dev -r tsconfig-paths/register src/api/index.ts",
-    "prod": "node -r ./tsconfig-paths-bootstrap.js ./dist/src/api/index.js"
+    "prod": "node -r ./tsconfig-paths-bootstrap.js ./dist/src/api/index.js",
+    "build": "ts-node -r tsconfig-paths/register ./src/api/index.ts"
   },
   "repository": {
     "type": "git",
