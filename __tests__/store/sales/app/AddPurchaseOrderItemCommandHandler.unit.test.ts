@@ -3,12 +3,11 @@ import { AddPurchaseOrderItemData } from '@sales/app/AddPurchaseOrderItemCommand
 import AddPurchaseOrderItemCommandHandler from '@sales/app/AddPurchaseOrderItemCommandHandler';
 import { EventData } from '@shared/@types/events';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
+import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 import createGenerateIDMock from '../../stubs/createGenerateIDMock';
 
 jest.mock('../../../../src/store/sales/domain/PurchaseOrderItem');
-jest.mock('../../../../src/store/sales/domain/PurchaseOrder');
 const PurchaseOrderItemMock = jest.mocked(PurchaseOrderItem, true);
 
 beforeEach(() => {
@@ -78,17 +77,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const repository = new RepositoryStub();
     repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
-
-    PurchaseOrder.createDraft = jest.fn().mockReturnValueOnce(
-      new PurchaseOrder({
-        clientId: faker.datatype.uuid(),
-        code: parseInt(faker.random.numeric(), 10),
-        createdAt: new Date(),
-        id: faker.datatype.uuid(),
-        status: PurchaseOrderStatus.DRAFT,
-        voucher: null,
-      }),
-    );
 
     const createDraftSpy = jest.spyOn(PurchaseOrder, 'createDraft');
 
