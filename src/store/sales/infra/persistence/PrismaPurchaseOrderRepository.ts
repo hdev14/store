@@ -264,6 +264,18 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return voucher ? this.mapVoucher(voucher) : null;
   }
 
+  public async countPurchaseOrders(): Promise<number> {
+    return this.connection.purchaseOrder.count();
+  }
+
+  public async countPurchaseOrderItems(): Promise<number> {
+    return this.connection.purchaseOrderItem.count();
+  }
+
+  public async countVouchers(): Promise<number> {
+    return this.connection.voucher.count();
+  }
+
   private mapPurchaseOrder(purchaseOrder: PurchaseOrderWithVoucherAndItems) {
     const params: PurchaseOrderParams = {
       id: purchaseOrder.id,
@@ -313,10 +325,5 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
         purchaseOrderItem.product.amount,
       ),
     });
-  }
-
-  countPurchaseOrders(): Promise<number> {
-    // TODO: add logic
-    throw new Error('Method not implemented.');
   }
 }

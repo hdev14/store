@@ -30,6 +30,10 @@ interface IPurchaseOrderRepository {
   getVoucherByCode(code: number): Promise<Voucher | null>;
 
   countPurchaseOrders(): Promise<number>;
+
+  countPurchaseOrderItems(): Promise<number>;
+
+  countVouchers(): Promise<number>;
 }
 
 export default IPurchaseOrderRepository;
