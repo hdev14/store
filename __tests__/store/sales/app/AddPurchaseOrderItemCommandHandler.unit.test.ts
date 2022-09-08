@@ -141,6 +141,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
 
     const addItemMock = jest.fn();
+    const currentCreateDraft = PurchaseOrder.createDraft;
     PurchaseOrder.createDraft = jest.fn().mockReturnValueOnce({ addItem: addItemMock });
 
     const data: EventData<AddPurchaseOrderItemData> = {
@@ -161,5 +162,61 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     await addPurchaseOrderItemCommandHandler.handle(data);
 
     expect(addItemMock).toHaveBeenCalledTimes(1);
+
+    PurchaseOrder.createDraft = currentCreateDraft;
+  });
+
+  it('calls repository.addPurchaseOrder after add the purchase order item in the new draftPurchaseOrder', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+    const addPurchaseOrderSpy = jest.spyOn(repository, 'addPurchaseOrder');
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(addPurchaseOrderSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls repository.addPurchaseOrderItem after add the purchase order item in the new draftPurchaseOrder', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+    const addPurchaseOrderItemSpy = jest.spyOn(repository, 'addPurchaseOrderItem');
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(addPurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
   });
 });
