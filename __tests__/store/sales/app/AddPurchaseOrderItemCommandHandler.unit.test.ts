@@ -133,4 +133,33 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect(createDraftSpy.mock.calls[0][0].code).toBeTruthy();
     expect(createDraftSpy.mock.calls[0][0].createdAt instanceof Date).toBe(true);
   });
+
+  it('adds a new PurchaseOrderItem in the new draftPurchaseOrder', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+
+    const addItemMock = jest.fn();
+    PurchaseOrder.createDraft = jest.fn().mockReturnValueOnce({ addItem: addItemMock });
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(addItemMock).toHaveBeenCalledTimes(1);
+  });
 });
