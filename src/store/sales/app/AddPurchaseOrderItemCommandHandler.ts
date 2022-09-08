@@ -20,31 +20,20 @@ export default class AddPurchaseItemCommandHandler implements IEventHandler<bool
     // TODO:
     // Add try/catch to return FALSE if something goes wrong
     // Create a function to perform each individual logic
-    const draftPurchaseOrder = await this.repository.getDraftPurchaseOrderByClientId(data.clientId);
-
     const purchaseOrderItem = new PurchaseOrderItem({
       id: data.principalId,
-      product: new Product(data.productId, data.productName, data.productAmount),
+      product: new Product(
+        data.productId,
+        data.productName,
+        data.productAmount,
+      ),
       quantity: data.quantity,
     });
 
+    const draftPurchaseOrder = await this.repository.getDraftPurchaseOrderByClientId(data.clientId);
+
     if (!draftPurchaseOrder) {
-      const code = await this.repository.countPurchaseOrders() + 1;
-
-      const newDraftPurchaseOrder = PurchaseOrder.createDraft({
-        id: this.generateID(),
-        clientId: data.clientId,
-        createdAt: new Date(),
-        code,
-        voucher: null,
-        status: null,
-      });
-
-      newDraftPurchaseOrder.addItem(purchaseOrderItem);
-
-      await this.repository.addPurchaseOrder(newDraftPurchaseOrder);
-      await this.repository.addPurchaseOrderItem(purchaseOrderItem);
-
+      await this.createNewDraftPurcahseOrder(data.clientId, purchaseOrderItem);
       return true;
     }
 
@@ -62,5 +51,26 @@ export default class AddPurchaseItemCommandHandler implements IEventHandler<bool
     // await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
     return true;
+  }
+
+  private async createNewDraftPurcahseOrder(
+    clientId: string,
+    purchaseOrderItem: PurchaseOrderItem,
+  ): Promise<void> {
+    const code = await this.repository.countPurchaseOrders() + 1;
+
+    const newDraftPurchaseOrder = PurchaseOrder.createDraft({
+      id: this.generateID(),
+      clientId,
+      createdAt: new Date(),
+      code,
+      voucher: null,
+      status: null,
+    });
+
+    newDraftPurchaseOrder.addItem(purchaseOrderItem);
+
+    await this.repository.addPurchaseOrder(newDraftPurchaseOrder);
+    await this.repository.addPurchaseOrderItem(purchaseOrderItem);
   }
 }
