@@ -58,6 +58,6 @@ export default class AddPurchaseItemCommandHandler implements IEventHandler<bool
 
     // await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
-    // return true;
+    return true;
   }
 }

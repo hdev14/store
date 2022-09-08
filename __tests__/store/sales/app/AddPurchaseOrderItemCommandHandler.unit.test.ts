@@ -72,6 +72,33 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect(PurchaseOrderItemMock.mock.calls[0][0].product.amount).toEqual(data.productAmount);
   });
 
+  it("calls repository.countPurchaseOrders if draftPurchaseOrder doesn't exist", async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+    const countPurchaseOrdersSpy = jest.spyOn(repository, 'countPurchaseOrders');
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(countPurchaseOrdersSpy).toHaveBeenCalledTimes(1);
+  });
+
   it("creates a new DraftPurchaseOrder if draftPurchaseOrder doesn't exist", async () => {
     expect.assertions(8);
 
