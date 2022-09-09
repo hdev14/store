@@ -18,15 +18,17 @@ export default class NodemailerEmailService implements IEmailService {
 
   public async send(params: EmailParams): Promise<void> {
     try {
-      const messageInfo = await this.transporter.sendMail({
-        from: params.from,
-        to: typeof params.to === 'string' ? params.to : params.to.join(', '),
-        subject: params.subject,
-        text: params.text,
-        html: params.html,
-      });
+      if (process.env.NODE_ENV !== 'test') {
+        const messageInfo = await this.transporter.sendMail({
+          from: params.from,
+          to: typeof params.to === 'string' ? params.to : params.to.join(', '),
+          subject: params.subject,
+          text: params.text,
+          html: params.html,
+        });
 
-      console.info(messageInfo);
+        console.info(messageInfo);
+      }
     } catch (e) {
       console.error(e);
     }
