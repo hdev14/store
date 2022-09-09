@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import CatalogControllerFactory from '../factories/CatalogControllerFactory';
+import { createCatalogController } from '../factories';
 
 const router = Router();
 
-const catalogController = CatalogControllerFactory.create();
+const catalogController = createCatalogController();
 
 router.get('/products', catalogController.getAllProducts.bind(catalogController));
 
