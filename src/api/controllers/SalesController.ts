@@ -43,7 +43,9 @@ export default class SalesController {
         });
       }
 
-      return response.sendStatus(200);
+      return response.status(422).json({
+        message: 'Não foi possível adicionar o item ao pedido.',
+      });
     } catch (e) {
       if (e instanceof ValidationError) {
         return response.status(400).send({ errors: e.errors });
