@@ -1,23 +1,23 @@
+import { LowStockProductData } from '@catalog/domain/LowStockProductEvent';
 import { EventData, IEventHandler } from '@shared/@types/events';
 import IEmailService from './IEmailService';
 
-type LowStocKProductType = {
-  productId: string;
-  productName: string;
-  productQuantity: number;
-}
-
 export default class LowStockProductEventHandler implements IEventHandler {
   private emailService: IEmailService;
+
+  private static defaultEmail = 'default@email.com';
 
   constructor(emailService: IEmailService) {
     this.emailService = emailService;
   }
 
-  public handle<R = {}>(data: EventData<LowStocKProductType>): Promise<void | R> {
-    console.info(data);
-
-    // TODO: Send a notification(E-mail, SMS, etc);
-    return Promise.resolve();
+  public async handle(data: EventData<LowStockProductData>): Promise<void> {
+    await this.emailService.send({
+      from: LowStockProductEventHandler.defaultEmail,
+      to: LowStockProductEventHandler.defaultEmail,
+      subject: 'Produto com baixo estoque!',
+      text: `O produto ${data.productName} com ID ${data.principalId}, está apenas com ${data.productQuantity} de quantitade.`,
+      html: `<p>O produto ${data.productName} com ID ${data.principalId}, está apenas com ${data.productQuantity} de quantitade.</p>`,
+    });
   }
 }
