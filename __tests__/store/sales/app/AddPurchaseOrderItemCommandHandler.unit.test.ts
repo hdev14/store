@@ -309,4 +309,31 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     expect(updatePurchaseOrderSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('returns FALSE if occurs an expected error', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    repository.getDraftPurchaseOrderByClientId = jest.fn().mockRejectedValueOnce(new Error('test'));
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+    );
+
+    const result = await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(result).toBe(false);
+  });
 });
