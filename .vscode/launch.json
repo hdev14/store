@@ -19,9 +19,7 @@
       "args": [
         "${workspaceFolder}/dist/src/api/index.js"
       ],
-      "env": {
-        "NODE_ENV": "development",
-      },
+      "envFile": "${workspaceFolder}/.env.dev",
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js",
         "!**/node_modules/**"
