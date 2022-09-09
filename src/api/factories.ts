@@ -22,7 +22,7 @@ export function createSalesController() {
   );
   storeMediator.addEvent(AddPurchaseOrderItemCommand.name, addPurchaseOrderItemCommandHandler);
   const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(storeMediator);
-  return new SalesController(addPurchaseOrderItemCommand);
+  return new SalesController(addPurchaseOrderItemCommand, generateUUID);
 }
 
 export function createCatalogController() {
