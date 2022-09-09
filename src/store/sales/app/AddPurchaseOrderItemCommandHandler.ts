@@ -51,6 +51,8 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       await this.repository.addPurchaseOrderItem(purchaseOrderItem);
     }
 
+    await this.repository.updatePurchaseOrder(draftPurchaseOrder);
+
     return true;
   }
 
