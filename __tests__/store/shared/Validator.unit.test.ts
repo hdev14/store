@@ -153,7 +153,7 @@ describe("Validator's unit tests", () => {
 
       try {
         Validator
-          .setData({ test: Math.random() * 10 * 10 })
+          .setData({ test: faker.datatype.number({ min: 11 }) })
           .setRule('test', ['number', 'max:10'])
           .validate();
       } catch (e: any) {
