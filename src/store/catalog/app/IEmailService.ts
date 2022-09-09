@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-type Email = string;
+export type Email = string;
 
-type EmailParams = {
+export type EmailParams = {
   from: Email;
   subject: string;
   to: Email | Email[];
