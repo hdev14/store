@@ -6,11 +6,13 @@
   "scripts": {
     "test:unit": "npx jest unit --passWithNoTests --watch --config=jest.unit.config.js",
     "test:unit:cov": "npx jest unit --coverage --config=jest.unit.config.js",
-    "test:int": "dotenv -e .env.test -- npx jest int --passWithNoTests --watch --config=jest.int.config.js",
-    "test:int:cov": "dotenv -e .env.test -- npx jest int --coverage --config=jest.int.config.js",
+    "test:int": "dotenv -e .env.test -- npx jest int --runInBand --passWithNoTests --watch --config=jest.int.config.js",
+    "test:int:cov": "dotenv -e .env.test -- npx jest int --runInBand --coverage --config=jest.int.config.js",
     "dev": "dotenv -e .env.dev -- npx ts-node-dev -r tsconfig-paths/register src/api/index.ts",
     "prod": "node -r ./tsconfig-paths-bootstrap.js ./dist/src/api/index.js",
-    "build": "ts-node -r tsconfig-paths/register ./src/api/index.ts"
+    "build": "ts-node -r tsconfig-paths/register ./src/api/index.ts",
+    "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --skip-generate",
+    "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev --skip-generate"
   },
   "repository": {
     "type": "git",
