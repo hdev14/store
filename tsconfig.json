@@ -41,9 +41,5 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true
-  },
-  "exclude": [
-    "__tests__",
-    "__mocks__"
-  ]
+  }
 }
