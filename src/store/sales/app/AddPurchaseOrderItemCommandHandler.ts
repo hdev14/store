@@ -37,6 +37,15 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       return true;
     }
 
+    await this.updatePurchaseOrder(draftPurchaseOrder, purchaseOrderItem);
+
+    return true;
+  }
+
+  private async updatePurchaseOrder(
+    draftPurchaseOrder: PurchaseOrder,
+    purchaseOrderItem: PurchaseOrderItem,
+  ): Promise<void> {
     const exists = draftPurchaseOrder.hasItem(purchaseOrderItem);
     draftPurchaseOrder.addItem(purchaseOrderItem);
     console.info(draftPurchaseOrder.items);
@@ -52,8 +61,6 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
     }
 
     await this.repository.updatePurchaseOrder(draftPurchaseOrder);
-
-    return true;
   }
 
   private async createNewDraftPurcahseOrder(
