@@ -3,20 +3,34 @@ import Product from '@sales/domain/Product';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import { EventData, IEventHandler } from '@shared/@types/events';
+import EventPublisher from '@shared/EventPublisher';
 import IGenerateID from '@shared/utils/IGenerateID';
+import AddDraftPurchaseOrderEvent from './AddDraftPurchaseOrderEvent';
 import { AddPurchaseOrderItemData } from './AddPurchaseOrderItemCommand';
+import AddPurchaseOrderItemEvent from './AddPurchaseOrderItemEvent';
+import UpdateDraftPurchaseOrderEvent from './UpdateDraftPurchaseOrderEvent';
+import UpdatePurchaseOrderItemEvent from './UpdatePurchaseOrderItemEvent';
 
 export default class AddPurchaseOrderItemCommandHandler implements IEventHandler<boolean> {
   private repository: IPurchaseOrderRepository;
 
   private generateID: IGenerateID;
 
-  constructor(repository: IPurchaseOrderRepository, generateID: IGenerateID) {
+  private eventPublisher: EventPublisher;
+
+  constructor(
+    repository: IPurchaseOrderRepository,
+    generateID: IGenerateID,
+    eventPublisher: EventPublisher,
+  ) {
     this.repository = repository;
     this.generateID = generateID;
+    this.eventPublisher = eventPublisher;
   }
 
   public async handle(data: EventData<AddPurchaseOrderItemData>): Promise<boolean> {
+    let hasExpection = false;
+
     try {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: data.principalId,
@@ -41,7 +55,14 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       return true;
     } catch (e: any) {
       console.error(e.stack);
+
+      hasExpection = true;
+
       return false;
+    } finally {
+      if (!hasExpection) {
+        await this.eventPublisher.sendEvents();
+      }
     }
   }
 
@@ -51,7 +72,6 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
   ): Promise<void> {
     const exists = draftPurchaseOrder.hasItem(purchaseOrderItem);
     draftPurchaseOrder.addItem(purchaseOrderItem);
-    console.info(draftPurchaseOrder.items);
 
     if (exists) {
       const addedPurchaseOrderItem = draftPurchaseOrder.items.find(
@@ -59,11 +79,29 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       )!;
 
       await this.repository.updatePurchaseOrderItem(addedPurchaseOrderItem);
+
+      this.eventPublisher.addEvent(UpdatePurchaseOrderItemEvent, {
+        principalId: addedPurchaseOrderItem.id,
+        // TODO: Add more informations
+        timestamp: new Date().toISOString(),
+      });
     } else {
       await this.repository.addPurchaseOrderItem(purchaseOrderItem);
+
+      this.eventPublisher.addEvent(AddPurchaseOrderItemEvent, {
+        principalId: purchaseOrderItem.id,
+        // TODO: Add more informations
+        timestamp: new Date().toISOString(),
+      });
     }
 
     await this.repository.updatePurchaseOrder(draftPurchaseOrder);
+
+    this.eventPublisher.addEvent(UpdateDraftPurchaseOrderEvent, {
+      principalId: draftPurchaseOrder.id,
+      // TODO: Add more informations
+      timestamp: new Date().toISOString(),
+    });
   }
 
   private async createNewDraftPurcahseOrder(
@@ -84,6 +122,19 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
     newDraftPurchaseOrder.addItem(purchaseOrderItem);
 
     await this.repository.addPurchaseOrder(newDraftPurchaseOrder);
+
     await this.repository.addPurchaseOrderItem(purchaseOrderItem);
+
+    this.eventPublisher.addEvent(AddDraftPurchaseOrderEvent, {
+      principalId: newDraftPurchaseOrder.id,
+      // TODO: Add more informations
+      timestamp: new Date().toISOString(),
+    });
+
+    this.eventPublisher.addEvent(AddPurchaseOrderItemEvent, {
+      principalId: purchaseOrderItem.id,
+      // TODO: Add more informations
+      timestamp: new Date().toISOString(),
+    });
   }
 }
