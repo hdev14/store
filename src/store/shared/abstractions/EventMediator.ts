@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { EventData, IEventHandler } from '@shared/@types/events';
-import EventMediatorError from '@shared/errors/EventMediatorError';
 
 export default abstract class EventMediator {
   protected _handlers: Map<string, IEventHandler> = new Map<string, IEventHandler>();
 
   public addEvent(name: string, handler: IEventHandler) {
-    this._handlers.set(name, handler);
+    if (!this.hasHandler(name)) {
+      this._handlers.set(name, handler);
+    }
   }
 
   get handlers() {
@@ -15,9 +16,9 @@ export default abstract class EventMediator {
 
   public abstract send<R, T = {}>(name: string, data: EventData<T>): Promise<void | R>;
 
-  protected hasHandler(name: string): IEventHandler {
+  protected hasHandler(name: string): IEventHandler | null {
     if (!this.handlers.has(name)) {
-      throw new EventMediatorError('There is no event with this name.');
+      return null;
     }
 
     return this.handlers.get(name)!;

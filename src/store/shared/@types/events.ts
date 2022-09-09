@@ -6,6 +6,6 @@ export type EventData<T = {}> = T & {
   timestamp: ISODate;
 };
 
-export interface IEventHandler<R = void> {
-  handle(data: EventData): Promise<void | R>;
+export interface IEventHandler<R = any> {
+  handle(data: EventData): Promise<R>;
 }
