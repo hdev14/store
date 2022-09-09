@@ -11,6 +11,7 @@ describe("NodemailerEmailService's unit tests", () => {
   beforeAll(() => {
     process.env = {
       ...OLD_ENV,
+      NODE_ENV: 'mock',
       EMAIL_HOST: 'smtp://test',
       EMAIL_HOST_PORT: '123',
       EMAIL_USER: 'test_user',
