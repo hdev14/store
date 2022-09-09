@@ -4,15 +4,9 @@ import AddPurchaseOrderItemCommandHandler from '@sales/app/AddPurchaseOrderItemC
 import { EventData } from '@shared/@types/events';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
+import Product from '@sales/domain/Product';
 import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 import createGenerateIDMock from '../../stubs/createGenerateIDMock';
-
-jest.mock('../../../../src/store/sales/domain/PurchaseOrderItem');
-const PurchaseOrderItemMock = jest.mocked(PurchaseOrderItem, true);
-
-beforeEach(() => {
-  PurchaseOrderItemMock.mockClear();
-});
 
 describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
   it('calls repository.getDraftPurchaseOrderByClientId with correct clientId', async () => {
@@ -40,36 +34,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     expect(getDraftPurchaseOrderByClientIdSpy).toHaveBeenCalledTimes(1);
     expect(getDraftPurchaseOrderByClientIdSpy).toHaveBeenCalledWith(data.clientId);
-  });
-
-  it('creates a new PurchaseOrderItem', async () => {
-    expect.assertions(6);
-
-    const repository = new RepositoryStub();
-
-    const data: EventData<AddPurchaseOrderItemData> = {
-      principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
-      productId: faker.datatype.uuid(),
-      productName: faker.commerce.product(),
-      quantity: 1,
-      productAmount: faker.datatype.float(),
-      timestamp: new Date().toISOString(),
-    };
-
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
-      repository,
-      createGenerateIDMock(),
-    );
-
-    await addPurchaseOrderItemCommandHandler.handle(data);
-
-    expect(PurchaseOrderItemMock).toHaveBeenCalledTimes(1);
-    expect(PurchaseOrderItemMock.mock.calls[0][0].id).toEqual(data.principalId);
-    expect(PurchaseOrderItemMock.mock.calls[0][0].quantity).toEqual(data.quantity);
-    expect(PurchaseOrderItemMock.mock.calls[0][0].product.id).toEqual(data.productId);
-    expect(PurchaseOrderItemMock.mock.calls[0][0].product.name).toEqual(data.productName);
-    expect(PurchaseOrderItemMock.mock.calls[0][0].product.amount).toEqual(data.productAmount);
   });
 
   it("calls repository.countPurchaseOrders if draftPurchaseOrder doesn't exist", async () => {
@@ -218,5 +182,55 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     await addPurchaseOrderItemCommandHandler.handle(data);
 
     expect(addPurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls repository.updatePurchaseOrderItem if draftPurchaseOrder exists and have the same item', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const purchaseOrderItem = new PurchaseOrderItem({
+      id: faker.datatype.uuid(),
+      quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+      product: new Product(
+        data.productId,
+        data.productName,
+        data.productAmount,
+      ),
+    });
+
+    const purchaseOrder = new PurchaseOrder({
+      id: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      code: parseInt(faker.datatype.number().toString(), 10),
+      createdAt: new Date(),
+      voucher: null,
+      status: null,
+    });
+
+    purchaseOrder.addItem(purchaseOrderItem);
+
+    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(purchaseOrder);
+
+    const updatePurchaseOrderItemSpy = jest.spyOn(repository, 'updatePurchaseOrderItem');
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(updatePurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
   });
 });
