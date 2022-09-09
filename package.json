@@ -10,7 +10,7 @@
     "test:int:cov": "dotenv -e .env.test -- npx jest int --runInBand --coverage --config=jest.int.config.js",
     "dev": "dotenv -e .env.dev -- npx ts-node-dev -r tsconfig-paths/register src/api/index.ts",
     "prod": "node -r ./tsconfig-paths-bootstrap.js ./dist/src/api/index.js",
-    "build": "ts-node -r tsconfig-paths/register ./src/api/index.ts",
+    "build": "tsc",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --skip-generate",
     "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev --skip-generate"
   },
