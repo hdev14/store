@@ -3,6 +3,7 @@ import LowStockProductEventHandler from '@catalog/app/LowStockProductEventHandle
 import ProductService from '@catalog/app/ProductService';
 import LowStockProductEvent from '@catalog/domain/LowStockProductEvent';
 import StockService from '@catalog/domain/StockService';
+import NodemailerEmailService from '@catalog/infra/notification/NodemailerEmailService';
 import PrismaProductRepository from '@catalog/infra/persistence/PrismaProductRepository';
 import AddPurchaseOrderItemCommand from '@sales/app/AddPurchaseOrderItemCommand';
 import AddPurchaseOrderItemCommandHandler from '@sales/app/AddPurchaseOrderItemCommandHandler';
@@ -26,10 +27,10 @@ export function createSalesController() {
 }
 
 export function createCatalogController() {
-  const lowStockProductEventHandler = new LowStockProductEventHandler();
+  const emailServcie = new NodemailerEmailService();
+  const lowStockProductEventHandler = new LowStockProductEventHandler(emailServcie);
   storeMediator.addEvent(LowStockProductEvent.name, lowStockProductEventHandler);
   const lowProductStockEvent = new LowStockProductEvent(storeMediator);
-
   const productRepository = new PrismaProductRepository();
   const stockService = new StockService(productRepository, lowProductStockEvent);
   const productService = new ProductService(productRepository, generateUUID, stockService);
