@@ -47,9 +47,9 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       )!;
 
       await this.repository.updatePurchaseOrderItem(addedPurchaseOrderItem);
+    } else {
+      await this.repository.addPurchaseOrderItem(purchaseOrderItem);
     }
-
-    // await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
     return true;
   }
