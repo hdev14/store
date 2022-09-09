@@ -3,9 +3,7 @@ const tsconfig = require('./tsconfig.json');
 
 const baseUrl = './dist';
 
-const cleanup = tsconfigPaths.register({
+tsconfigPaths.register({
   baseUrl,
   paths: tsconfig.compilerOptions.paths,
 });
-
-cleanup();
