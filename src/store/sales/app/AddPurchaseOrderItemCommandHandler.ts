@@ -37,16 +37,17 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       return true;
     }
 
-    // const exists = draftPurchaseOrder.hasItem(purchaseOrderItem);
-    // draftPurchaseOrder.addItem(purchaseOrderItem);
+    const exists = draftPurchaseOrder.hasItem(purchaseOrderItem);
+    draftPurchaseOrder.addItem(purchaseOrderItem);
+    console.info(draftPurchaseOrder.items);
 
-    // if (exists) {
-    //   await this.repository.updatePurchaseOrderItem(
-    //     draftPurchaseOrder.items.find((i) => i.product.id === purchaseOrderItem.product.id)!,
-    //   );
+    if (exists) {
+      const addedPurchaseOrderItem = draftPurchaseOrder.items.find(
+        (i) => i.product.id === purchaseOrderItem.product.id,
+      )!;
 
-    //   return true;
-    // }
+      await this.repository.updatePurchaseOrderItem(addedPurchaseOrderItem);
+    }
 
     // await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
