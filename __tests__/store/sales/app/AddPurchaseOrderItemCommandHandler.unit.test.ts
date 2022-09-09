@@ -271,4 +271,42 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     expect(addPurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('calls repository.updatePurchaseOrder if draftPurchaseOrder already exists', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const purchaseOrder = new PurchaseOrder({
+      id: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      code: parseInt(faker.datatype.number().toString(), 10),
+      createdAt: new Date(),
+      voucher: null,
+      status: null,
+    });
+
+    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(purchaseOrder);
+
+    const updatePurchaseOrderSpy = jest.spyOn(repository, 'updatePurchaseOrder');
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(updatePurchaseOrderSpy).toHaveBeenCalledTimes(1);
+  });
 });
