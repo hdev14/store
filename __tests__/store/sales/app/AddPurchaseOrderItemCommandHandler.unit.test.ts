@@ -359,4 +359,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     expect(result).toBe(false);
   });
+
+  // TODO: Add tests to ensures that EventPublisher works
 });
