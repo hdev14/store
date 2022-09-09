@@ -27,7 +27,7 @@ export default class SalesController {
         quantity,
       } = request.body;
 
-      await this.addPurchaseOrderItemCommand.send({
+      const result = await this.addPurchaseOrderItemCommand.send({
         principalId: this.generateID(),
         clientId,
         productId,
@@ -36,6 +36,12 @@ export default class SalesController {
         quantity,
         timestamp: new Date().toISOString(),
       });
+
+      if (result) {
+        return response.status(201).json({
+          message: 'Item adicionado ao pedido.',
+        });
+      }
 
       return response.sendStatus(200);
     } catch (e) {
