@@ -373,7 +373,7 @@ describe("Catalog's Integration Tests", () => {
     it("returns 422 if product doesn't have stock enough", async () => {
       expect.assertions(2);
 
-      const qtyToRemove = parseInt((Math.random() * 10).toString(), 10);
+      const qtyToRemove = faker.datatype.number({ min: 10 });
 
       const productWithZeroStock = products.find((p) => p.stockQuantity === 0);
 

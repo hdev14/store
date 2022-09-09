@@ -114,5 +114,29 @@ describe('Sales Integration Tests', () => {
       expect(purchaseOrder!.items[0].product.name).toEqual(product.name);
       expect(purchaseOrder!.items[0].product.amount).toEqual(product.amount);
     });
+
+    it('returns 422 if AddPurchaseOrderItemCommand returns FALSE', async () => {
+      expect.assertions(2);
+
+      // to simulate an expected error.
+      const fakeUserId = faker.datatype.uuid();
+
+      const data = {
+        clientId: fakeUserId,
+        productId: product.id,
+        productName: product.name,
+        productAmount: product.amount,
+        quantity: 1,
+      };
+
+      const response = await globalThis.request
+        .post('/sales/orders/items')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(422);
+      expect(response.body.message).toEqual('Não foi possível adicionar o item ao pedido.');
+    });
   });
 });
