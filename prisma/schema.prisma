@@ -36,6 +36,7 @@ model Category {
 
 model User {
   id             String          @id
+  name           String
   purchaseOrders PurchaseOrder[]
 }
 
@@ -45,7 +46,7 @@ model PurchaseOrder {
   clientId       String
   client         User                @relation(fields: [clientId], references: [id])
   voucherId      String?
-  voucher        Voucher?             @relation(fields: [voucherId], references: [id])
+  voucher        Voucher?            @relation(fields: [voucherId], references: [id])
   discountAmount Float
   totalAmount    Float
   status         String
