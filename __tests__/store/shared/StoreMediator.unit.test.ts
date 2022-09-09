@@ -1,5 +1,5 @@
 import { EventData, IEventHandler } from '@shared/@types/events';
-import EventMediatorError from '@shared/errors/EventMediatorError';
+import StoreMediatorError from '@shared/errors/StoreMediatorError';
 import StoreMediator from '@shared/StoreMediator';
 
 const handleMock = jest.fn(() => { });
@@ -51,8 +51,19 @@ describe("StoreMediator's unit tests", () => {
         timestamp: new Date().toISOString(),
       });
     } catch (e: any) {
-      expect(e).toBeInstanceOf(EventMediatorError);
+      expect(e).toBeInstanceOf(StoreMediatorError);
       expect(e.message).toEqual('There is no event with this name.');
     }
+  });
+
+  it('not adds the same even handler', () => {
+    const storeMediator = new StoreMediator();
+
+    const setSpy = jest.spyOn(storeMediator.handlers, 'set');
+
+    storeMediator.addEvent('test1', new EventHandlerStub());
+    storeMediator.addEvent('test1', new EventHandlerStub());
+
+    expect(setSpy).toHaveBeenCalledTimes(1);
   });
 });
