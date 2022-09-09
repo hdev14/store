@@ -17,29 +17,32 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
   }
 
   public async handle(data: EventData<AddPurchaseOrderItemData>): Promise<void | boolean> {
-    // TODO:
-    // Add try/catch to return FALSE if something goes wrong
-    // Create a function to perform each individual logic
-    const purchaseOrderItem = new PurchaseOrderItem({
-      id: data.principalId,
-      product: new Product(
-        data.productId,
-        data.productName,
-        data.productAmount,
-      ),
-      quantity: data.quantity,
-    });
+    try {
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: data.principalId,
+        product: new Product(
+          data.productId,
+          data.productName,
+          data.productAmount,
+        ),
+        quantity: data.quantity,
+      });
 
-    const draftPurchaseOrder = await this.repository.getDraftPurchaseOrderByClientId(data.clientId);
+      const draftPurchaseOrder = await this.repository
+        .getDraftPurchaseOrderByClientId(data.clientId);
 
-    if (!draftPurchaseOrder) {
-      await this.createNewDraftPurcahseOrder(data.clientId, purchaseOrderItem);
+      if (!draftPurchaseOrder) {
+        await this.createNewDraftPurcahseOrder(data.clientId, purchaseOrderItem);
+        return true;
+      }
+
+      await this.updatePurchaseOrder(draftPurchaseOrder, purchaseOrderItem);
+
       return true;
+    } catch (e: any) {
+      console.error(e.stack);
+      return false;
     }
-
-    await this.updatePurchaseOrder(draftPurchaseOrder, purchaseOrderItem);
-
-    return true;
   }
 
   private async updatePurchaseOrder(
