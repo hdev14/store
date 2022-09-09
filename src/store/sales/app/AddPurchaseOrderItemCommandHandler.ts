@@ -16,7 +16,7 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
     this.generateID = generateID;
   }
 
-  public async handle(data: EventData<AddPurchaseOrderItemData>): Promise<void | boolean> {
+  public async handle(data: EventData<AddPurchaseOrderItemData>): Promise<boolean> {
     try {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: data.principalId,
