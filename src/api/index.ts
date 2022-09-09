@@ -8,8 +8,10 @@ import Server from './Server';
   try {
     connection = Prisma.connect();
 
-    Server.application.listen(3000, () => {
-      console.info('Server is running at http://localhost:3000');
+    Server.application.listen(process.env.PORT, () => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.info(`Server is running at http://localhost:${process.env.PORT}`);
+      }
     });
   } catch (e: any) {
     console.error(e.stack);
