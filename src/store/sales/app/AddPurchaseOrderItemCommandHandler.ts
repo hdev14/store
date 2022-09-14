@@ -5,11 +5,11 @@ import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import { EventData, IEventHandler } from '@shared/@types/events';
 import EventPublisher from '@shared/EventPublisher';
 import IGenerateID from '@shared/utils/IGenerateID';
-import AddDraftPurchaseOrderEvent from './AddDraftPurchaseOrderEvent';
+import AddDraftPurchaseOrderEvent, { AddDraftPurchaseOrderEventData } from './AddDraftPurchaseOrderEvent';
 import { AddPurchaseOrderItemData } from './AddPurchaseOrderItemCommand';
-import AddPurchaseOrderItemEvent from './AddPurchaseOrderItemEvent';
-import UpdateDraftPurchaseOrderEvent from './UpdateDraftPurchaseOrderEvent';
-import UpdatePurchaseOrderItemEvent from './UpdatePurchaseOrderItemEvent';
+import AddPurchaseOrderItemEvent, { AddPurchaseOrderItemEventData } from './AddPurchaseOrderItemEvent';
+import UpdateDraftPurchaseOrderEvent, { UpdateDraftPurchaseOrderEventData } from './UpdateDraftPurchaseOrderEvent';
+import UpdatePurchaseOrderItemEvent, { UpdatePurchaserOrderItemEventData } from './UpdatePurchaseOrderItemEvent';
 
 export default class AddPurchaseOrderItemCommandHandler implements IEventHandler<boolean> {
   private repository: IPurchaseOrderRepository;
@@ -80,28 +80,45 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
 
       await this.repository.updatePurchaseOrderItem(addedPurchaseOrderItem);
 
-      this.eventPublisher.addEvent(UpdatePurchaseOrderItemEvent, {
-        principalId: addedPurchaseOrderItem.id,
-        // TODO: Add more informations
-        timestamp: new Date().toISOString(),
-      });
+      this.eventPublisher.addEvent<UpdatePurchaserOrderItemEventData>(
+        UpdatePurchaseOrderItemEvent,
+        {
+          principalId: addedPurchaseOrderItem.id,
+          productId: addedPurchaseOrderItem.product.id,
+          productName: addedPurchaseOrderItem.product.name,
+          productAmount: addedPurchaseOrderItem.product.amount,
+          quantity: addedPurchaseOrderItem.quantity,
+          timestamp: new Date().toISOString(),
+        },
+      );
     } else {
       await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
-      this.eventPublisher.addEvent(AddPurchaseOrderItemEvent, {
-        principalId: purchaseOrderItem.id,
-        // TODO: Add more informations
-        timestamp: new Date().toISOString(),
-      });
+      this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
+        AddPurchaseOrderItemEvent,
+        {
+          principalId: purchaseOrderItem.id,
+          productId: purchaseOrderItem.product.id,
+          productName: purchaseOrderItem.product.name,
+          productAmount: purchaseOrderItem.product.amount,
+          quantity: purchaseOrderItem.quantity,
+          timestamp: new Date().toISOString(),
+        },
+      );
     }
 
     await this.repository.updatePurchaseOrder(draftPurchaseOrder);
 
-    this.eventPublisher.addEvent(UpdateDraftPurchaseOrderEvent, {
-      principalId: draftPurchaseOrder.id,
-      // TODO: Add more informations
-      timestamp: new Date().toISOString(),
-    });
+    this.eventPublisher.addEvent<UpdateDraftPurchaseOrderEventData>(
+      UpdateDraftPurchaseOrderEvent,
+      {
+        principalId: draftPurchaseOrder.id,
+        purchaseOrderItemId: purchaseOrderItem.id,
+        purchaseOrderQuantity: purchaseOrderItem.quantity,
+        productId: purchaseOrderItem.product.id,
+        timestamp: new Date().toISOString(),
+      },
+    );
   }
 
   private async createNewDraftPurcahseOrder(
@@ -125,16 +142,25 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
 
     await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
-    this.eventPublisher.addEvent(AddDraftPurchaseOrderEvent, {
-      principalId: newDraftPurchaseOrder.id,
-      // TODO: Add more informations
-      timestamp: new Date().toISOString(),
-    });
+    this.eventPublisher.addEvent<AddDraftPurchaseOrderEventData>(
+      AddDraftPurchaseOrderEvent,
+      {
+        principalId: newDraftPurchaseOrder.id,
+        purchaseOrderItemId: purchaseOrderItem.id,
+        timestamp: new Date().toISOString(),
+      },
+    );
 
-    this.eventPublisher.addEvent(AddPurchaseOrderItemEvent, {
-      principalId: purchaseOrderItem.id,
-      // TODO: Add more informations
-      timestamp: new Date().toISOString(),
-    });
+    this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
+      AddPurchaseOrderItemEvent,
+      {
+        principalId: purchaseOrderItem.id,
+        productId: purchaseOrderItem.product.id,
+        productName: purchaseOrderItem.product.name,
+        productAmount: purchaseOrderItem.product.amount,
+        quantity: purchaseOrderItem.quantity,
+        timestamp: new Date().toISOString(),
+      },
+    );
   }
 }

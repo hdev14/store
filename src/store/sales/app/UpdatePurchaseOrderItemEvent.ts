@@ -1,3 +1,11 @@
 import Event from '@shared/abstractions/Event';
 
-export default class UpdatePurchaseOrderItemEvent extends Event {}
+export type UpdatePurchaserOrderItemEventData = {
+  productId: string;
+  productName: string;
+  productAmount: number;
+  quantity: number;
+}
+
+// eslint-disable-next-line max-len
+export default class UpdatePurchaseOrderItemEvent extends Event<void, UpdatePurchaserOrderItemEventData> {}
