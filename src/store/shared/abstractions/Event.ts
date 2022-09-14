@@ -10,7 +10,10 @@ export abstract class Event<R = void, T = {}> {
   }
 
   public async send(data: EventData<T>): Promise<void | R> {
-    return this.mediator.send<R>(this.constructor.name, data);
+    return this.mediator.send<R>(this.constructor.name, {
+      ...data,
+      eventType: this.constructor.name,
+    });
   }
 }
 
