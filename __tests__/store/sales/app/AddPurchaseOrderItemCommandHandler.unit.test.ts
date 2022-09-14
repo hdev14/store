@@ -8,6 +8,10 @@ import Product from '@sales/domain/Product';
 import EventPublisher from '@shared/EventPublisher';
 import { EventConstructor } from '@shared/abstractions/Event';
 import EventMediator from '@shared/abstractions/EventMediator';
+import AddDraftPurchaseOrderEvent from '@sales/app/AddDraftPurchaseOrderEvent';
+import AddPurchaseOrderItemEvent from '@sales/app/AddPurchaseOrderItemEvent';
+import UpdatePurchaseOrderItemEvent from '@sales/app/UpdatePurchaseOrderItemEvent';
+import UpdateDraftPurchaseOrderEvent from '@sales/app/UpdateDraftPurchaseOrderEvent';
 import createGenerateIDMock from '../../stubs/createGenerateIDMock';
 import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
@@ -360,5 +364,119 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect(result).toBe(false);
   });
 
-  // TODO: Add tests to ensures that EventPublisher works
+  it('calls EventPublisher.addEvent with correct event class when is create a new draft purchase order', async () => {
+    expect.assertions(3);
+
+    const repository = new RepositoryStub();
+    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+
+    const publisher = new PublisherStup({} as EventMediator);
+    const addEventSpy = jest.spyOn(publisher, 'addEvent');
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+      publisher,
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(addEventSpy).toHaveBeenCalledTimes(2);
+    expect(addEventSpy.mock.calls[0][0]).toEqual(AddDraftPurchaseOrderEvent);
+    expect(addEventSpy.mock.calls[1][0]).toEqual(AddPurchaseOrderItemEvent);
+  });
+
+  it('calls EventPublisher.addEvent with correct event class when a purchaser order is found', async () => {
+    expect.assertions(3);
+
+    const repository = new RepositoryStub();
+
+    const publisher = new PublisherStup({} as EventMediator);
+    const addEventSpy = jest.spyOn(publisher, 'addEvent');
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+      publisher,
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(addEventSpy).toHaveBeenCalledTimes(2);
+    expect(addEventSpy.mock.calls[0][0]).toEqual(AddPurchaseOrderItemEvent);
+    expect(addEventSpy.mock.calls[1][0]).toEqual(UpdateDraftPurchaseOrderEvent);
+  });
+
+  it('calls EventPublisher.addEvent with correct event class when an item is updated', async () => {
+    expect.assertions(3);
+
+    const repository = new RepositoryStub();
+    const publisher = new PublisherStup({} as EventMediator);
+    const addEventSpy = jest.spyOn(publisher, 'addEvent');
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const purchaseOrderItem = new PurchaseOrderItem({
+      id: faker.datatype.uuid(),
+      quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+      product: new Product(
+        data.productId,
+        data.productName,
+        data.productAmount,
+      ),
+    });
+
+    const purchaseOrder = new PurchaseOrder({
+      id: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      code: parseInt(faker.datatype.number().toString(), 10),
+      createdAt: new Date(),
+      voucher: null,
+      status: null,
+    });
+
+    purchaseOrder.addItem(purchaseOrderItem);
+
+    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(purchaseOrder);
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+      publisher,
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(addEventSpy).toHaveBeenCalledTimes(2);
+    expect(addEventSpy.mock.calls[0][0]).toEqual(UpdatePurchaseOrderItemEvent);
+    expect(addEventSpy.mock.calls[1][0]).toEqual(UpdateDraftPurchaseOrderEvent);
+  });
 });
