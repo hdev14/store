@@ -47,10 +47,9 @@ const RULE_FUNCTIONS = {
   integer: (value: any) => typeof value === 'number' && !Number.isInteger(value),
   float: (value: any) => typeof value === 'number' && Number.isInteger(value),
   uuid: (value: any) => typeof value === 'string' && !UUID_REGEX.test(value),
-  // TODO: validate Date
+  date: (value: any) => String(new Date(value)) !== 'Invalid Date',
 };
 
-// TODO: Change messages to pt-BR.
 const RULE_MESSAGES = {
   required: (field: string) => `The field ${field} is required.`,
   max: (field: string, max: number, isString: boolean) => {
@@ -72,6 +71,7 @@ const RULE_MESSAGES = {
   integer: (field: string) => `The field ${field} must be an integer.`,
   float: (field: string) => `The field ${field} must be a float.`,
   uuid: (field: string) => `The field ${field} must be an UUID.`,
+  date: (field: string) => `The field ${field} must be a validate date.`,
 };
 
 export default class EntityValidator {
