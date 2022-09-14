@@ -479,4 +479,32 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect(addEventSpy.mock.calls[0][0]).toEqual(UpdatePurchaseOrderItemEvent);
     expect(addEventSpy.mock.calls[1][0]).toEqual(UpdateDraftPurchaseOrderEvent);
   });
+
+  it('calls EventPublisher.sendEvents after adds a new purchase order item', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+    const publisher = new PublisherStup({} as EventMediator);
+    const sendEventsSpy = jest.spyOn(publisher, 'sendEvents');
+
+    const data: EventData<AddPurchaseOrderItemData> = {
+      principalId: faker.datatype.uuid(),
+      clientId: faker.datatype.uuid(),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      quantity: 1,
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      createGenerateIDMock(),
+      publisher,
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(data);
+
+    expect(sendEventsSpy).toHaveBeenCalledTimes(1);
+  });
 });
