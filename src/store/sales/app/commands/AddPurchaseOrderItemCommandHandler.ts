@@ -5,11 +5,11 @@ import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import { EventData, IEventHandler } from '@shared/@types/events';
 import EventPublisher from '@shared/EventPublisher';
 import IGenerateID from '@shared/utils/IGenerateID';
-import AddDraftPurchaseOrderEvent, { AddDraftPurchaseOrderEventData } from './AddDraftPurchaseOrderEvent';
+import AddDraftPurchaseOrderEvent, { AddDraftPurchaseOrderEventData } from '../events/AddDraftPurchaseOrderEvent';
 import { AddPurchaseOrderItemData } from './AddPurchaseOrderItemCommand';
-import AddPurchaseOrderItemEvent, { AddPurchaseOrderItemEventData } from './AddPurchaseOrderItemEvent';
-import UpdateDraftPurchaseOrderEvent, { UpdateDraftPurchaseOrderEventData } from './UpdateDraftPurchaseOrderEvent';
-import UpdatePurchaseOrderItemEvent, { UpdatePurchaserOrderItemEventData } from './UpdatePurchaseOrderItemEvent';
+import AddPurchaseOrderItemEvent, { AddPurchaseOrderItemEventData } from '../events/AddPurchaseOrderItemEvent';
+import UpdateDraftPurchaseOrderEvent, { UpdateDraftPurchaseOrderEventData } from '../events/UpdateDraftPurchaseOrderEvent';
+import UpdatePurchaseOrderItemEvent, { UpdatePurchaserOrderItemEventData } from '../events/UpdatePurchaseOrderItemEvent';
 
 export default class AddPurchaseOrderItemCommandHandler implements IEventHandler<boolean> {
   private repository: IPurchaseOrderRepository;

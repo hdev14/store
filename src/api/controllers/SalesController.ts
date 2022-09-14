@@ -1,4 +1,4 @@
-import { AddPurchaseOrderItemData } from '@sales/app/AddPurchaseOrderItemCommand';
+import { AddPurchaseOrderItemData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
 import Command from '@shared/abstractions/Command';
 import IGenerateID from '@shared/utils/IGenerateID';
 import { NextFunction, Request, Response } from 'express';

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { AddPurchaseOrderItemData } from '@sales/app/AddPurchaseOrderItemCommand';
-import AddPurchaseOrderItemCommandHandler from '@sales/app/AddPurchaseOrderItemCommandHandler';
+import { AddPurchaseOrderItemData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
+import AddPurchaseOrderItemCommandHandler from '@sales/app/commands/AddPurchaseOrderItemCommandHandler';
 import { EventData } from '@shared/@types/events';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
@@ -8,10 +8,10 @@ import Product from '@sales/domain/Product';
 import EventPublisher from '@shared/EventPublisher';
 import { EventConstructor } from '@shared/abstractions/Event';
 import EventMediator from '@shared/abstractions/EventMediator';
-import AddDraftPurchaseOrderEvent from '@sales/app/AddDraftPurchaseOrderEvent';
-import AddPurchaseOrderItemEvent from '@sales/app/AddPurchaseOrderItemEvent';
-import UpdatePurchaseOrderItemEvent from '@sales/app/UpdatePurchaseOrderItemEvent';
-import UpdateDraftPurchaseOrderEvent from '@sales/app/UpdateDraftPurchaseOrderEvent';
+import AddDraftPurchaseOrderEvent from '@sales/app/events/AddDraftPurchaseOrderEvent';
+import AddPurchaseOrderItemEvent from '@sales/app/events/AddPurchaseOrderItemEvent';
+import UpdatePurchaseOrderItemEvent from '@sales/app/events/UpdatePurchaseOrderItemEvent';
+import UpdateDraftPurchaseOrderEvent from '@sales/app/events/UpdateDraftPurchaseOrderEvent';
 import createGenerateIDMock from '../../stubs/createGenerateIDMock';
 import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 

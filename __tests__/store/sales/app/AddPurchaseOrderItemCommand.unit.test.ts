@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import AddPurchaseOrderItemCommand, { AddPurchaseOrderItemData } from '@sales/app/AddPurchaseOrderItemCommand';
+import AddPurchaseOrderItemCommand, { AddPurchaseOrderItemData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
 import { EventData } from '@shared/@types/events';
 import EventMediator from '@shared/abstractions/EventMediator';
 import ValidationError from '@shared/errors/ValidationError';
