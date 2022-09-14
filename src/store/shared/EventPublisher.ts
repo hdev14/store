@@ -12,7 +12,7 @@ export default class EventPublisher {
     this.events = [];
   }
 
-  addEvent(ctor: EventConstructor, data: EventData) {
+  addEvent<T>(ctor: EventConstructor, data: EventData<T>) {
     this.events.push({ ctor, data });
   }
 
