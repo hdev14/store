@@ -4,16 +4,12 @@ import PurchaseOrder from './PurchaseOrder';
 import PurchaseOrderItem from './PurchaseOrderItem';
 import Voucher from './Voucher';
 
-interface IPurchaseOrderRepository {
+export interface IPurchaseOrderRepositoryQueries {
   getPurchaseOrderById(id: string): Promise<PurchaseOrder | null>;
 
   getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]>;
 
   getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null>;
-
-  addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder>;
-
-  updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder>;
 
   getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null>;
 
@@ -21,13 +17,22 @@ interface IPurchaseOrderRepository {
   getPurchaseOrderItem(params: { productId: string }): Promise<PurchaseOrderItem | null>;
   getPurchaseOrderItem(params: { purchaseOrderId?: string, productId?: string }): Promise<PurchaseOrderItem | null>;
 
+  getVoucherByCode(code: number): Promise<Voucher | null>;
+}
+
+export interface IPurchaseOrderRepositoryCommands {
+  addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder>;
+
+  updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder>;
+
   addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem>;
 
   updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem>;
 
   deletePurchaseOrderItem(purchasOrderItemId: string): Promise<boolean>;
+}
 
-  getVoucherByCode(code: number): Promise<Voucher | null>;
+interface IPurchaseOrderRepository extends IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
 
   countPurchaseOrders(): Promise<number>;
 
