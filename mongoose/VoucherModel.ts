@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { IPurchaseOrder } from './PurchaseOrderModel';
 
 export interface IVoucher {
   id: string;
@@ -11,6 +12,7 @@ export interface IVoucher {
   createdAt: Date;
   expiresAt: Date;
   usedAt: Date;
+  purchaseOrders: IPurchaseOrder[];
 }
 
 const voucherSchema = new Schema<IVoucher>({
@@ -59,6 +61,10 @@ const voucherSchema = new Schema<IVoucher>({
     type: Date,
     required: false,
   },
+  purchaseOrders: [{
+    type: Schema.Types.ObjectId,
+    ref: 'PurchaseOrder',
+  }],
 });
 
 const VoucherModel = model<IVoucher>('Voucher', voucherSchema);

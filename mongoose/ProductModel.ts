@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { ICategory } from './CategoryModel';
 
 export interface IProduct {
   id: string;
@@ -8,7 +9,7 @@ export interface IProduct {
   amount: number;
   image: string
   stockQuantity: number;
-  categoryId: string;
+  category: ICategory;
   height: number;
   width: number;
   depth: number;
@@ -45,9 +46,9 @@ const productSchema = new Schema<IProduct>({
     type: Number,
     required: true,
   },
-  categoryId: {
-    type: String,
-    required: true,
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: 'Category',
   },
   height: {
     type: Number,

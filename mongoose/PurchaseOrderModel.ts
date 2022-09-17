@@ -1,14 +1,18 @@
 import { Schema, model } from 'mongoose';
+import { IPurchaseOrderItem } from './PurchaseOrderItemModel';
+import { IUser } from './UserModel';
+import { IVoucher } from './VoucherModel';
 
 export interface IPurchaseOrder {
   id: string;
   code: number;
-  clientId: string;
-  voucherId?: string;
+  client: IUser;
+  voucher: IVoucher;
   discountAmount: number;
   totalAmount: number;
   status: string;
   createdAt: Date;
+  items: IPurchaseOrderItem[];
 }
 
 const purchaseOrderSchema = new Schema<IPurchaseOrder>({
@@ -21,12 +25,13 @@ const purchaseOrderSchema = new Schema<IPurchaseOrder>({
     type: Number,
     required: true,
   },
-  clientId: {
-    type: String,
-    required: true,
+  client: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
-  voucherId: {
-    type: String,
+  voucher: {
+    type: Schema.Types.ObjectId,
+    ref: 'Voucher',
     required: false,
   },
   discountAmount: {
@@ -43,6 +48,10 @@ const purchaseOrderSchema = new Schema<IPurchaseOrder>({
     type: String,
     required: true,
   },
+  items: [{
+    type: Schema.Types.ObjectId,
+    ref: 'PurchaseOrderItem',
+  }],
   createdAt: {
     type: Date,
     required: true,
