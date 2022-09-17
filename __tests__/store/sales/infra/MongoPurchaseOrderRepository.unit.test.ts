@@ -2,10 +2,10 @@ import { faker } from '@faker-js/faker';
 import { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import MongoPurchaseOrderRepository from '@sales/infra/persistence/MongoPurchaseOrderRepository';
-import PurchaseOrderModel from '../../../../mongoose/PurchaseOrderModel';
-import PurchaseOrderItemModel from '../../../../mongoose/PurchaseOrderItemModel';
-import ProductModel from '../../../../mongoose/ProductModel';
-import VoucherModel from '../../../../mongoose/VoucherModel';
+import PurchaseOrderModel from '@mongoose/PurchaseOrderModel';
+import PurchaseOrderItemModel from '@mongoose/PurchaseOrderItemModel';
+import ProductModel from '@mongoose/ProductModel';
+import VoucherModel from '@mongoose/VoucherModel';
 
 jest.mock('../../../../mongoose/PurchaseOrderModel');
 jest.mock('../../../../mongoose/PurchaseOrderItemModel');
