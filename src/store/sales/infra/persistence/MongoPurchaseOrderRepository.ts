@@ -3,9 +3,9 @@ import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderParams, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
-import { IPurchaseOrderItem } from '@mongoose/PurchaseOrderItemModel';
+import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@mongoose/PurchaseOrderItemModel';
 import PurchaseOrderModel, { IPurchaseOrder } from '@mongoose/PurchaseOrderModel';
-import { IVoucher } from '@mongoose/VoucherModel';
+import VoucherModel, { IVoucher } from '@mongoose/VoucherModel';
 import UserModel from '@mongoose/UserModel';
 
 export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepository {
@@ -97,8 +97,36 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     throw new Error('Method not implemented.');
   }
 
-  addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    throw new Error('Method not implemented.');
+  public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+    const client = await UserModel.findOne({ id: purchaseOrder.clientId });
+
+    if (!client) {
+      throw new Error('Cliente não encontrado.');
+    }
+
+    const voucher = purchaseOrder.voucher
+      ? await VoucherModel.findOne({ id: purchaseOrder.voucher.id })
+      : null;
+
+    const items = await PurchaseOrderItemModel.find({
+      id: { $in: purchaseOrder.items.map((item) => item.id) },
+    });
+
+    const createdPurchaseOrder = await PurchaseOrderModel.create({
+      id: purchaseOrder.id,
+      client: client._id,
+      items: items.map(({ _id }) => _id),
+      voucher: voucher ? voucher._id : undefined,
+      code: purchaseOrder.code,
+      totalAmount: purchaseOrder.totalAmount,
+      discountAmount: purchaseOrder.discountAmount,
+      status: purchaseOrder.status,
+      createdAt: purchaseOrder.createdAt,
+    });
+
+    const populatedPurchaseOrder = await PurchaseOrderModel.populate(createdPurchaseOrder, { path: 'voucher' });
+
+    return this.mapPurchaseOrder(populatedPurchaseOrder);
   }
 
   updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
