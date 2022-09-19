@@ -6,16 +6,19 @@ import PurchaseOrderModel from '@mongoose/PurchaseOrderModel';
 import PurchaseOrderItemModel from '@mongoose/PurchaseOrderItemModel';
 import ProductModel from '@mongoose/ProductModel';
 import VoucherModel from '@mongoose/VoucherModel';
+import UserModel from '@mongoose/UserModel';
 
 jest.mock('../../../../mongoose/PurchaseOrderModel');
 jest.mock('../../../../mongoose/PurchaseOrderItemModel');
 jest.mock('../../../../mongoose/VoucherModel');
 jest.mock('../../../../mongoose/ProductModel');
+jest.mock('../../../../mongoose/UserModel');
 
 const PurchaseOrderModelMock = jest.mocked(PurchaseOrderModel, true);
 const PurchaseOrderItemModelMock = jest.mocked(PurchaseOrderItemModel, true);
 const ProductModelMock = jest.mocked(ProductModel, true);
 const VoucherModelMock = jest.mocked(VoucherModel, true);
+const UserModelMock = jest.mocked(UserModel, true);
 
 describe("MongoPurchaseOrderRepository's unit tests", () => {
   describe('PrismaPurchaseOrderRepository.getPurchaseOrderById()', () => {
@@ -128,185 +131,214 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  // describe('PrismaPurchaseOrderRepository.getPurchaseOrdersByClientId()', () => {
-  //   it('returns purchase orders by client id', async () => {
-  //     expect.assertions(28);
+  describe('PrismaPurchaseOrderRepository.getPurchaseOrdersByClientId()', () => {
+    it('returns purchase orders by client id', async () => {
+      UserModelMock.mockClear();
 
-  //     const clientId = faker.datatype.uuid();
-  //     const purchaseOrderId = faker.datatype.uuid();
+      expect.assertions(36);
 
-  //     const fakePurchaseOrders = [{
-  //       id: purchaseOrderId,
-  //       clientId,
-  //       code: parseInt(faker.datatype.number().toString(), 10),
-  //       status: PurchaseOrderStatus.STARTED,
-  //       totalAmount: faker.datatype.float(),
-  //       discountAmount: 0,
-  //       createdAt: new Date(),
-  //       voucher: {
-  //         id: faker.datatype.uuid(),
-  //         percentageAmount: 0,
-  //         rawDiscountAmount: 0,
-  //         quantity: parseInt(faker.datatype.number().toString(), 10),
-  //         type: VoucherDiscountTypes.ABSOLUTE,
-  //         active: faker.datatype.boolean(),
-  //         code: parseInt(faker.datatype.number().toString(), 10),
-  //         expiresAt: new Date(),
-  //         createdAt: new Date(),
-  //       },
-  //       items: [
-  //         {
-  //           id: faker.datatype.uuid(),
-  //           quantity: parseInt(faker.datatype.number().toString(), 10),
-  //           purchaseOrderId,
-  //           product: {
-  //             id: faker.datatype.uuid(),
-  //             name: faker.commerce.product(),
-  //             amount: faker.datatype.float(),
-  //           },
-  //         },
-  //         {
-  //           id: faker.datatype.uuid(),
-  //           quantity: parseInt(faker.datatype.number().toString(), 10),
-  //           purchaseOrderId,
-  //           product: {
-  //             id: faker.datatype.uuid(),
-  //             name: faker.commerce.product(),
-  //             amount: faker.datatype.float(),
-  //           },
-  //         },
-  //       ],
-  //     }];
+      const clientId = faker.datatype.uuid();
+      const purchaseOrderId = faker.datatype.uuid();
 
-  //     prismaMock.purchaseOrder.findMany.mockResolvedValueOnce(fakePurchaseOrders as any);
+      const fakePurchaseOrders = [{
+        id: purchaseOrderId,
+        client: {
+          id: clientId,
+        },
+        code: parseInt(faker.datatype.number().toString(), 10),
+        status: PurchaseOrderStatus.STARTED,
+        totalAmount: faker.datatype.float(),
+        discountAmount: 0,
+        createdAt: new Date(),
+        voucher: {
+          id: faker.datatype.uuid(),
+          percentageAmount: 0,
+          rawDiscountAmount: 0,
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          type: VoucherDiscountTypes.ABSOLUTE,
+          active: faker.datatype.boolean(),
+          code: parseInt(faker.datatype.number().toString(), 10),
+          expiresAt: new Date(),
+          createdAt: new Date(),
+        },
+        items: [
+          {
+            id: faker.datatype.uuid(),
+            quantity: parseInt(faker.datatype.number().toString(), 10),
+            purchaseOrderId,
+            product: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              amount: faker.datatype.float(),
+            },
+          },
+          {
+            id: faker.datatype.uuid(),
+            quantity: parseInt(faker.datatype.number().toString(), 10),
+            purchaseOrderId,
+            product: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              amount: faker.datatype.float(),
+            },
+          },
+        ],
+      }];
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+      const populateItemsMock = jest.fn()
+        .mockImplementation(() => Promise.resolve(fakePurchaseOrders as any));
 
-  //     const purchaseOrders = await repository.getPurchaseOrdersByClientId(clientId);
+      const populateVoucherMock = jest.fn()
+        .mockImplementation(() => ({ populate: populateItemsMock } as any));
 
-  //     purchaseOrders.forEach((purchaseOrder, index) => {
-  //       expect(purchaseOrder!.id).toEqual(fakePurchaseOrders[index].id);
-  //       expect(purchaseOrder!.clientId).toEqual(fakePurchaseOrders[index].clientId);
-  //       expect(purchaseOrder!.code).toEqual(fakePurchaseOrders[index].code);
-  //       expect(purchaseOrder!.createdAt).toEqual(fakePurchaseOrders[index].createdAt);
-  //       expect(purchaseOrder!.discountAmount).toEqual(fakePurchaseOrders[index].discountAmount);
-  //       expect(purchaseOrder!.voucher!.id).toEqual(fakePurchaseOrders[index].voucher.id);
-  //       expect(purchaseOrder!.voucher!.active).toEqual(fakePurchaseOrders[index].voucher.active);
-  //       expect(purchaseOrder!.voucher!.code).toEqual(fakePurchaseOrders[index].voucher.code);
-  //       expect(purchaseOrder!.voucher!.type).toEqual(fakePurchaseOrders[index].voucher.type);
-  //       expect(purchaseOrder!.voucher!.percentageAmount)
-  //         .toEqual(fakePurchaseOrders[index].voucher.percentageAmount);
-  //       expect(purchaseOrder!.voucher!.rawDiscountAmount)
-  //         .toEqual(fakePurchaseOrders[index].voucher.rawDiscountAmount);
-  //       expect(purchaseOrder!.voucher!.createdAt)
-  //         .toEqual(fakePurchaseOrders[index].voucher.createdAt);
-  //       expect(purchaseOrder!.voucher!.expiresAt)
-  //         .toEqual(fakePurchaseOrders[index].voucher.expiresAt);
-  //       expect(purchaseOrder!.voucher!.usedAt).toEqual(null);
+      const populateClientMock = jest.fn()
+        .mockImplementation(() => ({ populate: populateVoucherMock } as any));
 
-  //       purchaseOrder!.items.forEach((item, idx) => {
-  //         expect(item.id).toEqual(fakePurchaseOrders[index].items[idx].id);
-  //         expect(item.product.id).toEqual(fakePurchaseOrders[index].items[idx].product.id);
-  //         expect(item.product.name).toEqual(fakePurchaseOrders[index].items[idx].product.name);
-  //         expect(item.product.amount).toEqual(fakePurchaseOrders[index].items[idx].product.amount);
-  //         expect(item.quantity).toEqual(fakePurchaseOrders[index].items[idx].quantity);
-  //         expect(item.purchaseOrderId)
-  //           .toEqual(fakePurchaseOrders[index].items[idx].purchaseOrderId);
-  //       });
-  //     });
+      PurchaseOrderModelMock.find
+        .mockImplementationOnce(() => ({ populate: populateClientMock } as any));
 
-  //     expect(prismaMock.purchaseOrder.findMany).toHaveBeenCalledTimes(1);
-  //     expect(prismaMock.purchaseOrder.findMany).toHaveBeenCalledWith({
-  //       where: { clientId },
-  //       include: {
-  //         voucher: true,
-  //         items: {
-  //           include: {
-  //             product: {
-  //               select: {
-  //                 id: true,
-  //                 name: true,
-  //                 amount: true,
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     });
-  //   });
-  // });
+      UserModelMock.findOne.mockResolvedValueOnce({ _id: 'test' } as any);
 
-  // describe('PrismaPurchaseOrderRepository.getDraftPurchaseOrderByClientId()', () => {
-  //   it('returns a draft purchase order by client id', async () => {
-  //     expect.assertions(13);
+      const repository = new MongoPurchaseOrderRepository();
 
-  //     const clientId = faker.datatype.uuid();
-  //     const purchaseOrderId = faker.datatype.uuid();
+      const purchaseOrders = await repository.getPurchaseOrdersByClientId(clientId);
 
-  //     const fakeDraftPurchaseOrder = {
-  //       id: purchaseOrderId,
-  //       clientId,
-  //       code: parseInt(faker.datatype.number().toString(), 10),
-  //       status: PurchaseOrderStatus.DRAFT,
-  //       totalAmount: 0,
-  //       discountAmount: 0,
-  //       createdAt: new Date(),
-  //       voucher: null,
-  //       items: [
-  //         {
-  //           id: faker.datatype.uuid(),
-  //           quantity: parseInt(faker.datatype.number().toString(), 10),
-  //           purchaseOrderId,
-  //           product: {
-  //             id: faker.datatype.uuid(),
-  //             name: faker.commerce.product(),
-  //             amount: faker.datatype.float(),
-  //           },
-  //         },
-  //       ],
-  //     };
+      purchaseOrders.forEach((purchaseOrder, index) => {
+        expect(purchaseOrder!.id).toEqual(fakePurchaseOrders[index].id);
+        expect(purchaseOrder!.clientId).toEqual(fakePurchaseOrders[index].client.id);
+        expect(purchaseOrder!.code).toEqual(fakePurchaseOrders[index].code);
+        expect(purchaseOrder!.createdAt).toEqual(fakePurchaseOrders[index].createdAt);
+        expect(purchaseOrder!.discountAmount).toEqual(fakePurchaseOrders[index].discountAmount);
+        expect(purchaseOrder!.voucher!.id).toEqual(fakePurchaseOrders[index].voucher.id);
+        expect(purchaseOrder!.voucher!.active).toEqual(fakePurchaseOrders[index].voucher.active);
+        expect(purchaseOrder!.voucher!.code).toEqual(fakePurchaseOrders[index].voucher.code);
+        expect(purchaseOrder!.voucher!.type).toEqual(fakePurchaseOrders[index].voucher.type);
+        expect(purchaseOrder!.voucher!.percentageAmount)
+          .toEqual(fakePurchaseOrders[index].voucher.percentageAmount);
+        expect(purchaseOrder!.voucher!.rawDiscountAmount)
+          .toEqual(fakePurchaseOrders[index].voucher.rawDiscountAmount);
+        expect(purchaseOrder!.voucher!.createdAt)
+          .toEqual(fakePurchaseOrders[index].voucher.createdAt);
+        expect(purchaseOrder!.voucher!.expiresAt)
+          .toEqual(fakePurchaseOrders[index].voucher.expiresAt);
+        expect(purchaseOrder!.voucher!.usedAt).toEqual(null);
 
-  //     prismaMock.purchaseOrder.findFirst.mockResolvedValueOnce(fakeDraftPurchaseOrder as any);
+        purchaseOrder!.items.forEach((item, idx) => {
+          expect(item.id).toEqual(fakePurchaseOrders[index].items[idx].id);
+          expect(item.product.id).toEqual(fakePurchaseOrders[index].items[idx].product.id);
+          expect(item.product.name).toEqual(fakePurchaseOrders[index].items[idx].product.name);
+          expect(item.product.amount).toEqual(fakePurchaseOrders[index].items[idx].product.amount);
+          expect(item.quantity).toEqual(fakePurchaseOrders[index].items[idx].quantity);
+          expect(item.purchaseOrderId)
+            .toEqual(fakePurchaseOrders[index].items[idx].purchaseOrderId);
+        });
+      });
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+      expect(UserModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(UserModelMock.findOne).toHaveBeenCalledWith({ id: clientId });
+      expect(PurchaseOrderModelMock.find).toHaveBeenCalledTimes(1);
+      expect(PurchaseOrderModelMock.find).toHaveBeenCalledWith(
+        { client: 'test' },
+      );
+      expect(populateItemsMock).toHaveBeenCalledTimes(1);
+      expect(populateClientMock).toHaveBeenCalledTimes(1);
+      expect(populateVoucherMock).toHaveBeenCalledTimes(1);
+      expect(populateVoucherMock).toHaveBeenCalledWith('voucher');
+      expect(populateClientMock).toHaveBeenCalledWith('client');
+      expect(populateItemsMock).toHaveBeenCalledWith({
+        path: 'items',
+        populate: {
+          path: 'product',
+          select: 'id name amount',
+        },
+      });
+    });
+  });
 
-  //     const purchaseOrder = await repository.getDraftPurchaseOrderByClientId(clientId);
+  describe('PrismaPurchaseOrderRepository.getDraftPurchaseOrderByClientId()', () => {
+    it('returns a draft purchase order by client id', async () => {
+      expect.assertions(19);
 
-  //     expect(purchaseOrder!.id).toEqual(fakeDraftPurchaseOrder.id);
-  //     expect(purchaseOrder!.clientId).toEqual(fakeDraftPurchaseOrder.clientId);
-  //     expect(purchaseOrder!.code).toEqual(fakeDraftPurchaseOrder.code);
-  //     expect(purchaseOrder!.createdAt).toEqual(fakeDraftPurchaseOrder.createdAt);
-  //     expect(purchaseOrder!.discountAmount).toEqual(fakeDraftPurchaseOrder.discountAmount);
+      UserModelMock.findOne.mockClear();
+      PurchaseOrderModelMock.findOne.mockClear();
 
-  //     purchaseOrder!.items.forEach((item, idx) => {
-  //       expect(item.id).toEqual(fakeDraftPurchaseOrder.items[idx].id);
-  //       expect(item.product.id).toEqual(fakeDraftPurchaseOrder.items[idx].product.id);
-  //       expect(item.product.name).toEqual(fakeDraftPurchaseOrder.items[idx].product.name);
-  //       expect(item.product.amount).toEqual(fakeDraftPurchaseOrder.items[idx].product.amount);
-  //       expect(item.quantity).toEqual(fakeDraftPurchaseOrder.items[idx].quantity);
-  //       expect(item.purchaseOrderId)
-  //         .toEqual(fakeDraftPurchaseOrder.items[idx].purchaseOrderId);
-  //     });
+      const clientId = faker.datatype.uuid();
+      const purchaseOrderId = faker.datatype.uuid();
 
-  //     expect(prismaMock.purchaseOrder.findFirst).toHaveBeenCalledTimes(1);
-  //     expect(prismaMock.purchaseOrder.findFirst).toHaveBeenCalledWith({
-  //       where: { clientId, status: PurchaseOrderStatus.DRAFT },
-  //       include: {
-  //         items: {
-  //           include: {
-  //             product: {
-  //               select: {
-  //                 id: true,
-  //                 name: true,
-  //                 amount: true,
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     });
-  //   });
-  // });
+      const fakeDraftPurchaseOrder = {
+        id: purchaseOrderId,
+        client: {
+          id: clientId,
+        },
+        code: parseInt(faker.datatype.number().toString(), 10),
+        status: PurchaseOrderStatus.DRAFT,
+        totalAmount: 0,
+        discountAmount: 0,
+        createdAt: new Date(),
+        voucher: null,
+        items: [
+          {
+            id: faker.datatype.uuid(),
+            quantity: parseInt(faker.datatype.number().toString(), 10),
+            purchaseOrderId,
+            product: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              amount: faker.datatype.float(),
+            },
+          },
+        ],
+      };
+
+      const populateItemsMock = jest.fn()
+        .mockImplementation(() => Promise.resolve(fakeDraftPurchaseOrder));
+
+      const populateClientMock = jest.fn()
+        .mockImplementation(() => ({ populate: populateItemsMock } as any));
+
+      PurchaseOrderModelMock.findOne
+        .mockImplementationOnce(() => ({ populate: populateClientMock } as any));
+
+      UserModelMock.findOne.mockResolvedValueOnce({ _id: 'test' } as any);
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      const purchaseOrder = await repository.getDraftPurchaseOrderByClientId(clientId);
+
+      expect(purchaseOrder!.id).toEqual(fakeDraftPurchaseOrder.id);
+      expect(purchaseOrder!.clientId).toEqual(fakeDraftPurchaseOrder.client.id);
+      expect(purchaseOrder!.code).toEqual(fakeDraftPurchaseOrder.code);
+      expect(purchaseOrder!.createdAt).toEqual(fakeDraftPurchaseOrder.createdAt);
+      expect(purchaseOrder!.discountAmount).toEqual(fakeDraftPurchaseOrder.discountAmount);
+
+      purchaseOrder!.items.forEach((item, idx) => {
+        expect(item.id).toEqual(fakeDraftPurchaseOrder.items[idx].id);
+        expect(item.product.id).toEqual(fakeDraftPurchaseOrder.items[idx].product.id);
+        expect(item.product.name).toEqual(fakeDraftPurchaseOrder.items[idx].product.name);
+        expect(item.product.amount).toEqual(fakeDraftPurchaseOrder.items[idx].product.amount);
+        expect(item.quantity).toEqual(fakeDraftPurchaseOrder.items[idx].quantity);
+        expect(item.purchaseOrderId)
+          .toEqual(fakeDraftPurchaseOrder.items[idx].purchaseOrderId);
+      });
+
+      expect(UserModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(UserModelMock.findOne).toHaveBeenCalledWith({ id: clientId });
+      expect(PurchaseOrderModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(PurchaseOrderModelMock.findOne).toHaveBeenCalledWith({
+        client: 'test', status: PurchaseOrderStatus.DRAFT,
+      });
+      expect(populateItemsMock).toHaveBeenCalledTimes(1);
+      expect(populateClientMock).toHaveBeenCalledTimes(1);
+      expect(populateClientMock).toHaveBeenCalledWith('client');
+      expect(populateItemsMock).toHaveBeenCalledWith({
+        path: 'items',
+        populate: {
+          path: 'product',
+          select: 'id name amount',
+        },
+      });
+    });
+  });
 
   // describe('PrismaPurchaseOrderRepository.addPurchaseOrder()', () => {
   //   it('creates a new purchase order', async () => {
