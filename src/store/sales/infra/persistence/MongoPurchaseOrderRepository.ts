@@ -6,6 +6,7 @@ import Voucher from '@sales/domain/Voucher';
 import { IPurchaseOrderItem } from '@mongoose/PurchaseOrderItemModel';
 import PurchaseOrderModel, { IPurchaseOrder } from '@mongoose/PurchaseOrderModel';
 import { IVoucher } from '@mongoose/VoucherModel';
+import UserModel from '@mongoose/UserModel';
 
 export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepository {
   countPurchaseOrders(): Promise<number> {
@@ -36,12 +37,46 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
   }
 
-  getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]> {
-    throw new Error('Method not implemented.');
+  public async getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]> {
+    const client = await UserModel.findOne({ id });
+
+    if (!client) {
+      return [];
+    }
+
+    const purchaseOrders = await PurchaseOrderModel.find({ client: client._id })
+      .populate('client')
+      .populate('voucher')
+      .populate({
+        path: 'items',
+        populate: {
+          path: 'product',
+          select: 'id name amount',
+        },
+      });
+
+    return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
   }
 
-  getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null> {
-    throw new Error('Method not implemented.');
+  public async getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null> {
+    const client = await UserModel.findOne({ id });
+
+    if (!client) {
+      return null;
+    }
+
+    const purchaseOrder = await PurchaseOrderModel
+      .findOne({ client: client._id, status: PurchaseOrderStatus.DRAFT })
+      .populate('client')
+      .populate({
+        path: 'items',
+        populate: {
+          path: 'product',
+          select: 'id name amount',
+        },
+      });
+
+    return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
   }
 
   getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
