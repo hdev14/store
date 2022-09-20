@@ -29,8 +29,8 @@ export default class NodemailerEmailService implements IEmailService {
 
         console.info(messageInfo);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      console.error(e.stack);
     }
   }
 }
