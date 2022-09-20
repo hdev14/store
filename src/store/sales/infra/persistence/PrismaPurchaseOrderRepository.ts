@@ -249,8 +249,8 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
       });
 
       return true;
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      console.error(e.stack);
 
       return false;
     }
