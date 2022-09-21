@@ -3,7 +3,7 @@ import Command from '@shared/abstractions/Command';
 
 // TODO: finish logic
 export type ApplyVoucherData = {
-  clientId: string;
+  customerId: string;
   voucherCode: string;
 }
 

@@ -10,7 +10,7 @@ export default class RepositoryStub implements IPurchaseOrderRepository {
   getPurchaseOrderById(_: string): Promise<PurchaseOrder | null> {
     return Promise.resolve(
       new PurchaseOrder({
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
         createdAt: new Date(),
         id: faker.datatype.uuid(),
@@ -20,10 +20,10 @@ export default class RepositoryStub implements IPurchaseOrderRepository {
     );
   }
 
-  getPurchaseOrdersByClientId(_: string): Promise<PurchaseOrder[]> {
+  getPurchaseOrdersByCustomerId(_: string): Promise<PurchaseOrder[]> {
     return Promise.resolve([
       new PurchaseOrder({
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
         createdAt: new Date(),
         id: faker.datatype.uuid(),
@@ -33,10 +33,10 @@ export default class RepositoryStub implements IPurchaseOrderRepository {
     ]);
   }
 
-  getDraftPurchaseOrderByClientId(_: string): Promise<PurchaseOrder | null> {
+  getDraftPurchaseOrderByCustomerId(_: string): Promise<PurchaseOrder | null> {
     return Promise.resolve(
       new PurchaseOrder({
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
         createdAt: new Date(),
         id: faker.datatype.uuid(),

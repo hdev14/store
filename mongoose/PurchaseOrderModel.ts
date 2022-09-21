@@ -3,7 +3,7 @@ import { Schema, model, Types } from 'mongoose';
 export interface IPurchaseOrder {
   id: string;
   code: number;
-  client: Types.ObjectId;
+  customer: Types.ObjectId;
   voucher: Types.ObjectId;
   discountAmount: number;
   totalAmount: number;
@@ -22,7 +22,7 @@ const purchaseOrderSchema = new Schema<IPurchaseOrder>({
     type: Number,
     required: true,
   },
-  client: {
+  customer: {
     type: Schema.Types.ObjectId,
     ref: 'User',
   },

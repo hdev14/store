@@ -15,7 +15,7 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
     const purchaseOrder = await PurchaseOrderModel
       .findOne({ id })
-      .populate('client')
+      .populate('customer')
       .populate('voucher')
       .populate({
         path: 'items',
@@ -28,15 +28,15 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
   }
 
-  public async getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]> {
-    const client = await UserModel.findOne({ id });
+  public async getPurchaseOrdersByCustomerId(id: string): Promise<PurchaseOrder[]> {
+    const customer = await UserModel.findOne({ id });
 
-    if (!client) {
+    if (!customer) {
       return [];
     }
 
-    const purchaseOrders = await PurchaseOrderModel.find({ client: client._id })
-      .populate('client')
+    const purchaseOrders = await PurchaseOrderModel.find({ customer: customer._id })
+      .populate('customer')
       .populate('voucher')
       .populate({
         path: 'items',
@@ -49,16 +49,16 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
   }
 
-  public async getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null> {
-    const client = await UserModel.findOne({ id });
+  public async getDraftPurchaseOrderByCustomerId(id: string): Promise<PurchaseOrder | null> {
+    const customer = await UserModel.findOne({ id });
 
-    if (!client) {
+    if (!customer) {
       return null;
     }
 
     const purchaseOrder = await PurchaseOrderModel
-      .findOne({ client: client._id, status: PurchaseOrderStatus.DRAFT })
-      .populate('client')
+      .findOne({ customer: customer._id, status: PurchaseOrderStatus.DRAFT })
+      .populate('customer')
       .populate({
         path: 'items',
         populate: {
@@ -89,9 +89,9 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    const client = await UserModel.findOne({ id: purchaseOrder.clientId });
+    const customer = await UserModel.findOne({ id: purchaseOrder.customerId });
 
-    if (!client) {
+    if (!customer) {
       throw new Error('Cliente não encontrado.');
     }
 
@@ -105,7 +105,7 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
 
     const createdPurchaseOrder = await PurchaseOrderModel.create({
       id: purchaseOrder.id,
-      client: client._id,
+      customer: customer._id,
       items: items.map(({ _id }) => _id),
       voucher: voucher ? voucher._id : undefined,
       code: purchaseOrder.code,
@@ -115,7 +115,10 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
       createdAt: purchaseOrder.createdAt,
     });
 
-    const populatedPurchaseOrder = await PurchaseOrderModel.populate(createdPurchaseOrder, { path: 'voucher' });
+    const populatedPurchaseOrder = await PurchaseOrderModel.populate(
+      createdPurchaseOrder,
+      { path: 'voucher' },
+    );
 
     return this.mapPurchaseOrder(populatedPurchaseOrder);
   }
@@ -185,7 +188,7 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   private mapPurchaseOrder(purchaseOrder: IPurchaseOrder): PurchaseOrder {
     const params: PurchaseOrderParams = {
       id: purchaseOrder.id,
-      clientId: (purchaseOrder.client as unknown as IUser).id,
+      customerId: (purchaseOrder.customer as unknown as IUser).id,
       code: purchaseOrder.code,
       totalAmount: purchaseOrder.totalAmount,
       discountAmount: purchaseOrder.discountAmount,

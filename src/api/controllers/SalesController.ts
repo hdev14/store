@@ -20,7 +20,7 @@ export default class SalesController {
   public async addPurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
       const {
-        clientId,
+        customerId,
         productId,
         productName,
         productAmount,
@@ -29,7 +29,7 @@ export default class SalesController {
 
       const result = await this.addPurchaseOrderItemCommand.send({
         principalId: this.generateID(),
-        clientId,
+        customerId,
         productId,
         productName,
         productAmount,

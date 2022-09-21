@@ -54,9 +54,9 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
   }
 
-  public async getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]> {
+  public async getPurchaseOrdersByCustomerId(id: string): Promise<PurchaseOrder[]> {
     const purchaseOrders = await this.connection.purchaseOrder.findMany({
-      where: { clientId: id },
+      where: { customerId: id },
       include: {
         voucher: true,
         items: {
@@ -76,9 +76,9 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
   }
 
-  public async getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null> {
+  public async getDraftPurchaseOrderByCustomerId(id: string): Promise<PurchaseOrder | null> {
     const purchaseOrder = await this.connection.purchaseOrder.findFirst({
-      where: { clientId: id, status: PurchaseOrderStatus.DRAFT },
+      where: { customerId: id, status: PurchaseOrderStatus.DRAFT },
       include: {
         items: {
           include: {
@@ -105,7 +105,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
         totalAmount: purchaseOrder.totalAmount,
         discountAmount: purchaseOrder.discountAmount,
         status: purchaseOrder.status,
-        clientId: purchaseOrder.clientId,
+        customerId: purchaseOrder.customerId,
         voucherId: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
         createdAt: purchaseOrder.createdAt,
       },
@@ -121,7 +121,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     const updatedPurchaseOrder = await this.connection.purchaseOrder.update({
       where: { id: purchaseOrder.id },
       data: {
-        clientId: purchaseOrder.clientId,
+        customerId: purchaseOrder.customerId,
         code: purchaseOrder.code,
         totalAmount: purchaseOrder.totalAmount,
         discountAmount: purchaseOrder.discountAmount,
@@ -279,7 +279,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
   private mapPurchaseOrder(purchaseOrder: PurchaseOrderWithVoucherAndItems) {
     const params: PurchaseOrderParams = {
       id: purchaseOrder.id,
-      clientId: purchaseOrder.clientId,
+      customerId: purchaseOrder.customerId,
       code: purchaseOrder.code,
       totalAmount: purchaseOrder.totalAmount,
       discountAmount: purchaseOrder.discountAmount,

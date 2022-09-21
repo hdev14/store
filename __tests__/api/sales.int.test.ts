@@ -54,7 +54,7 @@ describe('Sales Integration Tests', () => {
       expect.assertions(2);
 
       const data = {
-        clientId: 'wrong',
+        customerId: 'wrong',
         productId: 'wrong',
         productName: 123,
         productAmount: 'wrong',
@@ -75,7 +75,7 @@ describe('Sales Integration Tests', () => {
       expect.assertions(8);
 
       const data = {
-        clientId: user.id,
+        customerId: user.id,
         productId: product.id,
         productName: product.name,
         productAmount: product.amount,
@@ -122,7 +122,7 @@ describe('Sales Integration Tests', () => {
       const fakeUserId = faker.datatype.uuid();
 
       const data = {
-        clientId: fakeUserId,
+        customerId: fakeUserId,
         productId: product.id,
         productName: product.name,
         productAmount: product.amount,

@@ -17,7 +17,7 @@ export enum PurchaseOrderStatus {
 
 export type PurchaseOrderParams = {
   id: string;
-  clientId: string;
+  customerId: string;
   code: number;
   createdAt: Date;
   voucher: Voucher | null;
@@ -29,7 +29,7 @@ export type PurchaseOrderParams = {
 export default class PurchaseOrder extends Entity implements IAggregateRoot {
   public code: number;
 
-  public clientId: string;
+  public customerId: string;
 
   public voucher: Voucher | null;
 
@@ -45,7 +45,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
 
   constructor(params: PurchaseOrderParams) {
     super(params.id);
-    this.clientId = params.clientId;
+    this.customerId = params.customerId;
     this.createdAt = params.createdAt;
     this.code = params.code;
     this.voucher = params.voucher;
@@ -148,7 +148,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   public validate(): boolean | void {
     // Validator.setData(this)
     //   .setRule('code', ['number', 'integer'])
-    //   .setRule('clientId', ['required', 'string'])
+    //   .setRule('customerId', ['required', 'string'])
     //   .setRule('discountAmount', ['number'])
     //   .setRule('totalAmount', ['number'])
     //   .setRule('status', ['required', 'string'])

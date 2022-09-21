@@ -9,7 +9,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('creates a draft purchase order', () => {
       const params: PurchaseOrderParams = {
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -33,7 +33,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('adds a new purchase order item', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -63,7 +63,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('increments the quantity of an existing purchase order item', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -104,7 +104,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -133,7 +133,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('removes a purchase order item', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -168,7 +168,7 @@ describe("PurchaseOrder's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -188,7 +188,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('updates purchase order item quantity', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -221,7 +221,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('calculates the total amount of all items', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -281,7 +281,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('returns TRUE if purchase order item exists', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -309,7 +309,7 @@ describe("PurchaseOrder's unit tests", () => {
     it("returns FALSE if purchase order item doesn't exist", () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
@@ -337,7 +337,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('changes status to draft', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         status: PurchaseOrderStatus.STARTED,
@@ -354,7 +354,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('changes status to started', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         status: PurchaseOrderStatus.DRAFT,
@@ -371,7 +371,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('changes status to paid', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         status: PurchaseOrderStatus.STARTED,
@@ -388,7 +388,7 @@ describe("PurchaseOrder's unit tests", () => {
     it('changes status to canceled', () => {
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         status: PurchaseOrderStatus.STARTED,

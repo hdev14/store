@@ -26,15 +26,15 @@ class PublisherStup extends EventPublisher {
 }
 
 describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
-  it('calls repository.getDraftPurchaseOrderByClientId with correct clientId', async () => {
+  it('calls repository.getDraftPurchaseOrderByCustomerId with correct customerId', async () => {
     expect.assertions(2);
 
     const repository = new RepositoryStub();
-    const getDraftPurchaseOrderByClientIdSpy = jest.spyOn(repository, 'getDraftPurchaseOrderByClientId');
+    const getDraftPurchaseOrderByCustomerIdSpy = jest.spyOn(repository, 'getDraftPurchaseOrderByCustomerId');
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -50,20 +50,20 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     await addPurchaseOrderItemCommandHandler.handle(data);
 
-    expect(getDraftPurchaseOrderByClientIdSpy).toHaveBeenCalledTimes(1);
-    expect(getDraftPurchaseOrderByClientIdSpy).toHaveBeenCalledWith(data.clientId);
+    expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledTimes(1);
+    expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledWith(data.customerId);
   });
 
   it("calls repository.countPurchaseOrders if draftPurchaseOrder doesn't exist", async () => {
     expect.assertions(1);
 
     const repository = new RepositoryStub();
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
     const countPurchaseOrdersSpy = jest.spyOn(repository, 'countPurchaseOrders');
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -86,13 +86,13 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect.assertions(8);
 
     const repository = new RepositoryStub();
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
 
     const createDraftSpy = jest.spyOn(PurchaseOrder, 'createDraft');
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -110,7 +110,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     expect(createDraftSpy).toHaveBeenCalledTimes(1);
     expect(createDraftSpy.mock.calls[0][0].id).toBeTruthy();
-    expect(createDraftSpy.mock.calls[0][0].clientId).toEqual(data.clientId);
+    expect(createDraftSpy.mock.calls[0][0].customerId).toEqual(data.customerId);
     expect(createDraftSpy.mock.calls[0][0].code).toBeTruthy();
     expect(createDraftSpy.mock.calls[0][0].voucher).toBeNull();
     expect(createDraftSpy.mock.calls[0][0].status).toBeNull();
@@ -122,7 +122,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect.assertions(1);
 
     const repository = new RepositoryStub();
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
 
     const addItemMock = jest.fn();
     const currentCreateDraft = PurchaseOrder.createDraft;
@@ -130,7 +130,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -155,12 +155,12 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect.assertions(1);
 
     const repository = new RepositoryStub();
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
     const addPurchaseOrderSpy = jest.spyOn(repository, 'addPurchaseOrder');
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -183,12 +183,12 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect.assertions(1);
 
     const repository = new RepositoryStub();
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
     const addPurchaseOrderItemSpy = jest.spyOn(repository, 'addPurchaseOrderItem');
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -214,7 +214,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -234,7 +234,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
       createdAt: new Date(),
       voucher: null,
@@ -243,7 +243,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     purchaseOrder.addItem(purchaseOrderItem);
 
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(purchaseOrder);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
 
     const updatePurchaseOrderItemSpy = jest.spyOn(repository, 'updatePurchaseOrderItem');
 
@@ -265,7 +265,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -275,14 +275,14 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
       createdAt: new Date(),
       voucher: null,
       status: null,
     });
 
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(purchaseOrder);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
 
     const addPurchaseOrderItemSpy = jest.spyOn(repository, 'addPurchaseOrderItem');
 
@@ -304,7 +304,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -314,14 +314,14 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
       createdAt: new Date(),
       voucher: null,
       status: null,
     });
 
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(purchaseOrder);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
 
     const updatePurchaseOrderSpy = jest.spyOn(repository, 'updatePurchaseOrder');
 
@@ -343,7 +343,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -351,7 +351,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       timestamp: new Date().toISOString(),
     };
 
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockRejectedValueOnce(new Error('test'));
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockRejectedValueOnce(new Error('test'));
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
@@ -368,14 +368,14 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect.assertions(3);
 
     const repository = new RepositoryStub();
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(null);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
 
     const publisher = new PublisherStup({} as EventMediator);
     const addEventSpy = jest.spyOn(publisher, 'addEvent');
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -406,7 +406,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -436,7 +436,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -456,7 +456,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
       createdAt: new Date(),
       voucher: null,
@@ -465,7 +465,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     purchaseOrder.addItem(purchaseOrderItem);
 
-    repository.getDraftPurchaseOrderByClientId = jest.fn().mockResolvedValueOnce(purchaseOrder);
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
@@ -489,7 +489,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,

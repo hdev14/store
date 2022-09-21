@@ -43,10 +43,10 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       });
 
       const draftPurchaseOrder = await this.repository
-        .getDraftPurchaseOrderByClientId(data.clientId);
+        .getDraftPurchaseOrderByCustomerId(data.customerId);
 
       if (!draftPurchaseOrder) {
-        await this.createNewDraftPurcahseOrder(data.clientId, purchaseOrderItem);
+        await this.createNewDraftPurcahseOrder(data.customerId, purchaseOrderItem);
         return true;
       }
 
@@ -122,14 +122,14 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
   }
 
   private async createNewDraftPurcahseOrder(
-    clientId: string,
+    customerId: string,
     purchaseOrderItem: PurchaseOrderItem,
   ): Promise<void> {
     const code = await this.repository.countPurchaseOrders() + 1;
 
     const newDraftPurchaseOrder = PurchaseOrder.createDraft({
       id: this.generateID(),
-      clientId,
+      customerId,
       createdAt: new Date(),
       code,
       voucher: null,

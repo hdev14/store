@@ -7,9 +7,9 @@ import Voucher from './Voucher';
 export interface IPurchaseOrderRepositoryQueries {
   getPurchaseOrderById(id: string): Promise<PurchaseOrder | null>;
 
-  getPurchaseOrdersByClientId(id: string): Promise<PurchaseOrder[]>;
+  getPurchaseOrdersByCustomerId(id: string): Promise<PurchaseOrder[]>;
 
-  getDraftPurchaseOrderByClientId(id: string): Promise<PurchaseOrder | null>;
+  getDraftPurchaseOrderByCustomerId(id: string): Promise<PurchaseOrder | null>;
 
   getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null>;
 

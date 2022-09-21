@@ -17,7 +17,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     try {
       const invalidData: any = {
-        clientId: 'wrong',
+        customerId: 'wrong',
         principalId: 'wrong',
         productAmount: 'wrong',
         productId: 'wrong',
@@ -43,7 +43,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -68,7 +68,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
@@ -92,7 +92,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
-      clientId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,

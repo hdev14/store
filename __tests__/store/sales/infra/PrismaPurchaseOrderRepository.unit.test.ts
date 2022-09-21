@@ -26,7 +26,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const fakePurchaseOrder = {
         id: purchaseOrderId,
-        clientId: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.STARTED,
         totalAmount: faker.datatype.float(),
@@ -74,7 +74,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const purchaseOrder = await repository.getPurchaseOrderById(purchaseOrderId);
 
       expect(purchaseOrder!.id).toEqual(fakePurchaseOrder.id);
-      expect(purchaseOrder!.clientId).toEqual(fakePurchaseOrder.clientId);
+      expect(purchaseOrder!.customerId).toEqual(fakePurchaseOrder.customerId);
       expect(purchaseOrder!.code).toEqual(fakePurchaseOrder.code);
       expect(purchaseOrder!.createdAt).toEqual(fakePurchaseOrder.createdAt);
       expect(purchaseOrder!.discountAmount).toEqual(fakePurchaseOrder.discountAmount);
@@ -120,16 +120,16 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  describe('PrismaPurchaseOrderRepository.getPurchaseOrdersByClientId()', () => {
+  describe('PrismaPurchaseOrderRepository.getPurchaseOrdersByCustomerId()', () => {
     it('returns purchase orders by client id', async () => {
       expect.assertions(28);
 
-      const clientId = faker.datatype.uuid();
+      const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
 
       const fakePurchaseOrders = [{
         id: purchaseOrderId,
-        clientId,
+        customerId,
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.STARTED,
         totalAmount: faker.datatype.float(),
@@ -174,11 +174,11 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const repository = new PrismaPurchaseOrderRepository();
 
-      const purchaseOrders = await repository.getPurchaseOrdersByClientId(clientId);
+      const purchaseOrders = await repository.getPurchaseOrdersByCustomerId(customerId);
 
       purchaseOrders.forEach((purchaseOrder, index) => {
         expect(purchaseOrder!.id).toEqual(fakePurchaseOrders[index].id);
-        expect(purchaseOrder!.clientId).toEqual(fakePurchaseOrders[index].clientId);
+        expect(purchaseOrder!.customerId).toEqual(fakePurchaseOrders[index].customerId);
         expect(purchaseOrder!.code).toEqual(fakePurchaseOrders[index].code);
         expect(purchaseOrder!.createdAt).toEqual(fakePurchaseOrders[index].createdAt);
         expect(purchaseOrder!.discountAmount).toEqual(fakePurchaseOrders[index].discountAmount);
@@ -209,7 +209,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       expect(prismaMock.purchaseOrder.findMany).toHaveBeenCalledTimes(1);
       expect(prismaMock.purchaseOrder.findMany).toHaveBeenCalledWith({
-        where: { clientId },
+        where: { customerId },
         include: {
           voucher: true,
           items: {
@@ -228,16 +228,16 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  describe('PrismaPurchaseOrderRepository.getDraftPurchaseOrderByClientId()', () => {
-    it('returns a draft purchase order by client id', async () => {
+  describe('PrismaPurchaseOrderRepository.getDraftPurchaseOrderByCustomerId()', () => {
+    it('returns a draft purchase order by customer id', async () => {
       expect.assertions(13);
 
-      const clientId = faker.datatype.uuid();
+      const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
 
       const fakeDraftPurchaseOrder = {
         id: purchaseOrderId,
-        clientId,
+        customerId,
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
         totalAmount: 0,
@@ -262,10 +262,10 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const repository = new PrismaPurchaseOrderRepository();
 
-      const purchaseOrder = await repository.getDraftPurchaseOrderByClientId(clientId);
+      const purchaseOrder = await repository.getDraftPurchaseOrderByCustomerId(customerId);
 
       expect(purchaseOrder!.id).toEqual(fakeDraftPurchaseOrder.id);
-      expect(purchaseOrder!.clientId).toEqual(fakeDraftPurchaseOrder.clientId);
+      expect(purchaseOrder!.customerId).toEqual(fakeDraftPurchaseOrder.customerId);
       expect(purchaseOrder!.code).toEqual(fakeDraftPurchaseOrder.code);
       expect(purchaseOrder!.createdAt).toEqual(fakeDraftPurchaseOrder.createdAt);
       expect(purchaseOrder!.discountAmount).toEqual(fakeDraftPurchaseOrder.discountAmount);
@@ -282,7 +282,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       expect(prismaMock.purchaseOrder.findFirst).toHaveBeenCalledTimes(1);
       expect(prismaMock.purchaseOrder.findFirst).toHaveBeenCalledWith({
-        where: { clientId, status: PurchaseOrderStatus.DRAFT },
+        where: { customerId, status: PurchaseOrderStatus.DRAFT },
         include: {
           items: {
             include: {
@@ -304,12 +304,12 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
     it('creates a new purchase order', async () => {
       expect.assertions(17);
 
-      const clientId = faker.datatype.uuid();
+      const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
 
       const fakePurchaseOrder = {
         id: purchaseOrderId,
-        clientId,
+        customerId,
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
         totalAmount: 0,
@@ -333,7 +333,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: fakePurchaseOrder.id,
-        clientId: fakePurchaseOrder.clientId,
+        customerId: fakePurchaseOrder.customerId,
         code: fakePurchaseOrder.code,
         status: fakePurchaseOrder.status,
         voucher: new Voucher({
@@ -356,7 +356,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const result = await repository.addPurchaseOrder(purchaseOrder);
 
       expect(result.id).toEqual(purchaseOrder.id);
-      expect(result.clientId).toEqual(purchaseOrder.clientId);
+      expect(result.customerId).toEqual(purchaseOrder.customerId);
       expect(result.code).toEqual(purchaseOrder.code);
       expect(result.createdAt).toEqual(purchaseOrder.createdAt);
       expect(result.discountAmount).toEqual(purchaseOrder.discountAmount);
@@ -375,7 +375,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(prismaMock.purchaseOrder.create).toHaveBeenCalledWith({
         data: {
           id: fakePurchaseOrder.id,
-          clientId: fakePurchaseOrder.clientId,
+          customerId: fakePurchaseOrder.customerId,
           code: fakePurchaseOrder.code,
           status: fakePurchaseOrder.status,
           voucherId: fakePurchaseOrder.voucher.id,
@@ -392,12 +392,12 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
     it('creates a new purchase order without voucher', async () => {
       expect.assertions(8);
 
-      const clientId = faker.datatype.uuid();
+      const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
 
       const fakePurchaseOrder = {
         id: purchaseOrderId,
-        clientId,
+        customerId,
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
         totalAmount: 0,
@@ -411,7 +411,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: fakePurchaseOrder.id,
-        clientId: fakePurchaseOrder.clientId,
+        customerId: fakePurchaseOrder.customerId,
         code: fakePurchaseOrder.code,
         status: fakePurchaseOrder.status,
         voucher: null,
@@ -423,7 +423,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const result = await repository.addPurchaseOrder(purchaseOrder);
 
       expect(result.id).toEqual(purchaseOrder.id);
-      expect(result.clientId).toEqual(purchaseOrder.clientId);
+      expect(result.customerId).toEqual(purchaseOrder.customerId);
       expect(result.code).toEqual(purchaseOrder.code);
       expect(result.createdAt).toEqual(purchaseOrder.createdAt);
       expect(result.discountAmount).toEqual(purchaseOrder.discountAmount);
@@ -433,7 +433,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(prismaMock.purchaseOrder.create).toHaveBeenCalledWith({
         data: {
           id: fakePurchaseOrder.id,
-          clientId: fakePurchaseOrder.clientId,
+          customerId: fakePurchaseOrder.customerId,
           code: fakePurchaseOrder.code,
           status: fakePurchaseOrder.status,
           voucherId: undefined,
@@ -452,12 +452,12 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
     it('updates a specific purchase order', async () => {
       expect.assertions(8);
 
-      const clientId = faker.datatype.uuid();
+      const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
 
       const fakePurchaseOrder = {
         id: purchaseOrderId,
-        clientId,
+        customerId,
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
         totalAmount: 0,
@@ -482,7 +482,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: fakePurchaseOrder.id,
-        clientId: fakePurchaseOrder.clientId,
+        customerId: fakePurchaseOrder.customerId,
         code: fakePurchaseOrder.code,
         status: fakePurchaseOrder.status,
         voucher: null,
@@ -494,7 +494,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const result = await repository.updatePurchaseOrder(purchaseOrder);
 
       expect(result.id).toEqual(purchaseOrder.id);
-      expect(result.clientId).toEqual(purchaseOrder.clientId);
+      expect(result.customerId).toEqual(purchaseOrder.customerId);
       expect(result.code).toEqual(purchaseOrder.code);
       expect(result.createdAt).toEqual(purchaseOrder.createdAt);
       expect(result.discountAmount).toEqual(purchaseOrder.discountAmount);
@@ -504,7 +504,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(prismaMock.purchaseOrder.update).toHaveBeenCalledWith({
         where: { id: fakePurchaseOrder.id },
         data: {
-          clientId: fakePurchaseOrder.clientId,
+          customerId: fakePurchaseOrder.customerId,
           code: fakePurchaseOrder.code,
           status: fakePurchaseOrder.status,
           voucherId: undefined,
