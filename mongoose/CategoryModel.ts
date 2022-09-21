@@ -1,16 +1,18 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { IProduct } from './ProductModel';
 
 export interface ICategory {
-  id: string;
+  _id: string;
   name: string;
   code: number;
-  products: Types.ObjectId[];
+  products: Array<string | IProduct>;
 }
 
 const categorySchema = new Schema<ICategory>({
-  id: {
+  _id: {
     type: String,
     required: true,
+    unique: true,
     index: true,
   },
   name: {

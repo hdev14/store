@@ -1,7 +1,8 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { IPurchaseOrder } from './PurchaseOrderModel';
 
 export interface IVoucher {
-  id: string;
+  _id: string;
   code: number;
   percentageAmount: number;
   rawDiscountAmount: number;
@@ -11,13 +12,14 @@ export interface IVoucher {
   createdAt: Date;
   expiresAt: Date;
   usedAt: Date;
-  purchaseOrders: Types.ObjectId[];
+  purchaseOrders: Array<string | IPurchaseOrder>;
 }
 
 const voucherSchema = new Schema<IVoucher>({
-  id: {
+  _id: {
     type: String,
     required: true,
+    unique: true,
     index: true,
   },
   code: {
@@ -61,7 +63,7 @@ const voucherSchema = new Schema<IVoucher>({
     required: false,
   },
   purchaseOrders: [{
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'PurchaseOrder',
   }],
 });

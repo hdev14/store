@@ -1,15 +1,17 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { IPurchaseOrder } from './PurchaseOrderModel';
 
 export interface IUser {
-  id: string;
+  _id: string;
   name: string;
-  purchaseOrders: Types.ObjectId;
+  purchaseOrders: Array<string | IPurchaseOrder>;
 }
 
 const userSchema = new Schema<IUser>({
-  id: {
+  _id: {
     type: String,
     required: true,
+    unique: true,
     index: true,
   },
   name: {
@@ -17,7 +19,7 @@ const userSchema = new Schema<IUser>({
     required: true,
   },
   purchaseOrders: [{
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'PurchaseOrder',
   }],
 });

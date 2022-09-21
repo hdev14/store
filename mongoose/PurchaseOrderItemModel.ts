@@ -1,16 +1,19 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { IProduct } from './ProductModel';
+import { IPurchaseOrder } from './PurchaseOrderModel';
 
 export interface IPurchaseOrderItem {
-  id: string;
+  _id: string;
   quantity: number;
-  purchaseOrder: Types.ObjectId;
-  product: Types.ObjectId;
+  purchaseOrder: string | IPurchaseOrder;
+  product: string | IProduct;
 }
 
 const purchaseOrderItemSchema = new Schema<IPurchaseOrderItem>({
-  id: {
+  _id: {
     type: String,
     required: true,
+    unique: true,
     index: true,
   },
   quantity: {
@@ -18,11 +21,11 @@ const purchaseOrderItemSchema = new Schema<IPurchaseOrderItem>({
     required: true,
   },
   purchaseOrder: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'PurchaseOrder',
   },
   product: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Product',
   },
 });

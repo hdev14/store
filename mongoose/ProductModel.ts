@@ -1,14 +1,15 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { ICategory } from './CategoryModel';
 
 export interface IProduct {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   active: boolean;
   amount: number;
   image: string
   stockQuantity: number;
-  category: Types.ObjectId;
+  category: string | ICategory;
   height: number;
   width: number;
   depth: number;
@@ -16,9 +17,10 @@ export interface IProduct {
 }
 
 const productSchema = new Schema<IProduct>({
-  id: {
+  _id: {
     type: String,
     required: true,
+    unique: true,
     index: true,
   },
   name: {
@@ -46,7 +48,7 @@ const productSchema = new Schema<IProduct>({
     required: true,
   },
   category: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Category',
   },
   height: {
