@@ -71,7 +71,13 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
-    throw new Error('Method not implemented.');
+    const purchaseOrderItem = await PurchaseOrderItemModel.findOne(
+      { id },
+      undefined,
+      { populate: { path: 'product', select: 'id name amount' } },
+    );
+
+    return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
   }
 
   public async getPurchaseOrderItem(params: { purchaseOrderId: string; }): Promise<PurchaseOrderItem | null>;
