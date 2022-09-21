@@ -772,33 +772,27 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       );
     });
 
-    // it("returns null if purchase order item doesn't exist", async () => {
-    //   expect.assertions(3);
+    it("returns null if purchase order item doesn't exist", async () => {
+      expect.assertions(3);
 
-    //   const fakePurchaseOrderItemId = faker.datatype.uuid();
+      PurchaseOrderItemModelMock.findOne.mockClear();
 
-    //   prismaMock.purchaseOrderItem.findUnique.mockResolvedValueOnce(null);
+      const fakePurchaseOrderItemId = faker.datatype.uuid();
 
-    //   const repository = new PrismaPurchaseOrderRepository();
+      PurchaseOrderItemModelMock.findOne.mockResolvedValueOnce(null);
 
-    //   const purchaseOrderItem = await repository.getPurchaseOrderItemById(fakePurchaseOrderItemId);
+      const repository = new MongoPurchaseOrderRepository();
 
-    //   expect(purchaseOrderItem).toBeNull();
+      const purchaseOrderItem = await repository.getPurchaseOrderItemById(fakePurchaseOrderItemId);
 
-    //   expect(prismaMock.purchaseOrderItem.findUnique).toHaveBeenCalledTimes(1);
-    //   expect(prismaMock.purchaseOrderItem.findUnique).toHaveBeenCalledWith({
-    //     where: { id: fakePurchaseOrderItemId },
-    //     include: {
-    //       product: {
-    //         select: {
-    //           id: true,
-    //           name: true,
-    //           amount: true,
-    //         },
-    //       },
-    //     },
-    //   });
-    // });
+      expect(purchaseOrderItem).toBeNull();
+      expect(PurchaseOrderItemModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(PurchaseOrderItemModelMock.findOne).toHaveBeenCalledWith(
+        { id: fakePurchaseOrderItemId },
+        undefined,
+        { populate: { path: 'product', select: 'id name amount' } },
+      );
+    });
   });
 
   // describe('PrismaPurchaseOrderRepository.getPurchaseOrderItem()', () => {
