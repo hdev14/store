@@ -1,18 +1,15 @@
-import { Schema, model } from 'mongoose';
-import { IPurchaseOrderItem } from './PurchaseOrderItemModel';
-import { IUser } from './UserModel';
-import { IVoucher } from './VoucherModel';
+import { Schema, model, Types } from 'mongoose';
 
 export interface IPurchaseOrder {
   id: string;
   code: number;
-  client: IUser;
-  voucher: IVoucher;
+  client: Types.ObjectId;
+  voucher: Types.ObjectId;
   discountAmount: number;
   totalAmount: number;
   status: string;
   createdAt: Date;
-  items: IPurchaseOrderItem[];
+  items: Types.ObjectId[];
 }
 
 const purchaseOrderSchema = new Schema<IPurchaseOrder>({

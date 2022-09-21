@@ -1,5 +1,4 @@
-import { Schema, model } from 'mongoose';
-import { ICategory } from './CategoryModel';
+import { Schema, model, Types } from 'mongoose';
 
 export interface IProduct {
   id: string;
@@ -9,7 +8,7 @@ export interface IProduct {
   amount: number;
   image: string
   stockQuantity: number;
-  category: ICategory;
+  category: Types.ObjectId;
   height: number;
   width: number;
   depth: number;

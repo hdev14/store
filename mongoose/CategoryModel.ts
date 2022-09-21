@@ -1,11 +1,10 @@
-import { Schema, model } from 'mongoose';
-import { IProduct } from './ProductModel';
+import { Schema, model, Types } from 'mongoose';
 
 export interface ICategory {
   id: string;
   name: string;
   code: number;
-  products: IProduct[];
+  products: Types.ObjectId[];
 }
 
 const categorySchema = new Schema<ICategory>({

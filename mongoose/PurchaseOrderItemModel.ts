@@ -1,12 +1,10 @@
-import { Schema, model } from 'mongoose';
-import { IProduct } from './ProductModel';
-import { IPurchaseOrder } from './PurchaseOrderModel';
+import { Schema, model, Types } from 'mongoose';
 
 export interface IPurchaseOrderItem {
   id: string;
   quantity: number;
-  purchaseOrder: IPurchaseOrder;
-  product: IProduct;
+  purchaseOrder: Types.ObjectId;
+  product: Types.ObjectId;
 }
 
 const purchaseOrderItemSchema = new Schema<IPurchaseOrderItem>({
