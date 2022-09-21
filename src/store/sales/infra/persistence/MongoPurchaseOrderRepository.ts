@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable max-len */
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderParams, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
@@ -6,21 +8,10 @@ import Voucher from '@sales/domain/Voucher';
 import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@mongoose/PurchaseOrderItemModel';
 import PurchaseOrderModel, { IPurchaseOrder } from '@mongoose/PurchaseOrderModel';
 import VoucherModel, { IVoucher } from '@mongoose/VoucherModel';
-import UserModel from '@mongoose/UserModel';
+import UserModel, { IUser } from '@mongoose/UserModel';
+import { IProduct } from '@mongoose/ProductModel';
 
 export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepository {
-  countPurchaseOrders(): Promise<number> {
-    throw new Error('Method not implemented.');
-  }
-
-  countPurchaseOrderItems(): Promise<number> {
-    throw new Error('Method not implemented.');
-  }
-
-  countVouchers(): Promise<number> {
-    throw new Error('Method not implemented.');
-  }
-
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
     const purchaseOrder = await PurchaseOrderModel
       .findOne({ id })
@@ -79,21 +70,21 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
   }
 
-  getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
+  public async getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
     throw new Error('Method not implemented.');
   }
 
-  getPurchaseOrderItem(params: { purchaseOrderId: string; }): Promise<PurchaseOrderItem | null>;
+  public async getPurchaseOrderItem(params: { purchaseOrderId: string; }): Promise<PurchaseOrderItem | null>;
 
-  getPurchaseOrderItem(params: { productId: string; }): Promise<PurchaseOrderItem | null>;
+  public async getPurchaseOrderItem(params: { productId: string; }): Promise<PurchaseOrderItem | null>;
 
-  getPurchaseOrderItem(params: { purchaseOrderId?: string | undefined; productId?: string | undefined; }): Promise<PurchaseOrderItem | null>;
+  public async getPurchaseOrderItem(params: { purchaseOrderId?: string | undefined; productId?: string | undefined; }): Promise<PurchaseOrderItem | null>;
 
-  getPurchaseOrderItem(params: unknown): Promise<import('../../domain/PurchaseOrderItem').default | null> {
+  public async getPurchaseOrderItem(params: unknown): Promise<import('../../domain/PurchaseOrderItem').default | null> {
     throw new Error('Method not implemented.');
   }
 
-  getVoucherByCode(code: number): Promise<Voucher | null> {
+  public async getVoucherByCode(code: number): Promise<Voucher | null> {
     throw new Error('Method not implemented.');
   }
 
@@ -129,39 +120,87 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     return this.mapPurchaseOrder(populatedPurchaseOrder);
   }
 
-  updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+  public async updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+    const purchaseOrderToUpdate = await PurchaseOrderModel.findOne(
+      { id: purchaseOrder.id },
+    );
+
+    if (!purchaseOrderToUpdate) {
+      throw new Error('PurchaseOrder not found');
+    }
+
+    purchaseOrderToUpdate.code = purchaseOrder.code;
+    purchaseOrderToUpdate.discountAmount = purchaseOrder.discountAmount;
+    purchaseOrderToUpdate.totalAmount = purchaseOrder.totalAmount;
+    purchaseOrderToUpdate.status = purchaseOrder.status;
+
+    const voucher = purchaseOrder.voucher
+      ? await VoucherModel.findOne({ id: purchaseOrder.voucher.id })
+      : undefined;
+
+    if (voucher) {
+      purchaseOrderToUpdate.voucher = voucher._id;
+    }
+
+    purchaseOrderToUpdate.items = (
+      await PurchaseOrderItemModel.find({
+        id: { $in: purchaseOrder.items.map((item) => item.id) },
+      })
+    ).map((item) => item._id);
+
+    await purchaseOrderToUpdate.save();
+
+    const populatedPurchaseOrder = await PurchaseOrderModel.populate(
+      purchaseOrderToUpdate,
+      { path: 'voucher' },
+    );
+
+    return this.mapPurchaseOrder(populatedPurchaseOrder);
+  }
+
+  public async addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
     throw new Error('Method not implemented.');
   }
 
-  addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
+  public async updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
     throw new Error('Method not implemented.');
   }
 
-  updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
+  public async deletePurchaseOrderItem(purchasOrderItemId: string): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 
-  deletePurchaseOrderItem(purchasOrderItemId: string): Promise<boolean> {
+  public async countPurchaseOrders(): Promise<number> {
+    throw new Error('Method not implemented.');
+  }
+
+  public async countPurchaseOrderItems(): Promise<number> {
+    throw new Error('Method not implemented.');
+  }
+
+  public async countVouchers(): Promise<number> {
     throw new Error('Method not implemented.');
   }
 
   private mapPurchaseOrder(purchaseOrder: IPurchaseOrder): PurchaseOrder {
     const params: PurchaseOrderParams = {
       id: purchaseOrder.id,
-      clientId: purchaseOrder.client.id,
+      clientId: (purchaseOrder.client as unknown as IUser).id,
       code: purchaseOrder.code,
       totalAmount: purchaseOrder.totalAmount,
       discountAmount: purchaseOrder.discountAmount,
       status: purchaseOrder.status as PurchaseOrderStatus,
       createdAt: purchaseOrder.createdAt,
-      voucher: purchaseOrder.voucher ? this.mapVoucher(purchaseOrder.voucher) : null,
+      voucher: purchaseOrder.voucher
+        ? this.mapVoucher(purchaseOrder.voucher as unknown as IVoucher)
+        : null,
     };
 
     const po = new PurchaseOrder(params);
 
     if (purchaseOrder.items) {
       purchaseOrder.items.forEach((item) => {
-        po.addItem(this.mapPurchaseOrderItem(item));
+        po.addItem(this.mapPurchaseOrderItem(item as unknown as IPurchaseOrderItem));
       });
     }
 
@@ -184,13 +223,15 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   private mapPurchaseOrderItem(purchaseOrderItem: IPurchaseOrderItem) {
+    const product = purchaseOrderItem.product as unknown as IProduct;
+
     return new PurchaseOrderItem({
       id: purchaseOrderItem.id,
       quantity: purchaseOrderItem.quantity,
       product: new Product(
-        purchaseOrderItem.product.id,
-        purchaseOrderItem.product.name,
-        purchaseOrderItem.product.amount,
+        product.id,
+        product.name,
+        product.amount,
       ),
     });
   }
