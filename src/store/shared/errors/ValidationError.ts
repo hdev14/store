@@ -3,11 +3,14 @@ export type GenericError = {
   messages: string[];
 }
 
-export default class ValidationEntityError extends Error {
+export default class ValidationError extends Error {
   public errors: GenericError[] = [];
 
   constructor(errors: GenericError[]) {
     super('ValidationEntityError');
     this.errors = errors;
+    this.name = this.constructor.name;
+
+    Object.setPrototypeOf(this, ValidationError.prototype);
   }
 }
