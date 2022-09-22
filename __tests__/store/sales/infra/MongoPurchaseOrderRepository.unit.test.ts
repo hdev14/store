@@ -895,52 +895,43 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  // describe('MongoPurchaseOrderRepository.deletePurchaseOrderItem()', () => {
-  //   it('deletes a purchas order item by id', async () => {
-  //     expect.assertions(3);
+  describe('MongoPurchaseOrderRepository.deletePurchaseOrderItem()', () => {
+    it('deletes a purchas order item by id', async () => {
+      expect.assertions(3);
 
-  //     const fakePurchaseOrderItem = {
-  //       id: faker.datatype.uuid(),
-  //       quantity: parseInt(faker.datatype.number().toString(), 10),
-  //       purchaseOrderId: faker.datatype.uuid(),
-  //       product: {
-  //         id: faker.datatype.uuid(),
-  //         name: faker.commerce.product(),
-  //         amount: faker.datatype.float(),
-  //       },
-  //     };
+      const fakePurchaseOrderItemId = faker.datatype.uuid();
 
-  //     prismaMock.purchaseOrderItem.delete.mockResolvedValueOnce(fakePurchaseOrderItem as any);
+      const repository = new MongoPurchaseOrderRepository();
 
-  //     const repository = new MongoPurchaseOrderRepository();
+      PurchaseOrderItemModelMock.deleteOne.mockResolvedValueOnce({ deletedCount: 1 } as any);
 
-  //     const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItem.id);
+      const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
 
-  //     expect(result).toBe(true);
-  //     expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledTimes(1);
-  //     expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledWith({
-  //       where: { _id: fakePurchaseOrderItem.id },
-  //     });
-  //   });
+      expect(result).toBe(true);
+      expect(PurchaseOrderItemModelMock.deleteOne).toHaveBeenCalledTimes(1);
+      expect(PurchaseOrderItemModelMock.deleteOne).toHaveBeenCalledWith({
+        _id: fakePurchaseOrderItemId,
+      });
+    });
 
-  //   it('returns FALSE if occur an expected error', async () => {
-  //     expect.assertions(3);
+    // it('returns FALSE if occur an expected error', async () => {
+    //   expect.assertions(3);
 
-  //     const fakePurchaseOrderItemId = faker.datatype.uuid();
+    //   const fakePurchaseOrderItemId = faker.datatype.uuid();
 
-  //     prismaMock.purchaseOrderItem.delete.mockRejectedValueOnce(new Error('Test'));
+    //   prismaMock.purchaseOrderItem.delete.mockRejectedValueOnce(new Error('Test'));
 
-  //     const repository = new MongoPurchaseOrderRepository();
+    //   const repository = new MongoPurchaseOrderRepository();
 
-  //     const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
+    //   const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
 
-  //     expect(result).toBe(false);
-  //     expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledTimes(1);
-  //     expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledWith({
-  //       where: { _id: fakePurchaseOrderItemId },
-  //     });
-  //   });
-  // });
+    //   expect(result).toBe(false);
+    //   expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledTimes(1);
+    //   expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledWith({
+    //     where: { _id: fakePurchaseOrderItemId },
+    //   });
+    // });
+  });
 
   // describe('MongoPurchaseOrderRepository.getVoucherByCode()', () => {
   //   it('gets a voucher by code', async () => {
