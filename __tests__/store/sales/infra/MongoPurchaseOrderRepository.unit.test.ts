@@ -4,9 +4,7 @@ import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import MongoPurchaseOrderRepository from '@sales/infra/persistence/MongoPurchaseOrderRepository';
 import PurchaseOrderModel from '@mongoose/PurchaseOrderModel';
 import PurchaseOrderItemModel from '@mongoose/PurchaseOrderItemModel';
-import ProductModel from '@mongoose/ProductModel';
 import VoucherModel from '@mongoose/VoucherModel';
-import UserModel from '@mongoose/UserModel';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Product from '@sales/domain/Product';
 
@@ -18,9 +16,7 @@ jest.mock('../../../../mongoose/UserModel');
 
 const PurchaseOrderModelMock = jest.mocked(PurchaseOrderModel, true);
 const PurchaseOrderItemModelMock = jest.mocked(PurchaseOrderItemModel, true);
-const ProductModelMock = jest.mocked(ProductModel, true);
 const VoucherModelMock = jest.mocked(VoucherModel, true);
-const UserModelMock = jest.mocked(UserModel, true);
 
 describe("MongoPurchaseOrderRepository's unit tests", () => {
   describe('MongoPurchaseOrderRepository.getPurchaseOrderById()', () => {
@@ -990,55 +986,4 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       expect(VoucherModelMock.findOne).toHaveBeenCalledWith({ code: fakeVoucherCode });
     });
   });
-
-  // describe('MongoPurchaseOrderRepository.countPurchaseOrders()', () => {
-  //   it('counts all the purchase orders', async () => {
-  //     expect.assertions(2);
-
-  //     const fakeQuantityOfPuchaseOrders = parseInt(faker.datatype.number().toString(), 10);
-
-  //     prismaMock.purchaseOrder.count.mockResolvedValueOnce(fakeQuantityOfPuchaseOrders);
-
-  //     const repository = new MongoPurchaseOrderRepository();
-
-  //     const result = await repository.countPurchaseOrders();
-
-  //     expect(prismaMock.purchaseOrder.count).toHaveBeenCalledTimes(1);
-  //     expect(result).toEqual(fakeQuantityOfPuchaseOrders);
-  //   });
-  // });
-
-  // describe('MongoPurchaseOrderRepository.countPurchaseOrderItems()', () => {
-  //   it('counts all the purchase order items', async () => {
-  //     expect.assertions(2);
-
-  //     const fakeQuantityOfPuchaseOrderItems = parseInt(faker.datatype.number().toString(), 10);
-
-  //     prismaMock.purchaseOrderItem.count.mockResolvedValueOnce(fakeQuantityOfPuchaseOrderItems);
-
-  //     const repository = new MongoPurchaseOrderRepository();
-
-  //     const result = await repository.countPurchaseOrderItems();
-
-  //     expect(prismaMock.purchaseOrderItem.count).toHaveBeenCalledTimes(1);
-  //     expect(result).toEqual(fakeQuantityOfPuchaseOrderItems);
-  //   });
-  // });
-
-  // describe('MongoPurchaseOrderRepository.countVouchers()', () => {
-  //   it('counts all the vouchers', async () => {
-  //     expect.assertions(2);
-
-  //     const fakeQuantityOfVouchers = parseInt(faker.datatype.number().toString(), 10);
-
-  //     prismaMock.voucher.count.mockResolvedValueOnce(fakeQuantityOfVouchers);
-
-  //     const repository = new MongoPurchaseOrderRepository();
-
-  //     const result = await repository.countVouchers();
-
-  //     expect(prismaMock.voucher.count).toHaveBeenCalledTimes(1);
-  //     expect(result).toEqual(fakeQuantityOfVouchers);
-  //   });
-  // });
 });
