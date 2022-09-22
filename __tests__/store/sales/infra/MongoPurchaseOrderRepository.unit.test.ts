@@ -23,7 +23,7 @@ const VoucherModelMock = jest.mocked(VoucherModel, true);
 const UserModelMock = jest.mocked(UserModel, true);
 
 describe("MongoPurchaseOrderRepository's unit tests", () => {
-  describe('PrismaPurchaseOrderRepository.getPurchaseOrderById()', () => {
+  describe('MongoPurchaseOrderRepository.getPurchaseOrderById()', () => {
     it('returns a purchase order by id', async () => {
       expect.assertions(34);
 
@@ -133,7 +133,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  describe('PrismaPurchaseOrderRepository.getPurchaseOrdersByCustomerId()', () => {
+  describe('MongoPurchaseOrderRepository.getPurchaseOrdersByCustomerId()', () => {
     it('returns purchase orders by customer id', async () => {
       expect.assertions(34);
 
@@ -251,7 +251,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  describe('PrismaPurchaseOrderRepository.getDraftPurchaseOrderByCustomerId()', () => {
+  describe('MongoPurchaseOrderRepository.getDraftPurchaseOrderByCustomerId()', () => {
     it('returns a draft purchase order by customer id', async () => {
       expect.assertions(17);
 
@@ -331,7 +331,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  describe('PrismaPurchaseOrderRepository.addPurchaseOrder()', () => {
+  describe('MongoPurchaseOrderRepository.addPurchaseOrder()', () => {
     it('creates a new purchase order', async () => {
       expect.assertions(25);
 
@@ -554,7 +554,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  describe('PrismaPurchaseOrderRepository.updatePurchaseOrder()', () => {
+  describe('MongoPurchaseOrderRepository.updatePurchaseOrder()', () => {
     it('updates a specific purchase order', async () => {
       expect.assertions(26);
 
@@ -675,7 +675,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  describe('PrismaPurchaseOrderRepository.getPurchaseOrderItemById()', () => {
+  describe('MongoPurchaseOrderRepository.getPurchaseOrderItemById()', () => {
     it('returns a purchase order item by id', async () => {
       expect.assertions(5);
 
@@ -736,7 +736,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  describe('PrismaPurchaseOrderRepository.getPurchaseOrderItem()', () => {
+  describe('MongoPurchaseOrderRepository.getPurchaseOrderItem()', () => {
     it('gets a purchase order item by purchase order id and product id', async () => {
       expect.assertions(7);
 
@@ -788,7 +788,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     // it('throws a generic exception if neither purchaseOrderId or productId is passed', async () => {
     //   expect.assertions(1);
 
-    //   const repository = new PrismaPurchaseOrderRepository();
+    //   const repository = new MongoPurchaseOrderRepository();
 
     //   try {
     //     await repository.getPurchaseOrderItem({});
@@ -798,7 +798,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     // });
   });
 
-  // describe('PrismaPurchaseOrderRepository.addPurchaseOrderItem()', () => {
+  // describe('MongoPurchaseOrderRepository.addPurchaseOrderItem()', () => {
   //   it('creates a new purchase order item', async () => {
   //     expect.assertions(7);
 
@@ -815,7 +815,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   //     prismaMock.purchaseOrderItem.create.mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+  //     const repository = new MongoPurchaseOrderRepository();
 
   //     const purchaseOrderItem = await repository.addPurchaseOrderItem(
   //       new PurchaseOrderItem({
@@ -861,7 +861,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
   //   });
   // });
 
-  // describe('PrismaPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
+  // describe('MongoPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
   //   it('updates a specific purchase order item', async () => {
   //     expect.assertions(7);
 
@@ -878,7 +878,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   //     prismaMock.purchaseOrderItem.update.mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+  //     const repository = new MongoPurchaseOrderRepository();
 
   //     const purchaseOrderItem = await repository.updatePurchaseOrderItem(
   //       new PurchaseOrderItem({
@@ -924,7 +924,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
   //   });
   // });
 
-  // describe('PrismaPurchaseOrderRepository.deletePurchaseOrderItem()', () => {
+  // describe('MongoPurchaseOrderRepository.deletePurchaseOrderItem()', () => {
   //   it('deletes a purchas order item by id', async () => {
   //     expect.assertions(3);
 
@@ -941,7 +941,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   //     prismaMock.purchaseOrderItem.delete.mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+  //     const repository = new MongoPurchaseOrderRepository();
 
   //     const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItem.id);
 
@@ -959,7 +959,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   //     prismaMock.purchaseOrderItem.delete.mockRejectedValueOnce(new Error('Test'));
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+  //     const repository = new MongoPurchaseOrderRepository();
 
   //     const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
 
@@ -971,7 +971,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
   //   });
   // });
 
-  // describe('PrismaPurchaseOrderRepository.getVoucherByCode()', () => {
+  // describe('MongoPurchaseOrderRepository.getVoucherByCode()', () => {
   //   it('gets a voucher by code', async () => {
   //     expect.assertions(11);
 
@@ -990,7 +990,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   //     prismaMock.voucher.findFirst.mockResolvedValueOnce(fakeVoucher as any);
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+  //     const repository = new MongoPurchaseOrderRepository();
 
   //     const voucher = await repository.getVoucherByCode(fakeVoucher.code);
 
@@ -1017,7 +1017,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   //     prismaMock.voucher.findFirst.mockResolvedValueOnce(null);
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+  //     const repository = new MongoPurchaseOrderRepository();
 
   //     const voucher = await repository.getVoucherByCode(fakeVoucherCode);
 
@@ -1029,7 +1029,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
   //   });
   // });
 
-  // describe('PrismaPurchaseOrderRepository.countPurchaseOrders()', () => {
+  // describe('MongoPurchaseOrderRepository.countPurchaseOrders()', () => {
   //   it('counts all the purchase orders', async () => {
   //     expect.assertions(2);
 
@@ -1037,7 +1037,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   //     prismaMock.purchaseOrder.count.mockResolvedValueOnce(fakeQuantityOfPuchaseOrders);
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+  //     const repository = new MongoPurchaseOrderRepository();
 
   //     const result = await repository.countPurchaseOrders();
 
@@ -1046,7 +1046,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
   //   });
   // });
 
-  // describe('PrismaPurchaseOrderRepository.countPurchaseOrderItems()', () => {
+  // describe('MongoPurchaseOrderRepository.countPurchaseOrderItems()', () => {
   //   it('counts all the purchase order items', async () => {
   //     expect.assertions(2);
 
@@ -1054,7 +1054,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   //     prismaMock.purchaseOrderItem.count.mockResolvedValueOnce(fakeQuantityOfPuchaseOrderItems);
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+  //     const repository = new MongoPurchaseOrderRepository();
 
   //     const result = await repository.countPurchaseOrderItems();
 
@@ -1063,7 +1063,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
   //   });
   // });
 
-  // describe('PrismaPurchaseOrderRepository.countVouchers()', () => {
+  // describe('MongoPurchaseOrderRepository.countVouchers()', () => {
   //   it('counts all the vouchers', async () => {
   //     expect.assertions(2);
 
@@ -1071,7 +1071,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   //     prismaMock.voucher.count.mockResolvedValueOnce(fakeQuantityOfVouchers);
 
-  //     const repository = new PrismaPurchaseOrderRepository();
+  //     const repository = new MongoPurchaseOrderRepository();
 
   //     const result = await repository.countVouchers();
 
