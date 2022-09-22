@@ -134,7 +134,18 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
-    throw new Error('Method not implemented.');
+    const createdPurchaseOrderItem = await PurchaseOrderItemModel.create({
+      _id: purchaseOrderItem.id,
+      purchaseOrder: purchaseOrderItem.purchaseOrderId,
+      quantity: purchaseOrderItem.quantity,
+      product: purchaseOrderItem.product.id,
+    });
+
+    const populatedPurchaseOrderItem = await createdPurchaseOrderItem.populate({
+      path: 'product', select: '_id name amount',
+    });
+
+    return this.mapPurchaseOrderItem(populatedPurchaseOrderItem);
   }
 
   public async updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
