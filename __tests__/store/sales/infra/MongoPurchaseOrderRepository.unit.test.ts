@@ -737,8 +737,10 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
   });
 
   describe('PrismaPurchaseOrderRepository.getPurchaseOrderItem()', () => {
-    it('gets a purchase order item by purchase order id', async () => {
+    it('gets a purchase order item by purchase order id and product id', async () => {
       expect.assertions(7);
+
+      PurchaseOrderItemModelMock.findOne.mockClear();
 
       const fakePurchaseOrderId = faker.datatype.uuid();
 
@@ -772,15 +774,14 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         fakePurchaseOrderItem.product.amount,
       ));
 
-      expect(ProductModelMock.findOne).toHaveBeenCalledTimes(1);
-      expect(ProductModelMock.findOne).toHaveBeenCalledWith({
-        id: fakePurchaseOrderItem.product._id,
-      });
-      expect(PurchaseOrderModelMock.findOne).toHaveBeenCalledTimes(1);
-      expect(PurchaseOrderModelMock.findOne).toHaveBeenCalledWith({ _id: fakePurchaseOrderId });
       expect(PurchaseOrderItemModelMock.findOne).toHaveBeenCalledTimes(1);
       expect(PurchaseOrderItemModelMock.findOne).toHaveBeenCalledWith(
-        {},
+        {
+          product: fakePurchaseOrderItem.product._id,
+          purchaseOrder: fakePurchaseOrderItem.purchaseOrder,
+        },
+        undefined,
+        { populate: { path: 'product', select: '_id name amount' } },
       );
     });
 
