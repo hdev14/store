@@ -10,6 +10,7 @@ import PurchaseOrderModel, { IPurchaseOrder } from '@mongoose/PurchaseOrderModel
 import VoucherModel, { IVoucher } from '@mongoose/VoucherModel';
 import UserModel, { IUser } from '@mongoose/UserModel';
 import { IProduct } from '@mongoose/ProductModel';
+import RepositoryError from '@shared/errors/RepositoryError';
 
 export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepository {
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
@@ -149,7 +150,23 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
-    throw new Error('Method not implemented.');
+    const updatedPurchaseOrderItem = await PurchaseOrderItemModel.findOneAndUpdate(
+      { id: purchaseOrderItem.id },
+      { $set: { quantity: purchaseOrderItem.quantity } },
+      {
+        new: true,
+        populate: {
+          path: 'product',
+          select: '_id name amount',
+        },
+      },
+    );
+
+    if (!updatedPurchaseOrderItem) {
+      throw new RepositoryError(this.constructor.name, 'Item não encontrado.');
+    }
+
+    return this.mapPurchaseOrderItem(updatedPurchaseOrderItem);
   }
 
   public async deletePurchaseOrderItem(purchasOrderItemId: string): Promise<boolean> {
