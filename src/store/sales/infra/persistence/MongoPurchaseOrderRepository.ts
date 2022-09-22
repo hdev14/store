@@ -29,13 +29,7 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async getPurchaseOrdersByCustomerId(id: string): Promise<PurchaseOrder[]> {
-    const customer = await UserModel.findOne({ _id: id });
-
-    if (!customer) {
-      return [];
-    }
-
-    const purchaseOrders = await PurchaseOrderModel.find({ customer: customer._id })
+    const purchaseOrders = await PurchaseOrderModel.find({ customer: id })
       .populate('customer')
       .populate('voucher')
       .populate({
@@ -50,14 +44,8 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async getDraftPurchaseOrderByCustomerId(id: string): Promise<PurchaseOrder | null> {
-    const customer = await UserModel.findOne({ _id: id });
-
-    if (!customer) {
-      return null;
-    }
-
     const purchaseOrder = await PurchaseOrderModel
-      .findOne({ customer: customer._id, status: PurchaseOrderStatus.DRAFT })
+      .findOne({ customer: id, status: PurchaseOrderStatus.DRAFT })
       .populate('customer')
       .populate({
         path: 'items',
@@ -95,25 +83,11 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    const customer = await UserModel.findOne({ _id: purchaseOrder.customerId });
-
-    if (!customer) {
-      throw new Error('Cliente não encontrado.');
-    }
-
-    const voucher = purchaseOrder.voucher
-      ? await VoucherModel.findOne({ _id: purchaseOrder.voucher.id })
-      : null;
-
-    const items = await PurchaseOrderItemModel.find({
-      _id: { $in: purchaseOrder.items.map((item) => item.id) },
-    });
-
     const createdPurchaseOrder = await PurchaseOrderModel.create({
       _id: purchaseOrder.id,
-      customer: customer._id,
-      items: items.map(({ _id }) => _id),
-      voucher: voucher ? voucher._id : undefined,
+      customer: purchaseOrder.customerId,
+      items: purchaseOrder.items.map(({ id }) => id),
+      voucher: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
       code: purchaseOrder.code,
       totalAmount: purchaseOrder.totalAmount,
       discountAmount: purchaseOrder.discountAmount,
@@ -143,19 +117,11 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     purchaseOrderToUpdate.totalAmount = purchaseOrder.totalAmount;
     purchaseOrderToUpdate.status = purchaseOrder.status;
 
-    const voucher = purchaseOrder.voucher
-      ? await VoucherModel.findOne({ _id: purchaseOrder.voucher.id })
-      : undefined;
-
-    if (voucher) {
-      purchaseOrderToUpdate.voucher = voucher._id;
+    if (purchaseOrder.voucher) {
+      purchaseOrderToUpdate.voucher = purchaseOrder.voucher.id;
     }
 
-    purchaseOrderToUpdate.items = (
-      await PurchaseOrderItemModel.find({
-        _id: { $in: purchaseOrder.items.map((item) => item.id) },
-      })
-    ).map((item) => item._id);
+    purchaseOrderToUpdate.items = purchaseOrder.items.map(({ id }) => id);
 
     await purchaseOrderToUpdate.save();
 
