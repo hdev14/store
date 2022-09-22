@@ -841,68 +841,59 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  // describe('MongoPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
-  //   it('updates a specific purchase order item', async () => {
-  //     expect.assertions(7);
+  describe('MongoPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
+    it('updates a specific purchase order item', async () => {
+      expect.assertions(6);
 
-  //     const fakePurchaseOrderItem = {
-  //       id: faker.datatype.uuid(),
-  //       quantity: parseInt(faker.datatype.number().toString(), 10),
-  //       purchaseOrderId: faker.datatype.uuid(),
-  //       product: {
-  //         id: faker.datatype.uuid(),
-  //         name: faker.commerce.product(),
-  //         amount: faker.datatype.float(),
-  //       },
-  //     };
+      const fakePurchaseOrderItem = {
+        _id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrder: faker.datatype.uuid(),
+        product: {
+          _id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
+      };
 
-  //     prismaMock.purchaseOrderItem.update.mockResolvedValueOnce(fakePurchaseOrderItem as any);
+      PurchaseOrderItemModelMock.findOneAndUpdate
+        .mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
-  //     const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoPurchaseOrderRepository();
 
-  //     const purchaseOrderItem = await repository.updatePurchaseOrderItem(
-  //       new PurchaseOrderItem({
-  //         id: fakePurchaseOrderItem.id,
-  //         purchaseOrderId: fakePurchaseOrderItem.purchaseOrderId,
-  //         quantity: fakePurchaseOrderItem.quantity,
-  //         product: new Product(
-  //           fakePurchaseOrderItem.product.id,
-  //           fakePurchaseOrderItem.product.name,
-  //           fakePurchaseOrderItem.product.amount,
-  //         ),
-  //       }),
-  //     );
+      const purchaseOrderItem = await repository.updatePurchaseOrderItem(
+        new PurchaseOrderItem({
+          id: fakePurchaseOrderItem._id,
+          purchaseOrderId: fakePurchaseOrderItem.purchaseOrder,
+          quantity: fakePurchaseOrderItem.quantity,
+          product: new Product(
+            fakePurchaseOrderItem.product._id,
+            fakePurchaseOrderItem.product.name,
+            fakePurchaseOrderItem.product.amount,
+          ),
+        }),
+      );
 
-  //     expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
-  //     expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-  //     expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
-  //     expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
-  //     expect(purchaseOrderItem!.product).toEqual(new Product(
-  //       fakePurchaseOrderItem.product.id,
-  //       fakePurchaseOrderItem.product.name,
-  //       fakePurchaseOrderItem.product.amount,
-  //     ));
+      expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem._id);
+      expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
+      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrder);
+      expect(purchaseOrderItem!.product).toEqual(new Product(
+        fakePurchaseOrderItem.product._id,
+        fakePurchaseOrderItem.product.name,
+        fakePurchaseOrderItem.product.amount,
+      ));
 
-  //     expect(prismaMock.purchaseOrderItem.update).toHaveBeenCalledTimes(1);
-  //     expect(prismaMock.purchaseOrderItem.update).toHaveBeenCalledWith({
-  //       where: { _id: fakePurchaseOrderItem.id },
-  //       data: {
-  //         purchaseOrderId: fakePurchaseOrderItem.purchaseOrderId,
-  //         quantity: fakePurchaseOrderItem.quantity,
-  //         productId: fakePurchaseOrderItem.product.id,
-  //       },
-  //       include: {
-  //         product: {
-  //           select: {
-  //             id: true,
-  //             name: true,
-  //             amount: true,
-  //           },
-  //         },
-  //       },
-  //     });
-  //   });
-  // });
+      expect(PurchaseOrderItemModelMock.findOneAndUpdate).toHaveBeenCalledTimes(1);
+      expect(PurchaseOrderItemModelMock.findOneAndUpdate).toHaveBeenCalledWith(
+        { id: fakePurchaseOrderItem._id },
+        { $set: { quantity: fakePurchaseOrderItem.quantity } },
+        {
+          new: true,
+          populate: { path: 'product', select: '_id name amount' },
+        },
+      );
+    });
+  });
 
   // describe('MongoPurchaseOrderRepository.deletePurchaseOrderItem()', () => {
   //   it('deletes a purchas order item by id', async () => {
