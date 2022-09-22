@@ -68,14 +68,14 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
   }
 
-  public async getPurchaseOrderItem(params: { purchaseOrderId: string; }): Promise<PurchaseOrderItem | null>;
+  public async getPurchaseOrderItem(params: { purchaseOrderId: string, productId: string }): Promise<PurchaseOrderItem | null> {
+    const purchaseOrderItem = await PurchaseOrderItemModel.findOne(
+      { product: params.productId, purchaseOrder: params.purchaseOrderId },
+      undefined,
+      { populate: { path: 'product', select: '_id name amount' } },
+    );
 
-  public async getPurchaseOrderItem(params: { productId: string; }): Promise<PurchaseOrderItem | null>;
-
-  public async getPurchaseOrderItem(params: { purchaseOrderId?: string | undefined; productId?: string | undefined; }): Promise<PurchaseOrderItem | null>;
-
-  public async getPurchaseOrderItem(params: unknown): Promise<import('../../domain/PurchaseOrderItem').default | null> {
-    throw new Error('Method not implemented.');
+    return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
   }
 
   public async getVoucherByCode(code: number): Promise<Voucher | null> {
