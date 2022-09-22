@@ -164,26 +164,9 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
   }
 
-  // eslint-disable-next-line no-unused-vars
-  public async getPurchaseOrderItem(params: { purchaseOrderId: string; }): Promise<PurchaseOrderItem | null>;
-
-  // eslint-disable-next-line no-unused-vars
-  public async getPurchaseOrderItem(params: { productId: string; }): Promise<PurchaseOrderItem | null>;
-
-  // eslint-disable-next-line no-unused-vars
-  public async getPurchaseOrderItem(params: { purchaseOrderId?: string; productId?: string; }): Promise<PurchaseOrderItem | null>;
-
-  public async getPurchaseOrderItem(params: { purchaseOrderId?: string; productId?: string; }): Promise<PurchaseOrderItem | null> {
-    if (!params.purchaseOrderId && !params.productId) {
-      throw new Error('É preciso passar o ID do pedido ou do produto.');
-    }
-
-    const where = params.purchaseOrderId
-      ? { purchaseOrderId: params.purchaseOrderId }
-      : { productId: params.productId };
-
+  public async getPurchaseOrderItem(params: { purchaseOrderId: string; productId: string; }): Promise<PurchaseOrderItem | null> {
     const purchaseOrderItem = await this.connection.purchaseOrderItem.findFirst({
-      where,
+      where: params,
       include: {
         product: {
           select: {
