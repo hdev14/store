@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
-import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
+import { IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderParams, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
@@ -12,7 +12,7 @@ import UserModel, { IUser } from '@mongoose/UserModel';
 import { IProduct } from '@mongoose/ProductModel';
 import RepositoryError from '@shared/errors/RepositoryError';
 
-export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepository {
+export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
     const purchaseOrder = await PurchaseOrderModel
       .findOne({ _id: id })
@@ -180,18 +180,6 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
       console.error(e.stack);
       return false;
     }
-  }
-
-  public async countPurchaseOrders(): Promise<number> {
-    return PurchaseOrderModel.countDocuments({});
-  }
-
-  public async countPurchaseOrderItems(): Promise<number> {
-    return PurchaseOrderItemModel.countDocuments({});
-  }
-
-  public async countVouchers(): Promise<number> {
-    return VoucherModel.countDocuments({});
   }
 
   private mapPurchaseOrder(purchaseOrder: IPurchaseOrder): PurchaseOrder {
