@@ -169,8 +169,10 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     return this.mapPurchaseOrderItem(updatedPurchaseOrderItem);
   }
 
-  public async deletePurchaseOrderItem(purchasOrderItemId: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  public async deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<boolean> {
+    const result = await PurchaseOrderItemModel.deleteOne({ _id: purchaseOrderItemId });
+
+    return result.deletedCount > 0;
   }
 
   public async countPurchaseOrders(): Promise<number> {
