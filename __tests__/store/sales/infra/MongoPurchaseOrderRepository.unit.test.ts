@@ -914,23 +914,25 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    // it('returns FALSE if occur an expected error', async () => {
-    //   expect.assertions(3);
+    it('returns FALSE if occur an expected error', async () => {
+      expect.assertions(3);
 
-    //   const fakePurchaseOrderItemId = faker.datatype.uuid();
+      PurchaseOrderItemModelMock.deleteOne.mockClear();
 
-    //   prismaMock.purchaseOrderItem.delete.mockRejectedValueOnce(new Error('Test'));
+      const fakePurchaseOrderItemId = faker.datatype.uuid();
 
-    //   const repository = new MongoPurchaseOrderRepository();
+      PurchaseOrderItemModelMock.deleteOne.mockRejectedValueOnce(new Error('Test'));
 
-    //   const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
+      const repository = new MongoPurchaseOrderRepository();
 
-    //   expect(result).toBe(false);
-    //   expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledTimes(1);
-    //   expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledWith({
-    //     where: { _id: fakePurchaseOrderItemId },
-    //   });
-    // });
+      const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
+
+      expect(result).toBe(false);
+      expect(PurchaseOrderItemModelMock.deleteOne).toHaveBeenCalledTimes(1);
+      expect(PurchaseOrderItemModelMock.deleteOne).toHaveBeenCalledWith({
+        _id: fakePurchaseOrderItemId,
+      });
+    });
   });
 
   // describe('MongoPurchaseOrderRepository.getVoucherByCode()', () => {
