@@ -183,15 +183,15 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async countPurchaseOrders(): Promise<number> {
-    throw new Error('Method not implemented.');
+    return PurchaseOrderModel.countDocuments({});
   }
 
   public async countPurchaseOrderItems(): Promise<number> {
-    throw new Error('Method not implemented.');
+    return PurchaseOrderItemModel.countDocuments({});
   }
 
   public async countVouchers(): Promise<number> {
-    throw new Error('Method not implemented.');
+    return VoucherModel.countDocuments({});
   }
 
   private mapPurchaseOrder(purchaseOrder: IPurchaseOrder): PurchaseOrder {
