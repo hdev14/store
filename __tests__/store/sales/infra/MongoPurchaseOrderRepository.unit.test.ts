@@ -738,7 +738,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
   describe('MongoPurchaseOrderRepository.getPurchaseOrderItem()', () => {
     it('gets a purchase order item by purchase order id and product id', async () => {
-      expect.assertions(7);
+      expect.assertions(6);
 
       PurchaseOrderItemModelMock.findOne.mockClear();
 
@@ -767,7 +767,6 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem._id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
       expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrder);
-      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrder);
       expect(purchaseOrderItem!.product).toEqual(new Product(
         fakePurchaseOrderItem.product._id,
         fakePurchaseOrderItem.product.name,
@@ -784,82 +783,63 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         { populate: { path: 'product', select: '_id name amount' } },
       );
     });
-
-    // it('throws a generic exception if neither purchaseOrderId or productId is passed', async () => {
-    //   expect.assertions(1);
-
-    //   const repository = new MongoPurchaseOrderRepository();
-
-    //   try {
-    //     await repository.getPurchaseOrderItem({});
-    //   } catch (e: any) {
-    //     expect(e.message).toEqual('É preciso passar o ID do pedido ou do produto.');
-    //   }
-    // });
   });
 
-  // describe('MongoPurchaseOrderRepository.addPurchaseOrderItem()', () => {
-  //   it('creates a new purchase order item', async () => {
-  //     expect.assertions(7);
+  describe('MongoPurchaseOrderRepository.addPurchaseOrderItem()', () => {
+    it('creates a new purchase order item', async () => {
+      expect.assertions(8);
 
-  //     const fakePurchaseOrderItem = {
-  //       id: faker.datatype.uuid(),
-  //       quantity: parseInt(faker.datatype.number().toString(), 10),
-  //       purchaseOrderId: faker.datatype.uuid(),
-  //       product: {
-  //         id: faker.datatype.uuid(),
-  //         name: faker.commerce.product(),
-  //         amount: faker.datatype.float(),
-  //       },
-  //     };
+      const fakePurchaseOrderItem = {
+        _id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrder: faker.datatype.uuid(),
+        product: {
+          _id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
+      };
 
-  //     prismaMock.purchaseOrderItem.create.mockResolvedValueOnce(fakePurchaseOrderItem as any);
+      const populateProductMock = jest.fn().mockResolvedValue(fakePurchaseOrderItem);
 
-  //     const repository = new MongoPurchaseOrderRepository();
+      PurchaseOrderItemModelMock.create
+        .mockImplementationOnce(() => Promise.resolve({ populate: populateProductMock }));
 
-  //     const purchaseOrderItem = await repository.addPurchaseOrderItem(
-  //       new PurchaseOrderItem({
-  //         id: fakePurchaseOrderItem.id,
-  //         purchaseOrderId: fakePurchaseOrderItem.purchaseOrderId,
-  //         quantity: fakePurchaseOrderItem.quantity,
-  //         product: new Product(
-  //           fakePurchaseOrderItem.product.id,
-  //           fakePurchaseOrderItem.product.name,
-  //           fakePurchaseOrderItem.product.amount,
-  //         ),
-  //       }),
-  //     );
+      const repository = new MongoPurchaseOrderRepository();
 
-  //     expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
-  //     expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-  //     expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
-  //     expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
-  //     expect(purchaseOrderItem!.product).toEqual(new Product(
-  //       fakePurchaseOrderItem.product.id,
-  //       fakePurchaseOrderItem.product.name,
-  //       fakePurchaseOrderItem.product.amount,
-  //     ));
+      const purchaseOrderItem = await repository.addPurchaseOrderItem(
+        new PurchaseOrderItem({
+          id: fakePurchaseOrderItem._id,
+          purchaseOrderId: fakePurchaseOrderItem.purchaseOrder,
+          quantity: fakePurchaseOrderItem.quantity,
+          product: new Product(
+            fakePurchaseOrderItem.product._id,
+            fakePurchaseOrderItem.product.name,
+            fakePurchaseOrderItem.product.amount,
+          ),
+        }),
+      );
 
-  //     expect(prismaMock.purchaseOrderItem.create).toHaveBeenCalledTimes(1);
-  //     expect(prismaMock.purchaseOrderItem.create).toHaveBeenCalledWith({
-  //       data: {
-  //         id: fakePurchaseOrderItem.id,
-  //         purchaseOrderId: fakePurchaseOrderItem.purchaseOrderId,
-  //         quantity: fakePurchaseOrderItem.quantity,
-  //         productId: fakePurchaseOrderItem.product.id,
-  //       },
-  //       include: {
-  //         product: {
-  //           select: {
-  //             id: true,
-  //             name: true,
-  //             amount: true,
-  //           },
-  //         },
-  //       },
-  //     });
-  //   });
-  // });
+      expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem._id);
+      expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
+      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrder);
+      expect(purchaseOrderItem!.product).toEqual(new Product(
+        fakePurchaseOrderItem.product._id,
+        fakePurchaseOrderItem.product.name,
+        fakePurchaseOrderItem.product.amount,
+      ));
+
+      expect(PurchaseOrderItemModelMock.create).toHaveBeenCalledTimes(1);
+      expect(PurchaseOrderItemModelMock.create).toHaveBeenCalledWith({
+        _id: purchaseOrderItem.id,
+        purchaseOrder: purchaseOrderItem.purchaseOrderId,
+        quantity: purchaseOrderItem.quantity,
+        product: purchaseOrderItem.product.id,
+      });
+      expect(populateProductMock).toHaveBeenCalledTimes(1);
+      expect(populateProductMock).toHaveBeenCalledWith({ path: 'product', select: '_id name amount' });
+    });
+  });
 
   // describe('MongoPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
   //   it('updates a specific purchase order item', async () => {
