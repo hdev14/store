@@ -13,9 +13,7 @@ export interface IPurchaseOrderRepositoryQueries {
 
   getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null>;
 
-  getPurchaseOrderItem(params: { purchaseOrderId: string }): Promise<PurchaseOrderItem | null>;
-  getPurchaseOrderItem(params: { productId: string }): Promise<PurchaseOrderItem | null>;
-  getPurchaseOrderItem(params: { purchaseOrderId?: string, productId?: string }): Promise<PurchaseOrderItem | null>;
+  getPurchaseOrderItem(params: { purchaseOrderId: string, productId: string }): Promise<PurchaseOrderItem | null>;
 
   getVoucherByCode(code: number): Promise<Voucher | null>;
 }
