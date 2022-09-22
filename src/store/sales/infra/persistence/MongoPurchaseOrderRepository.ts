@@ -170,9 +170,14 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<boolean> {
-    const result = await PurchaseOrderItemModel.deleteOne({ _id: purchaseOrderItemId });
+    try {
+      const result = await PurchaseOrderItemModel.deleteOne({ _id: purchaseOrderItemId });
 
-    return result.deletedCount > 0;
+      return result.deletedCount > 0;
+    } catch (e: any) {
+      console.error(e.stack);
+      return false;
+    }
   }
 
   public async countPurchaseOrders(): Promise<number> {
