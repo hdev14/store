@@ -935,63 +935,61 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     });
   });
 
-  // describe('MongoPurchaseOrderRepository.getVoucherByCode()', () => {
-  //   it('gets a voucher by code', async () => {
-  //     expect.assertions(11);
+  describe('MongoPurchaseOrderRepository.getVoucherByCode()', () => {
+    it('gets a voucher by code', async () => {
+      expect.assertions(11);
 
-  //     const fakeVoucher = {
-  //       id: faker.datatype.uuid(),
-  //       code: parseInt(faker.datatype.number().toString(), 10),
-  //       percentageAmount: faker.datatype.float(),
-  //       rawDiscountAmount: faker.datatype.float(),
-  //       quantity: parseInt(faker.datatype.number().toString(), 10),
-  //       type: VoucherDiscountTypes.ABSOLUTE,
-  //       createdAt: new Date(),
-  //       expiresAt: new Date(),
-  //       active: faker.datatype.boolean(),
-  //       usedAt: null,
-  //     };
+      const fakeVoucher = {
+        _id: faker.datatype.uuid(),
+        code: parseInt(faker.datatype.number().toString(), 10),
+        percentageAmount: faker.datatype.float(),
+        rawDiscountAmount: faker.datatype.float(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        type: VoucherDiscountTypes.ABSOLUTE,
+        createdAt: new Date(),
+        expiresAt: new Date(),
+        active: faker.datatype.boolean(),
+        usedAt: null,
+      };
 
-  //     prismaMock.voucher.findFirst.mockResolvedValueOnce(fakeVoucher as any);
+      VoucherModelMock.findOne.mockResolvedValueOnce(fakeVoucher as any);
 
-  //     const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoPurchaseOrderRepository();
 
-  //     const voucher = await repository.getVoucherByCode(fakeVoucher.code);
+      const voucher = await repository.getVoucherByCode(fakeVoucher.code);
 
-  //     expect(voucher!.id).toEqual(fakeVoucher.id);
-  //     expect(voucher!.code).toEqual(fakeVoucher.code);
-  //     expect(voucher!.percentageAmount).toEqual(fakeVoucher.percentageAmount);
-  //     expect(voucher!.rawDiscountAmount).toEqual(fakeVoucher.rawDiscountAmount);
-  //     expect(voucher!.quantity).toEqual(fakeVoucher.quantity);
-  //     expect(voucher!.type).toEqual(fakeVoucher.type);
-  //     expect(voucher!.createdAt).toEqual(fakeVoucher.createdAt);
-  //     expect(voucher!.expiresAt).toEqual(fakeVoucher.expiresAt);
-  //     expect(voucher!.usedAt).toBeNull();
+      expect(voucher!.id).toEqual(fakeVoucher._id);
+      expect(voucher!.code).toEqual(fakeVoucher.code);
+      expect(voucher!.percentageAmount).toEqual(fakeVoucher.percentageAmount);
+      expect(voucher!.rawDiscountAmount).toEqual(fakeVoucher.rawDiscountAmount);
+      expect(voucher!.quantity).toEqual(fakeVoucher.quantity);
+      expect(voucher!.type).toEqual(fakeVoucher.type);
+      expect(voucher!.createdAt).toEqual(fakeVoucher.createdAt);
+      expect(voucher!.expiresAt).toEqual(fakeVoucher.expiresAt);
+      expect(voucher!.usedAt).toBeNull();
 
-  //     expect(prismaMock.voucher.findFirst).toHaveBeenCalledTimes(1);
-  //     expect(prismaMock.voucher.findFirst).toHaveBeenCalledWith({
-  //       where: { code: fakeVoucher.code },
-  //     });
-  //   });
+      expect(VoucherModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(VoucherModelMock.findOne).toHaveBeenCalledWith({ code: fakeVoucher.code });
+    });
 
-  //   it("returns null if voucher doesn't exist", async () => {
-  //     expect.assertions(3);
+    it("returns null if voucher doesn't exist", async () => {
+      expect.assertions(3);
 
-  //     const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
+      VoucherModelMock.findOne.mockClear();
 
-  //     prismaMock.voucher.findFirst.mockResolvedValueOnce(null);
+      const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
 
-  //     const repository = new MongoPurchaseOrderRepository();
+      VoucherModelMock.findOne.mockResolvedValueOnce(null);
 
-  //     const voucher = await repository.getVoucherByCode(fakeVoucherCode);
+      const repository = new MongoPurchaseOrderRepository();
 
-  //     expect(voucher).toBeNull();
-  //     expect(prismaMock.voucher.findFirst).toHaveBeenCalledTimes(1);
-  //     expect(prismaMock.voucher.findFirst).toHaveBeenCalledWith({
-  //       where: { code: fakeVoucherCode },
-  //     });
-  //   });
-  // });
+      const voucher = await repository.getVoucherByCode(fakeVoucherCode);
+
+      expect(voucher).toBeNull();
+      expect(VoucherModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(VoucherModelMock.findOne).toHaveBeenCalledWith({ code: fakeVoucherCode });
+    });
+  });
 
   // describe('MongoPurchaseOrderRepository.countPurchaseOrders()', () => {
   //   it('counts all the purchase orders', async () => {
