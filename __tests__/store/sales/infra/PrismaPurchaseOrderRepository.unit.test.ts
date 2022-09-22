@@ -531,7 +531,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
   describe('PrismaPurchaseOrderRepository.getPurchaseOrderItemById()', () => {
     it('returns a purchase order item by id', async () => {
-      expect.assertions(7);
+      expect.assertions(6);
 
       const fakePurchaseOrderItem = {
         id: faker.datatype.uuid(),
@@ -552,7 +552,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
       expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
       expect(purchaseOrderItem!.product).toEqual(new Product(
         fakePurchaseOrderItem.product.id,
@@ -606,7 +605,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
   describe('PrismaPurchaseOrderRepository.getPurchaseOrderItem()', () => {
     it('gets a purchase order item by purchase order id', async () => {
-      expect.assertions(7);
+      expect.assertions(6);
 
       const fakePurchaseOrderId = faker.datatype.uuid();
 
@@ -632,7 +631,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
       expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
       expect(purchaseOrderItem!.product).toEqual(new Product(
         fakePurchaseOrderItem.product.id,
@@ -661,7 +659,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
   describe('PrismaPurchaseOrderRepository.addPurchaseOrderItem()', () => {
     it('creates a new purchase order item', async () => {
-      expect.assertions(7);
+      expect.assertions(6);
 
       const fakePurchaseOrderItem = {
         id: faker.datatype.uuid(),
@@ -694,7 +692,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
       expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
-      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
       expect(purchaseOrderItem!.product).toEqual(new Product(
         fakePurchaseOrderItem.product.id,
         fakePurchaseOrderItem.product.name,
@@ -724,7 +721,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
   describe('PrismaPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
     it('updates a specific purchase order item', async () => {
-      expect.assertions(7);
+      expect.assertions(6);
 
       const fakePurchaseOrderItem = {
         id: faker.datatype.uuid(),
@@ -756,7 +753,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
       expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
       expect(purchaseOrderItem!.product).toEqual(new Product(
         fakePurchaseOrderItem.product.id,
