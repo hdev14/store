@@ -80,7 +80,9 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async getVoucherByCode(code: number): Promise<Voucher | null> {
-    throw new Error('Method not implemented.');
+    const voucher = await VoucherModel.findOne({ code });
+
+    return voucher ? this.mapVoucher(voucher) : null;
   }
 
   public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
