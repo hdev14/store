@@ -1,9 +1,6 @@
 import Event from '@shared/abstractions/Event';
 
 export type UpdatePurchaserOrderItemEventData = {
-  productId: string;
-  productName: string;
-  productAmount: number;
   quantity: number;
 }
 

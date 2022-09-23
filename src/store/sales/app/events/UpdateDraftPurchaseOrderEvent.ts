@@ -1,9 +1,9 @@
 import Event from '@shared/abstractions/Event';
 
 export type UpdateDraftPurchaseOrderEventData = {
-  purchaseOrderItemId: string;
-  purchaseOrderQuantity: number;
-  productId: string;
+  purchaseOrderItemIds: string[];
+  totalAmount: number;
+  discountAmount: number;
 };
 
 // eslint-disable-next-line max-len
