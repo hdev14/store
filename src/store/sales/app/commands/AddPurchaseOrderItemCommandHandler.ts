@@ -84,9 +84,6 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
         UpdatePurchaseOrderItemEvent,
         {
           principalId: addedPurchaseOrderItem.id,
-          productId: addedPurchaseOrderItem.product.id,
-          productName: addedPurchaseOrderItem.product.name,
-          productAmount: addedPurchaseOrderItem.product.amount,
           quantity: addedPurchaseOrderItem.quantity,
           timestamp: new Date().toISOString(),
         },
@@ -99,8 +96,7 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
         {
           principalId: purchaseOrderItem.id,
           productId: purchaseOrderItem.product.id,
-          productName: purchaseOrderItem.product.name,
-          productAmount: purchaseOrderItem.product.amount,
+          purchaseOrderId: purchaseOrderItem.purchaseOrderId,
           quantity: purchaseOrderItem.quantity,
           timestamp: new Date().toISOString(),
         },
@@ -113,9 +109,9 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       UpdateDraftPurchaseOrderEvent,
       {
         principalId: draftPurchaseOrder.id,
-        purchaseOrderItemId: purchaseOrderItem.id,
-        purchaseOrderQuantity: purchaseOrderItem.quantity,
-        productId: purchaseOrderItem.product.id,
+        purchaseOrderItemIds: draftPurchaseOrder.items.map((i) => i.id),
+        totalAmount: draftPurchaseOrder.totalAmount,
+        discountAmount: draftPurchaseOrder.discountAmount,
         timestamp: new Date().toISOString(),
       },
     );
@@ -146,7 +142,9 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       AddDraftPurchaseOrderEvent,
       {
         principalId: newDraftPurchaseOrder.id,
-        purchaseOrderItemId: purchaseOrderItem.id,
+        customerId: newDraftPurchaseOrder.customerId,
+        code: newDraftPurchaseOrder.code,
+        createdAt: newDraftPurchaseOrder.createdAt,
         timestamp: new Date().toISOString(),
       },
     );
@@ -155,10 +153,9 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       AddPurchaseOrderItemEvent,
       {
         principalId: purchaseOrderItem.id,
-        productId: purchaseOrderItem.product.id,
-        productName: purchaseOrderItem.product.name,
-        productAmount: purchaseOrderItem.product.amount,
+        purchaseOrderId: purchaseOrderItem.purchaseOrderId,
         quantity: purchaseOrderItem.quantity,
+        productId: purchaseOrderItem.product.id,
         timestamp: new Date().toISOString(),
       },
     );
