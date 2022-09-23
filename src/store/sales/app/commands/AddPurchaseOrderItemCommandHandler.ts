@@ -111,7 +111,8 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
       UpdateDraftPurchaseOrderEvent,
       {
         principalId: draftPurchaseOrder.id,
-        purchaseOrderItemIds: draftPurchaseOrder.items.map((i) => i.id),
+        customerId: draftPurchaseOrder.customerId,
+        code: draftPurchaseOrder.code,
         totalAmount: draftPurchaseOrder.totalAmount,
         discountAmount: draftPurchaseOrder.discountAmount,
         timestamp: new Date().toISOString(),

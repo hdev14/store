@@ -1,7 +1,8 @@
 import Event from '@shared/abstractions/Event';
 
 export type UpdateDraftPurchaseOrderEventData = {
-  purchaseOrderItemIds: string[];
+  customerId: string;
+  code: number;
   totalAmount: number;
   discountAmount: number;
 };
