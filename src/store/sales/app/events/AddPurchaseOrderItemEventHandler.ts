@@ -1,4 +1,6 @@
 import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
+import Product from '@sales/domain/Product';
+import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import { EventData, IEventHandler } from '@shared/@types/events';
 import { AddPurchaseOrderItemEventData } from './AddPurchaseOrderItemEvent';
 
@@ -10,7 +12,17 @@ export default class AddPurchaseOrderItemEventHandler implements IEventHandler<v
   }
 
   public async handle(data: EventData<AddPurchaseOrderItemEventData>): Promise<void> {
-    console.info(data);
-    throw new Error('Method not implemented.');
+    const purchaseOrderItem = new PurchaseOrderItem({
+      id: data.principalId,
+      quantity: data.quantity,
+      purchaseOrderId: data.purchaseOrderId,
+      product: new Product(
+        data.productId,
+        data.productName,
+        data.productAmount,
+      ),
+    });
+
+    await this.repository.addPurchaseOrderItem(purchaseOrderItem);
   }
 }
