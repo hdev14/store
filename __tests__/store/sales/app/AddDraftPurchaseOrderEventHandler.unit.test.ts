@@ -18,6 +18,8 @@ describe("AddDraftPurchaseOrderEventHandler's unit tests", () => {
       principalId: faker.datatype.uuid(),
       customerId: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
+      totalAmount: faker.datatype.float(),
+      discountAmount: faker.datatype.float(),
       createdAt: new Date(),
       timestamp: new Date().toISOString(),
       eventType: 'AddDraftPurchaseOrderEvent',
@@ -28,10 +30,12 @@ describe("AddDraftPurchaseOrderEventHandler's unit tests", () => {
     expect(addPurchaseOrderSpy).toHaveBeenCalledTimes(1);
     expect(addPurchaseOrderSpy).toHaveBeenCalledWith(
       PurchaseOrder.createDraft({
+        id: eventData.principalId,
         code: eventData.code,
         customerId: eventData.customerId,
+        totalAmount: eventData.totalAmount,
+        discountAmount: eventData.discountAmount,
         createdAt: eventData.createdAt,
-        id: eventData.principalId,
         status: null,
         voucher: null,
       }),
@@ -50,6 +54,8 @@ describe("AddDraftPurchaseOrderEventHandler's unit tests", () => {
       principalId: faker.datatype.uuid(),
       customerId: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
+      totalAmount: faker.datatype.float(),
+      discountAmount: faker.datatype.float(),
       createdAt: new Date(),
       timestamp: new Date().toISOString(),
       eventType: 'AddDraftPurchaseOrderEvent',
