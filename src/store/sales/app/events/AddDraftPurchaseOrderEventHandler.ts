@@ -17,6 +17,8 @@ export default class AddDraftPurchaseOrderEventHandler implements IEventHandler<
         id: data.principalId,
         code: data.code,
         customerId: data.customerId,
+        totalAmount: data.totalAmount,
+        discountAmount: data.discountAmount,
         createdAt: data.createdAt,
         status: null,
         voucher: null,

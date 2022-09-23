@@ -146,6 +146,8 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
         principalId: newDraftPurchaseOrder.id,
         customerId: newDraftPurchaseOrder.customerId,
         code: newDraftPurchaseOrder.code,
+        totalAmount: newDraftPurchaseOrder.totalAmount,
+        discountAmount: newDraftPurchaseOrder.discountAmount,
         createdAt: newDraftPurchaseOrder.createdAt,
         timestamp: new Date().toISOString(),
       },
