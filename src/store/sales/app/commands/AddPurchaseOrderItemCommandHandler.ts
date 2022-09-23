@@ -96,6 +96,8 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
         {
           principalId: purchaseOrderItem.id,
           productId: purchaseOrderItem.product.id,
+          productName: purchaseOrderItem.product.name,
+          productAmount: purchaseOrderItem.product.amount,
           purchaseOrderId: purchaseOrderItem.purchaseOrderId,
           quantity: purchaseOrderItem.quantity,
           timestamp: new Date().toISOString(),
@@ -156,6 +158,8 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
         purchaseOrderId: purchaseOrderItem.purchaseOrderId,
         quantity: purchaseOrderItem.quantity,
         productId: purchaseOrderItem.product.id,
+        productName: purchaseOrderItem.product.name,
+        productAmount: purchaseOrderItem.product.amount,
         timestamp: new Date().toISOString(),
       },
     );
