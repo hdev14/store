@@ -4,6 +4,7 @@ import UpdatePurchaseOrderItemEventHandler from '@sales/app/events/UpdatePurchas
 import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import { EventData } from '@shared/@types/events';
+import EventHandlerError from '@shared/errors/EventHandlerError';
 import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("UpdatePurchaseOrderItemEventHandler's unit tests", () => {
@@ -39,5 +40,31 @@ describe("UpdatePurchaseOrderItemEventHandler's unit tests", () => {
         ),
       }),
     );
+  });
+
+  it('throws a EventHandlerError if occurs an expected error', async () => {
+    expect.assertions(2);
+
+    const repository = new RepositoryStub();
+    repository.updatePurchaseOrderItem = jest.fn().mockRejectedValueOnce(new Error('test'));
+
+    const handler = new UpdatePurchaseOrderItemEventHandler(repository);
+
+    const data: EventData<UpdatePurchaserOrderItemEventData> = {
+      eventType: 'UpdatePurchaseOrderItemEvent',
+      principalId: faker.datatype.uuid(),
+      quantity: parseInt(faker.datatype.number().toString(), 10),
+      productId: faker.datatype.uuid(),
+      productName: faker.commerce.product(),
+      productAmount: faker.datatype.float(),
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      await handler.handle(data);
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(EventHandlerError);
+      expect(e.message).toEqual('Erro ao atualizar um item.');
+    }
   });
 });
