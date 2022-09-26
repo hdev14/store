@@ -84,6 +84,9 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
         UpdatePurchaseOrderItemEvent,
         {
           principalId: addedPurchaseOrderItem.id,
+          productId: addedPurchaseOrderItem.product.id,
+          productName: addedPurchaseOrderItem.product.name,
+          productAmount: addedPurchaseOrderItem.product.amount,
           quantity: addedPurchaseOrderItem.quantity,
           timestamp: new Date().toISOString(),
         },
