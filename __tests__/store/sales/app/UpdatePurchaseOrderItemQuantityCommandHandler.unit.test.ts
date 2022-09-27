@@ -47,7 +47,7 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
   });
 
   it('calls repository.updatePurchaseOrderItem if found the item', async () => {
-    expect.assertions(2);
+    expect.assertions(3);
 
     const repository = new RepositoryStub();
     const fakePurchaseOrderItem = new PurchaseOrderItem({
@@ -75,9 +75,10 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
     const expectedPurchaseOrderItem = fakePurchaseOrderItem;
     expectedPurchaseOrderItem.quantity = data.quantity;
 
-    await handler.handle(data);
+    const result = await handler.handle(data);
 
     expect(updatePurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
     expect(updatePurchaseOrderItemSpy).toHaveBeenCalledWith(expectedPurchaseOrderItem);
+    expect(result).toEqual(true);
   });
 });
