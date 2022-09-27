@@ -28,7 +28,7 @@ export default class AddPurchaseOrderItemEventHandler implements IEventHandler<v
       await this.repository.addPurchaseOrderItem(purchaseOrderItem);
     } catch (e: any) {
       console.error(e.stack);
-      throw new EventHandlerError('Erro ao cadastrar o item.');
+      throw new EventHandlerError('Erro ao cadastrar o item.', { cause: e.stack });
     }
   }
 }

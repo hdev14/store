@@ -27,7 +27,7 @@ export default class AddDraftPurchaseOrderEventHandler implements IEventHandler<
       await this.repository.addPurchaseOrder(draftPurchaseOrder);
     } catch (e: any) {
       console.error(e.stack);
-      throw new EventHandlerError('Erro ao cadastrar o pedido.');
+      throw new EventHandlerError('Erro ao cadastrar o pedido.', { cause: e.stack });
     }
   }
 }

@@ -27,7 +27,7 @@ export default class UpdateDraftPurchaseOrderEventHandler implements IEventHandl
       await this.repository.updatePurchaseOrder(purchaseOrder);
     } catch (e: any) {
       console.error(e.stack);
-      throw new EventHandlerError('Erro ao atualizar o pedido.');
+      throw new EventHandlerError('Erro ao atualizar o pedido.', { cause: e.stack });
     }
   }
 }
