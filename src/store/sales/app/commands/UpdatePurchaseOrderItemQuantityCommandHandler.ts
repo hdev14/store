@@ -1,13 +1,20 @@
+import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import { EventData, IEventHandler } from '@shared/@types/events';
 import { UpdatePurchaseOrderItemQuantityCommandData } from './UpdatePurchaseOrderItemQuantityCommand';
 
-// TODO: finish logic
 // eslint-disable-next-line max-len
 export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IEventHandler<boolean> {
+  private repository: IPurchaseOrderRepository;
+
+  constructor(repository: IPurchaseOrderRepository) {
+    this.repository = repository;
+  }
+
   public async handle(
     data: EventData<UpdatePurchaseOrderItemQuantityCommandData>,
   ): Promise<boolean> {
-    console.info(data);
+    const purchaseOrderItem = await this.repository.getPurchaseOrderItemById(data.principalId);
+
     return Promise.resolve(false);
   }
 }
