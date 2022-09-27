@@ -1,20 +1,17 @@
 import { EventData } from '@shared/@types/events';
 import Command from '@shared/abstractions/Command';
+import Validator from '@shared/utils/Validator';
 
-// TODO: finish logic
-export type RemovePurchaseOrderItemCommandData = {
-  purchaseOrderItemId: string;
-}
+export default class RemovePurchaseOrderItemCommand extends Command<boolean, {}> {
+  public send(data: EventData): Promise<boolean | void> {
+    this.validate(data);
 
-// eslint-disable-next-line max-len
-export default class RemovePurchaseOrderItemCommand extends Command<boolean, RemovePurchaseOrderItemCommandData> {
-  public send(data: EventData<RemovePurchaseOrderItemCommandData>): Promise<boolean | void> {
-    console.info(data);
     return Promise.resolve(false);
   }
 
-  public validate(data: EventData<RemovePurchaseOrderItemCommandData>): boolean | void {
-    console.info(data);
-    return false;
+  public validate(data: EventData): void {
+    Validator.setData(data)
+      .setRule('principalId', ['required', 'string', 'uuid'])
+      .validate();
   }
 }
