@@ -15,6 +15,10 @@ export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IE
   ): Promise<boolean> {
     const purchaseOrderItem = await this.repository.getPurchaseOrderItemById(data.principalId);
 
+    if (!purchaseOrderItem) {
+      return false;
+    }
+
     return Promise.resolve(false);
   }
 }
