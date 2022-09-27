@@ -74,7 +74,7 @@ const RULE_MESSAGES = {
   date: (field: string) => `The field ${field} must be a validate date.`,
 };
 
-export default class EntityValidator {
+export default class Validator {
   private data: Record<string, unknown>;
 
   private rules: Map<string, string[]> = new Map<string, string[]>();
@@ -86,7 +86,7 @@ export default class EntityValidator {
   }
 
   static setData(data: any) {
-    return new EntityValidator(data);
+    return new Validator(data);
   }
 
   setRule(field: string, rules: string[]) {
