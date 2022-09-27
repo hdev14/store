@@ -19,6 +19,10 @@ export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IE
       return false;
     }
 
+    purchaseOrderItem.updateQuantity(data.quantity);
+
+    await this.repository.updatePurchaseOrderItem(purchaseOrderItem);
+
     return Promise.resolve(false);
   }
 }
