@@ -81,4 +81,23 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
     expect(updatePurchaseOrderItemSpy).toHaveBeenCalledWith(expectedPurchaseOrderItem);
     expect(result).toEqual(true);
   });
+
+  it('returns FALSE if occurs an expected error', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+    repository.getPurchaseOrderItemById = jest.fn().mockRejectedValueOnce(new Error('test'));
+
+    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(repository);
+
+    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
+      principalId: faker.datatype.uuid(),
+      quantity: parseInt(faker.datatype.number().toString(), 10),
+      timestamp: new Date().toISOString(),
+    };
+
+    const result = await handler.handle(data);
+
+    expect(result).toBe(false);
+  });
 });
