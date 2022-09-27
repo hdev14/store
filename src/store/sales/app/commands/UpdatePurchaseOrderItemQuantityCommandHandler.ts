@@ -13,16 +13,21 @@ export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IE
   public async handle(
     data: EventData<UpdatePurchaseOrderItemQuantityCommandData>,
   ): Promise<boolean> {
-    const purchaseOrderItem = await this.repository.getPurchaseOrderItemById(data.principalId);
+    try {
+      const purchaseOrderItem = await this.repository.getPurchaseOrderItemById(data.principalId);
 
-    if (!purchaseOrderItem) {
+      if (!purchaseOrderItem) {
+        return false;
+      }
+
+      purchaseOrderItem.updateQuantity(data.quantity);
+
+      await this.repository.updatePurchaseOrderItem(purchaseOrderItem);
+
+      return true;
+    } catch (e: any) {
+      console.error(e.stack);
       return false;
     }
-
-    purchaseOrderItem.updateQuantity(data.quantity);
-
-    await this.repository.updatePurchaseOrderItem(purchaseOrderItem);
-
-    return true;
   }
 }
