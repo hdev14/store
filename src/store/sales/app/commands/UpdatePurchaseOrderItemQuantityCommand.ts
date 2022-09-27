@@ -13,7 +13,7 @@ export default class UpdatePurchaseOrderItemQuantityCommand extends Command<bool
   ): Promise<boolean | void> {
     this.validate(data);
 
-    return Promise.resolve(false);
+    return this.mediator.send(this.constructor.name, data);
   }
 
   public validate(data: EventData<UpdatePurchaseOrderItemQuantityCommandData>): void {
