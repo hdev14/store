@@ -1,9 +1,8 @@
 import { EventData } from '@shared/@types/events';
 import Command from '@shared/abstractions/Command';
+import Validator from '@shared/utils/Validator';
 
-// TODO: finish logic
 export type UpdatePurchaseOrderItemQuantityCommandData = {
-  purchaseOrderItemId: string;
   quantity: number;
 }
 
@@ -12,12 +11,15 @@ export default class UpdatePurchaseOrderItemQuantityCommand extends Command<bool
   public send(
     data: EventData<UpdatePurchaseOrderItemQuantityCommandData>,
   ): Promise<boolean | void> {
-    console.info(data);
+    this.validate(data);
+
     return Promise.resolve(false);
   }
 
-  public validate(data: EventData<UpdatePurchaseOrderItemQuantityCommandData>): boolean | void {
-    console.info(data);
-    return false;
+  public validate(data: EventData<UpdatePurchaseOrderItemQuantityCommandData>): void {
+    Validator.setData(data)
+      .setRule('principalId', ['string', 'required', 'uuid'])
+      .setRule('quantity', ['number', 'integer'])
+      .validate();
   }
 }
