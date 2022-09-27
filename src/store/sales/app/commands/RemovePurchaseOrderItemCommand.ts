@@ -6,7 +6,7 @@ export default class RemovePurchaseOrderItemCommand extends Command<boolean, {}>
   public send(data: EventData): Promise<boolean | void> {
     this.validate(data);
 
-    return Promise.resolve(false);
+    return this.mediator.send(this.constructor.name, data);
   }
 
   public validate(data: EventData): void {
