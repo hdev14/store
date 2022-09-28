@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import RemovePurchaseOrderItemCommand from '@sales/app/commands/RemovePurchaseOrderItemCommand';
 import { EventData } from '@shared/@types/events';
 import ValidationError from '@shared/errors/ValidationError';
@@ -20,5 +21,24 @@ describe("RemovePurchaseOrderItemCommand's unit tests", () => {
       expect(e).toBeInstanceOf(ValidationError);
       expect(e.errors).toHaveLength(1);
     }
+  });
+
+  it('calls mediator.send method', async () => {
+    expect.assertions(2);
+
+    const mediator = new MediatorStub();
+    const sendSpy = jest.spyOn(mediator, 'send');
+
+    const command = new RemovePurchaseOrderItemCommand(mediator);
+
+    const data: EventData = {
+      principalId: faker.datatype.uuid(),
+      timestamp: new Date().toISOString(),
+    };
+
+    await command.send(data);
+
+    expect(sendSpy).toHaveBeenCalledTimes(1);
+    expect(sendSpy).toHaveBeenCalledWith('RemovePurchaseOrderItemCommand', data);
   });
 });
