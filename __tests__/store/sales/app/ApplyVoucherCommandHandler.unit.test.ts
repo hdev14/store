@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand';
 import ApplyVoucherCommandHandler from '@sales/app/commands/ApplyVoucherCommandHandler';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
+import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import { EventData } from '@shared/@types/events';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
@@ -83,5 +84,44 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     const result = await handler.handle(data);
 
     expect(result).toBe(false);
+  });
+
+  it('apply the voucher to purchase order', async () => {
+    expect.assertions(2);
+
+    const applyVoucherMock = jest.fn();
+
+    repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce({
+      applyVoucher: applyVoucherMock,
+    });
+
+    const voucher = new Voucher({
+      id: faker.datatype.uuid(),
+      percentageAmount: faker.datatype.float(),
+      rawDiscountAmount: faker.datatype.float(),
+      quantity: parseInt(faker.datatype.number().toString(), 10),
+      type: VoucherDiscountTypes.ABSOLUTE,
+      createdAt: new Date(),
+      expiresAt: new Date(),
+      usedAt: new Date(),
+      active: true,
+      code: parseInt(faker.datatype.number().toString(), 10),
+    });
+
+    repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(voucher);
+
+    const handler = new ApplyVoucherCommandHandler(repositoryStub);
+
+    const data: EventData<ApplyVoucherCommandData> = {
+      principalId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      voucherCode: parseInt(faker.datatype.number().toString(), 10),
+      timestamp: new Date().toISOString(),
+    };
+
+    await handler.handle(data);
+
+    expect(applyVoucherMock).toHaveBeenCalledTimes(1);
+    expect(applyVoucherMock).toHaveBeenCalledWith(voucher);
   });
 });
