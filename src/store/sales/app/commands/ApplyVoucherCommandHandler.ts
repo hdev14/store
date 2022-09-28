@@ -15,7 +15,11 @@ export default class ApplyVoucherCommandHandler implements IEventHandler<boolean
 
     const voucher = await this.repository.getVoucherByCode(data.voucherCode);
 
-    if (!draftPurchaseOrder || !voucher || !voucher.active) {
+    if (
+      !draftPurchaseOrder
+      || !voucher
+      || !voucher.active
+      || (voucher.expiresAt.getTime() < new Date().getTime())) {
       return false;
     }
 
