@@ -45,4 +45,24 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     expect(result).toBe(false);
   });
+
+  it('calls repository.getVoucherByCode', async () => {
+    expect.assertions(2);
+
+    const getVoucherByCodeSpy = jest.spyOn(repositoryStub, 'getVoucherByCode');
+
+    const handler = new ApplyVoucherCommandHandler(repositoryStub);
+
+    const data: EventData<ApplyVoucherCommandData> = {
+      principalId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      voucherCode: parseInt(faker.datatype.number().toString(), 10),
+      timestamp: new Date().toISOString(),
+    };
+
+    await handler.handle(data);
+
+    expect(getVoucherByCodeSpy).toHaveBeenCalledTimes(1);
+    expect(getVoucherByCodeSpy).toHaveBeenCalledWith(data.voucherCode);
+  });
 });
