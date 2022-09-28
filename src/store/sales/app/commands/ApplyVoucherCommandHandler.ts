@@ -19,6 +19,8 @@ export default class ApplyVoucherCommandHandler implements IEventHandler<boolean
       return false;
     }
 
+    draftPurchaseOrder.applyVoucher(voucher);
+
     return true;
   }
 }

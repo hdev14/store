@@ -104,6 +104,11 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
     this.calculateTotalAmount();
   }
 
+  public applyVoucher(voucher: Voucher) {
+    this.voucher = voucher;
+    this.calculateTotalDiscountAmount();
+  }
+
   public calculateTotalAmount() {
     this.totalAmount = this._items.reduce((acc, item) => acc + item.calculateAmount(), 0);
     this.calculateTotalDiscountAmount();
