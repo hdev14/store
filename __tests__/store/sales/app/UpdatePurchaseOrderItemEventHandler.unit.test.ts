@@ -5,16 +5,15 @@ import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import { EventData } from '@shared/@types/events';
 import EventHandlerError from '@shared/errors/EventHandlerError';
-import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
+import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("UpdatePurchaseOrderItemEventHandler's unit tests", () => {
   it('calls repository.updatePurchaseOrderItem with correct params', async () => {
     expect.assertions(2);
 
-    const repository = new RepositoryStub();
-    const updatePurchaseOrderItemSpy = jest.spyOn(repository, 'updatePurchaseOrderItem');
+    const updatePurchaseOrderItemSpy = jest.spyOn(repositoryStub, 'updatePurchaseOrderItem');
 
-    const handler = new UpdatePurchaseOrderItemEventHandler(repository);
+    const handler = new UpdatePurchaseOrderItemEventHandler(repositoryStub);
 
     const data: EventData<UpdatePurchaserOrderItemEventData> = {
       eventType: 'UpdatePurchaseOrderItemEvent',
@@ -45,10 +44,9 @@ describe("UpdatePurchaseOrderItemEventHandler's unit tests", () => {
   it('throws a EventHandlerError if occurs an expected error', async () => {
     expect.assertions(2);
 
-    const repository = new RepositoryStub();
-    repository.updatePurchaseOrderItem = jest.fn().mockRejectedValueOnce(new Error('test'));
+    repositoryStub.updatePurchaseOrderItem = jest.fn().mockRejectedValueOnce(new Error('test'));
 
-    const handler = new UpdatePurchaseOrderItemEventHandler(repository);
+    const handler = new UpdatePurchaseOrderItemEventHandler(repositoryStub);
 
     const data: EventData<UpdatePurchaserOrderItemEventData> = {
       eventType: 'UpdatePurchaseOrderItemEvent',

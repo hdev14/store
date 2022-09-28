@@ -10,9 +10,9 @@ import AddDraftPurchaseOrderEvent from '@sales/app/events/AddDraftPurchaseOrderE
 import AddPurchaseOrderItemEvent from '@sales/app/events/AddPurchaseOrderItemEvent';
 import UpdatePurchaseOrderItemEvent from '@sales/app/events/UpdatePurchaseOrderItemEvent';
 import UpdateDraftPurchaseOrderEvent from '@sales/app/events/UpdateDraftPurchaseOrderEvent';
-import PublisherStub from '../../stubs/EventPublisherStub';
+import { PublisherStup } from '../../stubs/EventPublisherStub';
 import createGenerateIDMock from '../../stubs/createGenerateIDMock';
-import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
+import { RepositoryStub } from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
   it('calls repository.getDraftPurchaseOrderByCustomerId with correct customerId', async () => {
@@ -34,7 +34,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     await addPurchaseOrderItemCommandHandler.handle(data);
@@ -63,7 +63,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     await addPurchaseOrderItemCommandHandler.handle(data);
@@ -92,7 +92,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     await addPurchaseOrderItemCommandHandler.handle(data);
@@ -130,7 +130,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     await addPurchaseOrderItemCommandHandler.handle(data);
@@ -160,7 +160,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     await addPurchaseOrderItemCommandHandler.handle(data);
@@ -188,7 +188,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     await addPurchaseOrderItemCommandHandler.handle(data);
@@ -239,7 +239,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     await addPurchaseOrderItemCommandHandler.handle(data);
@@ -278,7 +278,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     await addPurchaseOrderItemCommandHandler.handle(data);
@@ -317,7 +317,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     await addPurchaseOrderItemCommandHandler.handle(data);
@@ -345,7 +345,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
       createGenerateIDMock(),
-      new PublisherStub({} as EventMediator),
+      new PublisherStup({} as EventMediator),
     );
 
     const result = await addPurchaseOrderItemCommandHandler.handle(data);
@@ -359,7 +359,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const repository = new RepositoryStub();
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
 
-    const publisher = new PublisherStub({} as EventMediator);
+    const publisher = new PublisherStup({} as EventMediator);
     const addEventSpy = jest.spyOn(publisher, 'addEvent');
 
     const data: EventData<AddPurchaseOrderItemData> = {
@@ -390,7 +390,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const repository = new RepositoryStub();
 
-    const publisher = new PublisherStub({} as EventMediator);
+    const publisher = new PublisherStup({} as EventMediator);
     const addEventSpy = jest.spyOn(publisher, 'addEvent');
 
     const data: EventData<AddPurchaseOrderItemData> = {
@@ -420,7 +420,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect.assertions(3);
 
     const repository = new RepositoryStub();
-    const publisher = new PublisherStub({} as EventMediator);
+    const publisher = new PublisherStup({} as EventMediator);
     const addEventSpy = jest.spyOn(publisher, 'addEvent');
 
     const data: EventData<AddPurchaseOrderItemData> = {
@@ -473,7 +473,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect.assertions(1);
 
     const repository = new RepositoryStub();
-    const publisher = new PublisherStub({} as EventMediator);
+    const publisher = new PublisherStup({} as EventMediator);
     const sendEventsSpy = jest.spyOn(publisher, 'sendEvents');
 
     const data: EventData<AddPurchaseOrderItemData> = {

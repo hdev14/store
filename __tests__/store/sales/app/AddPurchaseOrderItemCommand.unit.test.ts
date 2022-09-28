@@ -2,12 +2,12 @@ import { faker } from '@faker-js/faker';
 import AddPurchaseOrderItemCommand, { AddPurchaseOrderItemData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
 import { EventData } from '@shared/@types/events';
 import ValidationError from '@shared/errors/ValidationError';
-import MediatorStub from '../../stubs/MediatorStub';
+import mediatorStub from '../../stubs/MediatorStub';
 
 describe("AddPurchaseOrderItemCommand's unit tests", () => {
   it('throws an exception of type ValidationError if command data is invalid', async () => {
     expect.assertions(2);
-    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(new MediatorStub());
+    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
 
     try {
       const invalidData: any = {
@@ -30,10 +30,9 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
   it('calls Mediator.send method with correct params', async () => {
     expect.assertions(2);
 
-    const mediator = new MediatorStub();
-    const sendSpy = jest.spyOn(mediator, 'send');
+    const sendSpy = jest.spyOn(mediatorStub, 'send');
 
-    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediator);
+    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
@@ -54,11 +53,9 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
   it('returns TRUE if mediator.send execute successfully', async () => {
     expect.assertions(1);
 
-    const mediator = new MediatorStub();
+    mediatorStub.send = jest.fn().mockResolvedValueOnce(true);
 
-    mediator.send = jest.fn().mockResolvedValueOnce(true);
-
-    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediator);
+    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),
@@ -78,11 +75,9 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
   it('returns FALSE if mediator.send fails', async () => {
     expect.assertions(1);
 
-    const mediator = new MediatorStub();
+    mediatorStub.send = jest.fn().mockResolvedValueOnce(false);
 
-    mediator.send = jest.fn().mockResolvedValueOnce(false);
-
-    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediator);
+    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
 
     const data: EventData<AddPurchaseOrderItemData> = {
       principalId: faker.datatype.uuid(),

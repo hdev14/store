@@ -6,7 +6,7 @@ import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder'
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
 
-export default class RepositoryStub implements IPurchaseOrderRepository {
+export class RepositoryStub implements IPurchaseOrderRepository {
   getPurchaseOrderById(_: string): Promise<PurchaseOrder | null> {
     return Promise.resolve(
       new PurchaseOrder({
@@ -131,3 +131,5 @@ export default class RepositoryStub implements IPurchaseOrderRepository {
     return Promise.resolve(parseInt(faker.datatype.number().toString(), 10));
   }
 }
+
+export default new RepositoryStub();

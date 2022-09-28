@@ -2,7 +2,7 @@ import Category from '@catalog/domain/Category';
 import { ICategoryOperations } from '@catalog/domain/IProductRepository';
 import { fakeCategories } from '../fakes';
 
-export default class RepositoryStub implements ICategoryOperations {
+export class RepositoryStub implements ICategoryOperations {
   getCategoryById(categoryId: string): Promise<Category | null> {
     const category = fakeCategories.find((c) => c.id === categoryId);
 
@@ -31,3 +31,5 @@ export default class RepositoryStub implements ICategoryOperations {
     return Promise.resolve(category);
   }
 }
+
+export default new RepositoryStub();

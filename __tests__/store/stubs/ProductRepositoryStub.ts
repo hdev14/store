@@ -3,7 +3,7 @@ import IProductRepository from '@catalog/domain/IProductRepository';
 import Product from '@catalog/domain/Product';
 import { fakeCategories, fakeProducts } from '../fakes';
 
-export default class RepositoryStub implements IProductRepository {
+export class RepositoryStub implements IProductRepository {
   getCategoryById(categoryId: string): Promise<Category | null> {
     const category = fakeCategories.find((c) => c.id === categoryId);
 
@@ -51,3 +51,5 @@ export default class RepositoryStub implements IProductRepository {
     return Promise.resolve(product);
   }
 }
+
+export default new RepositoryStub();

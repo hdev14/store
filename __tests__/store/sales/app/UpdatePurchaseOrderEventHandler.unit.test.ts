@@ -3,17 +3,15 @@ import { UpdateDraftPurchaseOrderEventData } from '@sales/app/events/UpdateDraft
 import UpdateDraftPurchaseOrderEventHandler from '@sales/app/events/UpdateDraftPurchaseOrderEventHandler';
 import { EventData } from '@shared/@types/events';
 import EventHandlerError from '@shared/errors/EventHandlerError';
-import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
+import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("UpdateDraftPurchaseOrderEventHandler's unit tests", () => {
   it('calls repository.updatePurchaseOrder with correct params', async () => {
     expect.assertions(6);
 
-    const repository = new RepositoryStub();
+    const updatePurchaseOrderSpy = jest.spyOn(repositoryStub, 'updatePurchaseOrder');
 
-    const updatePurchaseOrderSpy = jest.spyOn(repository, 'updatePurchaseOrder');
-
-    const handler = new UpdateDraftPurchaseOrderEventHandler(repository);
+    const handler = new UpdateDraftPurchaseOrderEventHandler(repositoryStub);
 
     const eventData: EventData<UpdateDraftPurchaseOrderEventData> = {
       eventType: 'UpdateDraftPurchaseOrderEvent',
@@ -39,11 +37,9 @@ describe("UpdateDraftPurchaseOrderEventHandler's unit tests", () => {
   it('throws an EventHandlerError when occurs an expected error', async () => {
     expect.assertions(2);
 
-    const repository = new RepositoryStub();
+    repositoryStub.updatePurchaseOrder = jest.fn().mockRejectedValueOnce(new Error('test'));
 
-    repository.updatePurchaseOrder = jest.fn().mockRejectedValueOnce(new Error('test'));
-
-    const handler = new UpdateDraftPurchaseOrderEventHandler(repository);
+    const handler = new UpdateDraftPurchaseOrderEventHandler(repositoryStub);
 
     const eventData: EventData<UpdateDraftPurchaseOrderEventData> = {
       eventType: 'UpdateDraftPurchaseOrderEvent',

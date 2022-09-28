@@ -1,7 +1,7 @@
 import IStockService from '@catalog/domain/IStockService';
 import { fakeProducts } from '../fakes';
 
-export default class StockServiceStub implements IStockService {
+export class StockServiceStub implements IStockService {
   addToStock(productId: string, quantity: number): Promise<boolean> {
     const index = fakeProducts.findIndex((p) => p.id === productId);
 
@@ -18,3 +18,5 @@ export default class StockServiceStub implements IStockService {
     return Promise.resolve(true);
   }
 }
+
+export default new StockServiceStub();

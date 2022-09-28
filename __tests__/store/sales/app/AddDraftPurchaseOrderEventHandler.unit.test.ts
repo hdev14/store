@@ -4,15 +4,14 @@ import AddDraftPurchaseOrderEventHandler from '@sales/app/events/AddDraftPurchas
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import { EventData } from '@shared/@types/events';
 import EventHandlerError from '@shared/errors/EventHandlerError';
-import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
+import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("AddDraftPurchaseOrderEventHandler's unit tests", () => {
   it('calls repository.addPurchaseOrder with a draft purchase order', async () => {
     expect.assertions(2);
 
-    const repository = new RepositoryStub();
-    const addPurchaseOrderSpy = jest.spyOn(repository, 'addPurchaseOrder');
-    const handler = new AddDraftPurchaseOrderEventHandler(repository);
+    const addPurchaseOrderSpy = jest.spyOn(repositoryStub, 'addPurchaseOrder');
+    const handler = new AddDraftPurchaseOrderEventHandler(repositoryStub);
 
     const eventData: EventData<AddDraftPurchaseOrderEventData> = {
       principalId: faker.datatype.uuid(),
@@ -45,10 +44,9 @@ describe("AddDraftPurchaseOrderEventHandler's unit tests", () => {
   it('throws an EventHandlerError when occurs an expected error', async () => {
     expect.assertions(2);
 
-    const repository = new RepositoryStub();
-    repository.addPurchaseOrder = jest.fn().mockRejectedValueOnce(new Error('test'));
+    repositoryStub.addPurchaseOrder = jest.fn().mockRejectedValueOnce(new Error('test'));
 
-    const handler = new AddDraftPurchaseOrderEventHandler(repository);
+    const handler = new AddDraftPurchaseOrderEventHandler(repositoryStub);
 
     const eventData: EventData<AddDraftPurchaseOrderEventData> = {
       principalId: faker.datatype.uuid(),

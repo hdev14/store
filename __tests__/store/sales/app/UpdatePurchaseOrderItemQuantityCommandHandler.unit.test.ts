@@ -4,21 +4,20 @@ import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/commands/U
 import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import { EventData } from '@shared/@types/events';
-import EventMediator from '@shared/abstractions/EventMediator';
+
 import UpdatePurchaseOrderItemEvent from '@sales/app/events/UpdatePurchaseOrderItemEvent';
-import RepositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
-import PublisherStub from '../../stubs/EventPublisherStub';
+import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
+import publisherStub from '../../stubs/EventPublisherStub';
 
 describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
-  it('calls repository.getPurchaseOrderItemById', async () => {
+  it('calls repositoryStub.getPurchaseOrderItemById', async () => {
     expect.assertions(2);
 
-    const repository = new RepositoryStub();
-    const getPurchaseOrderItemByIdSpy = jest.spyOn(repository, 'getPurchaseOrderItemById');
+    const getPurchaseOrderItemByIdSpy = jest.spyOn(repositoryStub, 'getPurchaseOrderItemById');
 
     const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
-      repository,
-      new PublisherStub({} as EventMediator),
+      repositoryStub,
+      publisherStub,
     );
 
     const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
@@ -36,12 +35,11 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
   it("return FALSE if purchase order item doesn't exist", async () => {
     expect.assertions(1);
 
-    const repository = new RepositoryStub();
-    repository.getPurchaseOrderItemById = jest.fn().mockResolvedValueOnce(null);
+    repositoryStub.getPurchaseOrderItemById = jest.fn().mockResolvedValueOnce(null);
 
     const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
-      repository,
-      new PublisherStub({} as EventMediator),
+      repositoryStub,
+      publisherStub,
     );
 
     const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
@@ -58,7 +56,6 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
   it('calls repository.updatePurchaseOrderItem if found the item', async () => {
     expect.assertions(3);
 
-    const repository = new RepositoryStub();
     const fakePurchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
@@ -70,12 +67,14 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       ),
     });
 
-    repository.getPurchaseOrderItemById = jest.fn().mockResolvedValueOnce(fakePurchaseOrderItem);
-    const updatePurchaseOrderItemSpy = jest.spyOn(repository, 'updatePurchaseOrderItem');
+    repositoryStub.getPurchaseOrderItemById = jest.fn()
+      .mockResolvedValueOnce(fakePurchaseOrderItem);
+
+    const updatePurchaseOrderItemSpy = jest.spyOn(repositoryStub, 'updatePurchaseOrderItem');
 
     const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
-      repository,
-      new PublisherStub({} as EventMediator),
+      repositoryStub,
+      publisherStub,
     );
 
     const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
@@ -97,12 +96,11 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
   it('returns FALSE if occurs an expected error', async () => {
     expect.assertions(1);
 
-    const repository = new RepositoryStub();
-    repository.getPurchaseOrderItemById = jest.fn().mockRejectedValueOnce(new Error('test'));
+    repositoryStub.getPurchaseOrderItemById = jest.fn().mockRejectedValueOnce(new Error('test'));
 
     const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
-      repository,
-      new PublisherStub({} as EventMediator),
+      repositoryStub,
+      publisherStub,
     );
 
     const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
@@ -119,7 +117,6 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
   it('calls publisher.addEvent with correct params', async () => {
     expect.assertions(7);
 
-    const repository = new RepositoryStub();
     const fakePurchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
@@ -130,12 +127,16 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
         faker.datatype.float(),
       ),
     });
-    repository.getPurchaseOrderItemById = jest.fn().mockResolvedValueOnce(fakePurchaseOrderItem);
 
-    const publisher = new PublisherStub({} as EventMediator);
-    const addEventSpy = jest.spyOn(publisher, 'addEvent');
+    repositoryStub.getPurchaseOrderItemById = jest.fn()
+      .mockResolvedValueOnce(fakePurchaseOrderItem);
 
-    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(repository, publisher);
+    const addEventSpy = jest.spyOn(publisherStub, 'addEvent');
+
+    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
+      repositoryStub,
+      publisherStub,
+    );
 
     const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
       principalId: faker.datatype.uuid(),
@@ -163,7 +164,6 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
   it('calls publisher.sendEvents after the operation', async () => {
     expect.assertions(1);
 
-    const repository = new RepositoryStub();
     const fakePurchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
@@ -174,12 +174,16 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
         faker.datatype.float(),
       ),
     });
-    repository.getPurchaseOrderItemById = jest.fn().mockResolvedValueOnce(fakePurchaseOrderItem);
 
-    const publisher = new PublisherStub({} as EventMediator);
-    const sendEventsSpy = jest.spyOn(publisher, 'sendEvents');
+    repositoryStub.getPurchaseOrderItemById = jest.fn()
+      .mockResolvedValueOnce(fakePurchaseOrderItem);
 
-    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(repository, publisher);
+    const sendEventsSpy = jest.spyOn(publisherStub, 'sendEvents');
+
+    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
+      repositoryStub,
+      publisherStub,
+    );
 
     const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
       principalId: faker.datatype.uuid(),

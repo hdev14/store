@@ -2,7 +2,7 @@ import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 import CategoryService from '@catalog/app/CategoryService';
 import { CreateCategoryParams } from '@catalog/app/ICategoryService';
 import { fakeCategories } from '@tests/store/fakes';
-import RepositoryStub from '@tests/store/stubs/CategoryRepositoryStub';
+import repositoryStub from '@tests/store/stubs/CategoryRepositoryStub';
 import createGenerateIDMock from '@tests/store/stubs/createGenerateIDMock';
 
 describe('CategoryService.getAllCategories', () => {
@@ -10,7 +10,6 @@ describe('CategoryService.getAllCategories', () => {
     it('returns all categories', async () => {
       expect.assertions(2);
 
-      const repositoryStub = new RepositoryStub();
       const getAllCategoriesSpy = jest.spyOn(repositoryStub, 'getAllCategories');
 
       const categoryService = new CategoryService(
@@ -28,7 +27,6 @@ describe('CategoryService.getAllCategories', () => {
     it('creates a new category', async () => {
       expect.assertions(5);
 
-      const repositoryStub = new RepositoryStub();
       const getAllCategoriesSpy = jest.spyOn(repositoryStub, 'getAllCategories');
       const addCategorySpy = jest.spyOn(repositoryStub, 'addCategory');
       const generateIDMock = createGenerateIDMock(fakeCategories);
@@ -53,7 +51,6 @@ describe('CategoryService.getAllCategories', () => {
     it('updates a specific category', async () => {
       expect.assertions(4);
 
-      const repositoryStub = new RepositoryStub();
       const getCategoryByIdSpy = jest.spyOn(repositoryStub, 'getCategoryById');
       const updateCategorySpy = jest.spyOn(repositoryStub, 'updateCategory');
 
@@ -74,8 +71,6 @@ describe('CategoryService.getAllCategories', () => {
 
     it('throws an exception of type CategoryNotFoundError if repository.getCategoryById returns null', async () => {
       expect.assertions(1);
-
-      const repositoryStub = new RepositoryStub();
 
       const categoryService = new CategoryService(
         repositoryStub,

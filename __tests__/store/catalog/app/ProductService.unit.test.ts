@@ -2,8 +2,8 @@ import ProductService from '@catalog/app/ProductService';
 import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
 import { DefaultProductParams, UpdateProductParams } from '@catalog/app/IProductService';
 import StockError from '@catalog/app/StockError';
-import RepositoryStub from '@tests/store/stubs/ProductRepositoryStub';
-import StockServiceStub from '@tests/store/stubs/StockServiceStub';
+import repositoryStub from '@tests/store/stubs/ProductRepositoryStub';
+import stockServiceStub from '@tests/store/stubs/StockServiceStub';
 import createGenerateIDMock from '@tests/store/stubs/createGenerateIDMock';
 import { fakeCategories, fakeProducts } from '@tests/store/fakes';
 import { faker } from '@faker-js/faker';
@@ -14,9 +14,7 @@ describe('ProductsService\'s unit tests', () => {
     it('returns all products', async () => {
       expect.assertions(2);
 
-      const repositoryStub = new RepositoryStub();
       const getAllProductsSpy = jest.spyOn(repositoryStub, 'getAllProducts');
-      const stockServiceStub = new StockServiceStub();
 
       const productService = new ProductService(
         repositoryStub,
@@ -34,9 +32,7 @@ describe('ProductsService\'s unit tests', () => {
     it('returns a product by id', async () => {
       expect.assertions(10);
 
-      const repositoryStub = new RepositoryStub();
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
-      const stockServiceStub = new StockServiceStub();
 
       const productService = new ProductService(
         repositoryStub,
@@ -60,9 +56,7 @@ describe('ProductsService\'s unit tests', () => {
     it('throws an exception of type ProductNotFoundError if the product is null', async () => {
       expect.assertions(3);
 
-      const repositoryStub = new RepositoryStub();
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
-      const stockServiceStub = new StockServiceStub();
 
       const productService = new ProductService(
         repositoryStub,
@@ -84,9 +78,7 @@ describe('ProductsService\'s unit tests', () => {
     it('reutrns all products related to one specific category', async () => {
       expect.assertions(3);
 
-      const repositoryStub = new RepositoryStub();
       const getProductsByCategorySpy = jest.spyOn(repositoryStub, 'getProductsByCategory');
-      const stockServiceStub = new StockServiceStub();
 
       const productService = new ProductService(
         repositoryStub,
@@ -108,9 +100,8 @@ describe('ProductsService\'s unit tests', () => {
     it('creates a new product', async () => {
       expect.assertions(5);
 
-      const repositoryStub = new RepositoryStub();
       const addProductSpy = jest.spyOn(repositoryStub, 'addProduct');
-      const stockServiceStub = new StockServiceStub();
+
       const generateIDMock = createGenerateIDMock(fakeProducts);
 
       const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
@@ -142,9 +133,9 @@ describe('ProductsService\'s unit tests', () => {
       expect.assertions(3);
 
       const fakeCategoryId = faker.datatype.uuid();
-      const repositoryStub = new RepositoryStub();
+
       const getCategoryByIdSpy = jest.spyOn(repositoryStub, 'getCategoryById');
-      const stockServiceStub = new StockServiceStub();
+
       const generateIDMock = createGenerateIDMock(fakeProducts);
 
       const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
@@ -177,10 +168,8 @@ describe('ProductsService\'s unit tests', () => {
     it('updates an existing product', async () => {
       expect.assertions(11);
 
-      const repositoryStub = new RepositoryStub();
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
       const updateProductSpy = jest.spyOn(repositoryStub, 'updateProduct');
-      const stockServiceStub = new StockServiceStub();
 
       const productService = new ProductService(
         repositoryStub,
@@ -221,9 +210,7 @@ describe('ProductsService\'s unit tests', () => {
     it('throws an ProductNotFoundError if repository.getProductById returns null', async () => {
       expect.assertions(2);
 
-      const repositoryStub = new RepositoryStub();
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
-      const stockServiceStub = new StockServiceStub();
 
       const productService = new ProductService(
         repositoryStub,
@@ -256,9 +243,7 @@ describe('ProductsService\'s unit tests', () => {
     it('throws an CategoryNotFound if repository.getCategoryById returns null', async () => {
       expect.assertions(2);
 
-      const repositoryStub = new RepositoryStub();
       const getCategoryByIdSpy = jest.spyOn(repositoryStub, 'getCategoryById');
-      const stockServiceStub = new StockServiceStub();
 
       const productService = new ProductService(
         repositoryStub,
@@ -295,8 +280,6 @@ describe('ProductsService\'s unit tests', () => {
     it('removes products if is passed a negative quantity', async () => {
       expect.assertions(3);
 
-      const repositoryStub = new RepositoryStub();
-      const stockServiceStub = new StockServiceStub();
       const removeFromStockSpy = jest.spyOn(stockServiceStub, 'removeFromStock');
 
       const productService = new ProductService(
@@ -317,8 +300,6 @@ describe('ProductsService\'s unit tests', () => {
     it('adds products if is passed a positive quantity', async () => {
       expect.assertions(3);
 
-      const repositoryStub = new RepositoryStub();
-      const stockServiceStub = new StockServiceStub();
       const addToStockSpy = jest.spyOn(stockServiceStub, 'addToStock');
 
       const productService = new ProductService(
@@ -339,8 +320,6 @@ describe('ProductsService\'s unit tests', () => {
     it('throws an expection of type StockError if StockService.removeFromStock returns false', async () => {
       expect.assertions(2);
 
-      const repositoryStub = new RepositoryStub();
-      const stockServiceStub = new StockServiceStub();
       stockServiceStub.removeFromStock = jest.fn(() => Promise.resolve(false));
 
       const productService = new ProductService(
@@ -360,8 +339,6 @@ describe('ProductsService\'s unit tests', () => {
     it('throws an expection of type StockError if StockService.addToStock returns false', async () => {
       expect.assertions(2);
 
-      const repositoryStub = new RepositoryStub();
-      const stockServiceStub = new StockServiceStub();
       stockServiceStub.addToStock = jest.fn(() => Promise.resolve(false));
 
       const productService = new ProductService(

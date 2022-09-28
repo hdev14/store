@@ -1,8 +1,9 @@
 import { EventData } from '@shared/@types/events';
 import { EventConstructor } from '@shared/abstractions/Event';
+import EventMediator from '@shared/abstractions/EventMediator';
 import EventPublisher from '@shared/EventPublisher';
 
-export default class PublisherStup extends EventPublisher {
+export class PublisherStup extends EventPublisher {
   addEvent<T>(ctor: EventConstructor, data: EventData<T>): void {
     console.info(ctor, data);
   }
@@ -11,3 +12,5 @@ export default class PublisherStup extends EventPublisher {
     return Promise.resolve();
   }
 }
+
+export default new PublisherStup({} as EventMediator);
