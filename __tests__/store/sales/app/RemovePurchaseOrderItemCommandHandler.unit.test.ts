@@ -21,4 +21,21 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
     expect(deletePurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
     expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(data.principalId);
   });
+
+  it('returns FALSE if occurs an expected error', async () => {
+    expect.assertions(1);
+
+    repositoryStub.deletePurchaseOrderItem = jest.fn().mockRejectedValueOnce(new Error('test'));
+
+    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
+
+    const data: EventData = {
+      principalId: faker.datatype.uuid(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const result = await handler.handle(data);
+
+    expect(result).toBe(false);
+  });
 });
