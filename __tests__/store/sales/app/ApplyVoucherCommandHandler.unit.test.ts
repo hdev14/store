@@ -116,6 +116,39 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     expect(result).toBe(false);
   });
 
+  it('returns FALSE if voucher is expired', async () => {
+    expect.assertions(1);
+
+    const pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 1);
+
+    repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(new Voucher({
+      id: faker.datatype.uuid(),
+      percentageAmount: faker.datatype.float(),
+      rawDiscountAmount: faker.datatype.float(),
+      quantity: parseInt(faker.datatype.number().toString(), 10),
+      type: VoucherDiscountTypes.ABSOLUTE,
+      createdAt: new Date(),
+      expiresAt: pastDate,
+      usedAt: new Date(),
+      active: true,
+      code: parseInt(faker.datatype.number().toString(), 10),
+    }));
+
+    const handler = new ApplyVoucherCommandHandler(repositoryStub);
+
+    const data: EventData<ApplyVoucherCommandData> = {
+      principalId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      voucherCode: parseInt(faker.datatype.number().toString(), 10),
+      timestamp: new Date().toISOString(),
+    };
+
+    const result = await handler.handle(data);
+
+    expect(result).toBe(false);
+  });
+
   it('apply the voucher to purchase order', async () => {
     expect.assertions(2);
 
