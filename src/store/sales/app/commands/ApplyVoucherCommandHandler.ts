@@ -25,6 +25,8 @@ export default class ApplyVoucherCommandHandler implements IEventHandler<boolean
 
     draftPurchaseOrder.applyVoucher(voucher);
 
+    await this.repository.updatePurchaseOrder(draftPurchaseOrder);
+
     return true;
   }
 }
