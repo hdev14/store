@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import ApplyVoucherCommand, { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand';
 import { EventData } from '@shared/@types/events';
 import ValidationError from '@shared/errors/ValidationError';
@@ -22,5 +23,25 @@ describe("ApplyVoucherCommand's unit tests", () => {
       expect(e).toBeInstanceOf(ValidationError);
       expect(e.errors).toHaveLength(3);
     }
+  });
+
+  it('calls mediator.send with correct params', async () => {
+    expect.assertions(2);
+
+    const sendSpy = jest.spyOn(mediatorStub, 'send');
+
+    const command = new ApplyVoucherCommand(mediatorStub);
+
+    const data: EventData<ApplyVoucherCommandData> = {
+      principalId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      voucherCode: parseInt(faker.datatype.number().toString(), 10),
+      timestamp: new Date().toISOString(),
+    };
+
+    await command.send(data);
+
+    expect(sendSpy).toHaveBeenCalledTimes(1);
+    expect(sendSpy).toHaveBeenCalledWith('ApplyVoucherCommand', data);
   });
 });
