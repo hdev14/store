@@ -11,7 +11,7 @@ export default class ApplyVoucherCommand extends Command<boolean, ApplyVoucherCo
   public send(data: EventData<ApplyVoucherCommandData>): Promise<boolean | void> {
     this.validate(data);
 
-    return Promise.resolve();
+    return this.mediator.send(this.constructor.name, data);
   }
 
   public validate(data: EventData<ApplyVoucherCommandData>): boolean | void {
