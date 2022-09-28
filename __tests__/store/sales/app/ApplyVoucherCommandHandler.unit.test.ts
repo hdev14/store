@@ -65,4 +65,23 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     expect(getVoucherByCodeSpy).toHaveBeenCalledTimes(1);
     expect(getVoucherByCodeSpy).toHaveBeenCalledWith(data.voucherCode);
   });
+
+  it("returns FALSE if voucher doesn't exist", async () => {
+    expect.assertions(1);
+
+    repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(null);
+
+    const handler = new ApplyVoucherCommandHandler(repositoryStub);
+
+    const data: EventData<ApplyVoucherCommandData> = {
+      principalId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      voucherCode: parseInt(faker.datatype.number().toString(), 10),
+      timestamp: new Date().toISOString(),
+    };
+
+    const result = await handler.handle(data);
+
+    expect(result).toBe(false);
+  });
 });
