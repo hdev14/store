@@ -13,10 +13,12 @@ export default class ApplyVoucherCommandHandler implements IEventHandler<boolean
     const draftPurchaseOrder = await this.repository
       .getDraftPurchaseOrderByCustomerId(data.customerId);
 
-    if (!draftPurchaseOrder) {
+    const voucher = await this.repository.getVoucherByCode(data.voucherCode);
+
+    if (!draftPurchaseOrder || !voucher) {
       return false;
     }
 
-    return false;
+    return true;
   }
 }
