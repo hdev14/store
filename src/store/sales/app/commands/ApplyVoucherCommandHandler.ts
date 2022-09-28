@@ -1,10 +1,18 @@
+import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import { EventData, IEventHandler } from '@shared/@types/events';
-import { ApplyVoucherData } from './ApplyVoucherCommand';
+import { ApplyVoucherCommandData } from './ApplyVoucherCommand';
 
-// TODO: finish logic
 export default class ApplyVoucherCommandHandler implements IEventHandler<boolean> {
-  public async handle(data: EventData<ApplyVoucherData>): Promise<boolean> {
-    console.info(data);
-    return Promise.resolve(false);
+  private repository: IPurchaseOrderRepository;
+
+  constructor(repository: IPurchaseOrderRepository) {
+    this.repository = repository;
+  }
+
+  public async handle(data: EventData<ApplyVoucherCommandData>): Promise<boolean> {
+    const draftPurchaseOrder = await this.repository
+      .getDraftPurchaseOrderByCustomerId(data.customerId);
+
+    return false;
   }
 }
