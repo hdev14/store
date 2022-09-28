@@ -1,19 +1,24 @@
 import { EventData } from '@shared/@types/events';
 import Command from '@shared/abstractions/Command';
+import Validator from '@shared/utils/Validator';
 
-// TODO: finish logic
-export type ApplyVoucherData = {
+export type ApplyVoucherCommandData = {
   customerId: string;
-  voucherCode: string;
+  voucherCode: number;
 }
 
-export default class ApplyVoucher extends Command<boolean, ApplyVoucherData> {
-  public send(data: EventData<ApplyVoucherData>): Promise<boolean | void> {
-    console.info(data);
+export default class ApplyVoucherCommand extends Command<boolean, ApplyVoucherCommandData> {
+  public send(data: EventData<ApplyVoucherCommandData>): Promise<boolean | void> {
+    this.validate(data);
+
     return Promise.resolve();
   }
 
-  public validate(data: EventData<ApplyVoucherData>): boolean | void {
-    console.info(data);
+  public validate(data: EventData<ApplyVoucherCommandData>): boolean | void {
+    Validator.setData(data)
+      .setRule('principalId', ['required', 'string', 'uuid'])
+      .setRule('customerId', ['required', 'string', 'uuid'])
+      .setRule('voucherCode', ['required', 'number', 'integer'])
+      .validate();
   }
 }
