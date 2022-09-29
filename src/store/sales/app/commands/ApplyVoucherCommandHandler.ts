@@ -10,23 +10,28 @@ export default class ApplyVoucherCommandHandler implements IEventHandler<boolean
   }
 
   public async handle(data: EventData<ApplyVoucherCommandData>): Promise<boolean> {
-    const draftPurchaseOrder = await this.repository
-      .getDraftPurchaseOrderByCustomerId(data.customerId);
+    try {
+      const draftPurchaseOrder = await this.repository
+        .getDraftPurchaseOrderByCustomerId(data.customerId);
 
-    const voucher = await this.repository.getVoucherByCode(data.voucherCode);
+      const voucher = await this.repository.getVoucherByCode(data.voucherCode);
 
-    if (
-      !draftPurchaseOrder
-      || !voucher
-      || !voucher.active
-      || (voucher.expiresAt.getTime() < new Date().getTime())) {
+      if (
+        !draftPurchaseOrder
+        || !voucher
+        || !voucher.active
+        || (voucher.expiresAt.getTime() < new Date().getTime())) {
+        return false;
+      }
+
+      draftPurchaseOrder.applyVoucher(voucher);
+
+      await this.repository.updatePurchaseOrder(draftPurchaseOrder);
+
+      return true;
+    } catch (e: any) {
+      console.error(e.stack);
       return false;
     }
-
-    draftPurchaseOrder.applyVoucher(voucher);
-
-    await this.repository.updatePurchaseOrder(draftPurchaseOrder);
-
-    return true;
   }
 }
