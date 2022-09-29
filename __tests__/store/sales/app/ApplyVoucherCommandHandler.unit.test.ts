@@ -188,10 +188,27 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     expect(applyVoucherMock).toHaveBeenCalledWith(voucher);
   });
 
+  it('returns FALSE when occurs an expected error', async () => {
+    expect.assertions(1);
+
+    repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn().mockRejectedValueOnce(new Error('test'));
+
+    const handler = new ApplyVoucherCommandHandler(repositoryStub);
+
+    const data: EventData<ApplyVoucherCommandData> = {
+      principalId: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      voucherCode: parseInt(faker.datatype.number().toString(), 10),
+      timestamp: new Date().toISOString(),
+    };
+
+    const result = await handler.handle(data);
+
+    expect(result).toBe(false);
+  });
+
   it('calls repository.updatePurchaseOrder', async () => {
     expect.assertions(2);
-
-    const applyVoucherMock = jest.fn();
 
     const purchaseOrder = new PurchaseOrder({
       customerId: faker.datatype.uuid(),
