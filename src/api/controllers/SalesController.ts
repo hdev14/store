@@ -54,4 +54,29 @@ export default class SalesController {
       return next(e);
     }
   }
+
+  public async removePurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
+    try {
+      return response.status(200);
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  public async applyVoucher(request: Request, response: Response, next: NextFunction) {
+    try {
+      return response.status(200);
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  // eslint-disable-next-line max-len
+  public async updatePurchaseOrderItemQuantity(request: Request, response: Response, next: NextFunction) {
+    try {
+      return response.status(200);
+    } catch (e) {
+      return next(e);
+    }
+  }
 }
