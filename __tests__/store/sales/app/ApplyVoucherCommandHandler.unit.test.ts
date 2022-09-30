@@ -152,11 +152,12 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
   it('apply the voucher to purchase order', async () => {
     expect.assertions(2);
 
-    const applyVoucherMock = jest.fn();
+    const fakeDraftPurchaseOrder: any = {
+      applyVoucher: jest.fn(),
+    };
 
-    repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce({
-      applyVoucher: applyVoucherMock,
-    });
+    repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
+      .mockResolvedValueOnce(fakeDraftPurchaseOrder);
 
     const voucher = new Voucher({
       id: faker.datatype.uuid(),
@@ -165,7 +166,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
       quantity: parseInt(faker.datatype.number().toString(), 10),
       type: VoucherDiscountTypes.ABSOLUTE,
       createdAt: new Date(),
-      expiresAt: new Date(),
+      expiresAt: faker.date.future(),
       usedAt: new Date(),
       active: true,
       code: parseInt(faker.datatype.number().toString(), 10),
@@ -184,8 +185,8 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     await handler.handle(data);
 
-    expect(applyVoucherMock).toHaveBeenCalledTimes(1);
-    expect(applyVoucherMock).toHaveBeenCalledWith(voucher);
+    expect(fakeDraftPurchaseOrder.applyVoucher).toHaveBeenCalledTimes(1);
+    expect(fakeDraftPurchaseOrder.applyVoucher).toHaveBeenCalledWith(voucher);
   });
 
   it('returns FALSE when occurs an expected error', async () => {
@@ -229,7 +230,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
       quantity: parseInt(faker.datatype.number().toString(), 10),
       type: VoucherDiscountTypes.ABSOLUTE,
       createdAt: new Date(),
-      expiresAt: new Date(),
+      expiresAt: faker.date.future(),
       usedAt: new Date(),
       active: true,
       code: parseInt(faker.datatype.number().toString(), 10),
