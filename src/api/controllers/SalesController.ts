@@ -79,4 +79,20 @@ export default class SalesController {
       return next(e);
     }
   }
+
+  public async getPurchaseOrder(request: Request, response: Response, next: NextFunction) {
+    try {
+      return response.status(200);
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  public async getPurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
+    try {
+      return response.status(200);
+    } catch (e) {
+      return next(e);
+    }
+  }
 }
