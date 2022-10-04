@@ -3,17 +3,42 @@ import Command from '@shared/abstractions/Command';
 import IGenerateID from '@shared/utils/IGenerateID';
 import { NextFunction, Request, Response } from 'express';
 import ValidationError from '@shared/errors/ValidationError';
+import { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand';
+import { UpdatePurchaseOrderItemQuantityCommandData } from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
+import Query from '@shared/abstractions/Query';
 
 export default class SalesController {
   private addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemData>;
 
   private generateID: IGenerateID;
 
+  private removePurchaseOrderItemCommand: Command<boolean, {}>;
+
+  private applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>;
+
+  // eslint-disable-next-line max-len
+  private updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>;
+
+  private getPurchaseOrderQuery: Query<{}>;
+
+  private getPurchaseOrderItemQuery: any;
+
   constructor(
     addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemData>,
+    removePurchaseOrderItemCommand: Command<boolean, {}>,
+    applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>,
+    // eslint-disable-next-line max-len
+    updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>,
+    getPurchaseOrderQuery: Query<{}>,
+    getPurchaseOrderItemQuery: Query<{}>,
     generateID: IGenerateID,
   ) {
     this.addPurchaseOrderItemCommand = addPurchaseOrderItemCommand;
+    this.removePurchaseOrderItemCommand = removePurchaseOrderItemCommand;
+    this.applyVoucherCommand = applyVoucherCommand;
+    this.updatePurchaseOrderItemQuantityCommand = updatePurchaseOrderItemQuantityCommand;
+    this.getPurchaseOrderQuery = getPurchaseOrderQuery;
+    this.getPurchaseOrderItemQuery = getPurchaseOrderItemQuery;
     this.generateID = generateID;
   }
 
