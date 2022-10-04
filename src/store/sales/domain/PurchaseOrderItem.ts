@@ -1,6 +1,6 @@
 import Entity from '@shared/abstractions/Entity';
 import DomainError from '@shared/errors/DomainError';
-// import Validator from '@shared/utils/Validator';
+import Validator from '@shared/utils/Validator';
 import Product from './Product';
 
 export type PurchaseOrderItemParams = {
@@ -51,9 +51,9 @@ export default class PurchaseOrderItem extends Entity {
   }
 
   public validate(): boolean | void {
-    // Validator.setData(this)
-    //   .setRule('purchaseOrderId', ['string'])
-    //   .setRule('quantity', ['number', 'required'])
-    //   .validate();
+    Validator.setData(this)
+      .setRule('purchaseOrderId', ['string'])
+      .setRule('quantity', ['required', 'number'])
+      .validate();
   }
 }

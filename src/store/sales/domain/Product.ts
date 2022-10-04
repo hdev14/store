@@ -15,10 +15,10 @@ export default class Product extends Entity {
   }
 
   public validate(): boolean | void {
-    // Validator.setData(this)
-    //   .setRule('id', ['string', 'required'])
-    //   .setRule('name', ['string', 'required'])
-    //   .setRule('amount', ['number', 'required'])
-    //   .validate();
+    Validator.setData(this)
+      .setRule('id', ['required', 'string'])
+      .setRule('name', ['required', 'string'])
+      .setRule('amount', ['required', 'number'])
+      .validate();
   }
 }

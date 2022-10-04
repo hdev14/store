@@ -151,12 +151,12 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
   }
 
   public validate(): boolean | void {
-    // Validator.setData(this)
-    //   .setRule('code', ['number', 'integer'])
-    //   .setRule('customerId', ['required', 'string'])
-    //   .setRule('discountAmount', ['number'])
-    //   .setRule('totalAmount', ['number'])
-    //   .setRule('status', ['required', 'string'])
-    //   .validate();
+    Validator.setData(this)
+      .setRule('code', ['number', 'integer'])
+      .setRule('customerId', ['required', 'string', 'uuid'])
+      .setRule('discountAmount', ['number'])
+      .setRule('totalAmount', ['number'])
+      .setRule('status', ['required', 'string'])
+      .validate();
   }
 }

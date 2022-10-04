@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 import Entity from '@shared/abstractions/Entity';
 import Validator from '@shared/utils/Validator';
 
@@ -57,13 +56,12 @@ export default class Voucher extends Entity {
   }
 
   public validate(): boolean | void {
-    // Validator.setData(this)
-    //   .setRule('code', ['number', 'integer', 'required'])
-    //   .setRule('percentageAmount', ['number'])
-    //   .setRule('rawDiscountAmount', ['number'])
-    //   .setRule('quantity', ['number', 'integer', 'required'])
-    //   .setRule('type', ['number', 'integer', 'min:1', 'max:2'])
-    //   .setRule('active', ['boolean'])
-    //   .validate();
+    Validator.setData(this)
+      .setRule('code', ['required', 'number', 'integer'])
+      .setRule('percentageAmount', ['number'])
+      .setRule('rawDiscountAmount', ['number'])
+      .setRule('quantity', ['required', 'number', 'integer'])
+      .setRule('active', ['boolean'])
+      .validate();
   }
 }
