@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { createSalesController } from '../factories';
+import bootstrap from '../bootstrap';
 
 const router = Router();
 
-const salesController = createSalesController();
+const { salesController } = bootstrap.controllers;
 
 router.get('/orders/:id', salesController.getPurchaseOrder.bind(salesController));
 

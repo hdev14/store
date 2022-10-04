@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { createCatalogController } from '../factories';
+import bootstrap from '../bootstrap';
 
 const router = Router();
 
-const catalogController = createCatalogController();
+const { catalogController } = bootstrap.controllers;
 
 router.get('/products', catalogController.getAllProducts.bind(catalogController));
 

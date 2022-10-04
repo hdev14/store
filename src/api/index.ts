@@ -1,6 +1,7 @@
 /* eslint-disable wrap-iife */
 import Prisma from '@shared/Prisma';
 import Server from './Server';
+import './bootstrap';
 
 (async function main() {
   let connection;
