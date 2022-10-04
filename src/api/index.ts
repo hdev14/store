@@ -1,13 +1,15 @@
 /* eslint-disable wrap-iife */
 import Prisma from '@shared/Prisma';
 import Server from './Server';
-import './bootstrap';
+// import mongoose from 'mongoose';
 
 (async function main() {
-  let connection;
+  let prismaConnection;
+  // let mongoConnection;
 
   try {
-    connection = Prisma.connect();
+    prismaConnection = Prisma.connect();
+    // mongoConnection = mongoose.connect()
 
     Server.application.listen(process.env.PORT, () => {
       if (process.env.NODE_ENV !== 'production') {
@@ -17,8 +19,8 @@ import './bootstrap';
   } catch (e: any) {
     console.error(e.stack);
   } finally {
-    if (connection) {
-      await connection.$disconnect();
+    if (prismaConnection) {
+      await prismaConnection.$disconnect();
     }
   }
 })();

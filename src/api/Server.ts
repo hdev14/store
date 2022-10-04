@@ -1,3 +1,4 @@
+import './bootstrap';
 import express from 'express';
 import errorHandler from './middlewares/errorHandler';
 import catalog from './routers/catalog';
