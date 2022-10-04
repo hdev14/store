@@ -5,11 +5,11 @@ import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderParams, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
-import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@mongoose/PurchaseOrderItemModel';
-import PurchaseOrderModel, { IPurchaseOrder } from '@mongoose/PurchaseOrderModel';
-import VoucherModel, { IVoucher } from '@mongoose/VoucherModel';
-import UserModel, { IUser } from '@mongoose/UserModel';
-import { IProduct } from '@mongoose/ProductModel';
+import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@mongo/models/PurchaseOrderItemModel';
+import PurchaseOrderModel, { IPurchaseOrder } from '@mongo/models/PurchaseOrderModel';
+import VoucherModel, { IVoucher } from '@mongo/models/VoucherModel';
+import { IUser } from '@mongo/models/UserModel';
+import { IProduct } from '@mongo/models/ProductModel';
 import RepositoryError from '@shared/errors/RepositoryError';
 
 export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
