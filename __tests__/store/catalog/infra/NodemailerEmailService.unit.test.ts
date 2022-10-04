@@ -3,7 +3,7 @@ import NodemailerEmailService from '@catalog/infra/notification/NodemailerEmailS
 import nodemailer from 'nodemailer';
 
 jest.mock('nodemailer');
-const nodemailerMock = jest.mocked(nodemailer, true);
+const nodemailerMock = jest.mocked(nodemailer);
 
 describe("NodemailerEmailService's unit tests", () => {
   const OLD_ENV = process.env;

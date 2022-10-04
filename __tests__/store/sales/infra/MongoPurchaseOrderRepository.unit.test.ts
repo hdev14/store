@@ -2,21 +2,21 @@ import { faker } from '@faker-js/faker';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import MongoPurchaseOrderRepository from '@sales/infra/persistence/MongoPurchaseOrderRepository';
-import PurchaseOrderModel from '@mongoose/PurchaseOrderModel';
-import PurchaseOrderItemModel from '@mongoose/PurchaseOrderItemModel';
-import VoucherModel from '@mongoose/VoucherModel';
+import PurchaseOrderModel from '@mongo/models/PurchaseOrderModel';
+import PurchaseOrderItemModel from '@mongo/models/PurchaseOrderItemModel';
+import VoucherModel from '@mongo/models/VoucherModel';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Product from '@sales/domain/Product';
 
-jest.mock('../../../../mongoose/PurchaseOrderModel');
-jest.mock('../../../../mongoose/PurchaseOrderItemModel');
-jest.mock('../../../../mongoose/VoucherModel');
-jest.mock('../../../../mongoose/ProductModel');
-jest.mock('../../../../mongoose/UserModel');
+jest.mock('../../../../mongo/models/PurchaseOrderModel');
+jest.mock('../../../../mongo/models/PurchaseOrderItemModel');
+jest.mock('../../../../mongo/models/VoucherModel');
+jest.mock('../../../../mongo/models/ProductModel');
+jest.mock('../../../../mongo/models/UserModel');
 
-const PurchaseOrderModelMock = jest.mocked(PurchaseOrderModel, true);
-const PurchaseOrderItemModelMock = jest.mocked(PurchaseOrderItemModel, true);
-const VoucherModelMock = jest.mocked(VoucherModel, true);
+const PurchaseOrderModelMock = jest.mocked(PurchaseOrderModel);
+const PurchaseOrderItemModelMock = jest.mocked(PurchaseOrderItemModel);
+const VoucherModelMock = jest.mocked(VoucherModel);
 
 describe("MongoPurchaseOrderRepository's unit tests", () => {
   describe('MongoPurchaseOrderRepository.getPurchaseOrderById()', () => {
