@@ -48,6 +48,7 @@ const RULE_FUNCTIONS = {
   float: (value: any) => typeof value === 'number' && Number.isInteger(value),
   uuid: (value: any) => typeof value === 'string' && !UUID_REGEX.test(value),
   date: (value: any) => String(new Date(value)) !== 'Invalid Date',
+  boolean: (value: any) => typeof value !== 'boolean',
 };
 
 const RULE_MESSAGES = {
@@ -72,6 +73,7 @@ const RULE_MESSAGES = {
   float: (field: string) => `The field ${field} must be a float.`,
   uuid: (field: string) => `The field ${field} must be an UUID.`,
   date: (field: string) => `The field ${field} must be a validate date.`,
+  boolean: (field: string) => `The field ${field} must be a boolean.`,
 };
 
 export default class Validator {
