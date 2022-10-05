@@ -87,16 +87,16 @@ export default class Validator {
     this.data = data;
   }
 
-  static setData(data: any) {
+  public static setData(data: any) {
     return new Validator(data);
   }
 
-  setRule(field: string, rules: string[]) {
+  public setRule(field: string, rules: string[]) {
     this.rules.set(field, rules);
     return this;
   }
 
-  validate(doNotThrows: boolean = false) {
+  public validate(doNotThrows: boolean = false) {
     this.rules.forEach((fieldRules, fieldName) => {
       const field = this.data[fieldName];
       const messages: string[] = [];
