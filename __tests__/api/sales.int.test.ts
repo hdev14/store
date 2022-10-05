@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker';
+import Mongo from '@mongo/index';
+import { CategoryModel, ProductModel, UserModel } from '@mongo/models';
 import { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 
 describe('Sales Integration Tests', () => {
@@ -7,6 +9,11 @@ describe('Sales Integration Tests', () => {
     let user: any;
 
     beforeAll(async () => {
+      const userData = {
+        id: faker.datatype.uuid(),
+        name: faker.name.fullName(),
+      };
+
       user = await globalThis.dbConnection.user.create({
         data: {
           id: faker.datatype.uuid(),
@@ -14,29 +21,48 @@ describe('Sales Integration Tests', () => {
         },
       });
 
-      const category = await globalThis.dbConnection.category.create({
-        data: {
-          id: faker.datatype.uuid(),
-          name: faker.word.verb(),
-          code: parseInt(faker.random.numeric(5), 10),
-        },
+      await UserModel.create({
+        ...userData,
+        _id: userData.id,
       });
 
+      const categoryData = {
+        id: faker.datatype.uuid(),
+        name: faker.word.verb(),
+        code: parseInt(faker.random.numeric(5), 10),
+      };
+
+      const category = await globalThis.dbConnection.category.create({
+        data: categoryData,
+      });
+
+      await CategoryModel.create({
+        ...categoryData,
+        _id: categoryData.id,
+      });
+
+      const productData = {
+        id: faker.datatype.uuid(),
+        name: faker.commerce.product(),
+        description: faker.commerce.productDescription(),
+        amount: faker.datatype.float(100),
+        active: faker.datatype.boolean(),
+        depth: faker.datatype.number(50),
+        height: faker.datatype.number(50),
+        width: faker.datatype.number(50),
+        stockQuantity: 0,
+        image: faker.internet.url(),
+        createdAt: new Date(),
+        categoryId: category.id,
+      };
+
       product = await globalThis.dbConnection.product.create({
-        data: {
-          id: faker.datatype.uuid(),
-          name: faker.commerce.product(),
-          description: faker.commerce.productDescription(),
-          amount: faker.datatype.float(100),
-          active: faker.datatype.boolean(),
-          depth: faker.datatype.number(50),
-          height: faker.datatype.number(50),
-          width: faker.datatype.number(50),
-          stockQuantity: 0,
-          image: faker.internet.url(),
-          createdAt: new Date(),
-          categoryId: category.id,
-        },
+        data: productData,
+      });
+
+      await ProductModel.create({
+        ...productData,
+        _id: productData.id,
       });
     });
 
@@ -48,6 +74,8 @@ describe('Sales Integration Tests', () => {
         globalThis.dbConnection.category.deleteMany({}),
         globalThis.dbConnection.user.deleteMany({}),
       ]);
+
+      await Mongo.dropCollections();
     });
 
     it('returns 400 if data is invalid', async () => {
