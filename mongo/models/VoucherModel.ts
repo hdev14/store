@@ -16,12 +16,7 @@ export interface IVoucher {
 }
 
 const voucherSchema = new Schema<IVoucher>({
-  _id: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
-  },
+  _id: String,
   code: {
     type: Number,
     required: true,

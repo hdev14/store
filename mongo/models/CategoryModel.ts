@@ -9,12 +9,7 @@ export interface ICategory {
 }
 
 const categorySchema = new Schema<ICategory>({
-  _id: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
-  },
+  _id: String,
   name: {
     type: String,
     required: true,

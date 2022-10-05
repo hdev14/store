@@ -17,7 +17,7 @@ export default class Mongo {
     }
   }
 
-  static async drop() {
+  static async dropCollections() {
     if (process.env.NODE_ENV === 'test') {
       const mappedModels = new Map(Object.entries(models));
 

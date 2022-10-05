@@ -17,12 +17,7 @@ export interface IProduct {
 }
 
 const productSchema = new Schema<IProduct>({
-  _id: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
-  },
+  _id: String,
   name: {
     type: String,
     required: true,

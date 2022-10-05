@@ -14,12 +14,7 @@ export interface IPurchaseOrder {
 }
 
 const purchaseOrderSchema = new Schema<IPurchaseOrder>({
-  _id: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
-  },
+  _id: String,
   code: {
     type: Number,
     required: true,
