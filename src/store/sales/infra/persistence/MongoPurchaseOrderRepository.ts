@@ -9,20 +9,21 @@ import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@mongo/models/Purcha
 import PurchaseOrderModel, { IPurchaseOrder } from '@mongo/models/PurchaseOrderModel';
 import VoucherModel, { IVoucher } from '@mongo/models/VoucherModel';
 import { IUser } from '@mongo/models/UserModel';
-import { IProduct } from '@mongo/models/ProductModel';
+import ProductModel, { IProduct } from '@mongo/models/ProductModel';
 import RepositoryError from '@shared/errors/RepositoryError';
 
 export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
     const purchaseOrder = await PurchaseOrderModel
       .findOne({ _id: id })
-      .populate('customer')
-      .populate('voucher')
+      .populate({ path: 'voucher', model: VoucherModel })
       .populate({
         path: 'items',
+        model: PurchaseOrderItemModel,
         populate: {
           path: 'product',
           select: '_id name amount',
+          model: ProductModel,
         },
       });
 
@@ -31,13 +32,14 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
 
   public async getPurchaseOrdersByCustomerId(id: string): Promise<PurchaseOrder[]> {
     const purchaseOrders = await PurchaseOrderModel.find({ customer: id })
-      .populate('customer')
-      .populate('voucher')
+      .populate({ path: 'voucher', model: VoucherModel })
       .populate({
         path: 'items',
+        model: PurchaseOrderItemModel,
         populate: {
           path: 'product',
           select: '_id name amount',
+          model: ProductModel,
         },
       });
 
@@ -47,12 +49,13 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   public async getDraftPurchaseOrderByCustomerId(id: string): Promise<PurchaseOrder | null> {
     const purchaseOrder = await PurchaseOrderModel
       .findOne({ customer: id, status: PurchaseOrderStatus.DRAFT })
-      .populate('customer')
       .populate({
         path: 'items',
+        model: PurchaseOrderItemModel,
         populate: {
           path: 'product',
           select: '_id name amount',
+          model: ProductModel,
         },
       });
 
@@ -63,7 +66,13 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     const purchaseOrderItem = await PurchaseOrderItemModel.findOne(
       { _id: id },
       undefined,
-      { populate: { path: 'product', select: '_id name amount' } },
+      {
+        populate: {
+          path: 'product',
+          select: '_id name amount',
+          model: ProductModel,
+        },
+      },
     );
 
     return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
@@ -73,7 +82,13 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     const purchaseOrderItem = await PurchaseOrderItemModel.findOne(
       { product: params.productId, purchaseOrder: params.purchaseOrderId },
       undefined,
-      { populate: { path: 'product', select: '_id name amount' } },
+      {
+        populate: {
+          path: 'product',
+          select: '_id name amount',
+          model: ProductModel,
+        },
+      },
     );
 
     return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
@@ -100,7 +115,7 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
 
     const populatedPurchaseOrder = await PurchaseOrderModel.populate(
       createdPurchaseOrder,
-      { path: 'voucher' },
+      { path: 'voucher', model: VoucherModel },
     );
 
     return this.mapPurchaseOrder(populatedPurchaseOrder);
@@ -130,7 +145,7 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
 
     const populatedPurchaseOrder = await PurchaseOrderModel.populate(
       purchaseOrderToUpdate,
-      { path: 'voucher' },
+      { path: 'voucher', model: VoucherModel },
     );
 
     return this.mapPurchaseOrder(populatedPurchaseOrder);
@@ -145,7 +160,7 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
     });
 
     const populatedPurchaseOrderItem = await createdPurchaseOrderItem.populate({
-      path: 'product', select: '_id name amount',
+      path: 'product', select: '_id name amount', model: ProductModel,
     });
 
     return this.mapPurchaseOrderItem(populatedPurchaseOrderItem);
@@ -160,6 +175,7 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
         populate: {
           path: 'product',
           select: '_id name amount',
+          model: ProductModel,
         },
       },
     );
@@ -185,7 +201,7 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   private mapPurchaseOrder(purchaseOrder: IPurchaseOrder): PurchaseOrder {
     const params: PurchaseOrderParams = {
       id: purchaseOrder._id,
-      customerId: (purchaseOrder.customer as unknown as IUser)._id,
+      customerId: purchaseOrder.customer,
       code: purchaseOrder.code,
       totalAmount: purchaseOrder.totalAmount,
       discountAmount: purchaseOrder.discountAmount,
