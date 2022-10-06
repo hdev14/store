@@ -167,4 +167,96 @@ describe('Sales Integration Tests', () => {
       expect(response.body.message).toEqual('Não foi possível adicionar o item ao pedido.');
     });
   });
+
+  describe('DELETE: /sales/orders/items/:id', () => {
+    const fakePurchaseOrderItemId = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      const fakeCustomerId = faker.datatype.uuid();
+      const fakeProductId = faker.datatype.uuid();
+      const fakePurchaseOrderId = faker.datatype.uuid();
+      const fakeCategoryId = faker.datatype.uuid();
+
+      await globalThis.dbConnection.user.create({
+        data: {
+          id: fakeCustomerId,
+          name: faker.name.fullName(),
+        },
+      });
+
+      await globalThis.dbConnection.category.create({
+        data: {
+          id: fakeCategoryId,
+          code: parseInt(faker.datatype.number().toString(), 10),
+          name: faker.word.adjective(),
+        },
+      });
+
+      await globalThis.dbConnection.product.create({
+        data: {
+          id: fakeProductId,
+          name: faker.commerce.product(),
+          description: faker.commerce.productDescription(),
+          amount: faker.datatype.float(100),
+          active: faker.datatype.boolean(),
+          depth: faker.datatype.number(50),
+          height: faker.datatype.number(50),
+          width: faker.datatype.number(50),
+          stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+          image: faker.internet.url(),
+          createdAt: new Date(),
+          categoryId: fakeCategoryId,
+        },
+      });
+
+      await globalThis.dbConnection.purchaseOrder.create({
+        data: {
+          id: fakePurchaseOrderId,
+          code: parseInt(faker.datatype.number().toString(), 10),
+          totalAmount: faker.datatype.float(),
+          discountAmount: faker.datatype.float(),
+          status: PurchaseOrderStatus.DRAFT,
+          customerId: fakeCustomerId,
+          createdAt: new Date(),
+        },
+      });
+
+      await globalThis.dbConnection.purchaseOrderItem.create({
+        data: {
+          id: fakePurchaseOrderItemId,
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          productId: fakeProductId,
+          purchaseOrderId: fakePurchaseOrderId,
+        },
+      });
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.$transaction([
+        globalThis.dbConnection.purchaseOrder.deleteMany({}),
+        globalThis.dbConnection.product.deleteMany({}),
+        globalThis.dbConnection.category.deleteMany({}),
+        globalThis.dbConnection.user.deleteMany({}),
+      ]);
+    });
+
+    it('return 200 if purchase order item was deleted', async () => {
+      expect.assertions(3);
+
+      const response = await globalThis.request
+        .delete(`/sales/orders/items/${fakePurchaseOrderItemId}`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body.message).toEqual('Item excluido com sucesso.');
+
+      const exists = await globalThis.dbConnection.purchaseOrderItem.findUnique({
+        where: { id: fakePurchaseOrderItemId },
+      });
+
+      expect(exists).toBeNull();
+    });
+  });
 });
