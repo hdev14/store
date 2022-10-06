@@ -82,6 +82,15 @@ export default class SalesController {
 
   public async removePurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
+      const result = await this.removePurchaseOrderItemCommand.send({
+        principalId: request.params.id,
+        timestamp: new Date().toISOString(),
+      });
+
+      if (result) {
+        return response.status(200).json({ message: 'Item excluido com sucesso.' });
+      }
+
       return response.status(200);
     } catch (e) {
       return next(e);
