@@ -87,11 +87,13 @@ export default class SalesController {
         timestamp: new Date().toISOString(),
       });
 
-      if (result) {
-        return response.status(200).json({ message: 'Item excluido com sucesso.' });
+      if (!result) {
+        return response.status(422).json({
+          message: 'Não foi possível excluir o item.',
+        });
       }
 
-      return response.status(200);
+      return response.status(200).json({ message: 'Item excluido com sucesso.' });
     } catch (e) {
       if (e instanceof ValidationError) {
         return response.status(400).json({ errors: e.errors });
