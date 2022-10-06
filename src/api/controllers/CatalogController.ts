@@ -24,6 +24,10 @@ export default class CatalogController {
 
       return response.status(200).json({ product });
     } catch (e) {
+      if (e instanceof ProductNotFoundError) {
+        return response.status(404).json({ message: e.message });
+      }
+
       return next(e);
     }
   }
@@ -94,6 +98,7 @@ export default class CatalogController {
       if (e instanceof ProductNotFoundError) {
         return response.status(404).json({ message: e.message });
       }
+
       return next(e);
     }
   }
