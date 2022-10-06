@@ -93,6 +93,10 @@ export default class SalesController {
 
       return response.status(200);
     } catch (e) {
+      if (e instanceof ValidationError) {
+        return response.status(400).json({ errors: e.errors });
+      }
+
       return next(e);
     }
   }
