@@ -240,7 +240,7 @@ describe('Sales Integration Tests', () => {
       ]);
     });
 
-    it('return 200 if purchase order item was deleted', async () => {
+    it('returns 200 if purchase order item was deleted', async () => {
       expect.assertions(3);
 
       const response = await globalThis.request
@@ -257,6 +257,21 @@ describe('Sales Integration Tests', () => {
       });
 
       expect(exists).toBeNull();
+    });
+
+    it('returns 400 if purchase order item id is invalid', async () => {
+      expect.assertions(2);
+
+      const invalidPurchaseOrderItemId = 'wrong';
+
+      const response = await globalThis.request
+        .delete(`/sales/orders/items/${invalidPurchaseOrderItemId}`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(400);
+      expect(response.body.errors).toHaveLength(1);
     });
   });
 });
