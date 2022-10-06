@@ -8,7 +8,6 @@ import Voucher from '@sales/domain/Voucher';
 import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@mongo/models/PurchaseOrderItemModel';
 import PurchaseOrderModel, { IPurchaseOrder } from '@mongo/models/PurchaseOrderModel';
 import VoucherModel, { IVoucher } from '@mongo/models/VoucherModel';
-import { IUser } from '@mongo/models/UserModel';
 import ProductModel, { IProduct } from '@mongo/models/ProductModel';
 import RepositoryError from '@shared/errors/RepositoryError';
 
