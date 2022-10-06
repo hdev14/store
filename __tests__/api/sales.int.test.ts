@@ -273,5 +273,20 @@ describe('Sales Integration Tests', () => {
       expect(response.status).toEqual(400);
       expect(response.body.errors).toHaveLength(1);
     });
+
+    it('returns 422 when was not possible to delete the purchase order item', async () => {
+      expect.assertions(2);
+
+      const noexistentPurchaseOrderItemId = faker.datatype.uuid();
+
+      const response = await globalThis.request
+        .delete(`/sales/orders/items/${noexistentPurchaseOrderItemId}`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(422);
+      expect(response.body.message).toEqual('Não foi possível excluir o item.');
+    });
   });
 });
