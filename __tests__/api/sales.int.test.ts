@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import Mongo from '@mongo/index';
 import { CategoryModel, ProductModel, UserModel } from '@mongo/models';
 import { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
+import { VoucherDiscountTypes } from '@sales/domain/Voucher';
 
 describe('Sales Integration Tests', () => {
   describe('POST: /sales/orders/items', () => {
@@ -287,6 +288,80 @@ describe('Sales Integration Tests', () => {
 
       expect(response.status).toEqual(422);
       expect(response.body.message).toEqual('Não foi possível excluir o item.');
+    });
+  });
+
+  describe('POST: /sales/orders/:id/voucher', () => {
+    const fakeCustomerId = faker.datatype.uuid();
+    const fakePurchaseOrderId = faker.datatype.uuid();
+    const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
+
+    beforeAll(async () => {
+      await globalThis.dbConnection.user.create({
+        data: {
+          id: fakeCustomerId,
+          name: faker.name.fullName(),
+        },
+      });
+
+      await globalThis.dbConnection.purchaseOrder.create({
+        data: {
+          id: fakePurchaseOrderId,
+          code: parseInt(faker.datatype.number().toString(), 10),
+          totalAmount: faker.datatype.float(),
+          discountAmount: faker.datatype.float(),
+          status: PurchaseOrderStatus.DRAFT,
+          customerId: fakeCustomerId,
+          createdAt: new Date(),
+        },
+      });
+
+      await globalThis.dbConnection.voucher.create({
+        data: {
+          id: faker.datatype.uuid(),
+          active: true,
+          code: fakeVoucherCode,
+          quantity: 10,
+          type: VoucherDiscountTypes.ABSOLUTE,
+          rawDiscountAmount: faker.datatype.float(),
+          percentageAmount: faker.datatype.float(),
+          createdAt: new Date(),
+          expiresAt: faker.date.future(),
+        },
+      });
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.$transaction([
+        globalThis.dbConnection.voucher.deleteMany({}),
+        globalThis.dbConnection.purchaseOrder.deleteMany({}),
+        globalThis.dbConnection.user.deleteMany({}),
+      ]);
+    });
+
+    it('apply a voucher in the purchase order', async () => {
+      expect.assertions(3);
+
+      const data = {
+        customerId: fakeCustomerId,
+        voucherCode: fakeVoucherCode,
+      };
+
+      const response = await globalThis.request
+        .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(200);
+      expect(response.body.message).toEqual('Voucher aplicado com sucesso.');
+
+      const purchaseOrder = await globalThis.dbConnection.purchaseOrder.findUnique({
+        where: { id: fakePurchaseOrderId },
+        include: { voucher: true },
+      });
+
+      expect(purchaseOrder!.voucher!.code).toEqual(fakeVoucherCode);
     });
   });
 });
