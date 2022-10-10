@@ -381,5 +381,23 @@ describe('Sales Integration Tests', () => {
       expect(response.status).toEqual(422);
       expect(response.body.message).toEqual('Não foi possível utilizar este voucher.');
     });
+
+    it('returns 422 when voucher is not found', async () => {
+      expect.assertions(2);
+
+      const data = {
+        customerId: fakeCustomerId,
+        voucherCode: 1234,
+      };
+
+      const response = await globalThis.request
+        .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(422);
+      expect(response.body.message).toEqual('Não foi possível utilizar este voucher.');
+    });
   });
 });
