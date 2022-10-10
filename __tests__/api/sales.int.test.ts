@@ -465,5 +465,23 @@ describe('Sales Integration Tests', () => {
       expect(response.status).toEqual(422);
       expect(response.body.message).toEqual('Não foi possível utilizar este voucher.');
     });
+
+    it('returns 400 if data is invalid', async () => {
+      expect.assertions(2);
+
+      const data = {
+        customerId: 'wrong',
+        voucherCode: 'wrong',
+      };
+
+      const response = await globalThis.request
+        .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(400);
+      expect(response.body.errors).toHaveLength(2);
+    });
   });
 });
