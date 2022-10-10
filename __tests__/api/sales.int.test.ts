@@ -295,6 +295,7 @@ describe('Sales Integration Tests', () => {
     const fakeCustomerId = faker.datatype.uuid();
     const fakePurchaseOrderId = faker.datatype.uuid();
     const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
+    const fakeDeactivedVoucherCode = parseInt(faker.datatype.number().toString(), 10);
 
     beforeAll(async () => {
       await globalThis.dbConnection.user.create({
@@ -321,6 +322,20 @@ describe('Sales Integration Tests', () => {
           id: faker.datatype.uuid(),
           active: true,
           code: fakeVoucherCode,
+          quantity: 10,
+          type: VoucherDiscountTypes.ABSOLUTE,
+          rawDiscountAmount: faker.datatype.float(),
+          percentageAmount: faker.datatype.float(),
+          createdAt: new Date(),
+          expiresAt: faker.date.future(),
+        },
+      });
+
+      await globalThis.dbConnection.voucher.create({
+        data: {
+          id: faker.datatype.uuid(),
+          active: false,
+          code: fakeDeactivedVoucherCode,
           quantity: 10,
           type: VoucherDiscountTypes.ABSOLUTE,
           rawDiscountAmount: faker.datatype.float(),
@@ -388,6 +403,24 @@ describe('Sales Integration Tests', () => {
       const data = {
         customerId: fakeCustomerId,
         voucherCode: 1234,
+      };
+
+      const response = await globalThis.request
+        .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(422);
+      expect(response.body.message).toEqual('Não foi possível utilizar este voucher.');
+    });
+
+    it('returns 422 when voucher is deactived', async () => {
+      expect.assertions(2);
+
+      const data = {
+        customerId: fakeCustomerId,
+        voucherCode: fakeDeactivedVoucherCode,
       };
 
       const response = await globalThis.request
