@@ -13,8 +13,8 @@ router.post('/orders/items', salesController.addPurchaseOrderItem.bind(salesCont
 
 router.delete('/orders/items/:id', salesController.removePurchaseOrderItem.bind(salesController));
 
-router.patch('/orders/items/:id/quantity', salesController.updatePurchaseOrderItemQuantity.bind(salesController));
+router.patch('/orders/items/:id/quantities', salesController.updatePurchaseOrderItemQuantity.bind(salesController));
 
-router.post('/orders/:id/voucher', salesController.applyVoucher.bind(salesController));
+router.post('/orders/:id/vouchers', salesController.applyVoucher.bind(salesController));
 
 export default router;

@@ -105,7 +105,19 @@ export default class SalesController {
 
   public async applyVoucher(request: Request, response: Response, next: NextFunction) {
     try {
-      return response.status(200);
+      const purchaseOrderId = request.params.id;
+      const { customerId, voucherCode } = request.body;
+
+      await this.applyVoucherCommand.send({
+        principalId: purchaseOrderId,
+        customerId,
+        voucherCode,
+        timestamp: new Date().toISOString(),
+      });
+
+      return response.status(200).json({
+        message: 'Voucher aplicado com sucesso.',
+      });
     } catch (e) {
       return next(e);
     }

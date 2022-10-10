@@ -11,7 +11,7 @@ export default class RemovePurchaseOrderItemCommandHandler implements IEventHand
   public async handle(data: EventData): Promise<boolean> {
     try {
       const isDeleted = await this.repository.deletePurchaseOrderItem(data.principalId);
-
+      // TODO: add event
       return isDeleted;
     } catch (e: any) {
       console.error(e.stack);
