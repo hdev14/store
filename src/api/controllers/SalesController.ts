@@ -108,12 +108,18 @@ export default class SalesController {
       const purchaseOrderId = request.params.id;
       const { customerId, voucherCode } = request.body;
 
-      await this.applyVoucherCommand.send({
+      const result = await this.applyVoucherCommand.send({
         principalId: purchaseOrderId,
         customerId,
         voucherCode,
         timestamp: new Date().toISOString(),
       });
+
+      if (!result) {
+        return response.status(422).json({
+          message: 'Não foi possível utilizar este voucher.',
+        });
+      }
 
       return response.status(200).json({
         message: 'Voucher aplicado com sucesso.',
