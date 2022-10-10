@@ -125,6 +125,10 @@ export default class SalesController {
         message: 'Voucher aplicado com sucesso.',
       });
     } catch (e) {
+      if (e instanceof ValidationError) {
+        return response.status(400).json({ errors: e.errors });
+      }
+
       return next(e);
     }
   }
