@@ -333,8 +333,8 @@ describe('Sales Integration Tests', () => {
 
     afterAll(async () => {
       await globalThis.dbConnection.$transaction([
-        globalThis.dbConnection.voucher.deleteMany({}),
         globalThis.dbConnection.purchaseOrder.deleteMany({}),
+        globalThis.dbConnection.voucher.deleteMany({}),
         globalThis.dbConnection.user.deleteMany({}),
       ]);
     });
@@ -362,6 +362,24 @@ describe('Sales Integration Tests', () => {
       });
 
       expect(purchaseOrder!.voucher!.code).toEqual(fakeVoucherCode);
+    });
+
+    it('returns 422 when draft purchase order is not found', async () => {
+      expect.assertions(2);
+
+      const data = {
+        customerId: faker.datatype.uuid(),
+        voucherCode: fakeVoucherCode,
+      };
+
+      const response = await globalThis.request
+        .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send(data);
+
+      expect(response.status).toEqual(422);
+      expect(response.body.message).toEqual('Não foi possível utilizar este voucher.');
     });
   });
 });
