@@ -3,7 +3,7 @@ import EventMediator from './abstractions/EventMediator';
 import StoreMediatorError from './errors/StoreMediatorError';
 
 export default class StoreMediator extends EventMediator {
-  async send<R>(name: string, data: EventData): Promise<void | R> {
+  public async send<R>(name: string, data: EventData): Promise<void | R> {
     const handler = this.hasHandler(name);
 
     if (!handler) {

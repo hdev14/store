@@ -4,9 +4,9 @@ import IStockService from './IStockService';
 import { LowStockProductData } from './LowStockProductEvent';
 
 export default class StockService implements IStockService {
-  private productRepository: IProductOperations;
+  private readonly productRepository: IProductOperations;
 
-  private lowStockProductEvent: Event<void, LowStockProductData>;
+  private readonly lowStockProductEvent: Event<void, LowStockProductData>;
 
   constructor(
     productRepository: IProductOperations,

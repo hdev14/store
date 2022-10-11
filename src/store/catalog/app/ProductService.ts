@@ -8,11 +8,11 @@ import StockError from './StockError';
 import CategoryNotFoundError from './CategoryNotFoundError';
 
 export default class ProductService implements IProductService {
-  private repository: IProductRepository;
+  private readonly repository: IProductRepository;
 
-  private generateID: IGenerateID;
+  private readonly generateID: IGenerateID;
 
-  private stockService: IStockService;
+  private readonly stockService: IStockService;
 
   constructor(
     repository: IProductRepository,

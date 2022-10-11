@@ -26,7 +26,7 @@ type PurchaseOrderWithVoucherAndItems = PrismaPurchaseOrder & {
 };
 
 export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepository {
-  private connection: PrismaClient;
+  private readonly connection: PrismaClient;
 
   constructor() {
     this.connection = Prisma.connect();

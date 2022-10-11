@@ -5,9 +5,9 @@ import CategoryNotFoundError from './CategoryNotFoundError';
 import ICategoryService, { CreateCategoryParams, UpdateCategoryParams } from './ICategoryService';
 
 export default class CategoryService implements ICategoryService {
-  private repository: ICategoryOperations;
+  private readonly repository: ICategoryOperations;
 
-  private generateID: IGenerateID;
+  private readonly generateID: IGenerateID;
 
   constructor(repository: ICategoryOperations, generateID: IGenerateID) {
     this.repository = repository;

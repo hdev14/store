@@ -8,20 +8,20 @@ import { UpdatePurchaseOrderItemQuantityCommandData } from '@sales/app/commands/
 import Query from '@shared/abstractions/Query';
 
 export default class SalesController {
-  private addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemData>;
+  private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemData>;
 
-  private generateID: IGenerateID;
+  private readonly generateID: IGenerateID;
 
-  private removePurchaseOrderItemCommand: Command<boolean, {}>;
+  private readonly removePurchaseOrderItemCommand: Command<boolean, {}>;
 
-  private applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>;
+  private readonly applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>;
 
   // eslint-disable-next-line max-len
-  private updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>;
+  private readonly updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>;
 
-  private getPurchaseOrderQuery: Query<{}>;
+  private readonly getPurchaseOrderQuery: Query<{}>;
 
-  private getPurchaseOrderItemQuery: any;
+  private readonly getPurchaseOrderItemQuery: any;
 
   constructor(
     addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemData>,

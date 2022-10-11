@@ -12,11 +12,11 @@ import UpdateDraftPurchaseOrderEvent, { UpdateDraftPurchaseOrderEventData } from
 import UpdatePurchaseOrderItemEvent, { UpdatePurchaserOrderItemEventData } from '../events/UpdatePurchaseOrderItemEvent';
 
 export default class AddPurchaseOrderItemCommandHandler implements IEventHandler<boolean> {
-  private repository: IPurchaseOrderRepository;
+  private readonly repository: IPurchaseOrderRepository;
 
-  private generateID: IGenerateID;
+  private readonly generateID: IGenerateID;
 
-  private eventPublisher: EventPublisher;
+  private readonly eventPublisher: EventPublisher;
 
   constructor(
     repository: IPurchaseOrderRepository,

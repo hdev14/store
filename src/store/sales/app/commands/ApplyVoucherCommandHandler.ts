@@ -3,7 +3,7 @@ import { EventData, IEventHandler } from '@shared/@types/events';
 import { ApplyVoucherCommandData } from './ApplyVoucherCommand';
 
 export default class ApplyVoucherCommandHandler implements IEventHandler<boolean> {
-  private repository: IPurchaseOrderRepository;
+  private readonly repository: IPurchaseOrderRepository;
 
   constructor(repository: IPurchaseOrderRepository) {
     this.repository = repository;

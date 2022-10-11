@@ -6,9 +6,9 @@ import { UpdatePurchaseOrderItemQuantityCommandData } from './UpdatePurchaseOrde
 
 // eslint-disable-next-line max-len
 export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IEventHandler<boolean> {
-  private repository: IPurchaseOrderRepository;
+  private readonly repository: IPurchaseOrderRepository;
 
-  private publisher: EventPublisher;
+  private readonly publisher: EventPublisher;
 
   constructor(repository: IPurchaseOrderRepository, publisher: EventPublisher) {
     this.repository = repository;

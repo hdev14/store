@@ -2,7 +2,7 @@ import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRe
 import { EventData, IEventHandler } from '@shared/@types/events';
 
 export default class RemovePurchaseOrderItemCommandHandler implements IEventHandler<boolean> {
-  private repository: IPurchaseOrderRepositoryCommands;
+  private readonly repository: IPurchaseOrderRepositoryCommands;
 
   constructor(repository: IPurchaseOrderRepositoryCommands) {
     this.repository = repository;

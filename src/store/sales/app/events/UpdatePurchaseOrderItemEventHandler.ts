@@ -6,7 +6,7 @@ import EventHandlerError from '@shared/errors/EventHandlerError';
 import { UpdatePurchaserOrderItemEventData } from './UpdatePurchaseOrderItemEvent';
 
 export default class UpdatePurchaseOrderItemEventHandler implements IEventHandler<void> {
-  private repository: IPurchaseOrderRepositoryCommands;
+  private readonly repository: IPurchaseOrderRepositoryCommands;
 
   constructor(repository: IPurchaseOrderRepositoryCommands) {
     this.repository = repository;

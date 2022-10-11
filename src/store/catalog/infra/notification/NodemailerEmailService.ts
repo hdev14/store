@@ -2,7 +2,7 @@ import IEmailService, { EmailParams } from '@catalog/app/IEmailService';
 import nodemailer from 'nodemailer';
 
 export default class NodemailerEmailService implements IEmailService {
-  private transporter;
+  private readonly transporter;
 
   constructor() {
     this.transporter = nodemailer.createTransport({

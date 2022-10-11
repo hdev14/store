@@ -3,7 +3,7 @@ import { EventData, IEventHandler } from '@shared/@types/events';
 import IEmailService from './IEmailService';
 
 export default class LowStockProductEventHandler implements IEventHandler {
-  private emailService: IEmailService;
+  private readonly emailService: IEmailService;
 
   private static defaultEmail = 'default@email.com';
 

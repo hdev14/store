@@ -7,16 +7,16 @@ import ValidationError from '@shared/errors/ValidationError';
 import { NextFunction, Request, Response } from 'express';
 
 export default class CatalogController {
-  private productService: IProductService;
+  private readonly productService: IProductService;
 
-  private categoryService: ICategoryService;
+  private readonly categoryService: ICategoryService;
 
   constructor(productService: IProductService, categoryService: ICategoryService) {
     this.productService = productService;
     this.categoryService = categoryService;
   }
 
-  async getProductById(request: Request, response: Response, next: NextFunction) {
+  public async getProductById(request: Request, response: Response, next: NextFunction) {
     try {
       const { id } = request.params;
 
@@ -32,7 +32,7 @@ export default class CatalogController {
     }
   }
 
-  async getAllProducts(_: Request, response: Response, next: NextFunction) {
+  public async getAllProducts(_: Request, response: Response, next: NextFunction) {
     try {
       const products = await this.productService.getAllProducts();
 
@@ -42,7 +42,7 @@ export default class CatalogController {
     }
   }
 
-  async getProductsByCategory(request: Request, response: Response, next: NextFunction) {
+  public async getProductsByCategory(request: Request, response: Response, next: NextFunction) {
     try {
       const categoryId = request.params.id;
 
@@ -54,7 +54,7 @@ export default class CatalogController {
     }
   }
 
-  async createProduct(request: Request, response: Response, next: NextFunction) {
+  public async createProduct(request: Request, response: Response, next: NextFunction) {
     try {
       const {
         height,
@@ -86,7 +86,7 @@ export default class CatalogController {
     }
   }
 
-  async updateProduct(request: Request, response: Response, next: NextFunction) {
+  public async updateProduct(request: Request, response: Response, next: NextFunction) {
     try {
       const productId = request.params.id;
       const data = request.body;
@@ -103,7 +103,7 @@ export default class CatalogController {
     }
   }
 
-  async updateProductStock(request: Request, response: Response, next: NextFunction) {
+  public async updateProductStock(request: Request, response: Response, next: NextFunction) {
     try {
       const productId = request.params.id;
       const { quantity } = request.body;
@@ -120,7 +120,7 @@ export default class CatalogController {
     }
   }
 
-  async getAllCategories(_: Request, response: Response, next: NextFunction) {
+  public async getAllCategories(_: Request, response: Response, next: NextFunction) {
     try {
       const categories = await this.categoryService.getAllCategories();
 
@@ -130,7 +130,7 @@ export default class CatalogController {
     }
   }
 
-  async createCategory(request: Request, response: Response, next: NextFunction) {
+  public async createCategory(request: Request, response: Response, next: NextFunction) {
     try {
       const data = request.body;
 
@@ -146,7 +146,7 @@ export default class CatalogController {
     }
   }
 
-  async updateCategory(request: Request, response: Response, next: NextFunction) {
+  public async updateCategory(request: Request, response: Response, next: NextFunction) {
     try {
       const categoryId = request.params.id;
       const data = request.body;

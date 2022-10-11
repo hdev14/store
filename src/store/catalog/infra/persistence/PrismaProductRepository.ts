@@ -6,7 +6,7 @@ import Product from '@catalog/domain/Product';
 import Prisma from '@shared/Prisma';
 
 export default class PrismaProductRepository implements IProductRepository {
-  private connection: PrismaClient;
+  private readonly connection: PrismaClient;
 
   constructor() {
     this.connection = Prisma.connect();
@@ -78,7 +78,7 @@ export default class PrismaProductRepository implements IProductRepository {
     return category ? this.mapCategory(category) : null;
   }
 
-  async updateProduct(product: Product): Promise<Product> {
+  public async updateProduct(product: Product): Promise<Product> {
     const updatedProduct = await this.connection.product.update({
       where: {
         id: product.id,
