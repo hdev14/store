@@ -1,8 +1,8 @@
-import { EventData } from '@shared/@types/events';
-import EventMediator from '@shared/abstractions/EventMediator';
+import { EventData } from '@shared/abstractions/IEventHandler';
+import Mediator from '@shared/abstractions/Mediator';
 import EventPublisher from '@shared/EventPublisher';
 
-class MediatorSub extends EventMediator {
+class MediatorSub extends Mediator {
   public send<R, T = {}>(_name: string, _data: EventData<T>): Promise<void | R> {
     return Promise.resolve();
   }

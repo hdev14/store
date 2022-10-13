@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { AddDraftPurchaseOrderEventData } from '@sales/app/events/AddDraftPurchaseOrderEvent';
 import AddDraftPurchaseOrderEventHandler from '@sales/app/events/AddDraftPurchaseOrderEventHandler';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
-import { EventData } from '@shared/@types/events';
+import { EventData } from '@shared/abstractions/IEventHandler';
 import EventHandlerError from '@shared/errors/EventHandlerError';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 

@@ -3,8 +3,6 @@ import { UpdatePurchaseOrderItemQuantityCommandData } from '@sales/app/commands/
 import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommandHandler';
 import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import { EventData } from '@shared/@types/events';
-
 import UpdatePurchaseOrderItemEvent from '@sales/app/events/UpdatePurchaseOrderItemEvent';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 import publisherStub from '../../stubs/EventPublisherStub';
@@ -20,16 +18,15 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       publisherStub,
     );
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     await handler.handle(data);
 
     expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledTimes(1);
-    expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledWith(data.principalId);
+    expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledWith(data.purchaseOrderItemId);
   });
 
   it("return FALSE if purchase order item doesn't exist", async () => {
@@ -42,10 +39,9 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       publisherStub,
     );
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const result = await handler.handle(data);
@@ -77,10 +73,9 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       publisherStub,
     );
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const expectedPurchaseOrderItem = fakePurchaseOrderItem;
@@ -103,10 +98,9 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       publisherStub,
     );
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const result = await handler.handle(data);
@@ -138,10 +132,9 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       publisherStub,
     );
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const expectedPurchaseOrderItem = fakePurchaseOrderItem;
@@ -185,10 +178,9 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       publisherStub,
     );
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const expectedPurchaseOrderItem = fakePurchaseOrderItem;

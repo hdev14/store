@@ -1,4 +1,4 @@
-import { EventData, IEventHandler } from '@shared/@types/events';
+import IEventHandler, { EventData } from '@shared/abstractions/IEventHandler';
 import StoreMediatorError from '@shared/errors/StoreMediatorError';
 import StoreMediator from '@shared/StoreMediator';
 

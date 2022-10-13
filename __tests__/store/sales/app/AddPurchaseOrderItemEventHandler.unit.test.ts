@@ -1,10 +1,10 @@
 import AddPurchaseOrderItemEventHandler from '@sales/app/events/AddPurchaseOrderItemEventHandler';
-import { EventData } from '@shared/@types/events';
 import { AddPurchaseOrderItemEventData } from '@sales/app/events/AddPurchaseOrderItemEvent';
 import { faker } from '@faker-js/faker';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Product from '@sales/domain/Product';
 import EventHandlerError from '@shared/errors/EventHandlerError';
+import { EventData } from '@shared/abstractions/IEventHandler';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("AddPurchaseOrderItemEventHandler's unit tests", () => {

@@ -3,7 +3,7 @@ import { UpdatePurchaserOrderItemEventData } from '@sales/app/events/UpdatePurch
 import UpdatePurchaseOrderItemEventHandler from '@sales/app/events/UpdatePurchaseOrderItemEventHandler';
 import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import { EventData } from '@shared/@types/events';
+import { EventData } from '@shared/abstractions/IEventHandler';
 import EventHandlerError from '@shared/errors/EventHandlerError';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 

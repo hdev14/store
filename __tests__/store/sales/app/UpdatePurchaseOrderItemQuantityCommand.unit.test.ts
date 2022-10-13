@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 import UpdatePurchaseOrderItemQuantityCommand, { UpdatePurchaseOrderItemQuantityCommandData } from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
-import { EventData } from '@shared/@types/events';
 import ValidationError from '@shared/errors/ValidationError';
 import mediatorStub from '../../stubs/MediatorStub';
 
@@ -10,10 +9,9 @@ describe("UpdatePurchaseOrderItemQuantityCommand's unit tests", () => {
 
     const command = new UpdatePurchaseOrderItemQuantityCommand(mediatorStub);
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: 'wrong',
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: 'wrong',
       quantity: 7.3, // float
-      timestamp: new Date().toISOString(),
     };
 
     try {
@@ -31,10 +29,9 @@ describe("UpdatePurchaseOrderItemQuantityCommand's unit tests", () => {
 
     const command = new UpdatePurchaseOrderItemQuantityCommand(mediatorStub);
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
       quantity: parseInt(faker.random.numeric(1), 10), // float
-      timestamp: new Date().toISOString(),
     };
 
     await command.send(data);
@@ -50,10 +47,9 @@ describe("UpdatePurchaseOrderItemQuantityCommand's unit tests", () => {
 
     const command = new UpdatePurchaseOrderItemQuantityCommand(mediatorStub);
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
       quantity: parseInt(faker.random.numeric(1), 10), // float
-      timestamp: new Date().toISOString(),
     };
 
     const result = await command.send(data);
@@ -68,10 +64,9 @@ describe("UpdatePurchaseOrderItemQuantityCommand's unit tests", () => {
 
     const command = new UpdatePurchaseOrderItemQuantityCommand(mediatorStub);
 
-    const data: EventData<UpdatePurchaseOrderItemQuantityCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: UpdatePurchaseOrderItemQuantityCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
       quantity: parseInt(faker.random.numeric(1), 10), // float
-      timestamp: new Date().toISOString(),
     };
 
     const result = await command.send(data);

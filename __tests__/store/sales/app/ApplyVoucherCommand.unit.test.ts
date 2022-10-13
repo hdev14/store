@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import ApplyVoucherCommand, { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand';
-import { EventData } from '@shared/@types/events';
+import { EventData } from '@shared/abstractions/IEventHandler';
 import ValidationError from '@shared/errors/ValidationError';
 import mediatorStub from '../../stubs/MediatorStub';
 

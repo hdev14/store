@@ -2,7 +2,7 @@ import IEmailService, { EmailParams } from '@catalog/app/IEmailService';
 import LowStockProductEventHandler, { } from '@catalog/app/LowStockProductEventHandler';
 import { LowStockProductData } from '@catalog/domain/LowStockProductEvent';
 import { faker } from '@faker-js/faker';
-import { EventData } from '@shared/@types/events';
+import { EventData } from '@shared/abstractions/IEventHandler';
 
 class EmailServiceStub implements IEmailService {
   send(_: EmailParams): Promise<void> {

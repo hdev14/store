@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-import AddPurchaseOrderItemCommand, { AddPurchaseOrderItemData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
-import { EventData } from '@shared/@types/events';
+import AddPurchaseOrderItemCommand, { AddPurchaseOrderItemCommandData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
 import ValidationError from '@shared/errors/ValidationError';
 import mediatorStub from '../../stubs/MediatorStub';
 
@@ -17,13 +16,12 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
         productId: 'wrong',
         productName: 123,
         quantity: 'wrong',
-        timestamp: new Date().toISOString(),
       };
 
       await addPurchaseOrderItemCommand.send(invalidData);
     } catch (e: any) {
       expect(e).toBeInstanceOf(ValidationError);
-      expect(e.errors).toHaveLength(6);
+      expect(e.errors).toHaveLength(5);
     }
   });
 
@@ -34,14 +32,12 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
 
-    const data: EventData<AddPurchaseOrderItemData> = {
-      principalId: faker.datatype.uuid(),
+    const data: AddPurchaseOrderItemCommandData = {
       customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
       productAmount: faker.datatype.float(),
-      timestamp: new Date().toISOString(),
     };
 
     await addPurchaseOrderItemCommand.send(data);
@@ -57,14 +53,12 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
 
-    const data: EventData<AddPurchaseOrderItemData> = {
-      principalId: faker.datatype.uuid(),
+    const data: AddPurchaseOrderItemCommandData = {
       customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
       productAmount: faker.datatype.float(),
-      timestamp: new Date().toISOString(),
     };
 
     const result = await addPurchaseOrderItemCommand.send(data);
@@ -79,14 +73,12 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
 
-    const data: EventData<AddPurchaseOrderItemData> = {
-      principalId: faker.datatype.uuid(),
+    const data: AddPurchaseOrderItemCommandData = {
       customerId: faker.datatype.uuid(),
       productId: faker.datatype.uuid(),
       productName: faker.commerce.product(),
       quantity: 1,
       productAmount: faker.datatype.float(),
-      timestamp: new Date().toISOString(),
     };
 
     const result = await addPurchaseOrderItemCommand.send(data);

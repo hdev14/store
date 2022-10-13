@@ -3,8 +3,8 @@ import { IProductOperations } from '@catalog/domain/IProductRepository';
 import { LowStockProductData } from '@catalog/domain/LowStockProductEvent';
 import Product from '@catalog/domain/Product';
 import StockService from '@catalog/domain/StockService';
-import { EventData } from '@shared/@types/events';
 import Event from '@shared/abstractions/Event';
+import { EventData } from '@shared/abstractions/IEventHandler';
 
 const fakeProduct: any = {
   stockQuantity: 10,
@@ -17,7 +17,7 @@ const fakeProduct: any = {
   hasStockFor: jest.fn(() => true),
 };
 
-class LowStockProductEventStub extends Event<void, LowStockProductData> {
+class LowStockProductEventStub extends Event<LowStockProductData> {
   constructor() {
     super({} as any);
   }

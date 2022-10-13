@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
+import { RemovePurchaseOrderItemCommandData } from '@sales/app/commands/RemovePurchaseOrderItemCommand';
 import RemovePurchaseOrderItemCommandHandler from '@sales/app/commands/RemovePurchaseOrderItemCommandHandler';
-import { EventData } from '@shared/@types/events';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
@@ -11,15 +11,14 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
 
     const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
 
-    const data: EventData = {
-      principalId: faker.datatype.uuid(),
-      timestamp: new Date().toISOString(),
+    const data: RemovePurchaseOrderItemCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
     };
 
     await handler.handle(data);
 
     expect(deletePurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
-    expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(data.principalId);
+    expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(data.purchaseOrderItemId);
   });
 
   it('returns TRUE after remove purchase order item', async () => {
@@ -29,9 +28,8 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
 
     const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
 
-    const data: EventData = {
-      principalId: faker.datatype.uuid(),
-      timestamp: new Date().toISOString(),
+    const data: RemovePurchaseOrderItemCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
     };
 
     const result = await handler.handle(data);
@@ -46,9 +44,8 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
 
     const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
 
-    const data: EventData = {
-      principalId: faker.datatype.uuid(),
-      timestamp: new Date().toISOString(),
+    const data: RemovePurchaseOrderItemCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
     };
 
     const result = await handler.handle(data);

@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-import RemovePurchaseOrderItemCommand from '@sales/app/commands/RemovePurchaseOrderItemCommand';
-import { EventData } from '@shared/@types/events';
+import RemovePurchaseOrderItemCommand, { RemovePurchaseOrderItemData } from '@sales/app/commands/RemovePurchaseOrderItemCommand';
 import ValidationError from '@shared/errors/ValidationError';
 import mediatorStub from '../../stubs/MediatorStub';
 
@@ -10,9 +9,8 @@ describe("RemovePurchaseOrderItemCommand's unit tests", () => {
 
     const command = new RemovePurchaseOrderItemCommand(mediatorStub);
 
-    const data: EventData = {
-      principalId: 'wrong',
-      timestamp: new Date().toISOString(),
+    const data: RemovePurchaseOrderItemData = {
+      purchaseOrderItemId: 'wrong',
     };
 
     try {
@@ -30,9 +28,8 @@ describe("RemovePurchaseOrderItemCommand's unit tests", () => {
 
     const command = new RemovePurchaseOrderItemCommand(mediatorStub);
 
-    const data: EventData = {
-      principalId: faker.datatype.uuid(),
-      timestamp: new Date().toISOString(),
+    const data: RemovePurchaseOrderItemData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
     };
 
     await command.send(data);

@@ -1,6 +1,6 @@
-import { EventData } from '@shared/@types/events';
 import { EventConstructor } from '@shared/abstractions/Event';
-import EventMediator from '@shared/abstractions/EventMediator';
+import { EventData } from '@shared/abstractions/IEventHandler';
+import Mediator from '@shared/abstractions/Mediator';
 import EventPublisher from '@shared/EventPublisher';
 
 export class PublisherStup extends EventPublisher {
@@ -13,4 +13,4 @@ export class PublisherStup extends EventPublisher {
   }
 }
 
-export default new PublisherStup({} as EventMediator);
+export default new PublisherStup({} as Mediator);

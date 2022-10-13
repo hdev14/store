@@ -3,7 +3,6 @@ import { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand
 import ApplyVoucherCommandHandler from '@sales/app/commands/ApplyVoucherCommandHandler';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
-import { EventData } from '@shared/@types/events';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("ApplyVoucherCommandHandler's unit tests", () => {
@@ -14,11 +13,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: EventData<ApplyVoucherCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: ApplyVoucherCommandData = {
       customerId: faker.datatype.uuid(),
       voucherCode: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     await handler.handle(data);
@@ -35,11 +32,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: EventData<ApplyVoucherCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: ApplyVoucherCommandData = {
       customerId: faker.datatype.uuid(),
       voucherCode: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const result = await handler.handle(data);
@@ -54,11 +49,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: EventData<ApplyVoucherCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: ApplyVoucherCommandData = {
       customerId: faker.datatype.uuid(),
       voucherCode: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     await handler.handle(data);
@@ -74,11 +67,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: EventData<ApplyVoucherCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: ApplyVoucherCommandData = {
       customerId: faker.datatype.uuid(),
       voucherCode: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const result = await handler.handle(data);
@@ -104,11 +95,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: EventData<ApplyVoucherCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: ApplyVoucherCommandData = {
       customerId: faker.datatype.uuid(),
       voucherCode: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const result = await handler.handle(data);
@@ -137,11 +126,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: EventData<ApplyVoucherCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: ApplyVoucherCommandData = {
       customerId: faker.datatype.uuid(),
       voucherCode: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const result = await handler.handle(data);
@@ -176,11 +163,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: EventData<ApplyVoucherCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: ApplyVoucherCommandData = {
       customerId: faker.datatype.uuid(),
       voucherCode: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     await handler.handle(data);
@@ -196,11 +181,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: EventData<ApplyVoucherCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: ApplyVoucherCommandData = {
       customerId: faker.datatype.uuid(),
       voucherCode: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     const result = await handler.handle(data);
@@ -242,11 +225,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: EventData<ApplyVoucherCommandData> = {
-      principalId: faker.datatype.uuid(),
+    const data: ApplyVoucherCommandData = {
       customerId: faker.datatype.uuid(),
       voucherCode: parseInt(faker.datatype.number().toString(), 10),
-      timestamp: new Date().toISOString(),
     };
 
     await handler.handle(data);
