@@ -9,4 +9,4 @@ export type AddDraftPurchaseOrderEventData = {
 }
 
 // eslint-disable-next-line max-len
-export default class AddDraftPurchaseOrderEvent extends Event<void, AddDraftPurchaseOrderEventData> {}
+export default class AddDraftPurchaseOrderEvent extends Event<AddDraftPurchaseOrderEventData> {}

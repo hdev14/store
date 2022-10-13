@@ -1,11 +1,12 @@
 import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import { EventData, IEventHandler } from '@shared/@types/events';
+import IEventHandler, { EventData } from '@shared/abstractions/IEventHandler';
 import EventHandlerError from '@shared/errors/EventHandlerError';
 import { AddPurchaseOrderItemEventData } from './AddPurchaseOrderItemEvent';
 
-export default class AddPurchaseOrderItemEventHandler implements IEventHandler<void> {
+// eslint-disable-next-line max-len
+export default class AddPurchaseOrderItemEventHandler implements IEventHandler<AddPurchaseOrderItemEventData> {
   private readonly repository: IPurchaseOrderRepositoryCommands;
 
   constructor(repository: IPurchaseOrderRepositoryCommands) {
