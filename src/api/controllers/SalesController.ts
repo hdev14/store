@@ -1,4 +1,4 @@
-import { AddPurchaseOrderItemData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
+import { AddPurchaseOrderItemCommandData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
 import Command from '@shared/abstractions/Command';
 import IGenerateID from '@shared/utils/IGenerateID';
 import { NextFunction, Request, Response } from 'express';
@@ -6,9 +6,10 @@ import ValidationError from '@shared/errors/ValidationError';
 import { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand';
 import { UpdatePurchaseOrderItemQuantityCommandData } from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
 import Query from '@shared/abstractions/Query';
+import { RemovePurchaseOrderItemCommandData } from '@sales/app/commands/RemovePurchaseOrderItemCommand';
 
 export default class SalesController {
-  private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemData>;
+  private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>;
 
   private readonly generateID: IGenerateID;
 
@@ -24,8 +25,8 @@ export default class SalesController {
   private readonly getPurchaseOrderItemQuery: any;
 
   constructor(
-    addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemData>,
-    removePurchaseOrderItemCommand: Command<boolean, {}>,
+    addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>,
+    removePurchaseOrderItemCommand: Command<boolean, RemovePurchaseOrderItemCommandData>,
     applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>,
     // eslint-disable-next-line max-len
     updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>,
@@ -53,13 +54,11 @@ export default class SalesController {
       } = request.body;
 
       const result = await this.addPurchaseOrderItemCommand.send({
-        principalId: this.generateID(),
         customerId,
         productId,
         productName,
         productAmount,
         quantity,
-        timestamp: new Date().toISOString(),
       });
 
       if (result) {
@@ -83,8 +82,7 @@ export default class SalesController {
   public async removePurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
       const result = await this.removePurchaseOrderItemCommand.send({
-        principalId: request.params.id,
-        timestamp: new Date().toISOString(),
+        purchaseOrderItemId: request.params.id,
       });
 
       if (!result) {
@@ -105,14 +103,11 @@ export default class SalesController {
 
   public async applyVoucher(request: Request, response: Response, next: NextFunction) {
     try {
-      const purchaseOrderId = request.params.id;
       const { customerId, voucherCode } = request.body;
 
       const result = await this.applyVoucherCommand.send({
-        principalId: purchaseOrderId,
         customerId,
         voucherCode,
-        timestamp: new Date().toISOString(),
       });
 
       if (!result) {
