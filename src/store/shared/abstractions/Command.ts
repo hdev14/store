@@ -1,7 +1,13 @@
-/* eslint-disable no-unused-vars */
-import { EventData } from '@shared/@types/events';
-import Event from './Event';
+import Mediator from './Mediator';
 
-export default abstract class Command<R, T> extends Event<R, T> {
-  public abstract validate(data: EventData<T>): boolean | void;
+export default abstract class Event<R = void, T = {}> {
+  protected readonly mediator: Mediator;
+
+  constructor(mediator: Mediator) {
+    this.mediator = mediator;
+  }
+
+  public async send(data: T): Promise<void | R> {
+    return this.mediator.send<R>(this.constructor.name, data);
+  }
 }
