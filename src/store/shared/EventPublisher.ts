@@ -1,13 +1,13 @@
-import { EventData } from './@types/events';
 import { EventConstructor } from './abstractions/Event';
-import EventMediator from './abstractions/EventMediator';
+import { EventData } from './abstractions/IEventHandler';
+import Mediator from './abstractions/Mediator';
 
 export default class EventPublisher {
-  private readonly mediator: EventMediator;
+  private readonly mediator: Mediator;
 
   private events: Array<{ ctor: EventConstructor, data: EventData }>;
 
-  constructor(mediator: EventMediator) {
+  constructor(mediator: Mediator) {
     this.mediator = mediator;
     this.events = [];
   }
