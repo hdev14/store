@@ -6,11 +6,11 @@ import { LowStockProductData } from './LowStockProductEvent';
 export default class StockService implements IStockService {
   private readonly productRepository: IProductOperations;
 
-  private readonly lowStockProductEvent: Event<void, LowStockProductData>;
+  private readonly lowStockProductEvent: Event<LowStockProductData>;
 
   constructor(
     productRepository: IProductOperations,
-    lowStockProductEvent: Event<void, LowStockProductData>,
+    lowStockProductEvent: Event<LowStockProductData>,
   ) {
     this.productRepository = productRepository;
     this.lowStockProductEvent = lowStockProductEvent;

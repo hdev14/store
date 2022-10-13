@@ -1,8 +1,9 @@
 import { LowStockProductData } from '@catalog/domain/LowStockProductEvent';
-import { EventData, IEventHandler } from '@shared/@types/events';
+import IEventHandler, { EventData } from '@shared/abstractions/IEventHandler';
 import IEmailService from './IEmailService';
 
-export default class LowStockProductEventHandler implements IEventHandler {
+// eslint-disable-next-line max-len
+export default class LowStockProductEventHandler implements IEventHandler<LowStockProductData> {
   private readonly emailService: IEmailService;
 
   private static defaultEmail = 'default@email.com';

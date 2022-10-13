@@ -5,4 +5,4 @@ export type LowStockProductData = {
   productQuantity: number;
 }
 
-export default class LowStockProductEvent extends Event<void, LowStockProductData> {}
+export default class LowStockProductEvent extends Event<LowStockProductData> {}
