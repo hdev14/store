@@ -1,17 +1,21 @@
-import { EventData } from '@shared/@types/events';
 import Command from '@shared/abstractions/Command';
 import Validator from '@shared/utils/Validator';
 
-export default class RemovePurchaseOrderItemCommand extends Command<boolean, {}> {
-  public send(data: EventData): Promise<boolean | void> {
+export type RemovePurchaseOrderItemCommandData = {
+  purchaseOrderItemId: string;
+}
+
+// eslint-disable-next-line max-len
+export default class RemovePurchaseOrderItemCommand extends Command<boolean, RemovePurchaseOrderItemCommandData> {
+  public send(data: RemovePurchaseOrderItemCommandData): Promise<boolean | void> {
     this.validate(data);
 
     return this.mediator.send(this.constructor.name, data);
   }
 
-  public validate(data: EventData): void {
+  public validate(data: RemovePurchaseOrderItemCommandData): void {
     Validator.setData(data)
-      .setRule('principalId', ['required', 'string', 'uuid'])
+      .setRule('purchaseOrderItemId', ['required', 'string', 'uuid'])
       .validate();
   }
 }

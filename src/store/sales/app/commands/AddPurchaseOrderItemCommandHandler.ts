@@ -2,16 +2,17 @@ import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import { EventData, IEventHandler } from '@shared/@types/events';
 import EventPublisher from '@shared/EventPublisher';
 import IGenerateID from '@shared/utils/IGenerateID';
+import IHandler from '@shared/abstractions/IHandler';
 import AddDraftPurchaseOrderEvent, { AddDraftPurchaseOrderEventData } from '../events/AddDraftPurchaseOrderEvent';
-import { AddPurchaseOrderItemData } from './AddPurchaseOrderItemCommand';
+import { AddPurchaseOrderItemCommandData } from './AddPurchaseOrderItemCommand';
 import AddPurchaseOrderItemEvent, { AddPurchaseOrderItemEventData } from '../events/AddPurchaseOrderItemEvent';
 import UpdateDraftPurchaseOrderEvent, { UpdateDraftPurchaseOrderEventData } from '../events/UpdateDraftPurchaseOrderEvent';
 import UpdatePurchaseOrderItemEvent, { UpdatePurchaserOrderItemEventData } from '../events/UpdatePurchaseOrderItemEvent';
 
-export default class AddPurchaseOrderItemCommandHandler implements IEventHandler<boolean> {
+// eslint-disable-next-line max-len
+export default class AddPurchaseOrderItemCommandHandler implements IHandler<boolean, AddPurchaseOrderItemCommandData> {
   private readonly repository: IPurchaseOrderRepository;
 
   private readonly generateID: IGenerateID;
@@ -28,12 +29,12 @@ export default class AddPurchaseOrderItemCommandHandler implements IEventHandler
     this.eventPublisher = eventPublisher;
   }
 
-  public async handle(data: EventData<AddPurchaseOrderItemData>): Promise<boolean> {
+  public async handle(data: AddPurchaseOrderItemCommandData): Promise<boolean> {
     let hasExpection = false;
 
     try {
       const purchaseOrderItem = new PurchaseOrderItem({
-        id: data.principalId,
+        id: this.generateID(),
         product: new Product(
           data.productId,
           data.productName,

@@ -1,11 +1,11 @@
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
-import { EventData, IEventHandler } from '@shared/@types/events';
+import IHandler from '@shared/abstractions/IHandler';
 import EventPublisher from '@shared/EventPublisher';
 import UpdatePurchaseOrderItemEvent, { UpdatePurchaserOrderItemEventData } from '../events/UpdatePurchaseOrderItemEvent';
 import { UpdatePurchaseOrderItemQuantityCommandData } from './UpdatePurchaseOrderItemQuantityCommand';
 
 // eslint-disable-next-line max-len
-export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IEventHandler<boolean> {
+export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IHandler<boolean, UpdatePurchaseOrderItemQuantityCommandData> {
   private readonly repository: IPurchaseOrderRepository;
 
   private readonly publisher: EventPublisher;
@@ -15,11 +15,10 @@ export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IE
     this.publisher = publisher;
   }
 
-  public async handle(
-    data: EventData<UpdatePurchaseOrderItemQuantityCommandData>,
-  ): Promise<boolean> {
+  public async handle(data: UpdatePurchaseOrderItemQuantityCommandData): Promise<boolean> {
     try {
-      const purchaseOrderItem = await this.repository.getPurchaseOrderItemById(data.principalId);
+      const purchaseOrderItem = await this.repository
+        .getPurchaseOrderItemById(data.purchaseOrderItemId);
 
       if (!purchaseOrderItem) {
         return false;

@@ -1,8 +1,7 @@
-import { EventData } from '@shared/@types/events';
 import Command from '@shared/abstractions/Command';
 import Validator from '@shared/utils/Validator';
 
-export type AddPurchaseOrderItemData = {
+export type AddPurchaseOrderItemCommandData = {
   customerId: string;
   productId: string;
   productName: string;
@@ -11,16 +10,15 @@ export type AddPurchaseOrderItemData = {
 }
 
 // eslint-disable-next-line max-len
-export default class AddPurchaseOrderItemCommand extends Command<boolean, AddPurchaseOrderItemData> {
-  public async send(data: EventData<AddPurchaseOrderItemData>): Promise<boolean | void> {
+export default class AddPurchaseOrderItemCommand extends Command<boolean, AddPurchaseOrderItemCommandData> {
+  public async send(data: AddPurchaseOrderItemCommandData): Promise<boolean | void> {
     this.validate(data);
 
     return this.mediator.send<boolean>(this.constructor.name, data);
   }
 
-  public validate(data: EventData<AddPurchaseOrderItemData>): void {
+  public validate(data: AddPurchaseOrderItemCommandData): void {
     Validator.setData(data)
-      .setRule('principalId', ['required', 'string', 'uuid'])
       .setRule('customerId', ['required', 'string', 'uuid'])
       .setRule('productId', ['required', 'string', 'uuid'])
       .setRule('productName', ['required', 'string'])

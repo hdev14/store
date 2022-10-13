@@ -1,24 +1,22 @@
-import { EventData } from '@shared/@types/events';
 import Command from '@shared/abstractions/Command';
 import Validator from '@shared/utils/Validator';
 
 export type UpdatePurchaseOrderItemQuantityCommandData = {
+  purchaseOrderItemId: string;
   quantity: number;
 }
 
 // eslint-disable-next-line max-len
 export default class UpdatePurchaseOrderItemQuantityCommand extends Command<boolean, UpdatePurchaseOrderItemQuantityCommandData> {
-  public send(
-    data: EventData<UpdatePurchaseOrderItemQuantityCommandData>,
-  ): Promise<boolean | void> {
+  public send(data: UpdatePurchaseOrderItemQuantityCommandData): Promise<boolean | void> {
     this.validate(data);
 
     return this.mediator.send(this.constructor.name, data);
   }
 
-  public validate(data: EventData<UpdatePurchaseOrderItemQuantityCommandData>): void {
+  public validate(data: UpdatePurchaseOrderItemQuantityCommandData): void {
     Validator.setData(data)
-      .setRule('principalId', ['string', 'required', 'uuid'])
+      .setRule('purchaseOrderItemId', ['string', 'required', 'uuid'])
       .setRule('quantity', ['number', 'integer'])
       .validate();
   }

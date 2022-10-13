@@ -1,16 +1,18 @@
 import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
-import { EventData, IEventHandler } from '@shared/@types/events';
+import IHandler from '@shared/abstractions/IHandler';
+import { RemovePurchaseOrderItemCommandData } from './RemovePurchaseOrderItemCommand';
 
-export default class RemovePurchaseOrderItemCommandHandler implements IEventHandler<boolean> {
+// eslint-disable-next-line max-len
+export default class RemovePurchaseOrderItemCommandHandler implements IHandler<boolean, RemovePurchaseOrderItemCommandData> {
   private readonly repository: IPurchaseOrderRepositoryCommands;
 
   constructor(repository: IPurchaseOrderRepositoryCommands) {
     this.repository = repository;
   }
 
-  public async handle(data: EventData): Promise<boolean> {
+  public async handle(data: RemovePurchaseOrderItemCommandData): Promise<boolean> {
     try {
-      const isDeleted = await this.repository.deletePurchaseOrderItem(data.principalId);
+      const isDeleted = await this.repository.deletePurchaseOrderItem(data.purchaseOrderItemId);
       // TODO: add event
       return isDeleted;
     } catch (e: any) {

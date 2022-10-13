@@ -1,15 +1,16 @@
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
-import { EventData, IEventHandler } from '@shared/@types/events';
+import IHandler from '@shared/abstractions/IHandler';
 import { ApplyVoucherCommandData } from './ApplyVoucherCommand';
 
-export default class ApplyVoucherCommandHandler implements IEventHandler<boolean> {
+// eslint-disable-next-line max-len
+export default class ApplyVoucherCommandHandler implements IHandler<boolean, ApplyVoucherCommandData> {
   private readonly repository: IPurchaseOrderRepository;
 
   constructor(repository: IPurchaseOrderRepository) {
     this.repository = repository;
   }
 
-  public async handle(data: EventData<ApplyVoucherCommandData>): Promise<boolean> {
+  public async handle(data: ApplyVoucherCommandData): Promise<boolean> {
     try {
       const draftPurchaseOrder = await this.repository
         .getDraftPurchaseOrderByCustomerId(data.customerId);
