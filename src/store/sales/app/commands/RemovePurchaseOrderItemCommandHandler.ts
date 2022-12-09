@@ -30,6 +30,8 @@ export default class RemovePurchaseOrderItemCommandHandler implements IHandler<b
     } catch (e: any) {
       console.error(e.stack);
       return false;
+    } finally {
+      await this.publisher.sendEvents();
     }
   }
 }
