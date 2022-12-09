@@ -1,4 +1,4 @@
-import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
+import Voucher from '@sales/domain/Voucher';
 import Query from '@shared/abstractions/Query';
 
 export type GetVoucherParams = {
@@ -6,4 +6,4 @@ export type GetVoucherParams = {
 }
 
 // eslint-disable-next-line max-len
-export default class GetVoucherQuery extends Query<PurchaseOrderItem, GetVoucherParams> {}
+export default class GetVoucherQuery extends Query<Voucher, GetVoucherParams> {}
