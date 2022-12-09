@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { RemovePurchaseOrderItemCommandData } from '@sales/app/commands/RemovePurchaseOrderItemCommand';
 import RemovePurchaseOrderItemCommandHandler from '@sales/app/commands/RemovePurchaseOrderItemCommandHandler';
+import RemovePurchaseOrderItemEvent from '@sales/app/events/RemovePurchaseOrderItemEvent';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
+import publisherStub from '../../stubs/EventPublisherStub';
 
 describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
   it('calls repository.deletePurchaseOrderItem with correct id', async () => {
@@ -9,7 +11,7 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
 
     const deletePurchaseOrderItemSpy = jest.spyOn(repositoryStub, 'deletePurchaseOrderItem');
 
-    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
+    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub, publisherStub);
 
     const data: RemovePurchaseOrderItemCommandData = {
       purchaseOrderItemId: faker.datatype.uuid(),
@@ -26,7 +28,7 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
 
     repositoryStub.deletePurchaseOrderItem = jest.fn().mockResolvedValueOnce(true);
 
-    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
+    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub, publisherStub);
 
     const data: RemovePurchaseOrderItemCommandData = {
       purchaseOrderItemId: faker.datatype.uuid(),
@@ -42,7 +44,7 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
 
     repositoryStub.deletePurchaseOrderItem = jest.fn().mockRejectedValueOnce(new Error('test'));
 
-    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
+    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub, publisherStub);
 
     const data: RemovePurchaseOrderItemCommandData = {
       purchaseOrderItemId: faker.datatype.uuid(),
@@ -51,5 +53,30 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
     const result = await handler.handle(data);
 
     expect(result).toBe(false);
+  });
+
+  it('calls publisher.addEvent with correct params', async () => {
+    expect.assertions(3);
+
+    repositoryStub.deletePurchaseOrderItem = jest.fn().mockResolvedValueOnce(true);
+
+    const addEventSpy = jest.spyOn(publisherStub, 'addEvent');
+
+    const handler = new RemovePurchaseOrderItemCommandHandler(
+      repositoryStub,
+      publisherStub,
+    );
+
+    const data: RemovePurchaseOrderItemCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
+    };
+
+    await handler.handle(data);
+
+    expect(addEventSpy).toHaveBeenCalledTimes(1);
+    expect(addEventSpy.mock.calls[0][0]).toEqual(RemovePurchaseOrderItemEvent);
+
+    const secondParam: any = addEventSpy.mock.calls[0][1];
+    expect(secondParam.principalId).toEqual(data.purchaseOrderItemId);
   });
 });
