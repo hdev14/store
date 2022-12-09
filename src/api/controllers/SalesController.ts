@@ -7,6 +7,13 @@ import { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand
 import { UpdatePurchaseOrderItemQuantityCommandData } from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
 import Query from '@shared/abstractions/Query';
 import { RemovePurchaseOrderItemCommandData } from '@sales/app/commands/RemovePurchaseOrderItemCommand';
+import PurchaseOrder from '@sales/domain/PurchaseOrder';
+import { GetPurchaseOrderParams } from '@sales/app/queries/GetPurchaseOrderQuery';
+import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
+import { GetPurchaseOrderItemParams } from '@sales/app/queries/GetPurchaseOrderItemQuery';
+import { GetPurchaseOrdersParams } from '@sales/app/queries/GetPurchaseOrdersQuery';
+import Voucher from '@sales/domain/Voucher';
+import { GetVoucherParams } from '@sales/app/queries/GetVoucherQuery';
 
 export default class SalesController {
   private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>;
@@ -20,9 +27,13 @@ export default class SalesController {
   // eslint-disable-next-line max-len
   private readonly updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>;
 
-  private readonly getPurchaseOrderQuery: Query<{}>;
+  private readonly getPurchaseOrderQuery: Query<PurchaseOrder, GetPurchaseOrderParams>;
 
-  private readonly getPurchaseOrderItemQuery: any;
+  private readonly getPurchaseOrdersQuery: Query<PurchaseOrder, GetPurchaseOrdersParams>;
+
+  private readonly getPurchaseOrderItemQuery: Query<PurchaseOrderItem, GetPurchaseOrderItemParams>;
+
+  private readonly getVoucherQuery: Query<Voucher, GetVoucherParams>;
 
   constructor(
     addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>,
@@ -30,8 +41,10 @@ export default class SalesController {
     applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>,
     // eslint-disable-next-line max-len
     updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>,
-    getPurchaseOrderQuery: Query<{}>,
-    getPurchaseOrderItemQuery: Query<{}>,
+    getPurchaseOrderQuery: Query<PurchaseOrder, GetPurchaseOrderParams>,
+    getPurchaseOrdersQuery: Query<PurchaseOrder, GetPurchaseOrdersParams>,
+    getPurchaseOrderItemQuery: Query<PurchaseOrderItem, GetPurchaseOrderItemParams>,
+    getVoucherQuery: Query<Voucher, GetVoucherParams>,
     generateID: IGenerateID,
   ) {
     this.addPurchaseOrderItemCommand = addPurchaseOrderItemCommand;
@@ -39,7 +52,9 @@ export default class SalesController {
     this.applyVoucherCommand = applyVoucherCommand;
     this.updatePurchaseOrderItemQuantityCommand = updatePurchaseOrderItemQuantityCommand;
     this.getPurchaseOrderQuery = getPurchaseOrderQuery;
+    this.getPurchaseOrdersQuery = getPurchaseOrdersQuery;
     this.getPurchaseOrderItemQuery = getPurchaseOrderItemQuery;
+    this.getVoucherQuery = getVoucherQuery;
     this.generateID = generateID;
   }
 

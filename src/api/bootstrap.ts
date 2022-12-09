@@ -23,7 +23,13 @@ import UpdateDraftPurchaseOrderEventHandler from '@sales/app/events/UpdateDraftP
 import UpdatePurchaseOrderItemEvent from '@sales/app/events/UpdatePurchaseOrderItemEvent';
 import UpdatePurchaseOrderItemEventHandler from '@sales/app/events/UpdatePurchaseOrderItemEventHandler';
 import GetPurchaseOrderItemQuery from '@sales/app/queries/GetPurchaseOrderItemQuery';
+import GetPurchaseOrderItemQueryHandler from '@sales/app/queries/GetPurchaseOrderItemQueryHandler';
 import GetPurchaseOrderQuery from '@sales/app/queries/GetPurchaseOrderQuery';
+import GetPurchaseOrderQueryHandler from '@sales/app/queries/GetPurchaseOrderQueryHandler';
+import GetPurchaseOrdersQuery from '@sales/app/queries/GetPurchaseOrdersQuery';
+import GetPurchaseOrdersQueryHandler from '@sales/app/queries/GetPurchaseOrdersQueryHandler';
+import GetVoucherQuery from '@sales/app/queries/GetVoucherQuery';
+import GetVoucherQueryHandler from '@sales/app/queries/GetVoucherQueryHandler';
 import MongoPurchaseOrderRepository from '@sales/infra/persistence/MongoPurchaseOrderRepository';
 import PrismaPurchaseOrderRepository from '@sales/infra/persistence/PrismaPurchaseOrderRepository';
 import EventPublisher from '@shared/EventPublisher';
@@ -71,7 +77,7 @@ const updatePurchaseOrderItemQuantityCommand = new UpdatePurchaseOrderItemQuanti
 
 // Command Handlers
 const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository, generateUUID, eventPublisher);
-const removePurchaseOrderItemCommandHandler = new RemovePurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository);
+const removePurchaseOrderItemCommandHandler = new RemovePurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository, eventPublisher);
 const applyVoucherCommandHandler = new ApplyVoucherCommandHandler(prismaPurchaseOrderRepository);
 const updatePurchaseOrderItemQuantityCommandHandler = new UpdatePurchaseOrderItemQuantityCommandHandler(prismaPurchaseOrderRepository, eventPublisher);
 
@@ -82,7 +88,20 @@ storeMediator.addEvent(UpdatePurchaseOrderItemQuantityCommand.name, updatePurcha
 
 // Queries
 const getPurchaseOrderQuery = new GetPurchaseOrderQuery(storeMediator);
+const getPurchaseOrdersQuery = new GetPurchaseOrdersQuery(storeMediator);
 const getPurchaseOrderItemQuery = new GetPurchaseOrderItemQuery(storeMediator);
+const getVoucherQuery = new GetVoucherQuery(storeMediator);
+
+// Query Handlers
+const getPurchaseOrderQueryHandler = new GetPurchaseOrderQueryHandler(mongoPurchaseOrderRepository);
+const getPurchaseOrdersQueryHandler = new GetPurchaseOrdersQueryHandler(mongoPurchaseOrderRepository);
+const getPurchaseOrderItemQueryHandler = new GetPurchaseOrderItemQueryHandler(mongoPurchaseOrderRepository);
+const getVoucherQueryHandler = new GetVoucherQueryHandler(mongoPurchaseOrderRepository);
+
+storeMediator.addEvent(GetPurchaseOrderQuery.name, getPurchaseOrderQueryHandler);
+storeMediator.addEvent(GetPurchaseOrdersQuery.name, getPurchaseOrdersQueryHandler);
+storeMediator.addEvent(GetPurchaseOrderItemQuery.name, getPurchaseOrderItemQueryHandler);
+storeMediator.addEvent(GetVoucherQuery.name, getVoucherQueryHandler);
 
 // Controllers
 const catalogController = new CatalogController(productService, categoryService);
@@ -92,7 +111,9 @@ const salesController = new SalesController(
   applyVoucherCommand,
   updatePurchaseOrderItemQuantityCommand,
   getPurchaseOrderQuery,
+  getPurchaseOrdersQuery,
   getPurchaseOrderItemQuery,
+  getVoucherQuery,
   generateUUID,
 );
 
