@@ -43,8 +43,8 @@ model User {
 model PurchaseOrder {
   id             String              @id
   code           Int
-  customerId       String
-  customer         User                @relation(fields: [customerId], references: [id])
+  customerId     String
+  customer       User                @relation(fields: [customerId], references: [id])
   voucherId      String?
   voucher        Voucher?            @relation(fields: [voucherId], references: [id])
   discountAmount Float
