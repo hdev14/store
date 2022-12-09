@@ -21,7 +21,7 @@ describe("ApplyVoucherCommand's unit tests", () => {
       await command.send(data);
     } catch (e: any) {
       expect(e).toBeInstanceOf(ValidationError);
-      expect(e.errors).toHaveLength(3);
+      expect(e.errors).toHaveLength(2);
     }
   });
 

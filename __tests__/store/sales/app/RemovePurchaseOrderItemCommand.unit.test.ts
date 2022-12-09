@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import RemovePurchaseOrderItemCommand, { RemovePurchaseOrderItemData } from '@sales/app/commands/RemovePurchaseOrderItemCommand';
+import RemovePurchaseOrderItemCommand, { RemovePurchaseOrderItemCommandData } from '@sales/app/commands/RemovePurchaseOrderItemCommand';
 import ValidationError from '@shared/errors/ValidationError';
 import mediatorStub from '../../stubs/MediatorStub';
 
@@ -9,7 +9,7 @@ describe("RemovePurchaseOrderItemCommand's unit tests", () => {
 
     const command = new RemovePurchaseOrderItemCommand(mediatorStub);
 
-    const data: RemovePurchaseOrderItemData = {
+    const data: RemovePurchaseOrderItemCommandData = {
       purchaseOrderItemId: 'wrong',
     };
 
@@ -28,7 +28,7 @@ describe("RemovePurchaseOrderItemCommand's unit tests", () => {
 
     const command = new RemovePurchaseOrderItemCommand(mediatorStub);
 
-    const data: RemovePurchaseOrderItemData = {
+    const data: RemovePurchaseOrderItemCommandData = {
       purchaseOrderItemId: faker.datatype.uuid(),
     };
 
