@@ -1,6 +1,6 @@
 import Mediator from './Mediator';
 
-export default abstract class Event<R = void, T = {}> {
+export default abstract class Command<R = void, T = {}> {
   protected readonly mediator: Mediator;
 
   constructor(mediator: Mediator) {
