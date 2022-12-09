@@ -79,4 +79,23 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
     const secondParam: any = addEventSpy.mock.calls[0][1];
     expect(secondParam.principalId).toEqual(data.purchaseOrderItemId);
   });
+
+  it('calls publisher.sendEvents after the logic', async () => {
+    expect.assertions(1);
+
+    const sendEventsSpy = jest.spyOn(publisherStub, 'sendEvents');
+
+    const handler = new RemovePurchaseOrderItemCommandHandler(
+      repositoryStub,
+      publisherStub,
+    );
+
+    const data: RemovePurchaseOrderItemCommandData = {
+      purchaseOrderItemId: faker.datatype.uuid(),
+    };
+
+    await handler.handle(data);
+
+    expect(sendEventsSpy).toHaveBeenCalledTimes(1);
+  });
 });
