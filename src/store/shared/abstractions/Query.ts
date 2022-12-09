@@ -11,7 +11,7 @@ export default abstract class Query<D, P = {}> {
     this.mediator = mediator;
   }
 
-  public async get(params: P): Promise<Results<D>> {
+  public async execute(params: P): Promise<Results<D>> {
     const result = await this.mediator.send<Results<D>>(this.constructor.name, params);
 
     return result || { results: [] };
