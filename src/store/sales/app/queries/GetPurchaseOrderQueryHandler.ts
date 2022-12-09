@@ -14,8 +14,12 @@ export default class GetPurchaseOrderQueryHandler implements IHandler<Results<Pu
   public async handle(params: GetPurchaseOrderParams): Promise<Results<PurchaseOrder>> {
     const purchaseOrder = await this.repository.getPurchaseOrderById(params.purchaseOrderId);
 
-    return {
-      results: [],
-    };
+    const results: PurchaseOrder[] = [];
+
+    if (purchaseOrder) {
+      results.push(purchaseOrder);
+    }
+
+    return { results };
   }
 }
