@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
 import { GetPurchaseOrderParams } from '@sales/app/queries/GetPurchaseOrderQuery';
 import GetPurchaseOrderQueryHandler from '@sales/app/queries/GetPurchaseOrderQueryHandler';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
@@ -43,5 +44,24 @@ describe("GetPurchaseOrderQueryHandler's unit tests", () => {
     const result = await handler.handle(params);
 
     expect(result.results).toHaveLength(1);
+  });
+
+  it("throws a PurchaseOrderNotFoundError if purchase order doesn't exist", async () => {
+    expect.assertions(2);
+
+    jest.spyOn(repositoryStub, 'getPurchaseOrderById').mockResolvedValueOnce(null);
+
+    const handler = new GetPurchaseOrderQueryHandler(repositoryStub);
+
+    const params: GetPurchaseOrderParams = {
+      purchaseOrderId: faker.datatype.uuid(),
+    };
+
+    try {
+      await handler.handle(params);
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(PurchaseOrderNotFoundError);
+      expect(e.message).toBe('Pedido não encontrado.');
+    }
   });
 });
