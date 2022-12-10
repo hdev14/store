@@ -63,7 +63,7 @@ export default class SalesController {
         quantity,
       } = request.body;
 
-      const result = await this.addPurchaseOrderItemCommand.send({
+      const result = await this.addPurchaseOrderItemCommand.execute({
         customerId,
         productId,
         productName,
@@ -91,7 +91,7 @@ export default class SalesController {
 
   public async removePurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
-      const result = await this.removePurchaseOrderItemCommand.send({
+      const result = await this.removePurchaseOrderItemCommand.execute({
         purchaseOrderItemId: request.params.id,
       });
 
@@ -115,7 +115,7 @@ export default class SalesController {
     try {
       const { customerId, voucherCode } = request.body;
 
-      const result = await this.applyVoucherCommand.send({
+      const result = await this.applyVoucherCommand.execute({
         customerId,
         voucherCode,
       });
