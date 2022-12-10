@@ -38,6 +38,8 @@ model User {
   id             String          @id
   name           String
   purchaseOrders PurchaseOrder[]
+  // email String
+  // phoneNumber
 }
 
 model PurchaseOrder {
