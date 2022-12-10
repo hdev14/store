@@ -13,6 +13,7 @@ import { GetPurchaseOrderItemParams } from '@sales/app/queries/GetPurchaseOrderI
 import { GetPurchaseOrdersParams } from '@sales/app/queries/GetPurchaseOrdersQuery';
 import Voucher from '@sales/domain/Voucher';
 import { GetVoucherParams } from '@sales/app/queries/GetVoucherQuery';
+import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
 
 export default class SalesController {
   private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>;
@@ -157,6 +158,10 @@ export default class SalesController {
 
       return response.status(200).json(data.results[0]);
     } catch (e) {
+      if (e instanceof PurchaseOrderNotFoundError) {
+        return response.status(404).json({ message: e.message });
+      }
+
       return next(e);
     }
   }
