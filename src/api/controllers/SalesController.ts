@@ -1,7 +1,6 @@
+import { NextFunction, Request, Response } from 'express';
 import { AddPurchaseOrderItemCommandData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
 import Command from '@shared/abstractions/Command';
-import IGenerateID from '@shared/utils/IGenerateID';
-import { NextFunction, Request, Response } from 'express';
 import ValidationError from '@shared/errors/ValidationError';
 import { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand';
 import { UpdatePurchaseOrderItemQuantityCommandData } from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
@@ -17,8 +16,6 @@ import { GetVoucherParams } from '@sales/app/queries/GetVoucherQuery';
 
 export default class SalesController {
   private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>;
-
-  private readonly generateID: IGenerateID;
 
   private readonly removePurchaseOrderItemCommand: Command<boolean, {}>;
 
@@ -45,7 +42,6 @@ export default class SalesController {
     getPurchaseOrdersQuery: Query<PurchaseOrder, GetPurchaseOrdersParams>,
     getPurchaseOrderItemQuery: Query<PurchaseOrderItem, GetPurchaseOrderItemParams>,
     getVoucherQuery: Query<Voucher, GetVoucherParams>,
-    generateID: IGenerateID,
   ) {
     this.addPurchaseOrderItemCommand = addPurchaseOrderItemCommand;
     this.removePurchaseOrderItemCommand = removePurchaseOrderItemCommand;
@@ -55,7 +51,6 @@ export default class SalesController {
     this.getPurchaseOrdersQuery = getPurchaseOrdersQuery;
     this.getPurchaseOrderItemQuery = getPurchaseOrderItemQuery;
     this.getVoucherQuery = getVoucherQuery;
-    this.generateID = generateID;
   }
 
   public async addPurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
@@ -146,7 +141,7 @@ export default class SalesController {
   // eslint-disable-next-line max-len
   public async updatePurchaseOrderItemQuantity(request: Request, response: Response, next: NextFunction) {
     try {
-      return response.status(200);
+      return response.status(200).json({});
     } catch (e) {
       return next(e);
     }
@@ -154,7 +149,21 @@ export default class SalesController {
 
   public async getPurchaseOrder(request: Request, response: Response, next: NextFunction) {
     try {
-      return response.status(200);
+      const { id } = request.params;
+
+      const data = await this.getPurchaseOrderQuery.execute({
+        purchaseOrderId: id,
+      });
+
+      return response.status(200).json(data.results[0]);
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  public async getPurchaseOrders(request: Request, response: Response, next: NextFunction) {
+    try {
+      return response.status(200).json({});
     } catch (e) {
       return next(e);
     }
@@ -162,7 +171,15 @@ export default class SalesController {
 
   public async getPurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
-      return response.status(200);
+      return response.status(200).json({});
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  public async getVoucher(request: Request, response: Response, next: NextFunction) {
+    try {
+      return response.status(200).json({});
     } catch (e) {
       return next(e);
     }

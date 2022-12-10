@@ -18,6 +18,8 @@ import AddDraftPurchaseOrderEvent from '@sales/app/events/AddDraftPurchaseOrderE
 import AddDraftPurchaseOrderEventHandler from '@sales/app/events/AddDraftPurchaseOrderEventHandler';
 import AddPurchaseOrderItemEvent from '@sales/app/events/AddPurchaseOrderItemEvent';
 import AddPurchaseOrderItemEventHandler from '@sales/app/events/AddPurchaseOrderItemEventHandler';
+import RemovePurchaseOrderItemEvent from '@sales/app/events/RemovePurchaseOrderItemEvent';
+import RemovePurchaseOrderItemEventHandler from '@sales/app/events/RemovePurchaseOrderItemEventHandler';
 import UpdateDraftPurchaseOrderEvent from '@sales/app/events/UpdateDraftPurchaseOrderEvent';
 import UpdateDraftPurchaseOrderEventHandler from '@sales/app/events/UpdateDraftPurchaseOrderEventHandler';
 import UpdatePurchaseOrderItemEvent from '@sales/app/events/UpdatePurchaseOrderItemEvent';
@@ -55,11 +57,13 @@ const lowStockProductEventHandler = new LowStockProductEventHandler(emailService
 // Event Handlers
 const addDraftPurchaseOrderEventHandler = new AddDraftPurchaseOrderEventHandler(mongoPurchaseOrderRepository);
 const addPurchaseOrderItemEventHandler = new AddPurchaseOrderItemEventHandler(mongoPurchaseOrderRepository);
+const removePurchaseOrderItemEventHandler = new RemovePurchaseOrderItemEventHandler(mongoPurchaseOrderRepository);
 const updateDraftPurchaseOrderEventHandler = new UpdateDraftPurchaseOrderEventHandler(mongoPurchaseOrderRepository);
 const updatePurchaseOrderItemEventHandler = new UpdatePurchaseOrderItemEventHandler(mongoPurchaseOrderRepository);
 
 storeMediator.addEvent(LowStockProductEvent.name, lowStockProductEventHandler);
 storeMediator.addEvent(AddDraftPurchaseOrderEvent.name, addDraftPurchaseOrderEventHandler);
+storeMediator.addEvent(RemovePurchaseOrderItemEvent.name, removePurchaseOrderItemEventHandler);
 storeMediator.addEvent(AddPurchaseOrderItemEvent.name, addPurchaseOrderItemEventHandler);
 storeMediator.addEvent(UpdateDraftPurchaseOrderEvent.name, updateDraftPurchaseOrderEventHandler);
 storeMediator.addEvent(UpdatePurchaseOrderItemEvent.name, updatePurchaseOrderItemEventHandler);
@@ -114,7 +118,6 @@ const salesController = new SalesController(
   getPurchaseOrdersQuery,
   getPurchaseOrderItemQuery,
   getVoucherQuery,
-  generateUUID,
 );
 
 export default {
