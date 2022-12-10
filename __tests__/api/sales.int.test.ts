@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import Mongo from '@mongo/index';
 import {
-  CategoryModel, ProductModel, PurchaseOrderItemModel, PurchaseOrderModel, UserModel,
+  CategoryModel, ProductModel, PurchaseOrderItemModel, PurchaseOrderModel, UserModel, VoucherModel,
 } from '@mongo/models';
 import { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import { VoucherDiscountTypes } from '@sales/domain/Voucher';
@@ -667,6 +667,57 @@ describe('Sales Integration Tests', () => {
 
       expect(response.status).toEqual(404);
       expect(response.body.message).toBe('Item não encontrado.');
+    });
+  });
+
+  describe('GET: /sales/vouchers/:code', () => {
+    const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
+
+    beforeAll(async () => {
+      await VoucherModel.create({
+        _id: faker.datatype.uuid(),
+        percentageAmount: faker.datatype.float(),
+        rawDiscountAmount: faker.datatype.float(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        type: VoucherDiscountTypes.ABSOLUTE,
+        createdAt: new Date(),
+        expiresAt: new Date(),
+        usedAt: new Date(),
+        active: false,
+        code: fakeVoucherCode,
+      });
+    });
+
+    afterAll(async () => {
+      await Mongo.dropCollections([
+        VoucherModel.collection.collectionName,
+      ]);
+    });
+
+    it('returns a voucher by code', async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get(`/sales/vouchers/${fakeVoucherCode}`)
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body.code).toBe(fakeVoucherCode);
+    });
+
+    it("returns 404 if voucher doesn't exist", async () => {
+      expect.assertions(2);
+
+      const nonexistentVoucherCode = parseInt(faker.datatype.number().toString(), 10);
+
+      const response = await globalThis.request
+        .get(`/sales/vouchers/${nonexistentVoucherCode}`)
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toBe('Voucher não encontrado.');
     });
   });
 });
