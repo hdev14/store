@@ -168,7 +168,13 @@ export default class SalesController {
 
   public async getPurchaseOrders(request: Request, response: Response, next: NextFunction) {
     try {
-      return response.status(200).json({});
+      const { id } = request.params;
+
+      const result = await this.getPurchaseOrdersQuery.execute({
+        customerId: id,
+      });
+
+      return response.status(200).json(result);
     } catch (e) {
       return next(e);
     }

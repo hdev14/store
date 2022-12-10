@@ -7,7 +7,7 @@ const { salesController } = bootstrap.controllers;
 
 router.get('/orders/:id', salesController.getPurchaseOrder.bind(salesController));
 
-router.get('/customers/:customerId/orders', salesController.getPurchaseOrders.bind(salesController));
+router.get('/customers/:id/orders', salesController.getPurchaseOrders.bind(salesController));
 
 router.get('/orders/items/:id', salesController.getPurchaseOrderItem.bind(salesController));
 
