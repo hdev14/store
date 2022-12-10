@@ -7,7 +7,7 @@ export type ApplyVoucherCommandData = {
 }
 
 export default class ApplyVoucherCommand extends Command<boolean, ApplyVoucherCommandData> {
-  public send(data: ApplyVoucherCommandData): Promise<boolean | void> {
+  public execute(data: ApplyVoucherCommandData): Promise<boolean | void> {
     this.validate(data);
 
     return this.mediator.send(this.constructor.name, data);

@@ -7,7 +7,7 @@ export type RemovePurchaseOrderItemCommandData = {
 
 // eslint-disable-next-line max-len
 export default class RemovePurchaseOrderItemCommand extends Command<boolean, RemovePurchaseOrderItemCommandData> {
-  public send(data: RemovePurchaseOrderItemCommandData): Promise<boolean | void> {
+  public execute(data: RemovePurchaseOrderItemCommandData): Promise<boolean | void> {
     this.validate(data);
 
     return this.mediator.send(this.constructor.name, data);
