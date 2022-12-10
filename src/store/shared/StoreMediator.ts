@@ -6,8 +6,10 @@ export default class StoreMediator extends Mediator {
     const handler = this.hasHandler(name);
 
     if (!handler) {
-      throw new StoreMediatorError('There is no event with this name.');
+      throw new StoreMediatorError(`There is no event with this name: ${name}`);
     }
+
+    console.info(`Event name: ${name}`);
 
     return handler.handle(data);
   }
