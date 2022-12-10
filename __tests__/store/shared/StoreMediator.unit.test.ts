@@ -52,7 +52,7 @@ describe("StoreMediator's unit tests", () => {
       });
     } catch (e: any) {
       expect(e).toBeInstanceOf(StoreMediatorError);
-      expect(e.message).toEqual('There is no event with this name.');
+      expect(e.message).toEqual('There is no event with this name: test1');
     }
   });
 
