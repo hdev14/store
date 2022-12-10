@@ -721,7 +721,7 @@ describe('Sales Integration Tests', () => {
     });
   });
 
-  describe.only('PATCH: /sales/orders/items/:id/quantities', () => {
+  describe('PATCH: /sales/orders/items/:id/quantities', () => {
     const fakePurchaseOrderItemId = faker.datatype.uuid();
 
     beforeAll(async () => {
@@ -814,9 +814,8 @@ describe('Sales Integration Tests', () => {
 
       await Mongo.dropCollections([
         ProductModel.collection.collectionName,
-        PurchaseOrderItemModel.collection.collectionName,
         CategoryModel.collection.collectionName,
-        PurchaseOrderModel.collection.collectionName,
+        PurchaseOrderItemModel.collection.collectionName,
       ]);
     });
 
