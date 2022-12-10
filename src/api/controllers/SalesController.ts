@@ -14,6 +14,7 @@ import { GetPurchaseOrdersParams } from '@sales/app/queries/GetPurchaseOrdersQue
 import Voucher from '@sales/domain/Voucher';
 import { GetVoucherParams } from '@sales/app/queries/GetVoucherQuery';
 import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
+import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
 
 export default class SalesController {
   private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>;
@@ -182,8 +183,18 @@ export default class SalesController {
 
   public async getPurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
-      return response.status(200).json({});
+      const { id } = request.params;
+
+      const result = await this.getPurchaseOrderItemQuery.execute({
+        purchaseOrderItemId: id,
+      });
+
+      return response.status(200).json(result.results[0]);
     } catch (e) {
+      if (e instanceof PurchaseOrderItemNotFoundError) {
+        return response.status(404).json({ message: e.message });
+      }
+
       return next(e);
     }
   }
