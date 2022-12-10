@@ -1,6 +1,8 @@
 import { faker } from '@faker-js/faker';
 import Mongo from '@mongo/index';
-import { CategoryModel, ProductModel, UserModel } from '@mongo/models';
+import {
+  CategoryModel, ProductModel, PurchaseOrderItemModel, PurchaseOrderModel, UserModel,
+} from '@mongo/models';
 import { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import { VoucherDiscountTypes } from '@sales/domain/Voucher';
 
@@ -76,7 +78,13 @@ describe('Sales Integration Tests', () => {
         globalThis.dbConnection.user.deleteMany({}),
       ]);
 
-      await Mongo.dropCollections();
+      await Mongo.dropCollections([
+        PurchaseOrderModel.collection.collectionName,
+        PurchaseOrderItemModel.collection.collectionName,
+        ProductModel.collection.collectionName,
+        UserModel.collection.collectionName,
+        CategoryModel.collection.collectionName,
+      ]);
     });
 
     it('returns 400 if data is invalid', async () => {
@@ -222,6 +230,13 @@ describe('Sales Integration Tests', () => {
         },
       });
 
+      const purchaseOrderItemData = {
+        id: fakePurchaseOrderItemId,
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        productId: fakeProductId,
+        purchaseOrderId: fakePurchaseOrderId,
+      };
+
       await globalThis.dbConnection.purchaseOrderItem.create({
         data: {
           id: fakePurchaseOrderItemId,
@@ -229,6 +244,11 @@ describe('Sales Integration Tests', () => {
           productId: fakeProductId,
           purchaseOrderId: fakePurchaseOrderId,
         },
+      });
+
+      await PurchaseOrderItemModel.create({
+        ...purchaseOrderItemData,
+        _id: fakePurchaseOrderItemId,
       });
     });
 
@@ -239,6 +259,8 @@ describe('Sales Integration Tests', () => {
         globalThis.dbConnection.category.deleteMany({}),
         globalThis.dbConnection.user.deleteMany({}),
       ]);
+
+      await Mongo.dropCollections([PurchaseOrderItemModel.collection.collectionName]);
     });
 
     it('returns 200 if purchase order item was deleted', async () => {
@@ -482,6 +504,36 @@ describe('Sales Integration Tests', () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.errors).toHaveLength(2);
+    });
+  });
+
+  describe('GET: /sales/orders/:id', () => {
+    const fakePurchaseOrderId = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      await PurchaseOrderModel.create({
+        _id: fakePurchaseOrderId,
+        code: faker.datatype.number(),
+        customer: faker.datatype.uuid(),
+        status: PurchaseOrderStatus.STARTED,
+        createdAt: new Date(),
+      });
+    });
+
+    afterAll(async () => {
+      await Mongo.dropCollections([PurchaseOrderModel.collection.collectionName]);
+    });
+
+    it('returns a purchase order by id', async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get(`/sales/orders/${fakePurchaseOrderId}`)
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body.id).toBe(fakePurchaseOrderId);
     });
   });
 });
