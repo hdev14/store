@@ -836,5 +836,21 @@ describe('Sales Integration Tests', () => {
 
       expect(purchaseOrderItem!.quantity).toBe(quantity);
     });
+
+    it('returns 422 if is not possible to update the purchase order item quantity', async () => {
+      expect.assertions(2);
+
+      const nonexsitentPurchaseOrderItemId = faker.datatype.uuid();
+      const quantity = parseInt(faker.datatype.number().toString(), 10);
+
+      const response = await globalThis.request
+        .patch(`/sales/orders/items/${nonexsitentPurchaseOrderItemId}/quantities`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send({ quantity });
+
+      expect(response.status).toEqual(422);
+      expect(response.body.message).toBe('Não foi possível atualizar a quantidade do item.');
+    });
   });
 });
