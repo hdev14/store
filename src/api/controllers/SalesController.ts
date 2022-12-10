@@ -152,6 +152,10 @@ export default class SalesController {
         quantity,
       });
 
+      if (!result) {
+        return response.status(422).json({ message: 'Não foi possível atualizar a quantidade do item.' });
+      }
+
       return response.status(204).json({});
     } catch (e) {
       return next(e);
