@@ -144,7 +144,15 @@ export default class SalesController {
   // eslint-disable-next-line max-len
   public async updatePurchaseOrderItemQuantity(request: Request, response: Response, next: NextFunction) {
     try {
-      return response.status(200).json({});
+      const { id } = request.params;
+      const { quantity } = request.body;
+
+      const result = await this.updatePurchaseOrderItemQuantityCommand.execute({
+        purchaseOrderItemId: id,
+        quantity,
+      });
+
+      return response.status(204).json({});
     } catch (e) {
       return next(e);
     }
