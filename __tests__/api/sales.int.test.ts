@@ -720,4 +720,121 @@ describe('Sales Integration Tests', () => {
       expect(response.body.message).toBe('Voucher não encontrado.');
     });
   });
+
+  describe.only('PATCH: /sales/orders/items/:id/quantities', () => {
+    const fakePurchaseOrderItemId = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      const categoryData = {
+        id: faker.datatype.uuid(),
+        name: faker.word.verb(),
+        code: parseInt(faker.random.numeric(5), 10),
+      };
+
+      const category = await globalThis.dbConnection.category.create({
+        data: categoryData,
+      });
+
+      await CategoryModel.create({
+        ...categoryData,
+        _id: categoryData.id,
+      });
+
+      const productData = {
+        id: faker.datatype.uuid(),
+        name: faker.commerce.product(),
+        description: faker.commerce.productDescription(),
+        amount: faker.datatype.float(100),
+        active: faker.datatype.boolean(),
+        depth: faker.datatype.number(50),
+        height: faker.datatype.number(50),
+        width: faker.datatype.number(50),
+        stockQuantity: 0,
+        image: faker.internet.url(),
+        createdAt: new Date(),
+        categoryId: category.id,
+      };
+
+      const product = await globalThis.dbConnection.product.create({
+        data: productData,
+      });
+
+      await ProductModel.create({
+        ...productData,
+        _id: productData.id,
+      });
+
+      const user = await globalThis.dbConnection.user.create({
+        data: {
+          id: faker.datatype.uuid(),
+          name: faker.name.fullName(),
+        },
+      });
+
+      const purchaseOrder = await globalThis.dbConnection.purchaseOrder.create({
+        data: {
+          id: faker.datatype.uuid(),
+          code: parseInt(faker.datatype.number().toString(), 10),
+          totalAmount: faker.datatype.float(),
+          discountAmount: faker.datatype.float(),
+          status: PurchaseOrderStatus.DRAFT,
+          customerId: user.id,
+          createdAt: new Date(),
+        },
+      });
+
+      const purchaseOrderItemData = {
+        purchaseOrderId: purchaseOrder.id,
+        quantity: 1,
+        productId: product.id,
+      };
+
+      await globalThis.dbConnection.purchaseOrderItem.create({
+        data: {
+          ...purchaseOrderItemData,
+          id: fakePurchaseOrderItemId,
+        },
+      });
+
+      await PurchaseOrderItemModel.create({
+        ...purchaseOrderItemData,
+        _id: fakePurchaseOrderItemId,
+        product: purchaseOrderItemData.productId,
+      });
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.$transaction([
+        globalThis.dbConnection.purchaseOrderItem.deleteMany({}),
+        globalThis.dbConnection.purchaseOrder.deleteMany({}),
+        globalThis.dbConnection.product.deleteMany({}),
+        globalThis.dbConnection.category.deleteMany({}),
+        globalThis.dbConnection.user.deleteMany({}),
+      ]);
+
+      await Mongo.dropCollections([
+        ProductModel.collection.collectionName,
+        PurchaseOrderItemModel.collection.collectionName,
+        CategoryModel.collection.collectionName,
+        PurchaseOrderModel.collection.collectionName,
+      ]);
+    });
+
+    it('updates purchase order item quantity', async () => {
+      expect.assertions(2);
+
+      const quantity = parseInt(faker.datatype.number().toString(), 10);
+
+      const response = await globalThis.request
+        .patch(`/sales/orders/items/${fakePurchaseOrderItemId}/quantities`)
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send({ quantity });
+
+      expect(response.status).toEqual(204);
+      const purchaseOrderItem = await PurchaseOrderItemModel.findById(fakePurchaseOrderItemId);
+
+      expect(purchaseOrderItem!.quantity).toBe(quantity);
+    });
+  });
 });
