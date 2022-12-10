@@ -1,13 +1,3 @@
-import Mediator from './Mediator';
+import Operation from './Operation';
 
-export default abstract class Command<R = void, T = {}> {
-  protected readonly mediator: Mediator;
-
-  constructor(mediator: Mediator) {
-    this.mediator = mediator;
-  }
-
-  public async send(data: T): Promise<void | R> {
-    return this.mediator.send<R>(this.constructor.name, data);
-  }
-}
+export default abstract class Command<Result, Data> extends Operation<Result | void, Data> {}

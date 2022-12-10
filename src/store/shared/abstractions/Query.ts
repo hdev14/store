@@ -1,18 +1,12 @@
-import Mediator from './Mediator';
+import Operation from './Operation';
 
-export type Results<D = Record<string, any>> = {
-  results: D[];
+export type Results<Result = Record<string, any>> = {
+  results: Result[];
 }
 
-export default abstract class Query<D, P = {}> {
-  protected readonly mediator: Mediator;
-
-  constructor(mediator: Mediator) {
-    this.mediator = mediator;
-  }
-
-  public async execute(params: P): Promise<Results<D>> {
-    const result = await this.mediator.send<Results<D>>(this.constructor.name, params);
+export default abstract class Query<Result, Data> extends Operation<Results<Result>, Data> {
+  public async execute(data: Data): Promise<Results<Result>> {
+    const result = await this.mediator.send<Results<Result>>(this.constructor.name, data);
 
     return result || { results: [] };
   }
