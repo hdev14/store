@@ -550,4 +550,62 @@ describe('Sales Integration Tests', () => {
       expect(response.body.message).toBe('Pedido não encontrado.');
     });
   });
+
+  describe('GET: /sales/customers/:id/orders', () => {
+    const fakeCustomerId = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      await PurchaseOrderModel.create([
+        {
+          _id: faker.datatype.uuid(),
+          code: faker.datatype.number(),
+          customer: fakeCustomerId,
+          status: PurchaseOrderStatus.STARTED,
+          createdAt: new Date(),
+        },
+        {
+          _id: faker.datatype.uuid(),
+          code: faker.datatype.number(),
+          customer: fakeCustomerId,
+          status: PurchaseOrderStatus.STARTED,
+          createdAt: new Date(),
+        },
+        {
+          _id: faker.datatype.uuid(),
+          code: faker.datatype.number(),
+          customer: faker.datatype.uuid(),
+          status: PurchaseOrderStatus.STARTED,
+          createdAt: new Date(),
+        },
+      ]);
+    });
+
+    afterAll(async () => {
+      await Mongo.dropCollections([PurchaseOrderModel.collection.collectionName]);
+    });
+
+    it('returns an array of purchase order by customerId', async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get(`/sales/customers/${fakeCustomerId}/orders`)
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body.results).toHaveLength(2);
+    });
+
+    it("returns an empty array if the customer doesn't have any purchase order", async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get(`/sales/customers/${faker.datatype.uuid()}/orders`)
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body.results).toHaveLength(0);
+    });
+  });
 });
