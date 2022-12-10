@@ -24,5 +24,7 @@ export default class EventPublisher {
     });
 
     await Promise.all(promises);
+
+    this.events = [];
   }
 }
