@@ -18,7 +18,7 @@ describe("ApplyVoucherCommand's unit tests", () => {
     };
 
     try {
-      await command.send(data);
+      await command.execute(data);
     } catch (e: any) {
       expect(e).toBeInstanceOf(ValidationError);
       expect(e.errors).toHaveLength(2);
@@ -39,7 +39,7 @@ describe("ApplyVoucherCommand's unit tests", () => {
       timestamp: new Date().toISOString(),
     };
 
-    await command.send(data);
+    await command.execute(data);
 
     expect(sendSpy).toHaveBeenCalledTimes(1);
     expect(sendSpy).toHaveBeenCalledWith('ApplyVoucherCommand', data);

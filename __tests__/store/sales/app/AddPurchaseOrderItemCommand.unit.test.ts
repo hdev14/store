@@ -6,7 +6,7 @@ import mediatorStub from '../../stubs/MediatorStub';
 describe("AddPurchaseOrderItemCommand's unit tests", () => {
   it('throws an exception of type ValidationError if command data is invalid', async () => {
     expect.assertions(2);
-    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
+    const command = new AddPurchaseOrderItemCommand(mediatorStub);
 
     try {
       const invalidData: any = {
@@ -18,7 +18,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
         quantity: 'wrong',
       };
 
-      await addPurchaseOrderItemCommand.send(invalidData);
+      await command.execute(invalidData);
     } catch (e: any) {
       expect(e).toBeInstanceOf(ValidationError);
       expect(e.errors).toHaveLength(5);
@@ -30,7 +30,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     const sendSpy = jest.spyOn(mediatorStub, 'send');
 
-    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
+    const command = new AddPurchaseOrderItemCommand(mediatorStub);
 
     const data: AddPurchaseOrderItemCommandData = {
       customerId: faker.datatype.uuid(),
@@ -40,7 +40,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
       productAmount: faker.datatype.float(),
     };
 
-    await addPurchaseOrderItemCommand.send(data);
+    await command.execute(data);
 
     expect(sendSpy).toHaveBeenCalledTimes(1);
     expect(sendSpy).toHaveBeenCalledWith('AddPurchaseOrderItemCommand', data);
@@ -51,7 +51,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     mediatorStub.send = jest.fn().mockResolvedValueOnce(true);
 
-    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
+    const command = new AddPurchaseOrderItemCommand(mediatorStub);
 
     const data: AddPurchaseOrderItemCommandData = {
       customerId: faker.datatype.uuid(),
@@ -61,7 +61,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
       productAmount: faker.datatype.float(),
     };
 
-    const result = await addPurchaseOrderItemCommand.send(data);
+    const result = await command.execute(data);
 
     expect(result).toBe(true);
   });
@@ -71,7 +71,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
 
     mediatorStub.send = jest.fn().mockResolvedValueOnce(false);
 
-    const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(mediatorStub);
+    const command = new AddPurchaseOrderItemCommand(mediatorStub);
 
     const data: AddPurchaseOrderItemCommandData = {
       customerId: faker.datatype.uuid(),
@@ -81,7 +81,7 @@ describe("AddPurchaseOrderItemCommand's unit tests", () => {
       productAmount: faker.datatype.float(),
     };
 
-    const result = await addPurchaseOrderItemCommand.send(data);
+    const result = await command.execute(data);
 
     expect(result).toBe(false);
   });

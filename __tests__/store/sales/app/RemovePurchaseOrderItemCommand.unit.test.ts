@@ -14,7 +14,7 @@ describe("RemovePurchaseOrderItemCommand's unit tests", () => {
     };
 
     try {
-      await command.send(data);
+      await command.execute(data);
     } catch (e: any) {
       expect(e).toBeInstanceOf(ValidationError);
       expect(e.errors).toHaveLength(1);
@@ -32,7 +32,7 @@ describe("RemovePurchaseOrderItemCommand's unit tests", () => {
       purchaseOrderItemId: faker.datatype.uuid(),
     };
 
-    await command.send(data);
+    await command.execute(data);
 
     expect(sendSpy).toHaveBeenCalledTimes(1);
     expect(sendSpy).toHaveBeenCalledWith('RemovePurchaseOrderItemCommand', data);

@@ -15,7 +15,7 @@ describe("UpdatePurchaseOrderItemQuantityCommand's unit tests", () => {
     };
 
     try {
-      await command.send(data);
+      await command.execute(data);
     } catch (e: any) {
       expect(e).toBeInstanceOf(ValidationError);
       expect(e.errors).toHaveLength(2);
@@ -34,7 +34,7 @@ describe("UpdatePurchaseOrderItemQuantityCommand's unit tests", () => {
       quantity: parseInt(faker.random.numeric(1), 10), // float
     };
 
-    await command.send(data);
+    await command.execute(data);
 
     expect(sendSpy).toHaveBeenCalledTimes(1);
     expect(sendSpy).toHaveBeenCalledWith('UpdatePurchaseOrderItemQuantityCommand', data);
@@ -52,7 +52,7 @@ describe("UpdatePurchaseOrderItemQuantityCommand's unit tests", () => {
       quantity: parseInt(faker.random.numeric(1), 10), // float
     };
 
-    const result = await command.send(data);
+    const result = await command.execute(data);
 
     expect(result).toBe(true);
   });
@@ -69,7 +69,7 @@ describe("UpdatePurchaseOrderItemQuantityCommand's unit tests", () => {
       quantity: parseInt(faker.random.numeric(1), 10), // float
     };
 
-    const result = await command.send(data);
+    const result = await command.execute(data);
 
     expect(result).toBe(false);
   });
