@@ -535,5 +535,19 @@ describe('Sales Integration Tests', () => {
       expect(response.status).toEqual(200);
       expect(response.body.id).toBe(fakePurchaseOrderId);
     });
+
+    it("returns 404 if purchase order doesn't exist", async () => {
+      expect.assertions(2);
+
+      const nonexistPurchaseOrderId = faker.datatype.uuid();
+
+      const response = await globalThis.request
+        .get(`/sales/orders/${nonexistPurchaseOrderId}`)
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toBe('Pedido não encontrado.');
+    });
   });
 });
