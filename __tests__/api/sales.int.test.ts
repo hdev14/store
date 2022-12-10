@@ -608,4 +608,65 @@ describe('Sales Integration Tests', () => {
       expect(response.body.results).toHaveLength(0);
     });
   });
+
+  describe('GET: /sales/orders/items/:id', () => {
+    const fakePurchaseOrderItemId = faker.datatype.uuid();
+
+    beforeAll(async () => {
+      const product = await ProductModel.create({
+        _id: faker.datatype.uuid(),
+        name: faker.commerce.product(),
+        description: faker.commerce.productDescription(),
+        amount: faker.datatype.float(100),
+        active: faker.datatype.boolean(),
+        depth: faker.datatype.number(50),
+        height: faker.datatype.number(50),
+        width: faker.datatype.number(50),
+        stockQuantity: 0,
+        image: faker.internet.url(),
+        createdAt: new Date(),
+        category: faker.datatype.uuid(),
+      });
+
+      await PurchaseOrderItemModel.create({
+        _id: fakePurchaseOrderItemId,
+        product: product._id,
+        purchaseOrder: faker.datatype.uuid(),
+        quantity: 1,
+      });
+    });
+
+    afterAll(async () => {
+      await Mongo.dropCollections([
+        ProductModel.collection.collectionName,
+        PurchaseOrderItemModel.collection.collectionName,
+      ]);
+    });
+
+    it('returns a purchase order item by id', async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get(`/sales/orders/items/${fakePurchaseOrderItemId}`)
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body.id).toBe(fakePurchaseOrderItemId);
+    });
+
+    it("returns 404 if purchase order item doesn't exist", async () => {
+      expect.assertions(2);
+
+      const nonexistPurchaseOrderId = faker.datatype.uuid();
+
+      const response = await globalThis.request
+        .get(`/sales/orders/items/${nonexistPurchaseOrderId}`)
+        .set('Accept', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toBe('Item não encontrado.');
+    });
+  });
 });
