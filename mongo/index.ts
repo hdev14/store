@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import * as models from './models';
 
 export default class Mongo {
@@ -17,15 +17,17 @@ export default class Mongo {
     }
   }
 
-  static async dropCollections() {
+  static async dropCollections(collectionsToDrop: string[]) {
     if (process.env.NODE_ENV === 'test') {
-      const mappedModels = new Map(Object.entries(models));
+      const promises = Object
+        .entries<Model<any, {}, {}, any>>(models)
+        .map(async ([, model]) => {
+          if (collectionsToDrop.includes(model.collection.collectionName)) {
+            await model.collection.drop();
+          }
+        });
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [, value] of mappedModels) {
-        // eslint-disable-next-line no-await-in-loop
-        await value.collection.drop();
-      }
+      await Promise.all(promises);
     }
   }
 }
