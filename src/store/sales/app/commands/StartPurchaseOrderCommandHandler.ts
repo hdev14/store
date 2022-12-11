@@ -21,6 +21,8 @@ export default class StartPurchaseOrderCommandHandler implements IHandler<boolea
 
     purchaseOrder.start();
 
+    await this.repository.updatePurchaseOrder(purchaseOrder);
+
     return true;
   }
 }
