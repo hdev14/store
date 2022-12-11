@@ -24,6 +24,7 @@ export type PurchaseOrderParams = {
   discountAmount?: number;
   totalAmount?: number;
   status: PurchaseOrderStatus | null;
+  items?: Array<PurchaseOrderItem>;
 }
 
 export default class PurchaseOrder extends Entity implements IAggregateRoot {
@@ -52,7 +53,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
     this.totalAmount = params.totalAmount || 0;
     this.discountAmount = params.discountAmount || 0;
     this.status = params.status || PurchaseOrderStatus.DRAFT;
-    this._items = [];
+    this._items = params.items || [];
 
     this.validate();
   }
