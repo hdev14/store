@@ -21,6 +21,24 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
     expect(getPurchaseOrderByIdSpy).toHaveBeenCalledWith(eventData.purchaseOrderId);
   });
 
+  it("returns FALSE if purchase order doesn't exist", async () => {
+    expect.assertions(1);
+
+    jest.spyOn(repositoryStub, 'getPurchaseOrderById')
+      .mockResolvedValueOnce(null);
+    const handler = new StartPurchaseOrderCommandHandler(repositoryStub);
+
+    const eventData: StartPurchaseOrderData = {
+      purchaseOrderId: faker.datatype.uuid(),
+      cardToken: faker.random.alphaNumeric(),
+      installments: 3,
+    };
+
+    const result = await handler.handle(eventData);
+
+    expect(result).toBe(false);
+  });
+
   // it('throws an EventHandlerError when occurs an expected error', async () => {
   //   expect.assertions(2);
 
