@@ -1,11 +1,20 @@
+import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import IHandler from '@shared/abstractions/IHandler';
 import { StartPurchaseOrderData } from './StartPurchaseOrderCommand';
 
 // eslint-disable-next-line max-len
 export default class StartPurchaseOrderCommandHandler implements IHandler<boolean, StartPurchaseOrderData> {
-  public async handle(_data: StartPurchaseOrderData): Promise<boolean> {
+  private readonly repository: IPurchaseOrderRepository;
+
+  constructor(repository: IPurchaseOrderRepository) {
+    this.repository = repository;
+  }
+
+  public async handle(data: StartPurchaseOrderData): Promise<boolean> {
     // get purchase order
+    const purchaseOrder = await this.repository.getPurchaseOrderById(data.purchaseOrderId);
     // update status to started
-    throw new Error('Method not implemented.');
+
+    return true;
   }
 }
