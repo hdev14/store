@@ -11,18 +11,21 @@ export default class StartPurchaseOrderCommandHandler implements IHandler<boolea
   }
 
   public async handle(data: StartPurchaseOrderData): Promise<boolean> {
-    // get purchase order
-    const purchaseOrder = await this.repository.getPurchaseOrderById(data.purchaseOrderId);
-    // update status to started
+    try {
+      const purchaseOrder = await this.repository.getPurchaseOrderById(data.purchaseOrderId);
 
-    if (!purchaseOrder) {
+      if (!purchaseOrder) {
+        return false;
+      }
+
+      purchaseOrder.start();
+
+      await this.repository.updatePurchaseOrder(purchaseOrder);
+
+      return true;
+    } catch (e: any) {
+      console.error(e.stack);
       return false;
     }
-
-    purchaseOrder.start();
-
-    await this.repository.updatePurchaseOrder(purchaseOrder);
-
-    return true;
   }
 }
