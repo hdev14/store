@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { StartPurchaseOrderData } from '@sales/app/commands/StartPurchaseOrderCommand';
 import StartPurchaseOrderCommandHandler from '@sales/app/commands/StartPurchaseOrderCommandHandler';
-import PurchaseOrder from '@sales/domain/PurchaseOrder';
+import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("StartPurchaseOrderCommandHandler's unit tests", () => {
@@ -67,6 +67,35 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
     await handler.handle(eventData);
 
     expect(startSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls repository.updatePurchaseOrder with correct purchase order', async () => {
+    expect.assertions(2);
+
+    const purchaseOrder = new PurchaseOrder({
+      id: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      code: parseInt(faker.datatype.number().toString(), 10),
+      createdAt: new Date(),
+      voucher: null,
+      status: null,
+    });
+
+    jest.spyOn(repositoryStub, 'getPurchaseOrderById').mockResolvedValueOnce(purchaseOrder);
+    const updatePurchaseOrderSpy = jest.spyOn(repositoryStub, 'updatePurchaseOrder');
+
+    const handler = new StartPurchaseOrderCommandHandler(repositoryStub);
+
+    const eventData: StartPurchaseOrderData = {
+      purchaseOrderId: faker.datatype.uuid(),
+      cardToken: faker.random.alphaNumeric(),
+      installments: 3,
+    };
+
+    await handler.handle(eventData);
+
+    expect(updatePurchaseOrderSpy).toHaveBeenCalled();
+    expect(updatePurchaseOrderSpy.mock.calls[0][0].status).toBe(PurchaseOrderStatus.STARTED);
   });
 
   // it('throws an EventHandlerError when occurs an expected error', async () => {
