@@ -19,6 +19,8 @@ export default class StartPurchaseOrderCommandHandler implements IHandler<boolea
       return false;
     }
 
+    purchaseOrder.start();
+
     return true;
   }
 }
