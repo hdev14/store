@@ -15,6 +15,10 @@ export default class StartPurchaseOrderCommandHandler implements IHandler<boolea
     const purchaseOrder = await this.repository.getPurchaseOrderById(data.purchaseOrderId);
     // update status to started
 
+    if (!purchaseOrder) {
+      return false;
+    }
+
     return true;
   }
 }
