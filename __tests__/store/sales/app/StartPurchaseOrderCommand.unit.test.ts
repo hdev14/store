@@ -1,5 +1,4 @@
 import StartPurchaseOrderCommand from '@sales/app/commands/StartPurchaseOrderCommand';
-import { EventData } from '@shared/abstractions/IEventHandler';
 import ValidationError from '@shared/errors/ValidationError';
 import mediatorStub from '../../stubs/MediatorStub';
 
@@ -9,8 +8,8 @@ describe("StartPurchaseOrderCommand's unit tests", () => {
 
     const command = new StartPurchaseOrderCommand(mediatorStub);
 
-    const data: EventData<any> = {
-      principalId: 'wrong',
+    const data: any = {
+      purchaseOrderId: 'wrong',
       cardToken: 123,
       installments: -1,
     };
