@@ -1,6 +1,6 @@
 import Event from '@shared/abstractions/Event';
 
-export type ProcessPurchaseOrderData = {
+export type ChargePurchaseOrderData = {
   purchaseOrderId: string;
   customerId: string;
   purchaseOrderCode: number;
@@ -14,4 +14,4 @@ export type ProcessPurchaseOrderData = {
   }>;
 };
 
-export default class ProcessPurchaseOrderEvent extends Event<ProcessPurchaseOrderData> { }
+export default class ChargePurchaseOrderEvent extends Event<ChargePurchaseOrderData> { }
