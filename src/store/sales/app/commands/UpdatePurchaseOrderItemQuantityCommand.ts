@@ -8,12 +8,6 @@ export type UpdatePurchaseOrderItemQuantityCommandData = {
 
 // eslint-disable-next-line max-len
 export default class UpdatePurchaseOrderItemQuantityCommand extends Command<boolean, UpdatePurchaseOrderItemQuantityCommandData> {
-  public execute(data: UpdatePurchaseOrderItemQuantityCommandData): Promise<boolean | void> {
-    this.validate(data);
-
-    return this.mediator.send(this.constructor.name, data);
-  }
-
   public validate(data: UpdatePurchaseOrderItemQuantityCommandData): void {
     Validator.setData(data)
       .setRule('purchaseOrderItemId', ['string', 'required', 'uuid'])
