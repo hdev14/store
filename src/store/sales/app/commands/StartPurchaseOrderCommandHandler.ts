@@ -43,10 +43,14 @@ export default class StartPurchaseOrderCommandHandler implements IHandler<boolea
         timestamp: new Date().toISOString(),
       });
 
+      // TODO: add event to update purchase order
+
       return true;
     } catch (e: any) {
       console.error(e.stack);
       return false;
+    } finally {
+      await this.publisher.sendEvents();
     }
   }
 }
