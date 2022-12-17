@@ -182,4 +182,52 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
       quantity: item.quantity,
     })));
   });
+
+  it('calls publisherStub.sendEvents after the operation', async () => {
+    expect.assertions(1);
+
+    const purchaseOrder = new PurchaseOrder({
+      id: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      code: parseInt(faker.datatype.number().toString(), 10),
+      createdAt: new Date(),
+      voucher: null,
+      status: null,
+      items: [
+        new PurchaseOrderItem({
+          id: faker.datatype.uuid(),
+          quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+          product: new Product(
+            faker.datatype.uuid(),
+            faker.commerce.product(),
+            faker.datatype.float(),
+          ),
+        }),
+        new PurchaseOrderItem({
+          id: faker.datatype.uuid(),
+          quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+          product: new Product(
+            faker.datatype.uuid(),
+            faker.commerce.product(),
+            faker.datatype.float(),
+          ),
+        }),
+      ],
+    });
+
+    jest.spyOn(repositoryStub, 'getPurchaseOrderById').mockResolvedValueOnce(purchaseOrder);
+    const sendEventsSpy = jest.spyOn(publisherStub, 'sendEvents');
+
+    const handler = new StartPurchaseOrderCommandHandler(repositoryStub, publisherStub);
+
+    const data: StartPurchaseOrderData = {
+      purchaseOrderId: faker.datatype.uuid(),
+      cardToken: faker.random.alphaNumeric(),
+      installments: 3,
+    };
+
+    await handler.handle(data);
+
+    expect(sendEventsSpy).toHaveBeenCalledTimes(1);
+  });
 });
