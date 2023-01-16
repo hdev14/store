@@ -391,7 +391,7 @@ describe('Sales Integration Tests', () => {
       ]);
     });
 
-    it('apply a voucher in the purchase order', async () => {
+    it('applies a voucher in the purchase order', async () => {
       expect.assertions(3);
 
       const data = {

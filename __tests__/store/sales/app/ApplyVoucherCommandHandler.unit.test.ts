@@ -136,7 +136,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     expect(result).toBe(false);
   });
 
-  it('apply the voucher to purchase order', async () => {
+  it('applies voucher to purchase order', async () => {
     expect.assertions(2);
 
     const fakeDraftPurchaseOrder: any = {
