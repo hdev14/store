@@ -7,11 +7,11 @@ export type DimensionsParams = {
 }
 
 export default class Dimensions implements IValueObject {
-  public height: number;
+  public readonly height: number;
 
-  public width: number;
+  public readonly width: number;
 
-  public depth: number;
+  public readonly depth: number;
 
   constructor(params: DimensionsParams) {
     this.height = params.height;

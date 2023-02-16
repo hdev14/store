@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import ValidationError, { GenericError } from '../errors/ValidationError';
 
 // eslint-disable-next-line no-useless-escape
@@ -96,7 +97,7 @@ export default class Validator {
     return this;
   }
 
-  public validate(doNotThrows: boolean = false) {
+  public validate(doNotThrows = false) {
     this.rules.forEach((fieldRules, fieldName) => {
       const field = this.data[fieldName];
       const messages: string[] = [];

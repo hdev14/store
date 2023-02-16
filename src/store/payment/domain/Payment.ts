@@ -1,5 +1,4 @@
 /* eslint-disable no-shadow */
-/* eslint-disable no-unused-vars */
 import Entity from '@shared/abstractions/Entity';
 import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
 import Transaction from './Transaction';
@@ -28,17 +27,17 @@ export type PaymentParams = {
 };
 
 export default class Payment extends Entity implements IAggregateRoot {
-  public purchaseOrderId: string;
+  public readonly purchaseOrderId: string;
 
-  public value: number;
+  public readonly value: number;
 
-  public method: PaymentMethods;
+  public readonly method: PaymentMethods;
 
-  public status: PaymentStatus;
+  public readonly status: PaymentStatus;
 
-  public gateway: string;
+  public readonly gateway: string;
 
-  public transactions: Transaction[];
+  public readonly transactions: Transaction[];
 
   constructor(params: PaymentParams) {
     super(params.id);

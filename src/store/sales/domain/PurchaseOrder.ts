@@ -1,5 +1,4 @@
 /* eslint-disable no-shadow */
-/* eslint-disable no-unused-vars */
 import Entity from '@shared/abstractions/Entity';
 import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
 import DomainError from '@shared/errors/DomainError';
@@ -28,9 +27,9 @@ export type PurchaseOrderParams = {
 }
 
 export default class PurchaseOrder extends Entity implements IAggregateRoot {
-  public code: number;
+  public readonly code: number;
 
-  public customerId: string;
+  public readonly customerId: string;
 
   public voucher: Voucher | null;
 
@@ -38,7 +37,7 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
 
   public totalAmount: number;
 
-  public createdAt: Date;
+  public readonly createdAt: Date;
 
   public status: PurchaseOrderStatus;
 

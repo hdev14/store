@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import User from './User';
 
 interface IUserRepository {

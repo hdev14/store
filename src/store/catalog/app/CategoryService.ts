@@ -1,18 +1,13 @@
+import crypto from 'crypto';
 import Category, { CategoryParams } from '@catalog/domain/Category';
 import { ICategoryOperations } from '@catalog/domain/IProductRepository';
-import IGenerateID from '@shared/utils/IGenerateID';
 import CategoryNotFoundError from './CategoryNotFoundError';
 import ICategoryService, { CreateCategoryParams, UpdateCategoryParams } from './ICategoryService';
 
 export default class CategoryService implements ICategoryService {
-  private readonly repository: ICategoryOperations;
-
-  private readonly generateID: IGenerateID;
-
-  constructor(repository: ICategoryOperations, generateID: IGenerateID) {
-    this.repository = repository;
-    this.generateID = generateID;
-  }
+  constructor(
+    private readonly repository: ICategoryOperations,
+  ) { }
 
   public async getAllCategories(): Promise<Category[]> {
     const categories = await this.repository.getAllCategories();
@@ -24,7 +19,7 @@ export default class CategoryService implements ICategoryService {
     const allCategories = await this.repository.getAllCategories();
 
     const category = await this.repository.addCategory(new Category({
-      id: this.generateID(),
+      id: crypto.randomUUID(),
       name: params.name,
       code: allCategories.length + 1,
     }));

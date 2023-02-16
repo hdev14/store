@@ -8,9 +8,9 @@ export type CategoryParams = {
 };
 
 export default class Category extends Entity {
-  public name: string;
+  public readonly name: string;
 
-  public code: number;
+  public readonly code: number;
 
   constructor(params: CategoryParams) {
     super(params.id);

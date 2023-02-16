@@ -1,5 +1,4 @@
 /* eslint-disable no-shadow */
-/* eslint-disable no-unused-vars */
 import Entity from '@shared/abstractions/Entity';
 
 export enum TransactionStatus {
@@ -22,17 +21,17 @@ export type TransactionParams = {
 }
 
 export default class Transaction extends Entity {
-  public transactionId: string;
+  public readonly transactionId: string;
 
-  public status: TransactionStatus;
+  public readonly status: TransactionStatus;
 
-  public details: string;
+  public readonly details: string;
 
-  public payload: string;
+  public readonly payload: string;
 
-  public paymentId: string;
+  public readonly paymentId: string;
 
-  public registedAt: Date;
+  public readonly registedAt: Date;
 
   constructor(params: TransactionParams) {
     super(params.id);

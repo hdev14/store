@@ -4,13 +4,9 @@ import IEmailService from './IEmailService';
 
 // eslint-disable-next-line max-len
 export default class LowStockProductEventHandler implements IEventHandler<LowStockProductData> {
-  private readonly emailService: IEmailService;
-
   private static defaultEmail = 'default@email.com';
 
-  constructor(emailService: IEmailService) {
-    this.emailService = emailService;
-  }
+  constructor(private readonly emailService: IEmailService) {}
 
   public async handle(data: EventData<LowStockProductData>): Promise<void> {
     await this.emailService.send({

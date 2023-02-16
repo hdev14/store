@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import Category from './Category';
 import Product from './Product';
 

@@ -7,11 +7,7 @@ import { GetVoucherParams } from './GetVoucherQuery';
 
 // eslint-disable-next-line max-len
 export default class GetVoucherQueryHandler implements IHandler<Results<Voucher>, GetVoucherParams> {
-  private readonly repository: IPurchaseOrderRepositoryQueries;
-
-  constructor(repository: IPurchaseOrderRepositoryQueries) {
-    this.repository = repository;
-  }
+  constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 
   public async handle(params: GetVoucherParams): Promise<Results<Voucher>> {
     const voucher = await this.repository.getVoucherByCode(params.voucherCode);

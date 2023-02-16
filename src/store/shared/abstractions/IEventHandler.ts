@@ -1,14 +1,14 @@
 import IHandler from './IHandler';
 
-/* eslint-disable no-unused-vars */
 type ISODate = string;
 
-export type EventData<T = {}> = T & {
+export type EventData<T = object> = T & {
   principalId: string;
   timestamp: ISODate;
   eventType?: string;
 };
 
-interface IEventHandler<T = {}> extends IHandler<void, EventData<T>> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface IEventHandler<T = object> extends IHandler<void, EventData<T>> {}
 
 export default IEventHandler;

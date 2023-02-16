@@ -6,14 +6,10 @@ import { RemovePurchaseOrderItemCommandData } from './RemovePurchaseOrderItemCom
 
 // eslint-disable-next-line max-len
 export default class RemovePurchaseOrderItemCommandHandler implements IHandler<boolean, RemovePurchaseOrderItemCommandData> {
-  private readonly repository: IPurchaseOrderRepositoryCommands;
-
-  private readonly publisher: EventPublisher;
-
-  constructor(repository: IPurchaseOrderRepositoryCommands, publisher: EventPublisher) {
-    this.repository = repository;
-    this.publisher = publisher;
-  }
+  constructor(
+    private readonly repository: IPurchaseOrderRepositoryCommands,
+    private readonly publisher: EventPublisher,
+  ) { }
 
   public async handle(data: RemovePurchaseOrderItemCommandData): Promise<boolean> {
     try {

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import IHandler from './IHandler';
 
 export default abstract class Mediator {

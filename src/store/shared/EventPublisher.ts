@@ -3,11 +3,9 @@ import { EventData } from './abstractions/IEventHandler';
 import Mediator from './abstractions/Mediator';
 
 export default class EventPublisher {
-  private readonly mediator: Mediator;
-
   private events: Array<{ ctor: EventConstructor, data: EventData }>;
 
-  constructor(mediator: Mediator) {
+  constructor(private readonly mediator: Mediator) {
     this.mediator = mediator;
     this.events = [];
   }

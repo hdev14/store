@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import Payment from './Payment';
 import Transaction from './Transaction';
 

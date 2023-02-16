@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import Entity from '@shared/abstractions/Entity';
 import Validator from '@shared/utils/Validator';
 
@@ -22,23 +21,23 @@ export type VoucherParams = {
 }
 
 export default class Voucher extends Entity {
-  public code: number;
+  public readonly code: number;
 
-  public percentageAmount: number;
+  public readonly percentageAmount: number;
 
-  public rawDiscountAmount: number;
+  public readonly rawDiscountAmount: number;
 
-  public quantity: number;
+  public readonly quantity: number;
 
-  public type: VoucherDiscountTypes;
+  public readonly type: VoucherDiscountTypes;
 
-  public createdAt: Date;
+  public readonly createdAt: Date;
 
-  public expiresAt: Date;
+  public readonly expiresAt: Date;
 
-  public active: boolean;
+  public readonly active: boolean;
 
-  public usedAt: Date | null;
+  public readonly usedAt: Date | null;
 
   constructor(params: VoucherParams) {
     super(params.id);

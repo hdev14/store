@@ -13,7 +13,7 @@ export type PurchaseOrderItemParams = {
 export default class PurchaseOrderItem extends Entity {
   public purchaseOrderId: string;
 
-  public product: Product;
+  public readonly product: Product;
 
   public quantity: number;
 

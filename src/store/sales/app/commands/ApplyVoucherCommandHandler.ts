@@ -4,11 +4,7 @@ import { ApplyVoucherCommandData } from './ApplyVoucherCommand';
 
 // eslint-disable-next-line max-len
 export default class ApplyVoucherCommandHandler implements IHandler<boolean, ApplyVoucherCommandData> {
-  private readonly repository: IPurchaseOrderRepository;
-
-  constructor(repository: IPurchaseOrderRepository) {
-    this.repository = repository;
-  }
+  constructor(private readonly repository: IPurchaseOrderRepository) { }
 
   public async handle(data: ApplyVoucherCommandData): Promise<boolean> {
     try {

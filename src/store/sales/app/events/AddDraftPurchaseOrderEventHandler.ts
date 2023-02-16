@@ -6,11 +6,7 @@ import { AddDraftPurchaseOrderEventData } from './AddDraftPurchaseOrderEvent';
 
 // eslint-disable-next-line max-len
 export default class AddDraftPurchaseOrderEventHandler implements IEventHandler<AddDraftPurchaseOrderEventData> {
-  private readonly repository: IPurchaseOrderRepositoryCommands;
-
-  constructor(repository: IPurchaseOrderRepositoryCommands) {
-    this.repository = repository;
-  }
+  constructor(private readonly repository: IPurchaseOrderRepositoryCommands) { }
 
   public async handle(data: EventData<AddDraftPurchaseOrderEventData>): Promise<void> {
     try {

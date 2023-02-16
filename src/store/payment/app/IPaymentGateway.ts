@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import Payment from '@payment/domain/Payment';
 
 export type Item = {

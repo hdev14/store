@@ -4,11 +4,7 @@ import IPaymentGateway from './IPaymentGateway';
 
 // eslint-disable-next-line max-len
 export default class ChargePuchaseOrderEventHandler implements IHandler<void, ChargePurchaseOrderData> {
-  private readonly paymentGateway: IPaymentGateway;
-
-  constructor(paymentGateway: IPaymentGateway) {
-    this.paymentGateway = paymentGateway;
-  }
+  constructor(private readonly paymentGateway: IPaymentGateway) { }
 
   handle(data: ChargePurchaseOrderData): Promise<void> {
     throw new Error('Method not implemented.');

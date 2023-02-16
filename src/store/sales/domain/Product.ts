@@ -2,9 +2,9 @@ import Entity from '@shared/abstractions/Entity';
 import Validator from '@shared/utils/Validator';
 
 export default class Product extends Entity {
-  public name: string;
+  public readonly name: string;
 
-  public amount: number;
+  public readonly amount: number;
 
   constructor(id: string, name: string, amount: number) {
     super(id);

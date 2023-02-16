@@ -6,14 +6,10 @@ import { StartPurchaseOrderData } from './StartPurchaseOrderCommand';
 
 // eslint-disable-next-line max-len
 export default class StartPurchaseOrderCommandHandler implements IHandler<boolean, StartPurchaseOrderData> {
-  private readonly repository: IPurchaseOrderRepository;
-
-  private readonly publisher: EventPublisher;
-
-  constructor(repository: IPurchaseOrderRepository, publisher: EventPublisher) {
-    this.repository = repository;
-    this.publisher = publisher;
-  }
+  constructor(
+    private readonly repository: IPurchaseOrderRepository,
+    private readonly publisher: EventPublisher,
+  ) { }
 
   public async handle(data: StartPurchaseOrderData): Promise<boolean> {
     try {

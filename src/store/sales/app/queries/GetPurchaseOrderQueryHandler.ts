@@ -6,11 +6,7 @@ import { GetPurchaseOrderParams } from './GetPurchaseOrderQuery';
 import PurchaseOrderNotFoundError from '../PurchaseOrderNotFoundError';
 // eslint-disable-next-line max-len
 export default class GetPurchaseOrderQueryHandler implements IHandler<Results<PurchaseOrder>, GetPurchaseOrderParams> {
-  private readonly repository;
-
-  constructor(repository: IPurchaseOrderRepositoryQueries) {
-    this.repository = repository;
-  }
+  constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 
   public async handle(params: GetPurchaseOrderParams): Promise<Results<PurchaseOrder>> {
     const purchaseOrder = await this.repository.getPurchaseOrderById(params.purchaseOrderId);

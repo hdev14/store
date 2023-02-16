@@ -6,9 +6,7 @@ import { GetPurchaseOrdersParams } from './GetPurchaseOrdersQuery';
 
 // eslint-disable-next-line max-len
 export default class GetPurchaseOrdersQueryHandler implements IHandler<Results<PurchaseOrder>, GetPurchaseOrdersParams> {
-  private readonly repository: IPurchaseOrderRepositoryQueries;
-
-  constructor(repository: IPurchaseOrderRepositoryQueries) {
+  constructor(private readonly repository: IPurchaseOrderRepositoryQueries) {
     this.repository = repository;
   }
 

@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-interface IHandler<R = any, T = {}> {
+interface IHandler<R = any, T = object> {
   handle(data: T): Promise<R>;
 }
 

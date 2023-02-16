@@ -1,9 +1,9 @@
+import crypto from 'crypto';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import EventPublisher from '@shared/EventPublisher';
-import IGenerateID from '@shared/utils/IGenerateID';
 import IHandler from '@shared/abstractions/IHandler';
 import AddDraftPurchaseOrderEvent, { AddDraftPurchaseOrderEventData } from '../events/AddDraftPurchaseOrderEvent';
 import { AddPurchaseOrderItemCommandData } from './AddPurchaseOrderItemCommand';
@@ -13,19 +13,11 @@ import UpdatePurchaseOrderItemEvent, { UpdatePurchaserOrderItemEventData } from 
 
 // eslint-disable-next-line max-len
 export default class AddPurchaseOrderItemCommandHandler implements IHandler<boolean, AddPurchaseOrderItemCommandData> {
-  private readonly repository: IPurchaseOrderRepository;
-
-  private readonly generateID: IGenerateID;
-
-  private readonly eventPublisher: EventPublisher;
-
   constructor(
-    repository: IPurchaseOrderRepository,
-    generateID: IGenerateID,
-    eventPublisher: EventPublisher,
+    private readonly repository: IPurchaseOrderRepository,
+    private readonly eventPublisher: EventPublisher,
   ) {
     this.repository = repository;
-    this.generateID = generateID;
     this.eventPublisher = eventPublisher;
   }
 
@@ -34,7 +26,7 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<bool
 
     try {
       const purchaseOrderItem = new PurchaseOrderItem({
-        id: this.generateID(),
+        id: crypto.randomUUID(),
         product: new Product(
           data.productId,
           data.productName,
@@ -131,7 +123,7 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<bool
     const code = await this.repository.countPurchaseOrders() + 1;
 
     const newDraftPurchaseOrder = PurchaseOrder.createDraft({
-      id: this.generateID(),
+      id: crypto.randomUUID(),
       customerId,
       createdAt: new Date(),
       code,

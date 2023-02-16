@@ -4,11 +4,7 @@ import EventHandlerError from '@shared/errors/EventHandlerError';
 
 // eslint-disable-next-line max-len
 export default class RemovePurchaseOrderItemEventHandler implements IEventHandler {
-  private readonly repository: IPurchaseOrderRepositoryCommands;
-
-  constructor(repository: IPurchaseOrderRepositoryCommands) {
-    this.repository = repository;
-  }
+  constructor(private readonly repository: IPurchaseOrderRepositoryCommands) { }
 
   public async handle(data: EventData): Promise<void> {
     try {

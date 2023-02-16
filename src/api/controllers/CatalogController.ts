@@ -7,14 +7,10 @@ import ValidationError from '@shared/errors/ValidationError';
 import { NextFunction, Request, Response } from 'express';
 
 export default class CatalogController {
-  private readonly productService: IProductService;
-
-  private readonly categoryService: ICategoryService;
-
-  constructor(productService: IProductService, categoryService: ICategoryService) {
-    this.productService = productService;
-    this.categoryService = categoryService;
-  }
+  constructor(
+    private readonly productService: IProductService,
+    private readonly categoryService: ICategoryService,
+  ) { }
 
   public async getProductById(request: Request, response: Response, next: NextFunction) {
     try {

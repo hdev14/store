@@ -18,43 +18,19 @@ import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFound
 import VoucherNotFoundError from '@sales/app/VoucherNotFoundError';
 
 export default class SalesController {
-  private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>;
-
-  private readonly removePurchaseOrderItemCommand: Command<boolean, {}>;
-
-  private readonly applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>;
-
-  // eslint-disable-next-line max-len
-  private readonly updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>;
-
-  private readonly getPurchaseOrderQuery: Query<PurchaseOrder, GetPurchaseOrderParams>;
-
-  private readonly getPurchaseOrdersQuery: Query<PurchaseOrder, GetPurchaseOrdersParams>;
-
-  private readonly getPurchaseOrderItemQuery: Query<PurchaseOrderItem, GetPurchaseOrderItemParams>;
-
-  private readonly getVoucherQuery: Query<Voucher, GetVoucherParams>;
-
   constructor(
-    addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>,
-    removePurchaseOrderItemCommand: Command<boolean, RemovePurchaseOrderItemCommandData>,
-    applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>,
+    private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>,
     // eslint-disable-next-line max-len
-    updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>,
-    getPurchaseOrderQuery: Query<PurchaseOrder, GetPurchaseOrderParams>,
-    getPurchaseOrdersQuery: Query<PurchaseOrder, GetPurchaseOrdersParams>,
-    getPurchaseOrderItemQuery: Query<PurchaseOrderItem, GetPurchaseOrderItemParams>,
-    getVoucherQuery: Query<Voucher, GetVoucherParams>,
-  ) {
-    this.addPurchaseOrderItemCommand = addPurchaseOrderItemCommand;
-    this.removePurchaseOrderItemCommand = removePurchaseOrderItemCommand;
-    this.applyVoucherCommand = applyVoucherCommand;
-    this.updatePurchaseOrderItemQuantityCommand = updatePurchaseOrderItemQuantityCommand;
-    this.getPurchaseOrderQuery = getPurchaseOrderQuery;
-    this.getPurchaseOrdersQuery = getPurchaseOrdersQuery;
-    this.getPurchaseOrderItemQuery = getPurchaseOrderItemQuery;
-    this.getVoucherQuery = getVoucherQuery;
-  }
+    private readonly removePurchaseOrderItemCommand: Command<boolean, RemovePurchaseOrderItemCommandData>,
+    private readonly applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>,
+    // eslint-disable-next-line max-len
+    private readonly updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>,
+    private readonly getPurchaseOrderQuery: Query<PurchaseOrder, GetPurchaseOrderParams>,
+    private readonly getPurchaseOrdersQuery: Query<PurchaseOrder, GetPurchaseOrdersParams>,
+    // eslint-disable-next-line max-len
+    private readonly getPurchaseOrderItemQuery: Query<PurchaseOrderItem, GetPurchaseOrderItemParams>,
+    private readonly getVoucherQuery: Query<Voucher, GetVoucherParams>,
+  ) { }
 
   public async addPurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {

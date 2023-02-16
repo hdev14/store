@@ -36,7 +36,6 @@ import MongoPurchaseOrderRepository from '@sales/infra/persistence/MongoPurchase
 import PrismaPurchaseOrderRepository from '@sales/infra/persistence/PrismaPurchaseOrderRepository';
 import EventPublisher from '@shared/EventPublisher';
 import StoreMediator from '@shared/StoreMediator';
-import generateUUID from '@shared/utils/generateUUID';
 import CatalogController from './controllers/CatalogController';
 import SalesController from './controllers/SalesController';
 
@@ -70,8 +69,8 @@ storeMediator.addEvent(UpdatePurchaseOrderItemEvent.name, updatePurchaseOrderIte
 
 // Services
 const stockService = new StockService(productRepository, lowStockProductEvent);
-const productService = new ProductService(productRepository, generateUUID, stockService);
-const categoryService = new CategoryService(productRepository, generateUUID);
+const productService = new ProductService(productRepository, stockService);
+const categoryService = new CategoryService(productRepository);
 
 // Commands
 const addPurchaseOrderItemCommand = new AddPurchaseOrderItemCommand(storeMediator);
@@ -80,7 +79,7 @@ const applyVoucherCommand = new ApplyVoucherCommand(storeMediator);
 const updatePurchaseOrderItemQuantityCommand = new UpdatePurchaseOrderItemQuantityCommand(storeMediator);
 
 // Command Handlers
-const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository, generateUUID, eventPublisher);
+const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository, eventPublisher);
 const removePurchaseOrderItemCommandHandler = new RemovePurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository, eventPublisher);
 const applyVoucherCommandHandler = new ApplyVoucherCommandHandler(prismaPurchaseOrderRepository);
 const updatePurchaseOrderItemQuantityCommandHandler = new UpdatePurchaseOrderItemQuantityCommandHandler(prismaPurchaseOrderRepository, eventPublisher);

@@ -1,28 +1,17 @@
+import crypto from 'crypto';
 import IProductRepository from '@catalog/domain/IProductRepository';
 import Product, { ProductParams } from '@catalog/domain/Product';
 import IStockService from '@catalog/domain/IStockService';
-import IGenerateID from '@shared/utils/IGenerateID';
 import ProductNotFoundError from './ProductNotFoundError';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
 import StockError from './StockError';
 import CategoryNotFoundError from './CategoryNotFoundError';
 
 export default class ProductService implements IProductService {
-  private readonly repository: IProductRepository;
-
-  private readonly generateID: IGenerateID;
-
-  private readonly stockService: IStockService;
-
   constructor(
-    repository: IProductRepository,
-    generateID: IGenerateID,
-    stockService: IStockService,
-  ) {
-    this.repository = repository;
-    this.generateID = generateID;
-    this.stockService = stockService;
-  }
+    private readonly repository: IProductRepository,
+    private readonly stockService: IStockService,
+  ) { }
 
   public async getProductById(productId: string): Promise<Product> {
     const product = await this.repository.getProductById(productId);
@@ -54,7 +43,7 @@ export default class ProductService implements IProductService {
     }
 
     const product = await this.repository.addProduct(new Product({
-      id: this.generateID(),
+      id: crypto.randomUUID(),
       name: params.name,
       description: params.description,
       amount: params.amount,

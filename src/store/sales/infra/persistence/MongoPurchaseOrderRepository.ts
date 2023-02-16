@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 import { IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';

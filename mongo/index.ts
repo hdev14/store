@@ -20,7 +20,7 @@ export default class Mongo {
   static async dropCollections(collectionsToDrop: string[]) {
     if (process.env.NODE_ENV === 'test') {
       const promises = Object
-        .entries<Model<any, {}, {}, any>>(models)
+        .entries<Model<any, unknown, unknown, any>>(models)
         .map(async ([, model]) => {
           if (collectionsToDrop.includes(model.collection.collectionName)) {
             await model.collection.drop();

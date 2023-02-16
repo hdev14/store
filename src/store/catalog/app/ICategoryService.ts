@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import Category from '@catalog/domain/Category';
 
 export type DefaultCategoryParams = {
@@ -12,7 +11,9 @@ export type UpdateCategoryParams = Partial<DefaultCategoryParams>;
 
 interface ICategoryService {
   getAllCategories(): Promise<Category[]>;
+
   createCategory(params: CreateCategoryParams): Promise<Category>;
+
   updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<Category>;
 }
 

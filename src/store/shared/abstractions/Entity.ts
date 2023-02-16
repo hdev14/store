@@ -1,8 +1,10 @@
-export default abstract class Entity {
-  public id: string;
+import crypto from 'crypto';
 
-  protected constructor(id: string) {
-    this.id = id;
+export default abstract class Entity {
+  public readonly id: string;
+
+  protected constructor(id?: string) {
+    this.id = id || crypto.randomUUID();
   }
 
   public abstract validate(): boolean | void

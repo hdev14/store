@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-/* eslint-disable no-unused-vars */
 import PurchaseOrder from './PurchaseOrder';
 import PurchaseOrderItem from './PurchaseOrderItem';
 import Voucher from './Voucher';

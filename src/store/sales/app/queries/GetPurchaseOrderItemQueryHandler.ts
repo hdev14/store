@@ -7,11 +7,7 @@ import { GetPurchaseOrderItemParams } from './GetPurchaseOrderItemQuery';
 
 // eslint-disable-next-line max-len
 export default class GetPurchaseOrderItemQueryHandler implements IHandler<Results<PurchaseOrderItem>, GetPurchaseOrderItemParams> {
-  private readonly repository: IPurchaseOrderRepositoryQueries;
-
-  constructor(repository: IPurchaseOrderRepositoryQueries) {
-    this.repository = repository;
-  }
+  constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 
   public async handle(params: GetPurchaseOrderItemParams): Promise<Results<PurchaseOrderItem>> {
     const purchaseOrderItem = await this.repository
