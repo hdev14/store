@@ -4,7 +4,6 @@ import { DefaultProductParams, UpdateProductParams } from '@catalog/app/IProduct
 import StockError from '@catalog/app/StockError';
 import repositoryStub from '@tests/store/stubs/ProductRepositoryStub';
 import stockServiceStub from '@tests/store/stubs/StockServiceStub';
-import createGenerateIDMock from '@tests/store/stubs/createGenerateIDMock';
 import { fakeCategories, fakeProducts } from '@tests/store/fakes';
 import { faker } from '@faker-js/faker';
 import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
@@ -18,7 +17,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
       const products = await productService.getAllProducts();
@@ -36,7 +34,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
       const product = await productService.getProductById(fakeProducts[0].id);
@@ -60,7 +57,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
 
@@ -82,7 +78,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
       const firstCategoryProducts = await productService
@@ -98,13 +93,11 @@ describe('ProductsService\'s unit tests', () => {
 
   describe('ProductService.createProduct()', () => {
     it('creates a new product', async () => {
-      expect.assertions(5);
+      expect.assertions(4);
 
       const addProductSpy = jest.spyOn(repositoryStub, 'addProduct');
 
-      const generateIDMock = createGenerateIDMock(fakeProducts);
-
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(repositoryStub, stockServiceStub);
 
       const params: DefaultProductParams = {
         name: 'test_new_product',
@@ -126,7 +119,6 @@ describe('ProductsService\'s unit tests', () => {
       expect(product.createdAt).toBeInstanceOf(Date);
       expect(fakeProducts.find((p) => p.id === product.id)).toBeTruthy();
       expect(addProductSpy).toHaveBeenCalled();
-      expect(generateIDMock).toHaveBeenCalled();
     });
 
     it("throws an exception of CategoryNotFoundError if category doesn't exist", async () => {
@@ -136,9 +128,7 @@ describe('ProductsService\'s unit tests', () => {
 
       const getCategoryByIdSpy = jest.spyOn(repositoryStub, 'getCategoryById');
 
-      const generateIDMock = createGenerateIDMock(fakeProducts);
-
-      const productService = new ProductService(repositoryStub, generateIDMock, stockServiceStub);
+      const productService = new ProductService(repositoryStub, stockServiceStub);
 
       const params: DefaultProductParams = {
         name: 'test_new_product',
@@ -173,7 +163,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
 
@@ -214,7 +203,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
 
@@ -247,7 +235,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
 
@@ -284,7 +271,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
 
@@ -304,7 +290,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
 
@@ -324,7 +309,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
 
@@ -343,7 +327,6 @@ describe('ProductsService\'s unit tests', () => {
 
       const productService = new ProductService(
         repositoryStub,
-        createGenerateIDMock(fakeProducts),
         stockServiceStub,
       );
 

@@ -87,9 +87,7 @@ describe('InMemoryProductRepository\'s Unit Tests', () => {
       createdAt,
     });
 
-    product.name = 'updated test';
-
-    productRepository.updateProduct(product);
+    productRepository.updateProduct(new Product({ ...product, name: 'updated test' }));
 
     const inMemoryProduct = productRepository.products.find((p) => p._id === product.id);
 
@@ -129,9 +127,7 @@ describe('InMemoryProductRepository\'s Unit Tests', () => {
       code: fakeCategories[0].code,
     });
 
-    category.name = 'updated test';
-
-    productRepository.updateCategory(category);
+    productRepository.updateCategory(new Category({ ...category, name: 'updated test' }));
 
     const inMemoryCategory = productRepository.categories.find((p) => p._id === category.id);
 

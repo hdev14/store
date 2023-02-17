@@ -10,7 +10,6 @@ import AddPurchaseOrderItemEvent from '@sales/app/events/AddPurchaseOrderItemEve
 import UpdatePurchaseOrderItemEvent from '@sales/app/events/UpdatePurchaseOrderItemEvent';
 import UpdateDraftPurchaseOrderEvent from '@sales/app/events/UpdateDraftPurchaseOrderEvent';
 import { PublisherStup } from '../../stubs/EventPublisherStub';
-import createGenerateIDMock from '../../stubs/createGenerateIDMock';
 import { RepositoryStub } from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
@@ -30,7 +29,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -57,7 +55,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -84,7 +81,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -120,7 +116,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -148,7 +143,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -174,7 +168,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -223,7 +216,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -260,7 +252,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -297,7 +288,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -323,7 +313,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       new PublisherStup({} as Mediator),
     );
 
@@ -351,7 +340,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       publisher,
     );
 
@@ -380,7 +368,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       publisher,
     );
 
@@ -431,7 +418,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       publisher,
     );
 
@@ -459,7 +445,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
-      createGenerateIDMock(),
       publisher,
     );
 

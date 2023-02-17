@@ -3,7 +3,6 @@ import CategoryService from '@catalog/app/CategoryService';
 import { CreateCategoryParams } from '@catalog/app/ICategoryService';
 import { fakeCategories } from '@tests/store/fakes';
 import repositoryStub from '@tests/store/stubs/CategoryRepositoryStub';
-import createGenerateIDMock from '@tests/store/stubs/createGenerateIDMock';
 
 describe('CategoryService.getAllCategories', () => {
   describe('CategoryService.getAllCategories()', () => {
@@ -14,7 +13,6 @@ describe('CategoryService.getAllCategories', () => {
 
       const categoryService = new CategoryService(
         repositoryStub,
-        createGenerateIDMock(fakeCategories),
       );
       const categories = await categoryService.getAllCategories();
 
@@ -25,13 +23,12 @@ describe('CategoryService.getAllCategories', () => {
 
   describe('CategoryService.createCategory()', () => {
     it('creates a new category', async () => {
-      expect.assertions(5);
+      expect.assertions(4);
 
       const getAllCategoriesSpy = jest.spyOn(repositoryStub, 'getAllCategories');
       const addCategorySpy = jest.spyOn(repositoryStub, 'addCategory');
-      const generateIDMock = createGenerateIDMock(fakeCategories);
 
-      const categoryService = new CategoryService(repositoryStub, generateIDMock);
+      const categoryService = new CategoryService(repositoryStub);
 
       const params: CreateCategoryParams = {
         name: 'test_category',
@@ -41,7 +38,6 @@ describe('CategoryService.getAllCategories', () => {
 
       expect(category.id).toBeTruthy();
       expect(category.code).toBeTruthy();
-      expect(generateIDMock).toHaveBeenCalled();
       expect(getAllCategoriesSpy).toHaveBeenCalled();
       expect(addCategorySpy).toHaveBeenCalled();
     });
@@ -54,10 +50,7 @@ describe('CategoryService.getAllCategories', () => {
       const getCategoryByIdSpy = jest.spyOn(repositoryStub, 'getCategoryById');
       const updateCategorySpy = jest.spyOn(repositoryStub, 'updateCategory');
 
-      const categoryService = new CategoryService(
-        repositoryStub,
-        createGenerateIDMock(fakeCategories),
-      );
+      const categoryService = new CategoryService(repositoryStub);
 
       const category = await categoryService.updateCategory(fakeCategories[1].id, {
         name: 'test_category_updated',
@@ -72,10 +65,7 @@ describe('CategoryService.getAllCategories', () => {
     it('throws an exception of type CategoryNotFoundError if repository.getCategoryById returns null', async () => {
       expect.assertions(1);
 
-      const categoryService = new CategoryService(
-        repositoryStub,
-        createGenerateIDMock(fakeCategories),
-      );
+      const categoryService = new CategoryService(repositoryStub);
 
       try {
         await categoryService.updateCategory('wrong_id', {
