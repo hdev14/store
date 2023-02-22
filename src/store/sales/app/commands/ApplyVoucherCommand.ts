@@ -1,14 +1,17 @@
 import Command from '@shared/abstractions/Command';
 import Validator from '@shared/utils/Validator';
 
-export type ApplyVoucherCommandData = {
-  customerId: string;
-  voucherCode: number;
-}
+export default class ApplyVoucherCommand extends Command {
+  constructor(
+    readonly customerId: string,
+    readonly voucherCode: number,
+  ) {
+    super();
+    this.validate();
+  }
 
-export default class ApplyVoucherCommand extends Command<boolean, ApplyVoucherCommandData> {
-  public validate(data: ApplyVoucherCommandData): boolean | void {
-    Validator.setData(data)
+  protected validate(): void {
+    Validator.setData(this)
       .setRule('customerId', ['required', 'string', 'uuid'])
       .setRule('voucherCode', ['required', 'number', 'integer'])
       .validate();

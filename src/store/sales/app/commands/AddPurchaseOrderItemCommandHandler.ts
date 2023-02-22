@@ -3,60 +3,37 @@ import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import EventPublisher from '@shared/EventPublisher';
 import IHandler from '@shared/abstractions/IHandler';
-import AddDraftPurchaseOrderEvent, { AddDraftPurchaseOrderEventData } from '../events/AddDraftPurchaseOrderEvent';
-import { AddPurchaseOrderItemCommandData } from './AddPurchaseOrderItemCommand';
-import AddPurchaseOrderItemEvent, { AddPurchaseOrderItemEventData } from '../events/AddPurchaseOrderItemEvent';
-import UpdateDraftPurchaseOrderEvent, { UpdateDraftPurchaseOrderEventData } from '../events/UpdateDraftPurchaseOrderEvent';
-import UpdatePurchaseOrderItemEvent, { UpdatePurchaserOrderItemEventData } from '../events/UpdatePurchaseOrderItemEvent';
+import AddPurchaseOrderItemCommand from './AddPurchaseOrderItemCommand';
 
 // eslint-disable-next-line max-len
-export default class AddPurchaseOrderItemCommandHandler implements IHandler<boolean, AddPurchaseOrderItemCommandData> {
+export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddPurchaseOrderItemCommand, void> {
   constructor(
     private readonly repository: IPurchaseOrderRepository,
-    private readonly eventPublisher: EventPublisher,
   ) {
     this.repository = repository;
-    this.eventPublisher = eventPublisher;
   }
 
-  public async handle(data: AddPurchaseOrderItemCommandData): Promise<boolean> {
-    let hasExpection = false;
+  public async handle(event: AddPurchaseOrderItemCommand): Promise<void> {
+    const purchaseOrderItem = new PurchaseOrderItem({
+      id: crypto.randomUUID(),
+      product: new Product(
+        event.productId,
+        event.productName,
+        event.productAmount,
+      ),
+      quantity: event.quantity,
+    });
 
-    try {
-      const purchaseOrderItem = new PurchaseOrderItem({
-        id: crypto.randomUUID(),
-        product: new Product(
-          data.productId,
-          data.productName,
-          data.productAmount,
-        ),
-        quantity: data.quantity,
-      });
+    const draftPurchaseOrder = await this.repository
+      .getDraftPurchaseOrderByCustomerId(event.customerId);
 
-      const draftPurchaseOrder = await this.repository
-        .getDraftPurchaseOrderByCustomerId(data.customerId);
-
-      if (!draftPurchaseOrder) {
-        await this.createNewDraftPurcahseOrder(data.customerId, purchaseOrderItem);
-        return true;
-      }
-
-      await this.updatePurchaseOrder(draftPurchaseOrder, purchaseOrderItem);
-
-      return true;
-    } catch (e: any) {
-      console.error(e.stack);
-
-      hasExpection = true;
-
-      return false;
-    } finally {
-      if (!hasExpection) {
-        await this.eventPublisher.sendEvents();
-      }
+    if (!draftPurchaseOrder) {
+      await this.createNewDraftPurcahseOrder(event.customerId, purchaseOrderItem);
+      return;
     }
+
+    await this.updatePurchaseOrder(draftPurchaseOrder, purchaseOrderItem);
   }
 
   private async updatePurchaseOrder(
@@ -73,47 +50,47 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<bool
 
       await this.repository.updatePurchaseOrderItem(addedPurchaseOrderItem);
 
-      this.eventPublisher.addEvent<UpdatePurchaserOrderItemEventData>(
-        UpdatePurchaseOrderItemEvent,
-        {
-          principalId: addedPurchaseOrderItem.id,
-          productId: addedPurchaseOrderItem.product.id,
-          productName: addedPurchaseOrderItem.product.name,
-          productAmount: addedPurchaseOrderItem.product.amount,
-          quantity: addedPurchaseOrderItem.quantity,
-          timestamp: new Date().toISOString(),
-        },
-      );
+      // this.eventPublisher.addEvent<UpdatePurchaserOrderItemEventData>(
+      //   UpdatePurchaseOrderItemEvent,
+      //   {
+      //     principalId: addedPurchaseOrderItem.id,
+      //     productId: addedPurchaseOrderItem.product.id,
+      //     productName: addedPurchaseOrderItem.product.name,
+      //     productAmount: addedPurchaseOrderItem.product.amount,
+      //     quantity: addedPurchaseOrderItem.quantity,
+      //     timestamp: new Date().toISOString(),
+      //   },
+      // );
     } else {
       await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
-      this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
-        AddPurchaseOrderItemEvent,
-        {
-          principalId: purchaseOrderItem.id,
-          productId: purchaseOrderItem.product.id,
-          productName: purchaseOrderItem.product.name,
-          productAmount: purchaseOrderItem.product.amount,
-          purchaseOrderId: purchaseOrderItem.purchaseOrderId,
-          quantity: purchaseOrderItem.quantity,
-          timestamp: new Date().toISOString(),
-        },
-      );
+      // this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
+      //   AddPurchaseOrderItemEvent,
+      //   {
+      //     principalId: purchaseOrderItem.id,
+      //     productId: purchaseOrderItem.product.id,
+      //     productName: purchaseOrderItem.product.name,
+      //     productAmount: purchaseOrderItem.product.amount,
+      //     purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+      //     quantity: purchaseOrderItem.quantity,
+      //     timestamp: new Date().toISOString(),
+      //   },
+      // );
     }
 
     await this.repository.updatePurchaseOrder(draftPurchaseOrder);
 
-    this.eventPublisher.addEvent<UpdateDraftPurchaseOrderEventData>(
-      UpdateDraftPurchaseOrderEvent,
-      {
-        principalId: draftPurchaseOrder.id,
-        customerId: draftPurchaseOrder.customerId,
-        code: draftPurchaseOrder.code,
-        totalAmount: draftPurchaseOrder.totalAmount,
-        discountAmount: draftPurchaseOrder.discountAmount,
-        timestamp: new Date().toISOString(),
-      },
-    );
+    // this.eventPublisher.addEvent<UpdateDraftPurchaseOrderEventData>(
+    //   UpdateDraftPurchaseOrderEvent,
+    //   {
+    //     principalId: draftPurchaseOrder.id,
+    //     customerId: draftPurchaseOrder.customerId,
+    //     code: draftPurchaseOrder.code,
+    //     totalAmount: draftPurchaseOrder.totalAmount,
+    //     discountAmount: draftPurchaseOrder.discountAmount,
+    //     timestamp: new Date().toISOString(),
+    //   },
+    // );
   }
 
   private async createNewDraftPurcahseOrder(
@@ -137,30 +114,30 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<bool
 
     await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
-    this.eventPublisher.addEvent<AddDraftPurchaseOrderEventData>(
-      AddDraftPurchaseOrderEvent,
-      {
-        principalId: newDraftPurchaseOrder.id,
-        customerId: newDraftPurchaseOrder.customerId,
-        code: newDraftPurchaseOrder.code,
-        totalAmount: newDraftPurchaseOrder.totalAmount,
-        discountAmount: newDraftPurchaseOrder.discountAmount,
-        createdAt: newDraftPurchaseOrder.createdAt,
-        timestamp: new Date().toISOString(),
-      },
-    );
+    // this.eventPublisher.addEvent<AddDraftPurchaseOrderEventData>(
+    //   AddDraftPurchaseOrderEvent,
+    //   {
+    //     principalId: newDraftPurchaseOrder.id,
+    //     customerId: newDraftPurchaseOrder.customerId,
+    //     code: newDraftPurchaseOrder.code,
+    //     totalAmount: newDraftPurchaseOrder.totalAmount,
+    //     discountAmount: newDraftPurchaseOrder.discountAmount,
+    //     createdAt: newDraftPurchaseOrder.createdAt,
+    //     timestamp: new Date().toISOString(),
+    //   },
+    // );
 
-    this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
-      AddPurchaseOrderItemEvent,
-      {
-        principalId: purchaseOrderItem.id,
-        purchaseOrderId: purchaseOrderItem.purchaseOrderId,
-        quantity: purchaseOrderItem.quantity,
-        productId: purchaseOrderItem.product.id,
-        productName: purchaseOrderItem.product.name,
-        productAmount: purchaseOrderItem.product.amount,
-        timestamp: new Date().toISOString(),
-      },
-    );
+    // this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
+    //   AddPurchaseOrderItemEvent,
+    //   {
+    //     principalId: purchaseOrderItem.id,
+    //     purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+    //     quantity: purchaseOrderItem.quantity,
+    //     productId: purchaseOrderItem.product.id,
+    //     productName: purchaseOrderItem.product.name,
+    //     productAmount: purchaseOrderItem.product.amount,
+    //     timestamp: new Date().toISOString(),
+    //   },
+    // );
   }
 }

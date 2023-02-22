@@ -25,6 +25,7 @@ type PurchaseOrderWithVoucherAndItems = PrismaPurchaseOrder & {
   items?: Array<ItemWithProduct>;
 };
 
+// TODO: add try/catch and RepositoryError
 export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepository {
   private readonly connection: PrismaClient;
 

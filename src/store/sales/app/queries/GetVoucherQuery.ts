@@ -1,9 +1,7 @@
-import Voucher from '@sales/domain/Voucher';
 import Query from '@shared/abstractions/Query';
 
-export type GetVoucherParams = {
-  voucherCode: number;
+export default class GetVoucherQuery extends Query {
+  constructor(readonly voucherCode: number) {
+    super();
+  }
 }
-
-// eslint-disable-next-line max-len
-export default class GetVoucherQuery extends Query<Voucher, GetVoucherParams> {}

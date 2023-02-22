@@ -1,9 +1,7 @@
-import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import Query from '@shared/abstractions/Query';
 
-export type GetPurchaseOrdersParams = {
-  customerId: string;
+export default class GetPurchaseOrdersQuery extends Query {
+  constructor(readonly customerId: string) {
+    super();
+  }
 }
-
-// eslint-disable-next-line max-len
-export default class GetPurchaseOrdersQuery extends Query<PurchaseOrder, GetPurchaseOrdersParams> {}

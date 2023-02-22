@@ -1,18 +1,20 @@
 import Command from '@shared/abstractions/Command';
 import Validator from '@shared/utils/Validator';
 
-export type AddPurchaseOrderItemCommandData = {
-  customerId: string;
-  productId: string;
-  productName: string;
-  productAmount: number;
-  quantity: number;
-}
+export default class AddPurchaseOrderItemCommand extends Command {
+  constructor(
+    readonly customerId: string,
+    readonly productId: string,
+    readonly productName: string,
+    readonly productAmount: number,
+    readonly quantity: number,
+  ) {
+    super();
+    this.validate();
+  }
 
-// eslint-disable-next-line max-len
-export default class AddPurchaseOrderItemCommand extends Command<boolean, AddPurchaseOrderItemCommandData> {
-  public validate(data: AddPurchaseOrderItemCommandData): void {
-    Validator.setData(data)
+  protected validate(): void {
+    Validator.setData(this)
       .setRule('customerId', ['required', 'string', 'uuid'])
       .setRule('productId', ['required', 'string', 'uuid'])
       .setRule('productName', ['required', 'string'])

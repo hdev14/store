@@ -10,6 +10,7 @@ import VoucherModel, { IVoucher } from '@mongo/models/VoucherModel';
 import ProductModel, { IProduct } from '@mongo/models/ProductModel';
 import RepositoryError from '@shared/errors/RepositoryError';
 
+// TODO: add try/catch and RepositoryError
 export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
     const purchaseOrder = await PurchaseOrderModel
@@ -186,14 +187,9 @@ export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepos
   }
 
   public async deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<boolean> {
-    try {
-      const result = await PurchaseOrderItemModel.deleteOne({ _id: purchaseOrderItemId });
+    const result = await PurchaseOrderItemModel.deleteOne({ _id: purchaseOrderItemId });
 
-      return result.deletedCount > 0;
-    } catch (e: any) {
-      console.error(e.stack);
-      return false;
-    }
+    return result.deletedCount > 0;
   }
 
   private mapPurchaseOrder(purchaseOrder: IPurchaseOrder): PurchaseOrder {
