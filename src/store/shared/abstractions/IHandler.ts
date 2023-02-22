@@ -1,5 +1,5 @@
-interface IHandler<R = any, T = object> {
-  handle(data: T): Promise<R>;
+interface IHandler<E = any, R = any> {
+  handle(event: E): Promise<R>;
 }
 
 export default IHandler;

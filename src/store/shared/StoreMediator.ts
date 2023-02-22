@@ -1,5 +1,5 @@
-import Mediator from './abstractions/Mediator';
-import StoreMediatorError from './errors/StoreMediatorError';
+import Mediator from './Mediator';
+import StoreMediatorError from './errors/MediatorError';
 
 export default class StoreMediator extends Mediator {
   public async send<R>(name: string, data: any): Promise<void | R> {

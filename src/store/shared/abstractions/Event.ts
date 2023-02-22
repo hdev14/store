@@ -1,19 +1,10 @@
-import { EventData } from './IEventHandler';
-import Mediator from './Mediator';
+export default abstract class Event {
+  public readonly eventName: string;
 
-export abstract class Event<T = Record<string, any>> {
-  constructor(protected readonly mediator: Mediator) { }
+  public readonly date: Date;
 
-  public async send(data: EventData<T>): Promise<void> {
-    return this.mediator.send<void>(this.constructor.name, {
-      ...data,
-      eventType: this.constructor.name,
-    });
+  constructor() {
+    this.eventName = this.constructor.name;
+    this.date = new Date();
   }
 }
-
-export interface EventConstructor {
-  new(mediator: Mediator): Event;
-}
-
-export default Event;

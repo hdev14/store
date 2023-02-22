@@ -1,11 +1,5 @@
-import Operation from './Operation';
+import Event from './Event';
 
-export default abstract class Command<Result, Data> extends Operation<Result | void, Data> {
-  public async execute(data: Data): Promise<Result | void> {
-    this.validate(data);
-
-    return this.mediator.send<Result>(this.constructor.name, data);
-  }
-
-  public abstract validate(data: Data): void;
+export default abstract class Command extends Event {
+  protected abstract validate(): void;
 }
