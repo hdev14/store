@@ -14,6 +14,7 @@ import VoucherNotFoundError from '@sales/app/VoucherNotFoundError';
 import IMediator from '@shared/abstractions/IMediator';
 import VoucherInvalidError from '@sales/app/VoucherInvalidError';
 import PurchaseOrderItemNotDeletedError from '@sales/app/PurchaseOrderItemNotDeletedError.ts';
+import HttpStatusCodes from '@api/HttpStatusCodes';
 
 export default class SalesController {
   constructor(private readonly mediator: IMediator) { }
@@ -36,12 +37,12 @@ export default class SalesController {
         quantity,
       ));
 
-      return response.status(201).json({
+      return response.status(HttpStatusCodes.CREATED).json({
         message: 'Item adicionado ao pedido.',
       });
     } catch (e) {
       if (e instanceof ValidationError) {
-        return response.status(400).send({ errors: e.errors });
+        return response.status(HttpStatusCodes.BAD_REQUEST).send({ errors: e.errors });
       }
 
       return next(e);
@@ -54,14 +55,14 @@ export default class SalesController {
         new RemovePurchaseOrderItemCommand(request.params.id),
       );
 
-      return response.status(200).json({ message: 'Item excluido com sucesso.' });
+      return response.status(HttpStatusCodes.OK).json({ message: 'Item excluido com sucesso.' });
     } catch (e: any) {
       if (e instanceof ValidationError) {
-        return response.status(400).json({ errors: e.errors });
+        return response.status(HttpStatusCodes.BAD_REQUEST).json({ errors: e.errors });
       }
 
       if (e instanceof PurchaseOrderItemNotDeletedError) {
-        return response.status(422).json({ message: e.message });
+        return response.status(HttpStatusCodes.UNPROCESSABLE_ENTITY).json({ message: e.message });
       }
 
       return next(e);
@@ -74,20 +75,20 @@ export default class SalesController {
 
       await this.mediator.send(new ApplyVoucherCommand(customerId, voucherCode));
 
-      return response.status(200).json({
+      return response.status(HttpStatusCodes.OK).json({
         message: 'Voucher aplicado com sucesso.',
       });
     } catch (e) {
       if (e instanceof ValidationError) {
-        return response.status(400).json({ errors: e.errors });
+        return response.status(HttpStatusCodes.BAD_REQUEST).json({ errors: e.errors });
       }
 
       if (e instanceof VoucherInvalidError) {
-        return response.status(422).json({ message: e.message });
+        return response.status(HttpStatusCodes.UNPROCESSABLE_ENTITY).json({ message: e.message });
       }
 
       if (e instanceof VoucherNotFoundError || e instanceof PurchaseOrderNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
 
       return next(e);
@@ -104,10 +105,10 @@ export default class SalesController {
         new UpdatePurchaseOrderItemQuantityCommand(id, quantity),
       );
 
-      return response.status(204).json({});
+      return response.status(HttpStatusCodes.NO_CONTENT).json({});
     } catch (e) {
       if (e instanceof PurchaseOrderItemNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
 
       return next(e);
@@ -118,10 +119,10 @@ export default class SalesController {
     try {
       const purchaseOrder = await this.mediator.send(new GetPurchaseOrderQuery(request.params.id));
 
-      return response.status(200).json(purchaseOrder);
+      return response.status(HttpStatusCodes.OK).json(purchaseOrder);
     } catch (e) {
       if (e instanceof PurchaseOrderNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
 
       return next(e);
@@ -134,7 +135,7 @@ export default class SalesController {
         new GetPurchaseOrdersQuery(request.params.id),
       );
 
-      return response.status(200).json(purchaseOrders);
+      return response.status(HttpStatusCodes.OK).json(purchaseOrders);
     } catch (e) {
       return next(e);
     }
@@ -146,10 +147,10 @@ export default class SalesController {
         new GetPurchaseOrderItemQuery(request.params.id),
       );
 
-      return response.status(200).json(purchaseOrderItem);
+      return response.status(HttpStatusCodes.OK).json(purchaseOrderItem);
     } catch (e) {
       if (e instanceof PurchaseOrderItemNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
 
       return next(e);
@@ -162,10 +163,10 @@ export default class SalesController {
 
       const voucher = await this.mediator.send(new GetVoucherQuery(Number(code)));
 
-      return response.status(200).json(voucher);
+      return response.status(HttpStatusCodes.OK).json(voucher);
     } catch (e) {
       if (e instanceof VoucherNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
       return next(e);
     }

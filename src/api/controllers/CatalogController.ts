@@ -1,3 +1,4 @@
+import HttpStatusCodes from '@api/HttpStatusCodes';
 import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 import ICategoryService from '@catalog/app/ICategoryService';
 import IProductService from '@catalog/app/IProductService';
@@ -18,10 +19,10 @@ export default class CatalogController {
 
       const product = await this.productService.getProductById(id);
 
-      return response.status(200).json({ product });
+      return response.status(HttpStatusCodes.OK).json({ product });
     } catch (e) {
       if (e instanceof ProductNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
 
       return next(e);
@@ -32,7 +33,7 @@ export default class CatalogController {
     try {
       const products = await this.productService.getAllProducts();
 
-      return response.status(200).json({ results: products });
+      return response.status(HttpStatusCodes.OK).json({ results: products });
     } catch (e) {
       return next(e);
     }
@@ -44,7 +45,7 @@ export default class CatalogController {
 
       const products = await this.productService.getProductsByCategory(categoryId);
 
-      return response.status(200).json({ results: products });
+      return response.status(HttpStatusCodes.OK).json({ results: products });
     } catch (e) {
       return next(e);
     }
@@ -68,14 +69,14 @@ export default class CatalogController {
         },
       });
 
-      return response.status(201).json(product);
+      return response.status(HttpStatusCodes.CREATED).json(product);
     } catch (e) {
       if (e instanceof CategoryNotFoundError) {
-        return response.status(400).json({ message: e.message });
+        return response.status(HttpStatusCodes.BAD_REQUEST).json({ message: e.message });
       }
 
       if (e instanceof ValidationError) {
-        return response.status(400).json({ errors: e.errors });
+        return response.status(HttpStatusCodes.BAD_REQUEST).json({ errors: e.errors });
       }
 
       return next(e);
@@ -89,10 +90,10 @@ export default class CatalogController {
 
       const product = await this.productService.updateProduct(productId, data);
 
-      return response.status(200).json(product);
+      return response.status(HttpStatusCodes.OK).json(product);
     } catch (e) {
       if (e instanceof ProductNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
 
       return next(e);
@@ -106,10 +107,10 @@ export default class CatalogController {
 
       await this.productService.updateProductStock(productId, quantity);
 
-      return response.status(204).json({});
+      return response.status(HttpStatusCodes.NO_CONTENT).json({});
     } catch (e) {
       if (e instanceof StockError) {
-        return response.status(422).json({ message: e.message });
+        return response.status(HttpStatusCodes.UNPROCESSABLE_ENTITY).json({ message: e.message });
       }
 
       return next(e);
@@ -120,7 +121,7 @@ export default class CatalogController {
     try {
       const categories = await this.categoryService.getAllCategories();
 
-      return response.status(200).json({ results: categories });
+      return response.status(HttpStatusCodes.OK).json({ results: categories });
     } catch (e) {
       return next(e);
     }
@@ -132,10 +133,10 @@ export default class CatalogController {
 
       const category = await this.categoryService.createCategory(data);
 
-      return response.status(201).json(category);
+      return response.status(HttpStatusCodes.CREATED).json(category);
     } catch (e) {
       if (e instanceof ValidationError) {
-        return response.status(400).json({ errors: e.errors });
+        return response.status(HttpStatusCodes.BAD_REQUEST).json({ errors: e.errors });
       }
 
       return next(e);
@@ -149,14 +150,14 @@ export default class CatalogController {
 
       const category = await this.categoryService.updateCategory(categoryId, data);
 
-      return response.status(200).json(category);
+      return response.status(HttpStatusCodes.OK).json(category);
     } catch (e) {
       if (e instanceof ValidationError) {
-        return response.status(400).json({ errors: e.errors });
+        return response.status(HttpStatusCodes.BAD_REQUEST).json({ errors: e.errors });
       }
 
       if (e instanceof CategoryNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
 
       return next(e);
