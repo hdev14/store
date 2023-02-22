@@ -1,36 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
-import { AddPurchaseOrderItemCommandData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
-import Command from '@shared/abstractions/Command';
+import AddPurchaseOrderItemCommand from '@sales/app/commands/AddPurchaseOrderItemCommand';
 import ValidationError from '@shared/errors/ValidationError';
-import { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand';
-import { UpdatePurchaseOrderItemQuantityCommandData } from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
-import Query from '@shared/abstractions/Query';
-import { RemovePurchaseOrderItemCommandData } from '@sales/app/commands/RemovePurchaseOrderItemCommand';
-import PurchaseOrder from '@sales/domain/PurchaseOrder';
-import { GetPurchaseOrderParams } from '@sales/app/queries/GetPurchaseOrderQuery';
-import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import { GetPurchaseOrderItemParams } from '@sales/app/queries/GetPurchaseOrderItemQuery';
-import { GetPurchaseOrdersParams } from '@sales/app/queries/GetPurchaseOrdersQuery';
-import Voucher from '@sales/domain/Voucher';
-import { GetVoucherParams } from '@sales/app/queries/GetVoucherQuery';
+import ApplyVoucherCommand from '@sales/app/commands/ApplyVoucherCommand';
+import UpdatePurchaseOrderItemQuantityCommand from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
+import RemovePurchaseOrderItemCommand from '@sales/app/commands/RemovePurchaseOrderItemCommand';
+import GetPurchaseOrderQuery from '@sales/app/queries/GetPurchaseOrderQuery';
+import GetPurchaseOrderItemQuery from '@sales/app/queries/GetPurchaseOrderItemQuery';
+import GetPurchaseOrdersQuery from '@sales/app/queries/GetPurchaseOrdersQuery';
+import GetVoucherQuery from '@sales/app/queries/GetVoucherQuery';
 import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
 import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
 import VoucherNotFoundError from '@sales/app/VoucherNotFoundError';
+import IMediator from '@shared/abstractions/IMediator';
+import VoucherInvalidError from '@sales/app/VoucherInvalidError';
+import PurchaseOrderItemNotDeletedError from '@sales/app/PurchaseOrderItemNotDeletedError.ts';
 
 export default class SalesController {
-  constructor(
-    private readonly addPurchaseOrderItemCommand: Command<boolean, AddPurchaseOrderItemCommandData>,
-    // eslint-disable-next-line max-len
-    private readonly removePurchaseOrderItemCommand: Command<boolean, RemovePurchaseOrderItemCommandData>,
-    private readonly applyVoucherCommand: Command<boolean, ApplyVoucherCommandData>,
-    // eslint-disable-next-line max-len
-    private readonly updatePurchaseOrderItemQuantityCommand: Command<boolean, UpdatePurchaseOrderItemQuantityCommandData>,
-    private readonly getPurchaseOrderQuery: Query<PurchaseOrder, GetPurchaseOrderParams>,
-    private readonly getPurchaseOrdersQuery: Query<PurchaseOrder, GetPurchaseOrdersParams>,
-    // eslint-disable-next-line max-len
-    private readonly getPurchaseOrderItemQuery: Query<PurchaseOrderItem, GetPurchaseOrderItemParams>,
-    private readonly getVoucherQuery: Query<Voucher, GetVoucherParams>,
-  ) { }
+  constructor(private readonly mediator: IMediator) { }
 
   public async addPurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
@@ -42,22 +28,16 @@ export default class SalesController {
         quantity,
       } = request.body;
 
-      const result = await this.addPurchaseOrderItemCommand.execute({
+      await this.mediator.send(new AddPurchaseOrderItemCommand(
         customerId,
         productId,
         productName,
         productAmount,
         quantity,
-      });
+      ));
 
-      if (result) {
-        return response.status(201).json({
-          message: 'Item adicionado ao pedido.',
-        });
-      }
-
-      return response.status(422).json({
-        message: 'Não foi possível adicionar o item ao pedido.',
+      return response.status(201).json({
+        message: 'Item adicionado ao pedido.',
       });
     } catch (e) {
       if (e instanceof ValidationError) {
@@ -70,20 +50,18 @@ export default class SalesController {
 
   public async removePurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
-      const result = await this.removePurchaseOrderItemCommand.execute({
-        purchaseOrderItemId: request.params.id,
-      });
-
-      if (!result) {
-        return response.status(422).json({
-          message: 'Não foi possível excluir o item.',
-        });
-      }
+      await this.mediator.send(
+        new RemovePurchaseOrderItemCommand(request.params.id),
+      );
 
       return response.status(200).json({ message: 'Item excluido com sucesso.' });
-    } catch (e) {
+    } catch (e: any) {
       if (e instanceof ValidationError) {
         return response.status(400).json({ errors: e.errors });
+      }
+
+      if (e instanceof PurchaseOrderItemNotDeletedError) {
+        return response.status(422).json({ message: e.message });
       }
 
       return next(e);
@@ -94,16 +72,7 @@ export default class SalesController {
     try {
       const { customerId, voucherCode } = request.body;
 
-      const result = await this.applyVoucherCommand.execute({
-        customerId,
-        voucherCode,
-      });
-
-      if (!result) {
-        return response.status(422).json({
-          message: 'Não foi possível utilizar este voucher.',
-        });
-      }
+      await this.mediator.send(new ApplyVoucherCommand(customerId, voucherCode));
 
       return response.status(200).json({
         message: 'Voucher aplicado com sucesso.',
@@ -111,6 +80,14 @@ export default class SalesController {
     } catch (e) {
       if (e instanceof ValidationError) {
         return response.status(400).json({ errors: e.errors });
+      }
+
+      if (e instanceof VoucherInvalidError) {
+        return response.status(422).json({ message: e.message });
+      }
+
+      if (e instanceof VoucherNotFoundError || e instanceof PurchaseOrderNotFoundError) {
+        return response.status(404).json({ message: e.message });
       }
 
       return next(e);
@@ -123,30 +100,25 @@ export default class SalesController {
       const { id } = request.params;
       const { quantity } = request.body;
 
-      const result = await this.updatePurchaseOrderItemQuantityCommand.execute({
-        purchaseOrderItemId: id,
-        quantity,
-      });
-
-      if (!result) {
-        return response.status(422).json({ message: 'Não foi possível atualizar a quantidade do item.' });
-      }
+      await this.mediator.send(
+        new UpdatePurchaseOrderItemQuantityCommand(id, quantity),
+      );
 
       return response.status(204).json({});
     } catch (e) {
+      if (e instanceof PurchaseOrderItemNotFoundError) {
+        return response.status(404).json({ message: e.message });
+      }
+
       return next(e);
     }
   }
 
   public async getPurchaseOrder(request: Request, response: Response, next: NextFunction) {
     try {
-      const { id } = request.params;
+      const purchaseOrder = await this.mediator.send(new GetPurchaseOrderQuery(request.params.id));
 
-      const data = await this.getPurchaseOrderQuery.execute({
-        purchaseOrderId: id,
-      });
-
-      return response.status(200).json(data.results[0]);
+      return response.status(200).json(purchaseOrder);
     } catch (e) {
       if (e instanceof PurchaseOrderNotFoundError) {
         return response.status(404).json({ message: e.message });
@@ -158,13 +130,11 @@ export default class SalesController {
 
   public async getPurchaseOrders(request: Request, response: Response, next: NextFunction) {
     try {
-      const { id } = request.params;
+      const purchaseOrders = await this.mediator.send(
+        new GetPurchaseOrdersQuery(request.params.id),
+      );
 
-      const result = await this.getPurchaseOrdersQuery.execute({
-        customerId: id,
-      });
-
-      return response.status(200).json(result);
+      return response.status(200).json(purchaseOrders);
     } catch (e) {
       return next(e);
     }
@@ -172,13 +142,11 @@ export default class SalesController {
 
   public async getPurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
-      const { id } = request.params;
+      const purchaseOrderItem = await this.mediator.send(
+        new GetPurchaseOrderItemQuery(request.params.id),
+      );
 
-      const result = await this.getPurchaseOrderItemQuery.execute({
-        purchaseOrderItemId: id,
-      });
-
-      return response.status(200).json(result.results[0]);
+      return response.status(200).json(purchaseOrderItem);
     } catch (e) {
       if (e instanceof PurchaseOrderItemNotFoundError) {
         return response.status(404).json({ message: e.message });
@@ -192,11 +160,9 @@ export default class SalesController {
     try {
       const { code } = request.params;
 
-      const result = await this.getVoucherQuery.execute({
-        voucherCode: Number(code),
-      });
+      const voucher = await this.mediator.send(new GetVoucherQuery(Number(code)));
 
-      return response.status(200).json(result.results[0]);
+      return response.status(200).json(voucher);
     } catch (e) {
       if (e instanceof VoucherNotFoundError) {
         return response.status(404).json({ message: e.message });
