@@ -5,6 +5,7 @@ import IProductRepository from '@catalog/domain/IProductRepository';
 import Product from '@catalog/domain/Product';
 import Prisma from '@shared/Prisma';
 
+// TODO: add try/catch and RepositoryError
 export default class PrismaProductRepository implements IProductRepository {
   private readonly connection: PrismaClient;
 

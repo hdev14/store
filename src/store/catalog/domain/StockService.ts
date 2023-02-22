@@ -1,12 +1,12 @@
-import Event from '@shared/abstractions/Event';
+import IMediator from '@shared/abstractions/IMediator';
 import { IProductOperations } from './IProductRepository';
 import IStockService from './IStockService';
-import { LowStockProductData } from './LowStockProductEvent';
+import LowStockProductEvent from './LowStockProductEvent';
 
 export default class StockService implements IStockService {
   constructor(
     private readonly productRepository: IProductOperations,
-    private readonly lowStockProductEvent: Event<LowStockProductData>,
+    private readonly mediator: IMediator,
   ) { }
 
   public async addToStock(productId: string, quantity: number): Promise<boolean> {
@@ -35,12 +35,11 @@ export default class StockService implements IStockService {
     await this.productRepository.updateProduct(product);
 
     if (product.stockQuantity < 5) {
-      await this.lowStockProductEvent.send({
-        principalId: product.id,
-        timestamp: new Date().toISOString(),
-        productName: product.name,
-        productQuantity: product.stockQuantity,
-      });
+      await this.mediator.send(new LowStockProductEvent(
+        product.id,
+        product.name,
+        product.stockQuantity,
+      ));
     }
 
     return true;

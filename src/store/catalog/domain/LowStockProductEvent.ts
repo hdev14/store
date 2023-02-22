@@ -1,8 +1,11 @@
-import Event from '@shared/abstractions/Event';
+import DomainEvent from '@shared/abstractions/DomainEvent';
 
-export type LowStockProductData = {
-  productName: string;
-  productQuantity: number;
+export default class LowStockProductEvent extends DomainEvent {
+  constructor(
+    readonly principalId: string,
+    readonly productName: string,
+    readonly productQuantity: number,
+  ) {
+    super(principalId);
+  }
 }
-
-export default class LowStockProductEvent extends Event<LowStockProductData> {}
