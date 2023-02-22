@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { GetVoucherParams } from '@sales/app/queries/GetVoucherQuery';
+import GetVoucherQuery from '@sales/app/queries/GetVoucherQuery';
 import GetVoucherQueryHandler from '@sales/app/queries/GetVoucherQueryHandler';
 import VoucherNotFoundError from '@sales/app/VoucherNotFoundError';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
@@ -13,41 +13,39 @@ describe("GetVoucherQueryHandler's unit tests", () => {
 
     const handler = new GetVoucherQueryHandler(repositoryStub);
 
-    const params: GetVoucherParams = {
-      voucherCode: faker.datatype.number(),
-    };
+    const query = new GetVoucherQuery(faker.datatype.number());
 
-    await handler.handle(params);
+    await handler.handle(query);
 
-    expect(getVoucherByCodeSpy).toHaveBeenCalledWith(params.voucherCode);
+    expect(getVoucherByCodeSpy).toHaveBeenCalledWith(query.voucherCode);
   });
 
   it('returns a result if purchase order exists', async () => {
     expect.assertions(1);
 
+    const voucher = new Voucher({
+      id: faker.datatype.uuid(),
+      percentageAmount: faker.datatype.float(),
+      rawDiscountAmount: faker.datatype.float(),
+      quantity: parseInt(faker.datatype.number().toString(), 10),
+      type: VoucherDiscountTypes.ABSOLUTE,
+      createdAt: new Date(),
+      expiresAt: new Date(),
+      usedAt: new Date(),
+      active: false,
+      code: parseInt(faker.datatype.number().toString(), 10),
+    });
+
     jest.spyOn(repositoryStub, 'getVoucherByCode')
-      .mockResolvedValueOnce(new Voucher({
-        id: faker.datatype.uuid(),
-        percentageAmount: faker.datatype.float(),
-        rawDiscountAmount: faker.datatype.float(),
-        quantity: parseInt(faker.datatype.number().toString(), 10),
-        type: VoucherDiscountTypes.ABSOLUTE,
-        createdAt: new Date(),
-        expiresAt: new Date(),
-        usedAt: new Date(),
-        active: false,
-        code: parseInt(faker.datatype.number().toString(), 10),
-      }));
+      .mockResolvedValueOnce(voucher);
 
     const handler = new GetVoucherQueryHandler(repositoryStub);
 
-    const params: GetVoucherParams = {
-      voucherCode: faker.datatype.number(),
-    };
+    const query = new GetVoucherQuery(faker.datatype.number());
 
-    const result = await handler.handle(params);
+    const result = await handler.handle(query);
 
-    expect(result.results).toHaveLength(1);
+    expect(result).toEqual(voucher);
   });
 
   it("throws a VoucherNotFoundError if purchase order item doesn't exist", async () => {
@@ -57,12 +55,10 @@ describe("GetVoucherQueryHandler's unit tests", () => {
 
     const handler = new GetVoucherQueryHandler(repositoryStub);
 
-    const params: GetVoucherParams = {
-      voucherCode: faker.datatype.number(),
-    };
+    const query = new GetVoucherQuery(faker.datatype.number());
 
     try {
-      await handler.handle(params);
+      await handler.handle(query);
     } catch (e: any) {
       expect(e).toBeInstanceOf(VoucherNotFoundError);
       expect(e.message).toBe('Voucher não encontrado.');

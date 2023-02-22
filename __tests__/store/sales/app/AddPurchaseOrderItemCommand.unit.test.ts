@@ -1,88 +1,16 @@
-import { faker } from '@faker-js/faker';
-import AddPurchaseOrderItemCommand, { AddPurchaseOrderItemCommandData } from '@sales/app/commands/AddPurchaseOrderItemCommand';
+import AddPurchaseOrderItemCommand from '@sales/app/commands/AddPurchaseOrderItemCommand';
 import ValidationError from '@shared/errors/ValidationError';
-import mediatorStub from '../../stubs/MediatorStub';
 
 describe("AddPurchaseOrderItemCommand's unit tests", () => {
   it('throws an exception of type ValidationError if command data is invalid', async () => {
-    expect.assertions(2);
-    const command = new AddPurchaseOrderItemCommand(mediatorStub);
-
-    try {
-      const invalidData: any = {
-        customerId: 'wrong',
-        principalId: 'wrong',
-        productAmount: 'wrong',
-        productId: 'wrong',
-        productName: 123,
-        quantity: 'wrong',
-      };
-
-      await command.execute(invalidData);
-    } catch (e: any) {
-      expect(e).toBeInstanceOf(ValidationError);
-      expect(e.errors).toHaveLength(5);
-    }
-  });
-
-  it('calls Mediator.send method with correct params', async () => {
-    expect.assertions(2);
-
-    const sendSpy = jest.spyOn(mediatorStub, 'send');
-
-    const command = new AddPurchaseOrderItemCommand(mediatorStub);
-
-    const data: AddPurchaseOrderItemCommandData = {
-      customerId: faker.datatype.uuid(),
-      productId: faker.datatype.uuid(),
-      productName: faker.commerce.product(),
-      quantity: 1,
-      productAmount: faker.datatype.float(),
-    };
-
-    await command.execute(data);
-
-    expect(sendSpy).toHaveBeenCalledTimes(1);
-    expect(sendSpy).toHaveBeenCalledWith('AddPurchaseOrderItemCommand', data);
-  });
-
-  it('returns TRUE if mediator.send execute successfully', async () => {
     expect.assertions(1);
 
-    mediatorStub.send = jest.fn().mockResolvedValueOnce(true);
-
-    const command = new AddPurchaseOrderItemCommand(mediatorStub);
-
-    const data: AddPurchaseOrderItemCommandData = {
-      customerId: faker.datatype.uuid(),
-      productId: faker.datatype.uuid(),
-      productName: faker.commerce.product(),
-      quantity: 1,
-      productAmount: faker.datatype.float(),
-    };
-
-    const result = await command.execute(data);
-
-    expect(result).toBe(true);
-  });
-
-  it('returns FALSE if mediator.send fails', async () => {
-    expect.assertions(1);
-
-    mediatorStub.send = jest.fn().mockResolvedValueOnce(false);
-
-    const command = new AddPurchaseOrderItemCommand(mediatorStub);
-
-    const data: AddPurchaseOrderItemCommandData = {
-      customerId: faker.datatype.uuid(),
-      productId: faker.datatype.uuid(),
-      productName: faker.commerce.product(),
-      quantity: 1,
-      productAmount: faker.datatype.float(),
-    };
-
-    const result = await command.execute(data);
-
-    expect(result).toBe(false);
+    expect(() => new AddPurchaseOrderItemCommand(
+      'wrong',
+      'wrong',
+      'wrong',
+      'wrong' as any,
+      123,
+    )).toThrowError(ValidationError);
   });
 });

@@ -1,6 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { ApplyVoucherCommandData } from '@sales/app/commands/ApplyVoucherCommand';
+import ApplyVoucherCommand from '@sales/app/commands/ApplyVoucherCommand';
 import ApplyVoucherCommandHandler from '@sales/app/commands/ApplyVoucherCommandHandler';
+import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
+import VoucherInvalidError from '@sales/app/VoucherInvalidError';
+import VoucherNotFoundError from '@sales/app/VoucherNotFoundError';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
@@ -13,18 +16,18 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: ApplyVoucherCommandData = {
-      customerId: faker.datatype.uuid(),
-      voucherCode: parseInt(faker.datatype.number().toString(), 10),
-    };
+    const command = new ApplyVoucherCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
 
-    await handler.handle(data);
+    await handler.handle(command);
 
     expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledTimes(1);
-    expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledWith(data.customerId);
+    expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledWith(command.customerId);
   });
 
-  it("returns FALSE if purchase order doesn't exist", async () => {
+  it("throws a PurchaseOrderNotFoundError if purchase order doesn't exist", async () => {
     expect.assertions(1);
 
     repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
@@ -32,53 +35,87 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: ApplyVoucherCommandData = {
-      customerId: faker.datatype.uuid(),
-      voucherCode: parseInt(faker.datatype.number().toString(), 10),
-    };
+    const command = new ApplyVoucherCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
 
-    const result = await handler.handle(data);
-
-    expect(result).toBe(false);
+    try {
+      await handler.handle(command);
+    } catch (e) {
+      expect(e).toBeInstanceOf(PurchaseOrderNotFoundError);
+    }
   });
 
   it('calls repository.getVoucherByCode', async () => {
     expect.assertions(2);
 
+    repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
+      .mockResolvedValueOnce(new PurchaseOrder({
+        customerId: faker.datatype.uuid(),
+        code: parseInt(faker.random.numeric(), 10),
+        createdAt: new Date(),
+        id: faker.datatype.uuid(),
+        status: PurchaseOrderStatus.DRAFT,
+        voucher: null,
+      }));
+
     const getVoucherByCodeSpy = jest.spyOn(repositoryStub, 'getVoucherByCode');
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: ApplyVoucherCommandData = {
-      customerId: faker.datatype.uuid(),
-      voucherCode: parseInt(faker.datatype.number().toString(), 10),
-    };
+    const command = new ApplyVoucherCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
 
-    await handler.handle(data);
+    await handler.handle(command);
 
     expect(getVoucherByCodeSpy).toHaveBeenCalledTimes(1);
-    expect(getVoucherByCodeSpy).toHaveBeenCalledWith(data.voucherCode);
+    expect(getVoucherByCodeSpy).toHaveBeenCalledWith(command.voucherCode);
   });
 
-  it("returns FALSE if voucher doesn't exist", async () => {
+  it("throws a VoucherNotFoundError if voucher doesn't exist", async () => {
     expect.assertions(1);
+
+    repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
+      .mockResolvedValueOnce(new PurchaseOrder({
+        customerId: faker.datatype.uuid(),
+        code: parseInt(faker.random.numeric(), 10),
+        createdAt: new Date(),
+        id: faker.datatype.uuid(),
+        status: PurchaseOrderStatus.DRAFT,
+        voucher: null,
+      }));
 
     repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(null);
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: ApplyVoucherCommandData = {
-      customerId: faker.datatype.uuid(),
-      voucherCode: parseInt(faker.datatype.number().toString(), 10),
-    };
+    const command = new ApplyVoucherCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
 
-    const result = await handler.handle(data);
-
-    expect(result).toBe(false);
+    try {
+      await handler.handle(command);
+    } catch (e) {
+      expect(e).toBeInstanceOf(VoucherNotFoundError);
+    }
   });
 
-  it('returns FALSE if voucher is deactive', async () => {
+  it('throws a VoucherInvalidError if voucher is deactive', async () => {
     expect.assertions(1);
+
+    repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
+      .mockResolvedValueOnce(new PurchaseOrder({
+        customerId: faker.datatype.uuid(),
+        code: parseInt(faker.random.numeric(), 10),
+        createdAt: new Date(),
+        id: faker.datatype.uuid(),
+        status: PurchaseOrderStatus.DRAFT,
+        voucher: null,
+      }));
 
     repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(new Voucher({
       id: faker.datatype.uuid(),
@@ -95,21 +132,33 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: ApplyVoucherCommandData = {
-      customerId: faker.datatype.uuid(),
-      voucherCode: parseInt(faker.datatype.number().toString(), 10),
-    };
+    const command = new ApplyVoucherCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
 
-    const result = await handler.handle(data);
-
-    expect(result).toBe(false);
+    try {
+      await handler.handle(command);
+    } catch (e) {
+      expect(e).toBeInstanceOf(VoucherInvalidError);
+    }
   });
 
-  it('returns FALSE if voucher is expired', async () => {
+  it('throws a VoucherInvalidError if voucher is expired', async () => {
     expect.assertions(1);
 
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - 1);
+
+    repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
+      .mockResolvedValueOnce(new PurchaseOrder({
+        customerId: faker.datatype.uuid(),
+        code: parseInt(faker.random.numeric(), 10),
+        createdAt: new Date(),
+        id: faker.datatype.uuid(),
+        status: PurchaseOrderStatus.DRAFT,
+        voucher: null,
+      }));
 
     repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(new Voucher({
       id: faker.datatype.uuid(),
@@ -126,14 +175,16 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: ApplyVoucherCommandData = {
-      customerId: faker.datatype.uuid(),
-      voucherCode: parseInt(faker.datatype.number().toString(), 10),
-    };
+    const command = new ApplyVoucherCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
 
-    const result = await handler.handle(data);
-
-    expect(result).toBe(false);
+    try {
+      await handler.handle(command);
+    } catch (e) {
+      expect(e).toBeInstanceOf(VoucherInvalidError);
+    }
   });
 
   it('applies voucher to purchase order', async () => {
@@ -163,32 +214,15 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: ApplyVoucherCommandData = {
-      customerId: faker.datatype.uuid(),
-      voucherCode: parseInt(faker.datatype.number().toString(), 10),
-    };
+    const command = new ApplyVoucherCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
 
-    await handler.handle(data);
+    await handler.handle(command);
 
     expect(fakeDraftPurchaseOrder.applyVoucher).toHaveBeenCalledTimes(1);
     expect(fakeDraftPurchaseOrder.applyVoucher).toHaveBeenCalledWith(voucher);
-  });
-
-  it('returns FALSE when occurs an expected error', async () => {
-    expect.assertions(1);
-
-    repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn().mockRejectedValueOnce(new Error('test'));
-
-    const handler = new ApplyVoucherCommandHandler(repositoryStub);
-
-    const data: ApplyVoucherCommandData = {
-      customerId: faker.datatype.uuid(),
-      voucherCode: parseInt(faker.datatype.number().toString(), 10),
-    };
-
-    const result = await handler.handle(data);
-
-    expect(result).toBe(false);
   });
 
   it('calls repository.updatePurchaseOrder', async () => {
@@ -225,12 +259,12 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const handler = new ApplyVoucherCommandHandler(repositoryStub);
 
-    const data: ApplyVoucherCommandData = {
-      customerId: faker.datatype.uuid(),
-      voucherCode: parseInt(faker.datatype.number().toString(), 10),
-    };
+    const command = new ApplyVoucherCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
 
-    await handler.handle(data);
+    await handler.handle(command);
 
     expect(updatePurchaseOrderSpy).toHaveBeenCalledTimes(1);
     expect(updatePurchaseOrderSpy).toHaveBeenCalledWith(purchaseOrder);

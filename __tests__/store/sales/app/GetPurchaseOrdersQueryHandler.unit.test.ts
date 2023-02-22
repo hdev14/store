@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { GetPurchaseOrdersParams } from '@sales/app/queries/GetPurchaseOrdersQuery';
+import GetPurchaseOrdersQuery from '@sales/app/queries/GetPurchaseOrdersQuery';
 import GetPurchaseOrdersQueryHandler from '@sales/app/queries/GetPurchaseOrdersQueryHandler';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
@@ -12,16 +12,14 @@ describe("GetPurchaseOrdersQueryHandler's unit tests", () => {
 
     const handler = new GetPurchaseOrdersQueryHandler(repositoryStub);
 
-    const params: GetPurchaseOrdersParams = {
-      customerId: faker.datatype.uuid(),
-    };
+    const query = new GetPurchaseOrdersQuery(faker.datatype.uuid());
 
-    await handler.handle(params);
+    await handler.handle(query);
 
-    expect(getPurchaseOrdersByCustomerId).toHaveBeenCalledWith(params.customerId);
+    expect(getPurchaseOrdersByCustomerId).toHaveBeenCalledWith(query.customerId);
   });
 
-  it('returns a result with purchase orders', async () => {
+  it('returns an array of PurchaseOrder with purchase orders', async () => {
     expect.assertions(1);
 
     jest.spyOn(repositoryStub, 'getPurchaseOrdersByCustomerId')
@@ -46,12 +44,10 @@ describe("GetPurchaseOrdersQueryHandler's unit tests", () => {
 
     const handler = new GetPurchaseOrdersQueryHandler(repositoryStub);
 
-    const params: GetPurchaseOrdersParams = {
-      customerId: faker.datatype.uuid(),
-    };
+    const query = new GetPurchaseOrdersQuery(faker.datatype.uuid());
 
-    const result = await handler.handle(params);
+    const result = await handler.handle(query);
 
-    expect(result.results).toHaveLength(2);
+    expect(result).toHaveLength(2);
   });
 });

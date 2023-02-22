@@ -900,25 +900,6 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         _id: fakePurchaseOrderItemId,
       });
     });
-
-    it('returns FALSE if occur an expected error', async () => {
-      expect.assertions(2);
-
-      PurchaseOrderItemModelMock.deleteOne.mockClear();
-
-      const fakePurchaseOrderItemId = faker.datatype.uuid();
-
-      PurchaseOrderItemModelMock.deleteOne.mockRejectedValueOnce(new Error('Test'));
-
-      const repository = new MongoPurchaseOrderRepository();
-
-      const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
-
-      expect(result).toBe(false);
-      expect(PurchaseOrderItemModelMock.deleteOne).toHaveBeenCalledWith({
-        _id: fakePurchaseOrderItemId,
-      });
-    });
   });
 
   describe('MongoPurchaseOrderRepository.getVoucherByCode()', () => {

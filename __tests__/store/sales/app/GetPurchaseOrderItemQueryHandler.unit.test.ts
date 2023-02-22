@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
-import { GetPurchaseOrderItemParams } from '@sales/app/queries/GetPurchaseOrderItemQuery';
+import GetPurchaseOrderItemQuery from '@sales/app/queries/GetPurchaseOrderItemQuery';
 import GetPurchaseOrderItemQueryHandler from '@sales/app/queries/GetPurchaseOrderItemQueryHandler';
 import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
@@ -14,38 +14,36 @@ describe("GetPurchaseOrderItemQueryHandler's unit tests", () => {
 
     const handler = new GetPurchaseOrderItemQueryHandler(repositoryStub);
 
-    const params: GetPurchaseOrderItemParams = {
-      purchaseOrderItemId: faker.datatype.uuid(),
-    };
+    const query = new GetPurchaseOrderItemQuery(faker.datatype.uuid());
 
-    await handler.handle(params);
+    await handler.handle(query);
 
-    expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledWith(params.purchaseOrderItemId);
+    expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledWith(query.purchaseOrderItemId);
   });
 
-  it('returns a result if purchase order exists', async () => {
+  it('returns a PurchaseOrderItem if purchase order exists', async () => {
     expect.assertions(1);
 
+    const purchaseOrderItem = new PurchaseOrderItem({
+      id: faker.datatype.uuid(),
+      quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+      product: new Product(
+        faker.datatype.uuid(),
+        faker.commerce.product(),
+        faker.datatype.float(),
+      ),
+    });
+
     jest.spyOn(repositoryStub, 'getPurchaseOrderItemById')
-      .mockResolvedValueOnce(new PurchaseOrderItem({
-        id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
-      }));
+      .mockResolvedValueOnce(purchaseOrderItem);
 
     const handler = new GetPurchaseOrderItemQueryHandler(repositoryStub);
 
-    const params: GetPurchaseOrderItemParams = {
-      purchaseOrderItemId: faker.datatype.uuid(),
-    };
+    const query = new GetPurchaseOrderItemQuery(faker.datatype.uuid());
 
-    const result = await handler.handle(params);
+    const result = await handler.handle(query);
 
-    expect(result.results).toHaveLength(1);
+    expect(result).toEqual(purchaseOrderItem);
   });
 
   it("throws a PurchaseOrderItemNotFoundError if purchase order item doesn't exist", async () => {
@@ -55,12 +53,10 @@ describe("GetPurchaseOrderItemQueryHandler's unit tests", () => {
 
     const handler = new GetPurchaseOrderItemQueryHandler(repositoryStub);
 
-    const params: GetPurchaseOrderItemParams = {
-      purchaseOrderItemId: faker.datatype.uuid(),
-    };
+    const query = new GetPurchaseOrderItemQuery(faker.datatype.uuid());
 
     try {
-      await handler.handle(params);
+      await handler.handle(query);
     } catch (e: any) {
       expect(e).toBeInstanceOf(PurchaseOrderItemNotFoundError);
       expect(e.message).toBe('Item não encontrado.');

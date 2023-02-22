@@ -1,9 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { RemovePurchaseOrderItemCommandData } from '@sales/app/commands/RemovePurchaseOrderItemCommand';
+import RemovePurchaseOrderItemCommand from '@sales/app/commands/RemovePurchaseOrderItemCommand';
 import RemovePurchaseOrderItemCommandHandler from '@sales/app/commands/RemovePurchaseOrderItemCommandHandler';
-import RemovePurchaseOrderItemEvent from '@sales/app/events/RemovePurchaseOrderItemEvent';
+import PurchaseOrderItemNotDeletedError from '@sales/app/PurchaseOrderItemNotDeletedError.ts';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
-import publisherStub from '../../stubs/EventPublisherStub';
 
 describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
   it('calls repository.deletePurchaseOrderItem with correct id', async () => {
@@ -11,91 +10,30 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
 
     const deletePurchaseOrderItemSpy = jest.spyOn(repositoryStub, 'deletePurchaseOrderItem');
 
-    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub, publisherStub);
+    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
 
-    const data: RemovePurchaseOrderItemCommandData = {
-      purchaseOrderItemId: faker.datatype.uuid(),
-    };
+    const command = new RemovePurchaseOrderItemCommand(faker.datatype.uuid());
 
-    await handler.handle(data);
+    await handler.handle(command);
 
     expect(deletePurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
-    expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(data.purchaseOrderItemId);
+    expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(command.purchaseOrderItemId);
   });
 
-  it('returns TRUE after remove purchase order item', async () => {
-    expect.assertions(1);
+  it('throws a PurchaseOrderItemNotDeletedError if purchase order item was not deleted', async () => {
+    expect.assertions(2);
 
-    repositoryStub.deletePurchaseOrderItem = jest.fn().mockResolvedValueOnce(true);
+    repositoryStub.deletePurchaseOrderItem = jest.fn().mockResolvedValueOnce(false);
 
-    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub, publisherStub);
+    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
 
-    const data: RemovePurchaseOrderItemCommandData = {
-      purchaseOrderItemId: faker.datatype.uuid(),
-    };
+    const command = new RemovePurchaseOrderItemCommand(faker.datatype.uuid());
 
-    const result = await handler.handle(data);
-
-    expect(result).toBe(true);
-  });
-
-  it('returns FALSE if occurs an expected error', async () => {
-    expect.assertions(1);
-
-    repositoryStub.deletePurchaseOrderItem = jest.fn().mockRejectedValueOnce(new Error('test'));
-
-    const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub, publisherStub);
-
-    const data: RemovePurchaseOrderItemCommandData = {
-      purchaseOrderItemId: faker.datatype.uuid(),
-    };
-
-    const result = await handler.handle(data);
-
-    expect(result).toBe(false);
-  });
-
-  it('calls publisher.addEvent with correct params', async () => {
-    expect.assertions(3);
-
-    repositoryStub.deletePurchaseOrderItem = jest.fn().mockResolvedValueOnce(true);
-
-    const addEventSpy = jest.spyOn(publisherStub, 'addEvent');
-
-    const handler = new RemovePurchaseOrderItemCommandHandler(
-      repositoryStub,
-      publisherStub,
-    );
-
-    const data: RemovePurchaseOrderItemCommandData = {
-      purchaseOrderItemId: faker.datatype.uuid(),
-    };
-
-    await handler.handle(data);
-
-    expect(addEventSpy).toHaveBeenCalledTimes(1);
-    expect(addEventSpy.mock.calls[0][0]).toEqual(RemovePurchaseOrderItemEvent);
-
-    const secondParam: any = addEventSpy.mock.calls[0][1];
-    expect(secondParam.principalId).toEqual(data.purchaseOrderItemId);
-  });
-
-  it('calls publisher.sendEvents after the logic', async () => {
-    expect.assertions(1);
-
-    const sendEventsSpy = jest.spyOn(publisherStub, 'sendEvents');
-
-    const handler = new RemovePurchaseOrderItemCommandHandler(
-      repositoryStub,
-      publisherStub,
-    );
-
-    const data: RemovePurchaseOrderItemCommandData = {
-      purchaseOrderItemId: faker.datatype.uuid(),
-    };
-
-    await handler.handle(data);
-
-    expect(sendEventsSpy).toHaveBeenCalledTimes(1);
+    try {
+      await handler.handle(command);
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(PurchaseOrderItemNotDeletedError);
+      expect(e.message).toEqual('Não foi possível excluir o item.');
+    }
   });
 });
