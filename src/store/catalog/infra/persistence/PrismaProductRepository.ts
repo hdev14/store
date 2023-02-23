@@ -4,8 +4,8 @@ import Dimensions from '@catalog/domain/Dimensions';
 import IProductRepository from '@catalog/domain/IProductRepository';
 import Product from '@catalog/domain/Product';
 import Prisma from '@shared/Prisma';
+import RepositoryError from '@shared/errors/RepositoryError';
 
-// TODO: add try/catch and RepositoryError
 export default class PrismaProductRepository implements IProductRepository {
   private readonly connection: PrismaClient;
 
@@ -14,117 +14,172 @@ export default class PrismaProductRepository implements IProductRepository {
   }
 
   public async getAllProducts(): Promise<Product[]> {
-    const products = await this.connection.product.findMany({
-      include: { category: true },
-    });
+    try {
+      const products = await this.connection.product.findMany({
+        include: { category: true },
+      });
 
-    return products.map(this.mapProduct.bind(this));
+      return products.map(this.mapProduct.bind(this));
+    } catch (e: any) {
+      console.error(e.stack);
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getProductById(id: string): Promise<Product | null> {
-    const product = await this.connection.product.findUnique({
-      where: { id },
-      include: { category: true },
-    });
+    try {
+      const product = await this.connection.product.findUnique({
+        where: { id },
+        include: { category: true },
+      });
 
-    if (product) {
-      return this.mapProduct(product);
+      if (product) {
+        return this.mapProduct(product);
+      }
+
+      return null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
     }
-
-    return null;
   }
 
   public async getProductsByCategory(categoryId: string): Promise<Product[]> {
-    const products = await this.connection.product.findMany({
-      where: { categoryId },
-      include: { category: true },
-    });
+    try {
+      const products = await this.connection.product.findMany({
+        where: { categoryId },
+        include: { category: true },
+      });
 
-    return products.map(this.mapProduct.bind(this));
+      return products.map(this.mapProduct.bind(this));
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getAllCategories(): Promise<Category[]> {
-    const categories = await this.connection.category.findMany();
+    try {
+      const categories = await this.connection.category.findMany();
 
-    return categories.map(this.mapCategory.bind(this));
+      return categories.map(this.mapCategory.bind(this));
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async addProduct(product: Product): Promise<Product> {
-    const createdProduct = await this.connection.product.create({
-      data: {
-        id: product.id,
-        name: product.name,
-        active: product.active,
-        amount: product.amount,
-        description: product.description,
-        image: product.image,
-        stockQuantity: product.stockQuantity,
-        height: product.dimensions.height,
-        width: product.dimensions.width,
-        depth: product.dimensions.depth,
-        categoryId: product.category.id,
-        createdAt: product.createdAt,
-      },
-      include: { category: true },
-    });
+    try {
+      const createdProduct = await this.connection.product.create({
+        data: {
+          id: product.id,
+          name: product.name,
+          active: product.active,
+          amount: product.amount,
+          description: product.description,
+          image: product.image,
+          stockQuantity: product.stockQuantity,
+          height: product.dimensions.height,
+          width: product.dimensions.width,
+          depth: product.dimensions.depth,
+          categoryId: product.category.id,
+          createdAt: product.createdAt,
+        },
+        include: { category: true },
+      });
 
-    return this.mapProduct(createdProduct);
+      return this.mapProduct(createdProduct);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getCategoryById(categoryId: string): Promise<Category | null> {
-    const category = await this.connection.category.findUnique({
-      where: { id: categoryId },
-    });
+    try {
+      const category = await this.connection.category.findUnique({
+        where: { id: categoryId },
+      });
 
-    return category ? this.mapCategory(category) : null;
+      return category ? this.mapCategory(category) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async updateProduct(product: Product): Promise<Product> {
-    const updatedProduct = await this.connection.product.update({
-      where: {
-        id: product.id,
-      },
-      data: {
-        name: product.name,
-        active: product.active,
-        amount: product.amount,
-        description: product.description,
-        image: product.image,
-        stockQuantity: product.stockQuantity,
-        height: product.dimensions.height,
-        width: product.dimensions.width,
-        depth: product.dimensions.depth,
-        categoryId: product.category.id,
-        createdAt: product.createdAt,
-      },
-      include: { category: true },
-    });
+    try {
+      const updatedProduct = await this.connection.product.update({
+        where: {
+          id: product.id,
+        },
+        data: {
+          name: product.name,
+          active: product.active,
+          amount: product.amount,
+          description: product.description,
+          image: product.image,
+          stockQuantity: product.stockQuantity,
+          height: product.dimensions.height,
+          width: product.dimensions.width,
+          depth: product.dimensions.depth,
+          categoryId: product.category.id,
+          createdAt: product.createdAt,
+        },
+        include: { category: true },
+      });
 
-    return this.mapProduct(updatedProduct);
+      return this.mapProduct(updatedProduct);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async addCategory(category: Category): Promise<Category> {
-    const addedCategory = await this.connection.category.create({
-      data: {
-        id: category.id,
-        name: category.name,
-        code: category.code,
-      },
-    });
+    try {
+      const addedCategory = await this.connection.category.create({
+        data: {
+          id: category.id,
+          name: category.name,
+          code: category.code,
+        },
+      });
 
-    return this.mapCategory(addedCategory);
+      return this.mapCategory(addedCategory);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async updateCategory(category: Category): Promise<Category> {
-    const updatedCategory = await this.connection.category.update({
-      where: { id: category.id },
-      data: {
-        name: category.name,
-        code: category.code,
-      },
-    });
+    try {
+      const updatedCategory = await this.connection.category.update({
+        where: { id: category.id },
+        data: {
+          name: category.name,
+          code: category.code,
+        },
+      });
 
-    return this.mapCategory(updatedCategory);
+      return this.mapCategory(updatedCategory);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   private mapProduct(product: PrismaProduct & { category: PrismaCategory }): Product {
