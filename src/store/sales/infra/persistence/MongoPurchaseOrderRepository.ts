@@ -10,186 +10,251 @@ import VoucherModel, { IVoucher } from '@mongo/models/VoucherModel';
 import ProductModel, { IProduct } from '@mongo/models/ProductModel';
 import RepositoryError from '@shared/errors/RepositoryError';
 
-// TODO: add try/catch and RepositoryError
 export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
-    const purchaseOrder = await PurchaseOrderModel
-      .findOne({ _id: id })
-      .populate({ path: 'voucher', model: VoucherModel })
-      .populate({
-        path: 'items',
-        model: PurchaseOrderItemModel,
-        populate: {
-          path: 'product',
-          select: '_id name amount',
-          model: ProductModel,
-        },
-      });
+    try {
+      const purchaseOrder = await PurchaseOrderModel
+        .findOne({ _id: id })
+        .populate({ path: 'voucher', model: VoucherModel })
+        .populate({
+          path: 'items',
+          model: PurchaseOrderItemModel,
+          populate: {
+            path: 'product',
+            select: '_id name amount',
+            model: ProductModel,
+          },
+        });
 
-    return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
+      return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getPurchaseOrdersByCustomerId(id: string): Promise<PurchaseOrder[]> {
-    const purchaseOrders = await PurchaseOrderModel.find({ customer: id })
-      .populate({ path: 'voucher', model: VoucherModel })
-      .populate({
-        path: 'items',
-        model: PurchaseOrderItemModel,
-        populate: {
-          path: 'product',
-          select: '_id name amount',
-          model: ProductModel,
-        },
-      });
+    try {
+      const purchaseOrders = await PurchaseOrderModel.find({ customer: id })
+        .populate({ path: 'voucher', model: VoucherModel })
+        .populate({
+          path: 'items',
+          model: PurchaseOrderItemModel,
+          populate: {
+            path: 'product',
+            select: '_id name amount',
+            model: ProductModel,
+          },
+        });
 
-    return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
+      return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getDraftPurchaseOrderByCustomerId(id: string): Promise<PurchaseOrder | null> {
-    const purchaseOrder = await PurchaseOrderModel
-      .findOne({ customer: id, status: PurchaseOrderStatus.DRAFT })
-      .populate({
-        path: 'items',
-        model: PurchaseOrderItemModel,
-        populate: {
-          path: 'product',
-          select: '_id name amount',
-          model: ProductModel,
-        },
-      });
+    try {
+      const purchaseOrder = await PurchaseOrderModel
+        .findOne({ customer: id, status: PurchaseOrderStatus.DRAFT })
+        .populate({
+          path: 'items',
+          model: PurchaseOrderItemModel,
+          populate: {
+            path: 'product',
+            select: '_id name amount',
+            model: ProductModel,
+          },
+        });
 
-    return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
+      return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
-    const purchaseOrderItem = await PurchaseOrderItemModel.findOne(
-      { _id: id },
-      undefined,
-      {
-        populate: {
-          path: 'product',
-          select: '_id name amount',
-          model: ProductModel,
+    try {
+      const purchaseOrderItem = await PurchaseOrderItemModel.findOne(
+        { _id: id },
+        undefined,
+        {
+          populate: {
+            path: 'product',
+            select: '_id name amount',
+            model: ProductModel,
+          },
         },
-      },
-    );
+      );
 
-    return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
+      return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getPurchaseOrderItem(params: { purchaseOrderId: string, productId: string }): Promise<PurchaseOrderItem | null> {
-    const purchaseOrderItem = await PurchaseOrderItemModel.findOne(
-      { product: params.productId, purchaseOrder: params.purchaseOrderId },
-      undefined,
-      {
-        populate: {
-          path: 'product',
-          select: '_id name amount',
-          model: ProductModel,
+    try {
+      const purchaseOrderItem = await PurchaseOrderItemModel.findOne(
+        { product: params.productId, purchaseOrder: params.purchaseOrderId },
+        undefined,
+        {
+          populate: {
+            path: 'product',
+            select: '_id name amount',
+            model: ProductModel,
+          },
         },
-      },
-    );
+      );
 
-    return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
+      return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getVoucherByCode(code: number): Promise<Voucher | null> {
-    const voucher = await VoucherModel.findOne({ code });
+    try {
+      const voucher = await VoucherModel.findOne({ code });
 
-    return voucher ? this.mapVoucher(voucher) : null;
+      return voucher ? this.mapVoucher(voucher) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    const createdPurchaseOrder = await PurchaseOrderModel.create({
-      _id: purchaseOrder.id,
-      customer: purchaseOrder.customerId,
-      items: purchaseOrder.items.map(({ id }) => id),
-      voucher: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
-      code: purchaseOrder.code,
-      totalAmount: purchaseOrder.totalAmount,
-      discountAmount: purchaseOrder.discountAmount,
-      status: purchaseOrder.status,
-      createdAt: purchaseOrder.createdAt,
-    });
+    try {
+      const createdPurchaseOrder = await PurchaseOrderModel.create({
+        _id: purchaseOrder.id,
+        customer: purchaseOrder.customerId,
+        items: purchaseOrder.items.map(({ id }) => id),
+        voucher: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
+        code: purchaseOrder.code,
+        totalAmount: purchaseOrder.totalAmount,
+        discountAmount: purchaseOrder.discountAmount,
+        status: purchaseOrder.status,
+        createdAt: purchaseOrder.createdAt,
+      });
 
-    const populatedPurchaseOrder = await PurchaseOrderModel.populate(
-      createdPurchaseOrder,
-      { path: 'voucher', model: VoucherModel },
-    );
+      const populatedPurchaseOrder = await PurchaseOrderModel.populate(
+        createdPurchaseOrder,
+        { path: 'voucher', model: VoucherModel },
+      );
 
-    return this.mapPurchaseOrder(populatedPurchaseOrder);
+      return this.mapPurchaseOrder(populatedPurchaseOrder);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    const purchaseOrderToUpdate = await PurchaseOrderModel.findOne(
-      { _id: purchaseOrder.id },
-    );
+    try {
+      const purchaseOrderToUpdate = await PurchaseOrderModel.findOne(
+        { _id: purchaseOrder.id },
+      );
 
-    if (!purchaseOrderToUpdate) {
-      throw new Error('PurchaseOrder not found');
+      if (!purchaseOrderToUpdate) {
+        throw new Error('PurchaseOrder not found');
+      }
+
+      purchaseOrderToUpdate.code = purchaseOrder.code;
+      purchaseOrderToUpdate.discountAmount = purchaseOrder.discountAmount;
+      purchaseOrderToUpdate.totalAmount = purchaseOrder.totalAmount;
+      purchaseOrderToUpdate.status = purchaseOrder.status;
+
+      if (purchaseOrder.voucher) {
+        purchaseOrderToUpdate.voucher = purchaseOrder.voucher.id;
+      }
+
+      purchaseOrderToUpdate.items = purchaseOrder.items.map(({ id }) => id);
+
+      await purchaseOrderToUpdate.save();
+
+      const populatedPurchaseOrder = await PurchaseOrderModel.populate(
+        purchaseOrderToUpdate,
+        { path: 'voucher', model: VoucherModel },
+      );
+
+      return this.mapPurchaseOrder(populatedPurchaseOrder);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
     }
-
-    purchaseOrderToUpdate.code = purchaseOrder.code;
-    purchaseOrderToUpdate.discountAmount = purchaseOrder.discountAmount;
-    purchaseOrderToUpdate.totalAmount = purchaseOrder.totalAmount;
-    purchaseOrderToUpdate.status = purchaseOrder.status;
-
-    if (purchaseOrder.voucher) {
-      purchaseOrderToUpdate.voucher = purchaseOrder.voucher.id;
-    }
-
-    purchaseOrderToUpdate.items = purchaseOrder.items.map(({ id }) => id);
-
-    await purchaseOrderToUpdate.save();
-
-    const populatedPurchaseOrder = await PurchaseOrderModel.populate(
-      purchaseOrderToUpdate,
-      { path: 'voucher', model: VoucherModel },
-    );
-
-    return this.mapPurchaseOrder(populatedPurchaseOrder);
   }
 
   public async addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
-    const createdPurchaseOrderItem = await PurchaseOrderItemModel.create({
-      _id: purchaseOrderItem.id,
-      purchaseOrder: purchaseOrderItem.purchaseOrderId,
-      quantity: purchaseOrderItem.quantity,
-      product: purchaseOrderItem.product.id,
-    });
+    try {
+      const createdPurchaseOrderItem = await PurchaseOrderItemModel.create({
+        _id: purchaseOrderItem.id,
+        purchaseOrder: purchaseOrderItem.purchaseOrderId,
+        quantity: purchaseOrderItem.quantity,
+        product: purchaseOrderItem.product.id,
+      });
 
-    const populatedPurchaseOrderItem = await createdPurchaseOrderItem.populate({
-      path: 'product', select: '_id name amount', model: ProductModel,
-    });
+      const populatedPurchaseOrderItem = await createdPurchaseOrderItem.populate({
+        path: 'product', select: '_id name amount', model: ProductModel,
+      });
 
-    return this.mapPurchaseOrderItem(populatedPurchaseOrderItem);
+      return this.mapPurchaseOrderItem(populatedPurchaseOrderItem);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
-    const updatedPurchaseOrderItem = await PurchaseOrderItemModel.findOneAndUpdate(
-      { id: purchaseOrderItem.id },
-      { $set: { quantity: purchaseOrderItem.quantity } },
-      {
-        new: true,
-        populate: {
-          path: 'product',
-          select: '_id name amount',
-          model: ProductModel,
+    try {
+      const updatedPurchaseOrderItem = await PurchaseOrderItemModel.findOneAndUpdate(
+        { id: purchaseOrderItem.id },
+        { $set: { quantity: purchaseOrderItem.quantity } },
+        {
+          new: true,
+          populate: {
+            path: 'product',
+            select: '_id name amount',
+            model: ProductModel,
+          },
         },
-      },
-    );
+      );
 
-    if (!updatedPurchaseOrderItem) {
-      throw new RepositoryError(this.constructor.name, 'Item não encontrado.');
+      if (!updatedPurchaseOrderItem) {
+        throw new RepositoryError(this.constructor.name, 'Item não encontrado.');
+      }
+
+      return this.mapPurchaseOrderItem(updatedPurchaseOrderItem);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
     }
-
-    return this.mapPurchaseOrderItem(updatedPurchaseOrderItem);
   }
 
   public async deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<boolean> {
-    const result = await PurchaseOrderItemModel.deleteOne({ _id: purchaseOrderItemId });
+    try {
+      const result = await PurchaseOrderItemModel.deleteOne({ _id: purchaseOrderItemId });
 
-    return result.deletedCount > 0;
+      return result.deletedCount > 0;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   private mapPurchaseOrder(purchaseOrder: IPurchaseOrder): PurchaseOrder {
