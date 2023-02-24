@@ -10,6 +10,7 @@ import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderParams, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
+import RepositoryError from '@shared/errors/RepositoryError';
 import Prisma from '@shared/Prisma';
 
 type ItemWithProduct = PrismaPurchaseOrderItem & {
@@ -25,7 +26,6 @@ type PurchaseOrderWithVoucherAndItems = PrismaPurchaseOrder & {
   items?: Array<ItemWithProduct>;
 };
 
-// TODO: add try/catch and RepositoryError
 export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepository {
   private readonly connection: PrismaClient;
 
@@ -34,196 +34,250 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
   }
 
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
-    const purchaseOrder = await this.connection.purchaseOrder.findUnique({
-      where: { id },
-      include: {
-        voucher: true,
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                amount: true,
+    try {
+      const purchaseOrder = await this.connection.purchaseOrder.findUnique({
+        where: { id },
+        include: {
+          voucher: true,
+          items: {
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  amount: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
+      return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getPurchaseOrdersByCustomerId(id: string): Promise<PurchaseOrder[]> {
-    const purchaseOrders = await this.connection.purchaseOrder.findMany({
-      where: { customerId: id },
-      include: {
-        voucher: true,
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                amount: true,
+    try {
+      const purchaseOrders = await this.connection.purchaseOrder.findMany({
+        where: { customerId: id },
+        include: {
+          voucher: true,
+          items: {
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  amount: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
+      return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getDraftPurchaseOrderByCustomerId(id: string): Promise<PurchaseOrder | null> {
-    const purchaseOrder = await this.connection.purchaseOrder.findFirst({
-      where: { customerId: id, status: PurchaseOrderStatus.DRAFT },
-      include: {
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                amount: true,
+    try {
+      const purchaseOrder = await this.connection.purchaseOrder.findFirst({
+        where: { customerId: id, status: PurchaseOrderStatus.DRAFT },
+        include: {
+          items: {
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  amount: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
+      return purchaseOrder ? this.mapPurchaseOrder(purchaseOrder) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    const createdPurchaseOrder = await this.connection.purchaseOrder.create({
-      data: {
-        id: purchaseOrder.id,
-        code: purchaseOrder.code,
-        totalAmount: purchaseOrder.totalAmount,
-        discountAmount: purchaseOrder.discountAmount,
-        status: purchaseOrder.status,
-        customerId: purchaseOrder.customerId,
-        voucherId: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
-        createdAt: purchaseOrder.createdAt,
-      },
-      include: {
-        voucher: true,
-      },
-    });
+    try {
+      const createdPurchaseOrder = await this.connection.purchaseOrder.create({
+        data: {
+          id: purchaseOrder.id,
+          code: purchaseOrder.code,
+          totalAmount: purchaseOrder.totalAmount,
+          discountAmount: purchaseOrder.discountAmount,
+          status: purchaseOrder.status,
+          customerId: purchaseOrder.customerId,
+          voucherId: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
+          createdAt: purchaseOrder.createdAt,
+        },
+        include: {
+          voucher: true,
+        },
+      });
 
-    return this.mapPurchaseOrder(createdPurchaseOrder);
+      return this.mapPurchaseOrder(createdPurchaseOrder);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    const updatedPurchaseOrder = await this.connection.purchaseOrder.update({
-      where: { id: purchaseOrder.id },
-      data: {
-        customerId: purchaseOrder.customerId,
-        code: purchaseOrder.code,
-        totalAmount: purchaseOrder.totalAmount,
-        discountAmount: purchaseOrder.discountAmount,
-        status: purchaseOrder.status,
-        voucherId: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
-      },
-      include: {
-        voucher: true,
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                amount: true,
+    try {
+      const updatedPurchaseOrder = await this.connection.purchaseOrder.update({
+        where: { id: purchaseOrder.id },
+        data: {
+          customerId: purchaseOrder.customerId,
+          code: purchaseOrder.code,
+          totalAmount: purchaseOrder.totalAmount,
+          discountAmount: purchaseOrder.discountAmount,
+          status: purchaseOrder.status,
+          voucherId: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
+        },
+        include: {
+          voucher: true,
+          items: {
+            include: {
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  amount: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    return this.mapPurchaseOrder(updatedPurchaseOrder);
+      return this.mapPurchaseOrder(updatedPurchaseOrder);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null> {
-    const purchaseOrderItem = await this.connection.purchaseOrderItem.findUnique({
-      where: { id },
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
-            amount: true,
+    try {
+      const purchaseOrderItem = await this.connection.purchaseOrderItem.findUnique({
+        where: { id },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              amount: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
+      return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async getPurchaseOrderItem(params: { purchaseOrderId: string; productId: string; }): Promise<PurchaseOrderItem | null> {
-    const purchaseOrderItem = await this.connection.purchaseOrderItem.findFirst({
-      where: params,
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
-            amount: true,
+    try {
+      const purchaseOrderItem = await this.connection.purchaseOrderItem.findFirst({
+        where: params,
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              amount: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
+      return purchaseOrderItem ? this.mapPurchaseOrderItem(purchaseOrderItem) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
-    const createdPurchaseOrderItem = await this.connection.purchaseOrderItem.create({
-      data: {
-        id: purchaseOrderItem.id,
-        purchaseOrderId: purchaseOrderItem.purchaseOrderId,
-        quantity: purchaseOrderItem.quantity,
-        productId: purchaseOrderItem.product.id,
-      },
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
-            amount: true,
+    try {
+      const createdPurchaseOrderItem = await this.connection.purchaseOrderItem.create({
+        data: {
+          id: purchaseOrderItem.id,
+          purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+          quantity: purchaseOrderItem.quantity,
+          productId: purchaseOrderItem.product.id,
+        },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              amount: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    return this.mapPurchaseOrderItem(createdPurchaseOrderItem);
+      return this.mapPurchaseOrderItem(createdPurchaseOrderItem);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
-    const updatedPurchaseOrderItem = await this.connection.purchaseOrderItem.update({
-      where: { id: purchaseOrderItem.id },
-      data: {
-        purchaseOrderId: purchaseOrderItem.purchaseOrderId,
-        quantity: purchaseOrderItem.quantity,
-        productId: purchaseOrderItem.product.id,
-      },
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
-            amount: true,
+    try {
+      const updatedPurchaseOrderItem = await this.connection.purchaseOrderItem.update({
+        where: { id: purchaseOrderItem.id },
+        data: {
+          purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+          quantity: purchaseOrderItem.quantity,
+          productId: purchaseOrderItem.product.id,
+        },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              amount: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    return this.mapPurchaseOrderItem(updatedPurchaseOrderItem);
+      return this.mapPurchaseOrderItem(updatedPurchaseOrderItem);
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<boolean> {
@@ -234,30 +288,54 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
 
       return true;
     } catch (e: any) {
-      console.error(e.stack);
-
-      return false;
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
     }
   }
 
   public async getVoucherByCode(code: number): Promise<Voucher | null> {
-    const voucher = await this.connection.voucher.findFirst({
-      where: { code },
-    });
+    try {
+      const voucher = await this.connection.voucher.findFirst({
+        where: { code },
+      });
 
-    return voucher ? this.mapVoucher(voucher) : null;
+      return voucher ? this.mapVoucher(voucher) : null;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async countPurchaseOrders(): Promise<number> {
-    return this.connection.purchaseOrder.count();
+    try {
+      return this.connection.purchaseOrder.count();
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async countPurchaseOrderItems(): Promise<number> {
-    return this.connection.purchaseOrderItem.count();
+    try {
+      return this.connection.purchaseOrderItem.count();
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   public async countVouchers(): Promise<number> {
-    return this.connection.voucher.count();
+    try {
+      return this.connection.voucher.count();
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
   }
 
   private mapPurchaseOrder(purchaseOrder: PurchaseOrderWithVoucherAndItems) {
