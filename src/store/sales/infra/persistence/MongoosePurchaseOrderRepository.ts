@@ -4,13 +4,13 @@ import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderParams, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
-import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@mongo/models/PurchaseOrderItemModel';
-import PurchaseOrderModel, { IPurchaseOrder } from '@mongo/models/PurchaseOrderModel';
-import VoucherModel, { IVoucher } from '@mongo/models/VoucherModel';
-import ProductModel, { IProduct } from '@mongo/models/ProductModel';
 import RepositoryError from '@shared/errors/RepositoryError';
+import ProductModel, { IProduct } from '@mongoose/models/ProductModel';
+import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@mongoose/models/PurchaseOrderItemModel';
+import PurchaseOrderModel, { IPurchaseOrder } from '@mongoose/models/PurchaseOrderModel';
+import VoucherModel, { IVoucher } from '@mongoose/models/VoucherModel';
 
-export default class MongoPurchaseOrderRepository implements IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
+export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
     try {
       const purchaseOrder = await PurchaseOrderModel

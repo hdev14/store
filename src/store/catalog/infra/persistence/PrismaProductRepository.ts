@@ -21,7 +21,6 @@ export default class PrismaProductRepository implements IProductRepository {
 
       return products.map(this.mapProduct.bind(this));
     } catch (e: any) {
-      console.error(e.stack);
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
       });
