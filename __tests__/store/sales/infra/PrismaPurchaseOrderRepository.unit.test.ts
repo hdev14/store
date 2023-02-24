@@ -970,7 +970,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
   describe('PrismaPurchaseOrderRepository.deletePurchaseOrderItem()', () => {
     it('deletes a purchas order item by id', async () => {
-      expect.assertions(3);
+      expect.assertions(2);
 
       const fakePurchaseOrderItem = {
         id: faker.datatype.uuid(),
@@ -987,9 +987,8 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const repository = new PrismaPurchaseOrderRepository();
 
-      const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItem.id);
+      await repository.deletePurchaseOrderItem(fakePurchaseOrderItem.id);
 
-      expect(result).toBe(true);
       expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledTimes(1);
       expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledWith({
         where: { id: fakePurchaseOrderItem.id },

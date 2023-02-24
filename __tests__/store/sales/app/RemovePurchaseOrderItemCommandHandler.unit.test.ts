@@ -23,7 +23,7 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
   it('throws a PurchaseOrderItemNotDeletedError if purchase order item was not deleted', async () => {
     expect.assertions(2);
 
-    repositoryStub.deletePurchaseOrderItem = jest.fn().mockResolvedValueOnce(false);
+    repositoryStub.deletePurchaseOrderItem = jest.fn().mockRejectedValueOnce(new Error('test'));
 
     const handler = new RemovePurchaseOrderItemCommandHandler(repositoryStub);
 

@@ -1184,7 +1184,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
     });
 
     it('deletes a purchas order item by id', async () => {
-      expect.assertions(2);
+      expect.assertions(1);
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
@@ -1192,12 +1192,30 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
 
       PurchaseOrderItemModelMock.deleteOne.mockResolvedValueOnce({ deletedCount: 1 } as any);
 
-      const result = await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
+      await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
 
-      expect(result).toBe(true);
       expect(PurchaseOrderItemModelMock.deleteOne).toHaveBeenCalledWith({
         _id: fakePurchaseOrderItemId,
       });
+    });
+
+    it("throws a RepositoryError if the purchase order wasn't deleted", async () => {
+      expect.assertions(2);
+
+      const fakePurchaseOrderItemId = faker.datatype.uuid();
+
+      const repository = new MongoosePurchaseOrderRepository();
+
+      PurchaseOrderItemModelMock.deleteOne.mockResolvedValueOnce({
+        deletedCount: 0,
+      } as any);
+
+      try {
+        await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - Item não excluído');
+      }
     });
 
     it('throws a RepositoryError if occur an unexpected error', async () => {

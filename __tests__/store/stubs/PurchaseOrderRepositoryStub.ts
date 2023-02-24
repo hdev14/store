@@ -98,8 +98,8 @@ export class RepositoryStub implements IPurchaseOrderRepository {
     return Promise.resolve(purchaseOrderItem);
   }
 
-  deletePurchaseOrderItem(_: string): Promise<boolean> {
-    return Promise.resolve(true);
+  deletePurchaseOrderItem(_: string): Promise<void> {
+    return Promise.resolve();
   }
 
   getVoucherByCode(_: number): Promise<Voucher | null> {
