@@ -8,6 +8,7 @@ import VoucherModel from '@mongo/models/VoucherModel';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Product from '@sales/domain/Product';
 import { ProductModel } from '@mongo/models';
+import RepositoryError from '@shared/errors/RepositoryError';
 
 jest.mock('../../../../mongo/models/PurchaseOrderModel');
 jest.mock('../../../../mongo/models/PurchaseOrderItemModel');
@@ -21,6 +22,10 @@ const VoucherModelMock = jest.mocked(VoucherModel);
 
 describe("MongoPurchaseOrderRepository's unit tests", () => {
   describe('MongoPurchaseOrderRepository.getPurchaseOrderById()', () => {
+    beforeEach(() => {
+      PurchaseOrderModelMock.findOne.mockClear();
+    });
+
     it('returns a purchase order by id', async () => {
       expect.assertions(29);
 
@@ -120,9 +125,32 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         },
       });
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const purchaseOrderId = faker.datatype.uuid();
+
+      PurchaseOrderModelMock.findOne.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.getPurchaseOrderById(purchaseOrderId);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.getPurchaseOrdersByCustomerId()', () => {
+    beforeEach(() => {
+      PurchaseOrderModelMock.find.mockClear();
+    });
+
     it('returns purchase orders by customer id', async () => {
       expect.assertions(30);
 
@@ -231,13 +259,34 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         },
       });
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const customerId = faker.datatype.uuid();
+
+      PurchaseOrderModelMock.find.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.getPurchaseOrdersByCustomerId(customerId);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.getDraftPurchaseOrderByCustomerId()', () => {
+    beforeEach(() => {
+      PurchaseOrderModelMock.findOne.mockClear();
+    });
+
     it('returns a draft purchase order by customer id', async () => {
       expect.assertions(13);
-
-      PurchaseOrderModelMock.findOne.mockClear();
 
       const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
@@ -304,13 +353,36 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         },
       });
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const customerId = faker.datatype.uuid();
+
+      PurchaseOrderModelMock.findOne.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.getDraftPurchaseOrderByCustomerId(customerId);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.addPurchaseOrder()', () => {
+    beforeEach(() => {
+      PurchaseOrderItemModelMock.find.mockClear();
+      PurchaseOrderModelMock.populate.mockClear();
+      PurchaseOrderModelMock.create.mockClear();
+    });
+
     it('creates a new purchase order', async () => {
       expect.assertions(23);
-
-      PurchaseOrderItemModelMock.find.mockClear();
 
       const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
@@ -433,9 +505,6 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     it('creates a new purchase order without voucher', async () => {
       expect.assertions(14);
 
-      PurchaseOrderModelMock.populate.mockClear();
-      PurchaseOrderModelMock.create.mockClear();
-
       const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
 
@@ -524,14 +593,66 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         items: [purchaseOrder.items[0].id],
       });
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const customerId = faker.datatype.uuid();
+      const purchaseOrderId = faker.datatype.uuid();
+
+      const fakePurchaseOrder = {
+        _id: purchaseOrderId,
+        customer: customerId,
+        code: parseInt(faker.datatype.number().toString(), 10),
+        status: PurchaseOrderStatus.STARTED,
+        totalAmount: 0,
+        discountAmount: 0,
+        createdAt: new Date(),
+        voucher: null,
+        items: [
+          {
+            _id: faker.datatype.uuid(),
+            quantity: parseInt(faker.datatype.number().toString(), 10),
+            purchaseOrder: purchaseOrderId,
+            product: {
+              _id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              amount: faker.datatype.float(),
+            },
+          },
+        ],
+      };
+
+      PurchaseOrderModelMock.create.mockRejectedValueOnce(new Error('test') as never);
+
+      const purchaseOrder = new PurchaseOrder({
+        id: fakePurchaseOrder._id,
+        customerId: fakePurchaseOrder.customer,
+        code: fakePurchaseOrder.code,
+        status: fakePurchaseOrder.status,
+        voucher: null,
+        createdAt: fakePurchaseOrder.createdAt,
+      });
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.addPurchaseOrder(purchaseOrder);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.updatePurchaseOrder()', () => {
-    it('updates a specific purchase order', async () => {
-      expect.assertions(24);
-
+    afterAll(() => {
       PurchaseOrderModelMock.findOne.mockClear();
       PurchaseOrderModelMock.populate.mockClear();
+    });
+
+    it('updates a specific purchase order', async () => {
+      expect.assertions(24);
 
       const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
@@ -641,9 +762,74 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       expect(saveMock).toHaveBeenCalledTimes(1);
       expect(PurchaseOrderModelMock.populate.mock.calls[0][1]).toEqual({ path: 'voucher', model: VoucherModel });
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const customerId = faker.datatype.uuid();
+      const purchaseOrderId = faker.datatype.uuid();
+
+      const fakePurchaseOrder = {
+        _id: purchaseOrderId,
+        customer: customerId,
+        code: parseInt(faker.datatype.number().toString(), 10),
+        status: PurchaseOrderStatus.STARTED,
+        totalAmount: 0,
+        discountAmount: 0,
+        createdAt: new Date(),
+        voucher: {
+          _id: faker.datatype.uuid(),
+          percentageAmount: 0,
+          rawDiscountAmount: 0,
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          type: VoucherDiscountTypes.ABSOLUTE,
+          active: faker.datatype.boolean(),
+          code: parseInt(faker.datatype.number().toString(), 10),
+          expiresAt: new Date(),
+          createdAt: new Date(),
+        },
+      };
+
+      PurchaseOrderModelMock.findOne.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
+
+      const purchaseOrder = new PurchaseOrder({
+        id: fakePurchaseOrder._id,
+        customerId: fakePurchaseOrder.customer,
+        code: fakePurchaseOrder.code,
+        status: fakePurchaseOrder.status,
+        voucher: new Voucher({
+          id: fakePurchaseOrder.voucher._id,
+          active: fakePurchaseOrder.voucher.active,
+          code: fakePurchaseOrder.voucher.code,
+          percentageAmount: fakePurchaseOrder.voucher.percentageAmount,
+          rawDiscountAmount: fakePurchaseOrder.voucher.rawDiscountAmount,
+          quantity: fakePurchaseOrder.voucher.quantity,
+          type: fakePurchaseOrder.voucher.type,
+          createdAt: fakePurchaseOrder.voucher.createdAt,
+          expiresAt: fakePurchaseOrder.voucher.expiresAt,
+          usedAt: null,
+        }),
+        createdAt: fakePurchaseOrder.createdAt,
+      });
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.updatePurchaseOrder(purchaseOrder);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.getPurchaseOrderItemById()', () => {
+    beforeEach(() => {
+      PurchaseOrderItemModelMock.findOne.mockClear();
+    });
+
     it('returns a purchase order item by id', async () => {
       expect.assertions(4);
 
@@ -689,8 +875,6 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     it("returns null if purchase order item doesn't exist", async () => {
       expect.assertions(2);
 
-      PurchaseOrderItemModelMock.findOne.mockClear();
-
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
       PurchaseOrderItemModelMock.findOne.mockResolvedValueOnce(null);
@@ -712,13 +896,43 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         },
       );
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const fakePurchaseOrderItem = {
+        _id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: faker.datatype.uuid(),
+        product: {
+          _id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
+      };
+
+      PurchaseOrderItemModelMock.findOne.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.getPurchaseOrderItemById(fakePurchaseOrderItem._id);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.getPurchaseOrderItem()', () => {
+    beforeEach(() => {
+      PurchaseOrderItemModelMock.findOne.mockClear();
+    });
+
     it('gets a purchase order item by purchase order id and product id', async () => {
       expect.assertions(5);
-
-      PurchaseOrderItemModelMock.findOne.mockClear();
 
       const fakePurchaseOrderId = faker.datatype.uuid();
 
@@ -766,9 +980,33 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         },
       );
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      PurchaseOrderItemModelMock.findOne.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.getPurchaseOrderItem({
+          purchaseOrderId: faker.datatype.uuid(),
+          productId: faker.datatype.uuid(),
+        });
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.addPurchaseOrderItem()', () => {
+    beforeEach(() => {
+      PurchaseOrderItemModelMock.create.mockClear();
+    });
+
     it('creates a new purchase order item', async () => {
       expect.assertions(6);
 
@@ -824,9 +1062,39 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         model: ProductModel,
       });
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      PurchaseOrderItemModelMock.create.mockRejectedValueOnce(new Error('test') as never);
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.addPurchaseOrderItem(
+          new PurchaseOrderItem({
+            id: faker.datatype.uuid(),
+            purchaseOrderId: faker.datatype.uuid(),
+            quantity: parseInt(faker.datatype.number().toString(), 10),
+            product: new Product(
+              faker.datatype.uuid(),
+              faker.commerce.product(),
+              faker.datatype.float(),
+            ),
+          }),
+        );
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
+    beforeEach(() => {
+      PurchaseOrderItemModelMock.findOneAndUpdate.mockClear();
+    });
+
     it('updates a specific purchase order item', async () => {
       expect.assertions(5);
 
@@ -881,9 +1149,41 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         },
       );
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      PurchaseOrderItemModelMock.findOneAndUpdate.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.updatePurchaseOrderItem(
+          new PurchaseOrderItem({
+            id: faker.datatype.uuid(),
+            quantity: parseInt(faker.datatype.number().toString(), 10),
+            purchaseOrderId: faker.datatype.uuid(),
+            product: new Product(
+              faker.datatype.uuid(),
+              faker.commerce.product(),
+              faker.datatype.float(),
+            ),
+          }),
+        );
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.deletePurchaseOrderItem()', () => {
+    beforeEach(() => {
+      PurchaseOrderItemModelMock.deleteOne.mockClear();
+    });
+
     it('deletes a purchas order item by id', async () => {
       expect.assertions(2);
 
@@ -900,9 +1200,32 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         _id: fakePurchaseOrderItemId,
       });
     });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const fakePurchaseOrderItemId = faker.datatype.uuid();
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      PurchaseOrderItemModelMock.deleteOne.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
+
+      try {
+        await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
+    });
   });
 
   describe('MongoPurchaseOrderRepository.getVoucherByCode()', () => {
+    beforeEach(() => {
+      VoucherModelMock.findOne.mockClear();
+    });
+
     it('gets a voucher by code', async () => {
       expect.assertions(10);
 
@@ -941,8 +1264,6 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
     it("returns null if voucher doesn't exist", async () => {
       expect.assertions(2);
 
-      VoucherModelMock.findOne.mockClear();
-
       const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
 
       VoucherModelMock.findOne.mockResolvedValueOnce(null);
@@ -953,6 +1274,25 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
       expect(voucher).toBeNull();
       expect(VoucherModelMock.findOne).toHaveBeenCalledWith({ code: fakeVoucherCode });
+    });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
+
+      VoucherModelMock.findOne.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
+
+      const repository = new MongoPurchaseOrderRepository();
+
+      try {
+        await repository.getVoucherByCode(fakeVoucherCode);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+      }
     });
   });
 });
