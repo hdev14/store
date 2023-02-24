@@ -1,6 +1,6 @@
 /* eslint-disable wrap-iife */
 import Prisma from '@shared/Prisma';
-import Mongo from '@mongo/index';
+// import Mongo from '_mongoose/index';
 import Server from './Server';
 
 (async function main() {
@@ -8,7 +8,7 @@ import Server from './Server';
 
   try {
     prismaConnection = Prisma.connect();
-    await Mongo.connect(process.env.MONGO_URL!);
+    // await Mongo.connect(process.env.MONGO_URL!);
 
     Server.application.listen(process.env.PORT, () => {
       if (process.env.NODE_ENV !== 'production') {
@@ -22,6 +22,6 @@ import Server from './Server';
       await prismaConnection.$disconnect();
     }
 
-    await Mongo.disconnect();
+    // await Mongo.disconnect();
   }
 })();

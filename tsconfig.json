@@ -34,8 +34,8 @@
       "@api/*": [
         "src/api/*"
       ],
-      "@mongo/*": [
-        "mongo/*"
+      "@mongoose/*": [
+        "_mongoose/*"
       ]
     },
     "sourceMap": true,
