@@ -10,15 +10,16 @@ export default class RemovePurchaseOrderItemCommandHandler implements IHandler<R
   ) { }
 
   public async handle(event: RemovePurchaseOrderItemCommand): Promise<void> {
-    const isDeleted = await this.repository.deletePurchaseOrderItem(event.purchaseOrderItemId);
+    try {
+      await this.repository.deletePurchaseOrderItem(event.purchaseOrderItemId);
 
-    if (!isDeleted) {
+      // this.publisher.addEvent(RemovePurchaseOrderItemEvent, {
+      //   principalId: event.purchaseOrderItemId,
+      //   timestamp: new Date().toISOString(),
+      // });
+    } catch (e: any) {
+      console.error(e.stack);
       throw new PurchaseOrderItemNotDeletedError();
     }
-
-    // this.publisher.addEvent(RemovePurchaseOrderItemEvent, {
-    //   principalId: event.purchaseOrderItemId,
-    //   timestamp: new Date().toISOString(),
-    // });
   }
 }

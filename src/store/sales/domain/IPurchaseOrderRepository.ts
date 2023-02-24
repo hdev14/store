@@ -26,7 +26,7 @@ export interface IPurchaseOrderRepositoryCommands {
 
   updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem>;
 
-  deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<boolean>;
+  deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<void>;
 }
 
 interface IPurchaseOrderRepository extends IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {

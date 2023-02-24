@@ -245,12 +245,18 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
     }
   }
 
-  public async deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<boolean> {
+  public async deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<void> {
     try {
       const result = await PurchaseOrderItemModel.deleteOne({ _id: purchaseOrderItemId });
 
-      return result.deletedCount > 0;
+      if (result.deletedCount === 0) {
+        throw new RepositoryError(this.constructor.name, 'Item não excluído');
+      }
     } catch (e: any) {
+      if (e instanceof RepositoryError) {
+        throw e;
+      }
+
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
       });
