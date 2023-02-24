@@ -1,27 +1,26 @@
 import { faker } from '@faker-js/faker';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
-import MongoPurchaseOrderRepository from '@sales/infra/persistence/MongoPurchaseOrderRepository';
-import PurchaseOrderModel from '@mongo/models/PurchaseOrderModel';
-import PurchaseOrderItemModel from '@mongo/models/PurchaseOrderItemModel';
-import VoucherModel from '@mongo/models/VoucherModel';
+import MongoosePurchaseOrderRepository from '@sales/infra/persistence/MongoosePurchaseOrderRepository';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Product from '@sales/domain/Product';
-import { ProductModel } from '@mongo/models';
 import RepositoryError from '@shared/errors/RepositoryError';
+import {
+  PurchaseOrderModel, PurchaseOrderItemModel, VoucherModel, ProductModel,
+} from '@mongoose/models';
 
-jest.mock('../../../../mongo/models/PurchaseOrderModel');
-jest.mock('../../../../mongo/models/PurchaseOrderItemModel');
-jest.mock('../../../../mongo/models/VoucherModel');
-jest.mock('../../../../mongo/models/ProductModel');
-jest.mock('../../../../mongo/models/UserModel');
+jest.mock('../../../../_mongoose/models/PurchaseOrderModel');
+jest.mock('../../../../_mongoose/models/PurchaseOrderItemModel');
+jest.mock('../../../../_mongoose/models/VoucherModel');
+jest.mock('../../../../_mongoose/models/ProductModel');
+jest.mock('../../../../_mongoose/models/UserModel');
 
 const PurchaseOrderModelMock = jest.mocked(PurchaseOrderModel);
 const PurchaseOrderItemModelMock = jest.mocked(PurchaseOrderItemModel);
 const VoucherModelMock = jest.mocked(VoucherModel);
 
-describe("MongoPurchaseOrderRepository's unit tests", () => {
-  describe('MongoPurchaseOrderRepository.getPurchaseOrderById()', () => {
+describe("MongoosePurchaseOrderRepository's unit tests", () => {
+  describe('MongoosePurchaseOrderRepository.getPurchaseOrderById()', () => {
     beforeEach(() => {
       PurchaseOrderModelMock.findOne.mockClear();
     });
@@ -83,7 +82,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       PurchaseOrderModelMock.findOne
         .mockImplementationOnce(() => ({ populate: populateVoucherMock } as any));
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrder = await repository.getPurchaseOrderById(purchaseOrderId);
 
@@ -135,18 +134,18 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.getPurchaseOrderById(purchaseOrderId);
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.getPurchaseOrdersByCustomerId()', () => {
+  describe('MongoosePurchaseOrderRepository.getPurchaseOrdersByCustomerId()', () => {
     beforeEach(() => {
       PurchaseOrderModelMock.find.mockClear();
     });
@@ -209,7 +208,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       PurchaseOrderModelMock.find
         .mockImplementationOnce(() => ({ populate: populateVoucherMock } as any));
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrders = await repository.getPurchaseOrdersByCustomerId(customerId);
 
@@ -269,18 +268,18 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.getPurchaseOrdersByCustomerId(customerId);
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.getDraftPurchaseOrderByCustomerId()', () => {
+  describe('MongoosePurchaseOrderRepository.getDraftPurchaseOrderByCustomerId()', () => {
     beforeEach(() => {
       PurchaseOrderModelMock.findOne.mockClear();
     });
@@ -320,7 +319,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       PurchaseOrderModelMock.findOne
         .mockImplementationOnce(() => ({ populate: populateItemsMock } as any));
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrder = await repository.getDraftPurchaseOrderByCustomerId(customerId);
 
@@ -363,18 +362,18 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.getDraftPurchaseOrderByCustomerId(customerId);
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.addPurchaseOrder()', () => {
+  describe('MongoosePurchaseOrderRepository.addPurchaseOrder()', () => {
     beforeEach(() => {
       PurchaseOrderItemModelMock.find.mockClear();
       PurchaseOrderModelMock.populate.mockClear();
@@ -456,7 +455,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         ),
       }));
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const result = await repository.addPurchaseOrder(purchaseOrder);
 
@@ -556,7 +555,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         ),
       }));
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const result = await repository.addPurchaseOrder(purchaseOrder);
 
@@ -634,18 +633,18 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         createdAt: fakePurchaseOrder.createdAt,
       });
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.addPurchaseOrder(purchaseOrder);
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.updatePurchaseOrder()', () => {
+  describe('MongoosePurchaseOrderRepository.updatePurchaseOrder()', () => {
     afterAll(() => {
       PurchaseOrderModelMock.findOne.mockClear();
       PurchaseOrderModelMock.populate.mockClear();
@@ -728,7 +727,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         ),
       }));
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const result = await repository.updatePurchaseOrder(purchaseOrder);
 
@@ -814,18 +813,18 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         createdAt: fakePurchaseOrder.createdAt,
       });
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.updatePurchaseOrder(purchaseOrder);
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.getPurchaseOrderItemById()', () => {
+  describe('MongoosePurchaseOrderRepository.getPurchaseOrderItemById()', () => {
     beforeEach(() => {
       PurchaseOrderItemModelMock.findOne.mockClear();
     });
@@ -846,7 +845,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
       PurchaseOrderItemModelMock.findOne.mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrderItem = await repository
         .getPurchaseOrderItemById(fakePurchaseOrderItem._id);
@@ -879,7 +878,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
       PurchaseOrderItemModelMock.findOne.mockResolvedValueOnce(null);
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrderItem = await repository.getPurchaseOrderItemById(fakePurchaseOrderItemId);
 
@@ -915,18 +914,18 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.getPurchaseOrderItemById(fakePurchaseOrderItem._id);
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.getPurchaseOrderItem()', () => {
+  describe('MongoosePurchaseOrderRepository.getPurchaseOrderItem()', () => {
     beforeEach(() => {
       PurchaseOrderItemModelMock.findOne.mockClear();
     });
@@ -949,7 +948,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
       PurchaseOrderItemModelMock.findOne.mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrderItem = await repository.getPurchaseOrderItem({
         purchaseOrderId: fakePurchaseOrderId,
@@ -988,7 +987,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.getPurchaseOrderItem({
@@ -997,12 +996,12 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         });
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.addPurchaseOrderItem()', () => {
+  describe('MongoosePurchaseOrderRepository.addPurchaseOrderItem()', () => {
     beforeEach(() => {
       PurchaseOrderItemModelMock.create.mockClear();
     });
@@ -1026,7 +1025,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       PurchaseOrderItemModelMock.create
         .mockImplementationOnce(() => Promise.resolve({ populate: populateProductMock }));
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrderItem = await repository.addPurchaseOrderItem(
         new PurchaseOrderItem({
@@ -1068,7 +1067,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
       PurchaseOrderItemModelMock.create.mockRejectedValueOnce(new Error('test') as never);
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.addPurchaseOrderItem(
@@ -1085,12 +1084,12 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         );
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
+  describe('MongoosePurchaseOrderRepository.updatePurchaseOrderItem()', () => {
     beforeEach(() => {
       PurchaseOrderItemModelMock.findOneAndUpdate.mockClear();
     });
@@ -1112,7 +1111,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
       PurchaseOrderItemModelMock.findOneAndUpdate
         .mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrderItem = await repository.updatePurchaseOrderItem(
         new PurchaseOrderItem({
@@ -1157,7 +1156,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.updatePurchaseOrderItem(
@@ -1174,12 +1173,12 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         );
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.deletePurchaseOrderItem()', () => {
+  describe('MongoosePurchaseOrderRepository.deletePurchaseOrderItem()', () => {
     beforeEach(() => {
       PurchaseOrderItemModelMock.deleteOne.mockClear();
     });
@@ -1189,7 +1188,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       PurchaseOrderItemModelMock.deleteOne.mockResolvedValueOnce({ deletedCount: 1 } as any);
 
@@ -1206,7 +1205,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       PurchaseOrderItemModelMock.deleteOne.mockImplementationOnce(() => {
         throw new Error('test');
@@ -1216,12 +1215,12 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
 
-  describe('MongoPurchaseOrderRepository.getVoucherByCode()', () => {
+  describe('MongoosePurchaseOrderRepository.getVoucherByCode()', () => {
     beforeEach(() => {
       VoucherModelMock.findOne.mockClear();
     });
@@ -1244,7 +1243,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
       VoucherModelMock.findOne.mockResolvedValueOnce(fakeVoucher as any);
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const voucher = await repository.getVoucherByCode(fakeVoucher.code);
 
@@ -1268,7 +1267,7 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
 
       VoucherModelMock.findOne.mockResolvedValueOnce(null);
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       const voucher = await repository.getVoucherByCode(fakeVoucherCode);
 
@@ -1285,13 +1284,13 @@ describe("MongoPurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoPurchaseOrderRepository();
+      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.getVoucherByCode(fakeVoucherCode);
       } catch (e: any) {
         expect(e).toBeInstanceOf(RepositoryError);
-        expect(e.message).toEqual('MongoPurchaseOrderRepository - test');
+        expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
       }
     });
   });
