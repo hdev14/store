@@ -1,4 +1,4 @@
-import { queueConstructorMock } from '@mocks/bullqm/dist/esm';
+import { queueConstructorMock, queueMock } from '@mocks/bullqm/dist/esm';
 import BullEventQueue from '@shared/BullEventQueue';
 
 describe("BullEventQueue's unit tests", () => {
@@ -40,5 +40,21 @@ describe("BullEventQueue's unit tests", () => {
         },
       },
     );
+  });
+
+  // describe('BullEventQueue.enqueue()', () => {
+
+  // });
+
+  describe('BullEventQueue.closeConnection()', () => {
+    it('calls Queue.close method', async () => {
+      expect.assertions(1);
+
+      const bullEventQueue = new BullEventQueue();
+
+      await bullEventQueue.closeConnection();
+
+      expect(queueMock.close).toHaveBeenCalled();
+    });
   });
 });
