@@ -1,5 +1,8 @@
 import { queueConstructorMock, queueMock } from '@mocks/bullqm/dist/esm';
 import BullEventQueue from '@shared/BullEventQueue';
+import Event from '@shared/abstractions/Event';
+
+class EventStub extends Event {}
 
 describe("BullEventQueue's unit tests", () => {
   const OLD_ENV = process.env;
@@ -42,9 +45,19 @@ describe("BullEventQueue's unit tests", () => {
     );
   });
 
-  // describe('BullEventQueue.enqueue()', () => {
+  describe('BullEventQueue.enqueue()', () => {
+    it('calls Queue.add with the correct Event', async () => {
+      expect.assertions(1);
 
-  // });
+      const bullEventQueue = new BullEventQueue();
+
+      const eventStub = new EventStub();
+
+      await bullEventQueue.enqueue(eventStub);
+
+      expect(queueMock.add).toHaveBeenCalledWith('event', eventStub);
+    });
+  });
 
   describe('BullEventQueue.closeConnection()', () => {
     it('calls Queue.close method', async () => {
