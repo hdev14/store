@@ -62,9 +62,9 @@ describe("BullEventQueue's unit tests", () => {
     it('throws a QueueError if occur an unexpected error', async () => {
       expect.assertions(2);
 
-      const bullEventQueue = new BullEventQueue();
-
       queueMock.add.mockRejectedValueOnce(new Error('test'));
+
+      const bullEventQueue = new BullEventQueue();
 
       try {
         await bullEventQueue.enqueue(new EventStub());
@@ -84,6 +84,21 @@ describe("BullEventQueue's unit tests", () => {
       await bullEventQueue.closeConnection();
 
       expect(queueMock.close).toHaveBeenCalled();
+    });
+
+    it('throws a QueueError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      queueMock.close.mockRejectedValueOnce(new Error('test'));
+
+      const bullEventQueue = new BullEventQueue();
+
+      try {
+        await bullEventQueue.closeConnection();
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(QueueError);
+        expect(e.message).toEqual('test');
+      }
     });
   });
 });
