@@ -27,7 +27,7 @@ export default class BullEventQueue implements IEventQueue {
   }
 
   public async enqueue(event: Event): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.queue.add('event', event);
   }
 
   public async closeConnection(): Promise<void> {
