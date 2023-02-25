@@ -1,7 +1,14 @@
-import { queueConstructorMock, queueMock } from '@mocks/bullqm/dist/esm';
 import BullEventQueue from '@shared/BullEventQueue';
 import Event from '@shared/abstractions/Event';
 import QueueError from '@shared/errors/QueueError';
+import { Queue } from 'bullmq';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+
+const queueMock = mockDeep<Queue>() as unknown as DeepMockProxy<Queue>;
+
+jest.mock('bullmq', () => ({
+  Queue: jest.fn().mockImplementation(() => queueMock),
+}));
 
 class EventStub extends Event { }
 
@@ -24,6 +31,8 @@ describe("BullEventQueue's unit tests", () => {
   });
 
   it('instanciates a new bullmq.Queue with correct params', () => {
+    const queueConstructorMock = jest.mocked(Queue);
+
     // eslint-disable-next-line no-new
     new BullEventQueue();
 
