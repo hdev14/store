@@ -1,6 +1,7 @@
 import { Queue } from 'bullmq';
 import Event from './abstractions/Event';
 import IEventQueue from './abstractions/IEventQueue';
+import QueueError from './errors/QueueError';
 
 export default class BullEventQueue implements IEventQueue {
   private readonly queue: Queue;
@@ -27,7 +28,11 @@ export default class BullEventQueue implements IEventQueue {
   }
 
   public async enqueue(event: Event): Promise<void> {
-    await this.queue.add('event', event);
+    try {
+      await this.queue.add('event', event);
+    } catch (e: any) {
+      throw new QueueError(e.message, { cause: e.stack });
+    }
   }
 
   public async closeConnection(): Promise<void> {
