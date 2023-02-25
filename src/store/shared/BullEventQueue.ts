@@ -36,6 +36,10 @@ export default class BullEventQueue implements IEventQueue {
   }
 
   public async closeConnection(): Promise<void> {
-    await this.queue.close();
+    try {
+      await this.queue.close();
+    } catch (e: any) {
+      throw new QueueError(e.message, { cause: e.stack });
+    }
   }
 }
