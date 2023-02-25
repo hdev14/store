@@ -1,8 +1,9 @@
 import { queueConstructorMock, queueMock } from '@mocks/bullqm/dist/esm';
 import BullEventQueue from '@shared/BullEventQueue';
 import Event from '@shared/abstractions/Event';
+import QueueError from '@shared/errors/QueueError';
 
-class EventStub extends Event {}
+class EventStub extends Event { }
 
 describe("BullEventQueue's unit tests", () => {
   const OLD_ENV = process.env;
@@ -56,6 +57,21 @@ describe("BullEventQueue's unit tests", () => {
       await bullEventQueue.enqueue(eventStub);
 
       expect(queueMock.add).toHaveBeenCalledWith('event', eventStub);
+    });
+
+    it('throws a QueueError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const bullEventQueue = new BullEventQueue();
+
+      queueMock.add.mockRejectedValueOnce(new Error('test'));
+
+      try {
+        await bullEventQueue.enqueue(new EventStub());
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(QueueError);
+        expect(e.message).toEqual('test');
+      }
     });
   });
 
