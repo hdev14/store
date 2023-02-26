@@ -122,7 +122,7 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddP
       newDraftPurchaseOrder.discountAmount,
       newDraftPurchaseOrder.createdAt,
       newDraftPurchaseOrder.code,
-    ));
+    )).catch(console.error.bind(console));
 
     // this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
     //   AddPurchaseOrderItemEvent,
