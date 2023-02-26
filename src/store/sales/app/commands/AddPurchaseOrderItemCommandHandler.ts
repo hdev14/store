@@ -6,6 +6,7 @@ import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import IHandler from '@shared/abstractions/IHandler';
 import IEventQueue from '@shared/abstractions/IEventQueue';
 import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
+import AddPurchaseOrderItemEvent from '@sales/domain/events/AddPurchaseOrderItemEvent';
 import AddPurchaseOrderItemCommand from './AddPurchaseOrderItemCommand';
 
 // eslint-disable-next-line max-len
@@ -124,17 +125,13 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddP
       newDraftPurchaseOrder.code,
     )).catch(console.error.bind(console));
 
-    // this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
-    //   AddPurchaseOrderItemEvent,
-    //   {
-    //     principalId: purchaseOrderItem.id,
-    //     purchaseOrderId: purchaseOrderItem.purchaseOrderId,
-    //     quantity: purchaseOrderItem.quantity,
-    //     productId: purchaseOrderItem.product.id,
-    //     productName: purchaseOrderItem.product.name,
-    //     productAmount: purchaseOrderItem.product.amount,
-    //     timestamp: new Date().toISOString(),
-    //   },
-    // );
+    this.eventQueue.enqueue(new AddPurchaseOrderItemEvent(
+      purchaseOrderItem.id,
+      purchaseOrderItem.purchaseOrderId,
+      purchaseOrderItem.quantity,
+      purchaseOrderItem.product.id,
+      purchaseOrderItem.product.name,
+      purchaseOrderItem.product.amount,
+    )).catch(console.error.bind(console));
   }
 }
