@@ -7,6 +7,7 @@ import IHandler from '@shared/abstractions/IHandler';
 import IEventQueue from '@shared/abstractions/IEventQueue';
 import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
 import AddPurchaseOrderItemEvent from '@sales/domain/events/AddPurchaseOrderItemEvent';
+import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
 import AddPurchaseOrderItemCommand from './AddPurchaseOrderItemCommand';
 
 // eslint-disable-next-line max-len
@@ -52,17 +53,13 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddP
 
       await this.repository.updatePurchaseOrderItem(addedPurchaseOrderItem);
 
-      // this.eventPublisher.addEvent<UpdatePurchaserOrderItemEventData>(
-      //   UpdatePurchaseOrderItemEvent,
-      //   {
-      //     principalId: addedPurchaseOrderItem.id,
-      //     productId: addedPurchaseOrderItem.product.id,
-      //     productName: addedPurchaseOrderItem.product.name,
-      //     productAmount: addedPurchaseOrderItem.product.amount,
-      //     quantity: addedPurchaseOrderItem.quantity,
-      //     timestamp: new Date().toISOString(),
-      //   },
-      // );
+      this.eventQueue.enqueue(new UpdatePurchaseOrderItemEvent(
+        addedPurchaseOrderItem.id,
+        addedPurchaseOrderItem.quantity,
+        addedPurchaseOrderItem.product.id,
+        addedPurchaseOrderItem.product.name,
+        addedPurchaseOrderItem.product.amount,
+      )).catch(console.error.bind(console));
     } else {
       await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
