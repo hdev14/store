@@ -11,6 +11,9 @@ import { RepositoryStub } from '../../stubs/PurchaseOrderRepositoryStub';
 
 const eventQueueMock = mock<IEventQueue>();
 
+eventQueueMock.enqueue.mockImplementation(() => Promise.resolve());
+eventQueueMock.closeConnection.mockImplementation(() => Promise.resolve());
+
 describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
   it('calls repository.getDraftPurchaseOrderByCustomerId with correct customerId', async () => {
     expect.assertions(2);
@@ -102,8 +105,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
 
     const addItemMock = jest.fn();
-    const currentCreateDraft = PurchaseOrder.createDraft;
-    PurchaseOrder.createDraft = jest.fn().mockReturnValueOnce({ addItem: addItemMock });
+    jest.spyOn(PurchaseOrder, 'createDraft').mockReturnValueOnce({ addItem: addItemMock } as any);
 
     const command = new AddPurchaseOrderItemCommand(
       faker.datatype.uuid(),
@@ -121,8 +123,6 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     await addPurchaseOrderItemCommandHandler.handle(command);
 
     expect(addItemMock).toHaveBeenCalledTimes(1);
-
-    PurchaseOrder.createDraft = currentCreateDraft;
   });
 
   it('calls repository.addPurchaseOrder after add the purchase order item in the new draftPurchaseOrder', async () => {
@@ -318,5 +318,31 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     await addPurchaseOrderItemCommandHandler.handle(command);
 
     expect(eventQueueMock.enqueue.mock.calls[0][0]).toBeInstanceOf(AddDraftPurchaseOrderEvent);
+  });
+
+  it("doesn't throw a Error if Queue.enqueue method throws a QueueError when it is adding the AddDraftPurchaseOrderEvent", async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
+    eventQueueMock.enqueue.mockRejectedValueOnce(new Error('test'));
+
+    const command = new AddPurchaseOrderItemCommand(
+      faker.datatype.uuid(),
+      faker.datatype.uuid(),
+      faker.commerce.product(),
+      faker.datatype.float(),
+      1,
+    );
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
+
+    expect(
+      async () => addPurchaseOrderItemCommandHandler.handle(command),
+    ).not.toThrow();
   });
 });
