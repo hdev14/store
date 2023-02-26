@@ -4,7 +4,12 @@ import AddPurchaseOrderItemCommandHandler from '@sales/app/commands/AddPurchaseO
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import Product from '@sales/domain/Product';
+import { mock } from 'jest-mock-extended';
+import IEventQueue from '@shared/abstractions/IEventQueue';
+import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
 import { RepositoryStub } from '../../stubs/PurchaseOrderRepositoryStub';
+
+const eventQueueMock = mock<IEventQueue>();
 
 describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
   it('calls repository.getDraftPurchaseOrderByCustomerId with correct customerId', async () => {
@@ -21,7 +26,10 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       1,
     );
 
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(repository);
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
@@ -44,7 +52,10 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       1,
     );
 
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(repository);
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
@@ -67,7 +78,10 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       1,
     );
 
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(repository);
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
@@ -99,7 +113,10 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       1,
     );
 
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(repository);
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
@@ -123,7 +140,10 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       1,
     );
 
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(repository);
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
@@ -145,7 +165,10 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       1,
     );
 
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(repository);
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
@@ -190,7 +213,10 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const updatePurchaseOrderItemSpy = jest.spyOn(repository, 'updatePurchaseOrderItem');
 
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(repository);
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
@@ -223,7 +249,10 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const addPurchaseOrderItemSpy = jest.spyOn(repository, 'addPurchaseOrderItem');
 
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(repository);
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
@@ -256,10 +285,38 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const updatePurchaseOrderSpy = jest.spyOn(repository, 'updatePurchaseOrder');
 
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(repository);
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
     expect(updatePurchaseOrderSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls Queue.enqueue with AddDraftPurchaseOrderEvent after complete the operation of adding the purchase order item', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
+
+    const command = new AddPurchaseOrderItemCommand(
+      faker.datatype.uuid(),
+      faker.datatype.uuid(),
+      faker.commerce.product(),
+      faker.datatype.float(),
+      1,
+    );
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(command);
+
+    expect(eventQueueMock.enqueue.mock.calls[0][0]).toBeInstanceOf(AddDraftPurchaseOrderEvent);
   });
 });
