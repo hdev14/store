@@ -1,4 +1,6 @@
+import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
+import IEventQueue from '@shared/abstractions/IEventQueue';
 import IHandler from '@shared/abstractions/IHandler';
 import PurchaseOrderItemNotFoundError from '../PurchaseOrderItemNotFoundError';
 import UpdatePurchaseOrderItemQuantityCommand from './UpdatePurchaseOrderItemQuantityCommand';
@@ -7,6 +9,7 @@ import UpdatePurchaseOrderItemQuantityCommand from './UpdatePurchaseOrderItemQua
 export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IHandler<UpdatePurchaseOrderItemQuantityCommand, void> {
   constructor(
     private readonly repository: IPurchaseOrderRepository,
+    private readonly eventQueue: IEventQueue,
   ) { }
 
   public async handle(event: UpdatePurchaseOrderItemQuantityCommand): Promise<void> {
@@ -21,13 +24,12 @@ export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IH
 
     await this.repository.updatePurchaseOrderItem(purchaseOrderItem);
 
-    // this.publisher.addEvent<UpdatePurchaserOrderItemEventData>(UpdatePurchaseOrderItemEvent, {
-    //   principalId: purchaseOrderItem.id,
-    //   quantity: purchaseOrderItem.quantity,
-    //   productId: purchaseOrderItem.product.id,
-    //   productName: purchaseOrderItem.product.name,
-    //   productAmount: purchaseOrderItem.product.amount,
-    //   timestamp: new Date().toISOString(),
-    // });
+    this.eventQueue.enqueue(new UpdatePurchaseOrderItemEvent(
+      purchaseOrderItem.id,
+      purchaseOrderItem.quantity,
+      purchaseOrderItem.product.id,
+      purchaseOrderItem.product.name,
+      purchaseOrderItem.product.amount,
+    )).catch(console.error.bind(console));
   }
 }
