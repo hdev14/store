@@ -4,7 +4,14 @@ import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/commands/U
 import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
+import { mock } from 'jest-mock-extended';
+import IEventQueue from '@shared/abstractions/IEventQueue';
+import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
+
+const eventQueueMock = mock<IEventQueue>();
+
+eventQueueMock.enqueue.mockImplementation(() => Promise.resolve());
 
 describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
   it('calls repositoryStub.getPurchaseOrderItemById', async () => {
@@ -12,7 +19,10 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
 
     const getPurchaseOrderItemByIdSpy = jest.spyOn(repositoryStub, 'getPurchaseOrderItemById');
 
-    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(repositoryStub);
+    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
+      repositoryStub,
+      eventQueueMock,
+    );
 
     const command = new UpdatePurchaseOrderItemQuantityCommand(
       faker.datatype.uuid(),
@@ -30,7 +40,10 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
 
     repositoryStub.getPurchaseOrderItemById = jest.fn().mockResolvedValueOnce(null);
 
-    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(repositoryStub);
+    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
+      repositoryStub,
+      eventQueueMock,
+    );
 
     const command = new UpdatePurchaseOrderItemQuantityCommand(
       faker.datatype.uuid(),
@@ -64,7 +77,10 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
 
     const updatePurchaseOrderItemSpy = jest.spyOn(repositoryStub, 'updatePurchaseOrderItem');
 
-    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(repositoryStub);
+    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
+      repositoryStub,
+      eventQueueMock,
+    );
 
     const command = new UpdatePurchaseOrderItemQuantityCommand(
       faker.datatype.uuid(),
@@ -78,5 +94,67 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
 
     expect(updatePurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
     expect(updatePurchaseOrderItemSpy).toHaveBeenCalledWith(expectedPurchaseOrderItem);
+  });
+
+  it('calls EventQueue.enqueue with UpdatePurchaseOrderItemEvent after updating the purchase order item', async () => {
+    expect.assertions(1);
+
+    const fakePurchaseOrderItem = new PurchaseOrderItem({
+      id: faker.datatype.uuid(),
+      quantity: parseInt(faker.datatype.number().toString(), 10),
+      purchaseOrderId: faker.datatype.uuid(),
+      product: new Product(
+        faker.datatype.uuid(),
+        faker.commerce.product(),
+        faker.datatype.float(),
+      ),
+    });
+
+    repositoryStub.getPurchaseOrderItemById = jest.fn()
+      .mockResolvedValueOnce(fakePurchaseOrderItem);
+
+    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
+      repositoryStub,
+      eventQueueMock,
+    );
+
+    const command = new UpdatePurchaseOrderItemQuantityCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
+
+    await handler.handle(command);
+
+    expect(eventQueueMock.enqueue.mock.calls[0][0]).toBeInstanceOf(UpdatePurchaseOrderItemEvent);
+  });
+
+  it("doesn't throw a Error if EventQueue.enqueue throws a QueueError", async () => {
+    expect.assertions(1);
+
+    const fakePurchaseOrderItem = new PurchaseOrderItem({
+      id: faker.datatype.uuid(),
+      quantity: parseInt(faker.datatype.number().toString(), 10),
+      purchaseOrderId: faker.datatype.uuid(),
+      product: new Product(
+        faker.datatype.uuid(),
+        faker.commerce.product(),
+        faker.datatype.float(),
+      ),
+    });
+
+    repositoryStub.getPurchaseOrderItemById = jest.fn()
+      .mockResolvedValueOnce(fakePurchaseOrderItem);
+
+    const handler = new UpdatePurchaseOrderItemQuantityCommandHandler(
+      repositoryStub,
+      eventQueueMock,
+    );
+
+    const command = new UpdatePurchaseOrderItemQuantityCommand(
+      faker.datatype.uuid(),
+      parseInt(faker.datatype.number().toString(), 10),
+    );
+
+    expect(async () => handler.handle(command)).not.toThrow();
   });
 });
