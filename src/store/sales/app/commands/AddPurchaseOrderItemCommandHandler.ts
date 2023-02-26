@@ -8,6 +8,7 @@ import IEventQueue from '@shared/abstractions/IEventQueue';
 import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
 import AddPurchaseOrderItemEvent from '@sales/domain/events/AddPurchaseOrderItemEvent';
 import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
+import UpdateDraftPurchaseOrderEvent from '@sales/domain/events/UpdateDraftPurchaseOrderEvent';
 import AddPurchaseOrderItemCommand from './AddPurchaseOrderItemCommand';
 
 // eslint-disable-next-line max-len
@@ -75,17 +76,13 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddP
 
     await this.repository.updatePurchaseOrder(draftPurchaseOrder);
 
-    // this.eventPublisher.addEvent<UpdateDraftPurchaseOrderEventData>(
-    //   UpdateDraftPurchaseOrderEvent,
-    //   {
-    //     principalId: draftPurchaseOrder.id,
-    //     customerId: draftPurchaseOrder.customerId,
-    //     code: draftPurchaseOrder.code,
-    //     totalAmount: draftPurchaseOrder.totalAmount,
-    //     discountAmount: draftPurchaseOrder.discountAmount,
-    //     timestamp: new Date().toISOString(),
-    //   },
-    // );
+    this.eventQueue.enqueue(new UpdateDraftPurchaseOrderEvent(
+      draftPurchaseOrder.id,
+      draftPurchaseOrder.customerId,
+      draftPurchaseOrder.code,
+      draftPurchaseOrder.totalAmount,
+      draftPurchaseOrder.discountAmount,
+    )).catch(console.error.bind(console));
   }
 
   private async createNewDraftPurcahseOrder(
