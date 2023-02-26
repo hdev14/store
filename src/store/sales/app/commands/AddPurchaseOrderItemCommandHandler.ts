@@ -4,15 +4,16 @@ import Product from '@sales/domain/Product';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import IHandler from '@shared/abstractions/IHandler';
+import IEventQueue from '@shared/abstractions/IEventQueue';
+import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
 import AddPurchaseOrderItemCommand from './AddPurchaseOrderItemCommand';
 
 // eslint-disable-next-line max-len
 export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddPurchaseOrderItemCommand, void> {
   constructor(
     private readonly repository: IPurchaseOrderRepository,
-  ) {
-    this.repository = repository;
-  }
+    private readonly eventQueue: IEventQueue,
+  ) { }
 
   public async handle(event: AddPurchaseOrderItemCommand): Promise<void> {
     const purchaseOrderItem = new PurchaseOrderItem({
@@ -114,18 +115,14 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddP
 
     await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
-    // this.eventPublisher.addEvent<AddDraftPurchaseOrderEventData>(
-    //   AddDraftPurchaseOrderEvent,
-    //   {
-    //     principalId: newDraftPurchaseOrder.id,
-    //     customerId: newDraftPurchaseOrder.customerId,
-    //     code: newDraftPurchaseOrder.code,
-    //     totalAmount: newDraftPurchaseOrder.totalAmount,
-    //     discountAmount: newDraftPurchaseOrder.discountAmount,
-    //     createdAt: newDraftPurchaseOrder.createdAt,
-    //     timestamp: new Date().toISOString(),
-    //   },
-    // );
+    this.eventQueue.enqueue(new AddDraftPurchaseOrderEvent(
+      newDraftPurchaseOrder.id,
+      newDraftPurchaseOrder.customerId,
+      newDraftPurchaseOrder.totalAmount,
+      newDraftPurchaseOrder.discountAmount,
+      newDraftPurchaseOrder.createdAt,
+      newDraftPurchaseOrder.code,
+    ));
 
     // this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
     //   AddPurchaseOrderItemEvent,
