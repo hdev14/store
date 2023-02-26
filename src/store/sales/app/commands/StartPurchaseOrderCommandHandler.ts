@@ -1,5 +1,7 @@
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
+import IEventQueue from '@shared/abstractions/IEventQueue';
 import IHandler from '@shared/abstractions/IHandler';
+import ChargePurchaseOrderEvent from '@shared/events/ChargePurchaseOrderEvent';
 import PurchaseOrderNotFoundError from '../PurchaseOrderNotFoundError';
 import StartPurchaseOrderCommand from './StartPurchaseOrderCommand';
 
@@ -7,6 +9,7 @@ import StartPurchaseOrderCommand from './StartPurchaseOrderCommand';
 export default class StartPurchaseOrderCommandHandler implements IHandler<StartPurchaseOrderCommand, void> {
   constructor(
     private readonly repository: IPurchaseOrderRepository,
+    private readonly eventQueue: IEventQueue,
   ) { }
 
   public async handle(event: StartPurchaseOrderCommand): Promise<void> {
@@ -20,21 +23,19 @@ export default class StartPurchaseOrderCommandHandler implements IHandler<StartP
 
     await this.repository.updatePurchaseOrder(purchaseOrder);
 
-    // this.publisher.addEvent<ChargePurchaseOrderData>(ChargePurchaseOrderEvent, {
-    //   principalId: purchaseOrder.id,
-    //   purchaseOrderId: purchaseOrder.id,
-    //   purchaseOrderCode: purchaseOrder.code,
-    //   customerId: purchaseOrder.customerId,
-    //   totalAmount: purchaseOrder.totalAmount,
-    //   items: purchaseOrder.items.map((i) => ({
-    //     itemId: i.id,
-    //     productId: i.product.id,
-    //     quantity: i.quantity,
-    //   })),
-    //   cardToken: event.cardToken,
-    //   installments: event.installments,
-    //   timestamp: new Date().toISOString(),
-    // });
+    this.eventQueue.enqueue(new ChargePurchaseOrderEvent(
+      purchaseOrder.id,
+      purchaseOrder.customerId,
+      purchaseOrder.code,
+      purchaseOrder.totalAmount,
+      event.cardToken,
+      event.installments,
+      purchaseOrder.items.map((i) => ({
+        itemId: i.id,
+        productId: i.product.id,
+        quantity: i.quantity,
+      })),
+    )).catch(console.error.bind(console));
 
     // TODO: add event to update purchase order
   }

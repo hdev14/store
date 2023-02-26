@@ -1,17 +1,19 @@
-import Event from '@shared/abstractions/Event';
+import DomainEvent from '@shared/abstractions/DomainEvent';
 
-export type ChargePurchaseOrderData = {
-  purchaseOrderId: string;
-  customerId: string;
-  purchaseOrderCode: number;
-  totalAmount: number;
-  cardToken: string;
-  installments: number;
-  items: Array<{
-    itemId: string;
-    productId: string;
-    quantity: number;
-  }>;
-};
-
-export default class ChargePurchaseOrderEvent extends Event<ChargePurchaseOrderData> { }
+export default class ChargePurchaseOrderEvent extends DomainEvent {
+  constructor(
+    readonly principalId: string,
+    readonly customerId: string,
+    readonly code: number,
+    readonly totalAmount: number,
+    readonly cardToken: string,
+    readonly installments: number,
+    readonly items: Array<{
+      itemId: string
+      productId: string
+      quantity: number
+    }>,
+  ) {
+    super(principalId);
+  }
+}
