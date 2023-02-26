@@ -137,7 +137,7 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
     expect(eventQueueMock.enqueue.mock.calls[0][0]).toBeInstanceOf(ChargePurchaseOrderEvent);
   });
 
-  it("doesn't throw a Error if EventQueue.enqueue throws a QueueError", async () => {
+  it("doesn't throw a Error if EventQueue.enqueue throws a QueueError when it is called with ChargePurchaseOrderEvent", async () => {
     expect.assertions(1);
 
     const purchaseOrder = new PurchaseOrder({
@@ -163,4 +163,8 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
 
     expect(async () => handler.handle(command)).not.toThrow();
   });
+
+  it.todo('calls EventQueue.enqueue with UpdatePurchaseOrderEvent after updating the purchase order');
+
+  it.todo("doesn't throw a Error if EventQueue.enqueue throws a QueueError when it is called with UpdatePurchaseOrderEvent");
 });
