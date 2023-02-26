@@ -1,13 +1,35 @@
 version: '3.0'
 
 services:
-  store_redis:
+  store-redis:
+    container_name: store-redis
+    hostname: store-redis
     image: redis
     ports:
       - 6379:6379
     volumes:
       - redis_volume:/data
-    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    command:
+      [
+        "redis-server",
+        "--save",
+        "60",
+        "1",
+        "--loglevel",
+        "warning"
+      ]
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: ghcr.io/joeferner/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=store-redis
+    ports:
+      - "8081:8081"
+    depends_on:
+      - store-redis
 
 volumes:
   redis_volume:
