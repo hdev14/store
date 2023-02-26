@@ -9,6 +9,7 @@ import IEventQueue from '@shared/abstractions/IEventQueue';
 import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
 import AddPurchaseOrderItemEvent from '@sales/domain/events/AddPurchaseOrderItemEvent';
 import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
+import UpdateDraftPurchaseOrderEvent from '@sales/domain/events/UpdateDraftPurchaseOrderEvent';
 import { RepositoryStub } from '../../stubs/PurchaseOrderRepositoryStub';
 
 const eventQueueMock = mock<IEventQueue>();
@@ -553,6 +554,75 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
     eventQueueMock.enqueue.mockRejectedValueOnce(new Error('test'));
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
+
+    expect(async () => addPurchaseOrderItemCommandHandler.handle(command)).not.toThrow();
+  });
+
+  it('calls Queue.enqueue with UpdateDraftPurchaseOrderEvent after complete the operation of update the draft purchase order', async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+
+    const command = new AddPurchaseOrderItemCommand(
+      faker.datatype.uuid(),
+      faker.datatype.uuid(),
+      faker.commerce.product(),
+      faker.datatype.float(),
+      1,
+    );
+
+    const purchaseOrder = new PurchaseOrder({
+      id: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      code: parseInt(faker.datatype.number().toString(), 10),
+      createdAt: new Date(),
+      voucher: null,
+      status: null,
+    });
+
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
+
+    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
+      repository,
+      eventQueueMock,
+    );
+
+    await addPurchaseOrderItemCommandHandler.handle(command);
+
+    expect(eventQueueMock.enqueue.mock.calls[1][0]).toBeInstanceOf(UpdateDraftPurchaseOrderEvent);
+  });
+
+  it("doesn't throw a Error if Queue.enqueue method throws a QueueError when it is updating the draft purchase order", async () => {
+    expect.assertions(1);
+
+    const repository = new RepositoryStub();
+
+    const command = new AddPurchaseOrderItemCommand(
+      faker.datatype.uuid(),
+      faker.datatype.uuid(),
+      faker.commerce.product(),
+      faker.datatype.float(),
+      1,
+    );
+
+    const purchaseOrder = new PurchaseOrder({
+      id: faker.datatype.uuid(),
+      customerId: faker.datatype.uuid(),
+      code: parseInt(faker.datatype.number().toString(), 10),
+      createdAt: new Date(),
+      voucher: null,
+      status: null,
+    });
+
+    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
+    eventQueueMock.enqueue
+      .mockRejectedValueOnce(undefined)
+      .mockRejectedValueOnce(new Error('test'));
 
     const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
       repository,
