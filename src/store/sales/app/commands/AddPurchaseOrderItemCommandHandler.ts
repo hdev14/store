@@ -63,18 +63,14 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddP
     } else {
       await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
-      // this.eventPublisher.addEvent<AddPurchaseOrderItemEventData>(
-      //   AddPurchaseOrderItemEvent,
-      //   {
-      //     principalId: purchaseOrderItem.id,
-      //     productId: purchaseOrderItem.product.id,
-      //     productName: purchaseOrderItem.product.name,
-      //     productAmount: purchaseOrderItem.product.amount,
-      //     purchaseOrderId: purchaseOrderItem.purchaseOrderId,
-      //     quantity: purchaseOrderItem.quantity,
-      //     timestamp: new Date().toISOString(),
-      //   },
-      // );
+      this.eventQueue.enqueue(new AddPurchaseOrderItemEvent(
+        purchaseOrderItem.id,
+        purchaseOrderItem.purchaseOrderId,
+        purchaseOrderItem.quantity,
+        purchaseOrderItem.product.id,
+        purchaseOrderItem.product.name,
+        purchaseOrderItem.product.amount,
+      )).catch(console.error.bind(console));
     }
 
     await this.repository.updatePurchaseOrder(draftPurchaseOrder);
