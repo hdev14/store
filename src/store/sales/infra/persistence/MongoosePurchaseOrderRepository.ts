@@ -134,9 +134,9 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
     }
   }
 
-  public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+  public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<void> {
     try {
-      const createdPurchaseOrder = await PurchaseOrderModel.create({
+      await PurchaseOrderModel.create({
         _id: purchaseOrder.id,
         customer: purchaseOrder.customerId,
         items: purchaseOrder.items.map(({ id }) => id),
@@ -147,13 +147,6 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
         status: purchaseOrder.status,
         createdAt: purchaseOrder.createdAt,
       });
-
-      const populatedPurchaseOrder = await PurchaseOrderModel.populate(
-        createdPurchaseOrder,
-        { path: 'voucher', model: VoucherModel },
-      );
-
-      return this.mapPurchaseOrder(populatedPurchaseOrder);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -161,7 +154,7 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
     }
   }
 
-  public async updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+  public async updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<void> {
     try {
       const purchaseOrderToUpdate = await PurchaseOrderModel.findOne(
         { _id: purchaseOrder.id },
@@ -183,13 +176,6 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
       purchaseOrderToUpdate.items = purchaseOrder.items.map(({ id }) => id);
 
       await purchaseOrderToUpdate.save();
-
-      const populatedPurchaseOrder = await PurchaseOrderModel.populate(
-        purchaseOrderToUpdate,
-        { path: 'voucher', model: VoucherModel },
-      );
-
-      return this.mapPurchaseOrder(populatedPurchaseOrder);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -197,20 +183,14 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
     }
   }
 
-  public async addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
+  public async addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<void> {
     try {
-      const createdPurchaseOrderItem = await PurchaseOrderItemModel.create({
+      await PurchaseOrderItemModel.create({
         _id: purchaseOrderItem.id,
         purchaseOrder: purchaseOrderItem.purchaseOrderId,
         quantity: purchaseOrderItem.quantity,
         product: purchaseOrderItem.product.id,
       });
-
-      const populatedPurchaseOrderItem = await createdPurchaseOrderItem.populate({
-        path: 'product', select: '_id name amount', model: ProductModel,
-      });
-
-      return this.mapPurchaseOrderItem(populatedPurchaseOrderItem);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -218,7 +198,7 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
     }
   }
 
-  public async updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
+  public async updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<void> {
     try {
       const updatedPurchaseOrderItem = await PurchaseOrderItemModel.findOneAndUpdate(
         { id: purchaseOrderItem.id },
@@ -234,10 +214,8 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
       );
 
       if (!updatedPurchaseOrderItem) {
-        throw new RepositoryError(this.constructor.name, 'Item não encontrado.');
+        throw new Error('Item não encontrado.');
       }
-
-      return this.mapPurchaseOrderItem(updatedPurchaseOrderItem);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -250,13 +228,9 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
       const result = await PurchaseOrderItemModel.deleteOne({ _id: purchaseOrderItemId });
 
       if (result.deletedCount === 0) {
-        throw new RepositoryError(this.constructor.name, 'Item não excluído');
+        throw new Error('Item não excluído');
       }
     } catch (e: any) {
-      if (e instanceof RepositoryError) {
-        throw e;
-      }
-
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
       });

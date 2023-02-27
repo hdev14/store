@@ -116,9 +116,9 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     }
   }
 
-  public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+  public async addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<void> {
     try {
-      const createdPurchaseOrder = await this.connection.purchaseOrder.create({
+      await this.connection.purchaseOrder.create({
         data: {
           id: purchaseOrder.id,
           code: purchaseOrder.code,
@@ -133,8 +133,6 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
           voucher: true,
         },
       });
-
-      return this.mapPurchaseOrder(createdPurchaseOrder);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -142,9 +140,9 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     }
   }
 
-  public async updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
+  public async updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<void> {
     try {
-      const updatedPurchaseOrder = await this.connection.purchaseOrder.update({
+      await this.connection.purchaseOrder.update({
         where: { id: purchaseOrder.id },
         data: {
           customerId: purchaseOrder.customerId,
@@ -169,8 +167,6 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
           },
         },
       });
-
-      return this.mapPurchaseOrder(updatedPurchaseOrder);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -224,9 +220,9 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     }
   }
 
-  public async addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
+  public async addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<void> {
     try {
-      const createdPurchaseOrderItem = await this.connection.purchaseOrderItem.create({
+      await this.connection.purchaseOrderItem.create({
         data: {
           id: purchaseOrderItem.id,
           purchaseOrderId: purchaseOrderItem.purchaseOrderId,
@@ -243,8 +239,6 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
           },
         },
       });
-
-      return this.mapPurchaseOrderItem(createdPurchaseOrderItem);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -252,9 +246,9 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     }
   }
 
-  public async updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
+  public async updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<void> {
     try {
-      const updatedPurchaseOrderItem = await this.connection.purchaseOrderItem.update({
+      await this.connection.purchaseOrderItem.update({
         where: { id: purchaseOrderItem.id },
         data: {
           purchaseOrderId: purchaseOrderItem.purchaseOrderId,
@@ -271,8 +265,6 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
           },
         },
       });
-
-      return this.mapPurchaseOrderItem(updatedPurchaseOrderItem);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
