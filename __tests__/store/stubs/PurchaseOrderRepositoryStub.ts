@@ -46,12 +46,12 @@ export class RepositoryStub implements IPurchaseOrderRepository {
     );
   }
 
-  addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    return Promise.resolve(purchaseOrder);
+  addPurchaseOrder(_: PurchaseOrder): Promise<void> {
+    return Promise.resolve();
   }
 
-  updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder> {
-    return Promise.resolve(purchaseOrder);
+  updatePurchaseOrder(_: PurchaseOrder): Promise<void> {
+    return Promise.resolve();
   }
 
   getPurchaseOrderItemById(_: string): Promise<PurchaseOrderItem | null> {
@@ -90,12 +90,12 @@ export class RepositoryStub implements IPurchaseOrderRepository {
     );
   }
 
-  addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
-    return Promise.resolve(purchaseOrderItem);
+  addPurchaseOrderItem(_: PurchaseOrderItem): Promise<void> {
+    return Promise.resolve();
   }
 
-  updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem> {
-    return Promise.resolve(purchaseOrderItem);
+  updatePurchaseOrderItem(_: PurchaseOrderItem): Promise<void> {
+    return Promise.resolve();
   }
 
   deletePurchaseOrderItem(_: string): Promise<void> {

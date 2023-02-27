@@ -17,14 +17,18 @@ export class RepositoryStub implements ICategoryOperations {
     return Promise.resolve(fakeCategories as any);
   }
 
-  public async addCategory(category: Category): Promise<void> {
+  addCategory(category: Category): Promise<void> {
     fakeCategories.push(category);
+
+    return Promise.resolve();
   }
 
-  public async updateCategory(category: Category): Promise<void> {
+  updateCategory(category: Category): Promise<void> {
     const index = fakeCategories.findIndex((c) => c.id === category.id);
 
     fakeCategories[index] = category;
+
+    return Promise.resolve();
   }
 }
 

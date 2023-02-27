@@ -381,7 +381,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
     });
 
     it('creates a new purchase order', async () => {
-      expect.assertions(23);
+      expect.assertions(1);
 
       const customerId = faker.datatype.uuid();
       const purchaseOrderId = faker.datatype.uuid();
@@ -422,9 +422,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       PurchaseOrderModelMock.create
         .mockImplementationOnce(() => Promise.resolve(fakePurchaseOrder as any));
 
-      PurchaseOrderModelMock.populate
-        .mockImplementationOnce(() => Promise.resolve(fakePurchaseOrder as any));
-
       const purchaseOrder = new PurchaseOrder({
         id: fakePurchaseOrder._id,
         customerId: fakePurchaseOrder.customer,
@@ -457,37 +454,8 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
 
       const repository = new MongoosePurchaseOrderRepository();
 
-      const result = await repository.addPurchaseOrder(purchaseOrder);
+      await repository.addPurchaseOrder(purchaseOrder);
 
-      expect(result.id).toEqual(purchaseOrder.id);
-      expect(result.customerId).toEqual(purchaseOrder.customerId);
-      expect(result.code).toEqual(purchaseOrder.code);
-      expect(result.createdAt).toEqual(purchaseOrder.createdAt);
-      expect(result.discountAmount).toEqual(purchaseOrder.discountAmount);
-      expect(result.voucher!.id).toEqual(purchaseOrder.voucher!.id);
-      expect(result.voucher!.active).toEqual(purchaseOrder.voucher!.active);
-      expect(result.voucher!.code).toEqual(purchaseOrder.voucher!.code);
-      expect(result.voucher!.percentageAmount).toEqual(purchaseOrder.voucher!.percentageAmount);
-      expect(result.voucher!.rawDiscountAmount).toEqual(purchaseOrder.voucher!.rawDiscountAmount);
-      expect(result.voucher!.quantity).toEqual(purchaseOrder.voucher!.quantity);
-      expect(result.voucher!.type).toEqual(purchaseOrder.voucher!.type);
-      expect(result.voucher!.createdAt).toEqual(purchaseOrder.voucher!.createdAt);
-      expect(result.voucher!.expiresAt).toEqual(purchaseOrder.voucher!.expiresAt);
-      expect(result.voucher!.usedAt).toEqual(null);
-
-      purchaseOrder!.items.forEach((item, idx) => {
-        expect(item.id).toEqual(fakePurchaseOrder.items[idx]._id);
-        expect(item.product.id).toEqual(fakePurchaseOrder.items[idx].product._id);
-        expect(item.product.name).toEqual(fakePurchaseOrder.items[idx].product.name);
-        expect(item.product.amount).toEqual(fakePurchaseOrder.items[idx].product.amount);
-        expect(item.quantity).toEqual(fakePurchaseOrder.items[idx].quantity);
-        expect(item.purchaseOrderId)
-          .toEqual(fakePurchaseOrder.items[idx].purchaseOrder);
-      });
-      expect(PurchaseOrderModelMock.populate).toHaveBeenCalledWith(
-        fakePurchaseOrder,
-        { path: 'voucher', model: VoucherModel },
-      );
       expect(PurchaseOrderModelMock.create).toHaveBeenCalledWith({
         _id: purchaseOrder.id,
         customer: purchaseOrder.customerId,
@@ -502,84 +470,34 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
     });
 
     it('creates a new purchase order without voucher', async () => {
-      expect.assertions(14);
+      expect.assertions(1);
 
-      const customerId = faker.datatype.uuid();
-      const purchaseOrderId = faker.datatype.uuid();
-
-      const fakePurchaseOrder = {
-        _id: purchaseOrderId,
-        customer: customerId,
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.STARTED,
         totalAmount: 0,
         discountAmount: 0,
         createdAt: new Date(),
         voucher: null,
-        items: [
-          {
-            _id: faker.datatype.uuid(),
-            quantity: parseInt(faker.datatype.number().toString(), 10),
-            purchaseOrder: purchaseOrderId,
-            product: {
-              _id: faker.datatype.uuid(),
-              name: faker.commerce.product(),
-              amount: faker.datatype.float(),
-            },
-          },
-        ],
-      };
-
-      PurchaseOrderModelMock.create
-        .mockImplementationOnce(() => Promise.resolve(fakePurchaseOrder as any));
-
-      PurchaseOrderModelMock.populate
-        .mockImplementationOnce(() => Promise.resolve(fakePurchaseOrder as any));
-
-      const purchaseOrder = new PurchaseOrder({
-        id: fakePurchaseOrder._id,
-        customerId: fakePurchaseOrder.customer,
-        code: fakePurchaseOrder.code,
-        status: fakePurchaseOrder.status,
-        voucher: null,
-        createdAt: fakePurchaseOrder.createdAt,
       });
 
       purchaseOrder.addItem(new PurchaseOrderItem({
-        id: fakePurchaseOrder.items[0]._id,
-        quantity: fakePurchaseOrder.items[0].quantity,
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: purchaseOrder.id,
         product: new Product(
-          fakePurchaseOrder.items[0].product._id,
-          fakePurchaseOrder.items[0].product.name,
-          fakePurchaseOrder.items[0].product.amount,
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          faker.datatype.float(),
         ),
       }));
 
       const repository = new MongoosePurchaseOrderRepository();
 
-      const result = await repository.addPurchaseOrder(purchaseOrder);
+      await repository.addPurchaseOrder(purchaseOrder);
 
-      expect(result.id).toEqual(purchaseOrder.id);
-      expect(result.customerId).toEqual(purchaseOrder.customerId);
-      expect(result.code).toEqual(purchaseOrder.code);
-      expect(result.createdAt).toEqual(purchaseOrder.createdAt);
-      expect(result.discountAmount).toEqual(purchaseOrder.discountAmount);
-      expect(result.voucher).toBeNull();
-
-      purchaseOrder!.items.forEach((item, idx) => {
-        expect(item.id).toEqual(fakePurchaseOrder.items[idx]._id);
-        expect(item.product.id).toEqual(fakePurchaseOrder.items[idx].product._id);
-        expect(item.product.name).toEqual(fakePurchaseOrder.items[idx].product.name);
-        expect(item.product.amount).toEqual(fakePurchaseOrder.items[idx].product.amount);
-        expect(item.quantity).toEqual(fakePurchaseOrder.items[idx].quantity);
-        expect(item.purchaseOrderId)
-          .toEqual(fakePurchaseOrder.items[idx].purchaseOrder);
-      });
-
-      expect(PurchaseOrderModelMock.populate).toHaveBeenCalledWith(
-        fakePurchaseOrder,
-        { path: 'voucher', model: VoucherModel },
-      );
       expect(PurchaseOrderModelMock.create).toHaveBeenCalledWith({
         _id: purchaseOrder.id,
         customer: purchaseOrder.customerId,
@@ -596,41 +514,17 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
     it('throws a RepositoryError if occur an unexpected error', async () => {
       expect.assertions(2);
 
-      const customerId = faker.datatype.uuid();
-      const purchaseOrderId = faker.datatype.uuid();
+      PurchaseOrderModelMock.create.mockRejectedValueOnce(new Error('test') as never);
 
-      const fakePurchaseOrder = {
-        _id: purchaseOrderId,
-        customer: customerId,
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.STARTED,
         totalAmount: 0,
         discountAmount: 0,
         createdAt: new Date(),
         voucher: null,
-        items: [
-          {
-            _id: faker.datatype.uuid(),
-            quantity: parseInt(faker.datatype.number().toString(), 10),
-            purchaseOrder: purchaseOrderId,
-            product: {
-              _id: faker.datatype.uuid(),
-              name: faker.commerce.product(),
-              amount: faker.datatype.float(),
-            },
-          },
-        ],
-      };
-
-      PurchaseOrderModelMock.create.mockRejectedValueOnce(new Error('test') as never);
-
-      const purchaseOrder = new PurchaseOrder({
-        id: fakePurchaseOrder._id,
-        customerId: fakePurchaseOrder.customer,
-        code: fakePurchaseOrder.code,
-        status: fakePurchaseOrder.status,
-        voucher: null,
-        createdAt: fakePurchaseOrder.createdAt,
       });
 
       const repository = new MongoosePurchaseOrderRepository();
@@ -651,21 +545,23 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
     });
 
     it('updates a specific purchase order', async () => {
-      expect.assertions(24);
+      expect.assertions(2);
 
-      const customerId = faker.datatype.uuid();
-      const purchaseOrderId = faker.datatype.uuid();
+      const saveMock = jest.fn();
 
-      const fakePurchaseOrder = {
-        _id: purchaseOrderId,
-        customer: customerId,
+      PurchaseOrderModelMock.findOne
+        .mockResolvedValueOnce({ save: saveMock });
+
+      const purchaseOrder = new PurchaseOrder({
+        id: faker.datatype.uuid(),
+        customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.STARTED,
         totalAmount: 0,
         discountAmount: 0,
         createdAt: new Date(),
-        voucher: {
-          _id: faker.datatype.uuid(),
+        voucher: new Voucher({
+          id: faker.datatype.uuid(),
           percentageAmount: 0,
           rawDiscountAmount: 0,
           quantity: parseInt(faker.datatype.number().toString(), 10),
@@ -674,92 +570,27 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
           code: parseInt(faker.datatype.number().toString(), 10),
           expiresAt: new Date(),
           createdAt: new Date(),
-        },
-        items: [
-          {
-            _id: faker.datatype.uuid(),
-            quantity: parseInt(faker.datatype.number().toString(), 10),
-            purchaseOrder: purchaseOrderId,
-            product: {
-              _id: faker.datatype.uuid(),
-              name: faker.commerce.product(),
-              amount: faker.datatype.float(),
-            },
-          },
-        ],
-      };
-
-      const saveMock = jest.fn();
-
-      PurchaseOrderModelMock.findOne
-        .mockResolvedValueOnce({ save: saveMock });
-
-      PurchaseOrderModelMock.populate
-        .mockResolvedValueOnce(fakePurchaseOrder as any);
-
-      const purchaseOrder = new PurchaseOrder({
-        id: fakePurchaseOrder._id,
-        customerId: fakePurchaseOrder.customer,
-        code: fakePurchaseOrder.code,
-        status: fakePurchaseOrder.status,
-        voucher: new Voucher({
-          id: fakePurchaseOrder.voucher._id,
-          active: fakePurchaseOrder.voucher.active,
-          code: fakePurchaseOrder.voucher.code,
-          percentageAmount: fakePurchaseOrder.voucher.percentageAmount,
-          rawDiscountAmount: fakePurchaseOrder.voucher.rawDiscountAmount,
-          quantity: fakePurchaseOrder.voucher.quantity,
-          type: fakePurchaseOrder.voucher.type,
-          createdAt: fakePurchaseOrder.voucher.createdAt,
-          expiresAt: fakePurchaseOrder.voucher.expiresAt,
           usedAt: null,
         }),
-        createdAt: fakePurchaseOrder.createdAt,
       });
 
       purchaseOrder.addItem(new PurchaseOrderItem({
-        id: fakePurchaseOrder.items[0]._id,
-        quantity: fakePurchaseOrder.items[0].quantity,
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: purchaseOrder.id,
         product: new Product(
-          fakePurchaseOrder.items[0].product._id,
-          fakePurchaseOrder.items[0].product.name,
-          fakePurchaseOrder.items[0].product.amount,
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          faker.datatype.float(),
         ),
       }));
 
       const repository = new MongoosePurchaseOrderRepository();
 
-      const result = await repository.updatePurchaseOrder(purchaseOrder);
+      await repository.updatePurchaseOrder(purchaseOrder);
 
-      expect(result.id).toEqual(purchaseOrder.id);
-      expect(result.customerId).toEqual(purchaseOrder.customerId);
-      expect(result.code).toEqual(purchaseOrder.code);
-      expect(result.createdAt).toEqual(purchaseOrder.createdAt);
-      expect(result.discountAmount).toEqual(purchaseOrder.discountAmount);
-      expect(result.voucher!.id).toEqual(purchaseOrder.voucher!.id);
-      expect(result.voucher!.active).toEqual(purchaseOrder.voucher!.active);
-      expect(result.voucher!.code).toEqual(purchaseOrder.voucher!.code);
-      expect(result.voucher!.percentageAmount).toEqual(purchaseOrder.voucher!.percentageAmount);
-      expect(result.voucher!.rawDiscountAmount).toEqual(purchaseOrder.voucher!.rawDiscountAmount);
-      expect(result.voucher!.quantity).toEqual(purchaseOrder.voucher!.quantity);
-      expect(result.voucher!.type).toEqual(purchaseOrder.voucher!.type);
-      expect(result.voucher!.createdAt).toEqual(purchaseOrder.voucher!.createdAt);
-      expect(result.voucher!.expiresAt).toEqual(purchaseOrder.voucher!.expiresAt);
-      expect(result.voucher!.usedAt).toEqual(null);
-
-      purchaseOrder!.items.forEach((item, idx) => {
-        expect(item.id).toEqual(fakePurchaseOrder.items[idx]._id);
-        expect(item.product.id).toEqual(fakePurchaseOrder.items[idx].product._id);
-        expect(item.product.name).toEqual(fakePurchaseOrder.items[idx].product.name);
-        expect(item.product.amount).toEqual(fakePurchaseOrder.items[idx].product.amount);
-        expect(item.quantity).toEqual(fakePurchaseOrder.items[idx].quantity);
-        expect(item.purchaseOrderId)
-          .toEqual(fakePurchaseOrder.items[idx].purchaseOrder);
-      });
-
-      expect(PurchaseOrderModelMock.findOne).toHaveBeenCalledWith({ _id: fakePurchaseOrder._id });
+      expect(PurchaseOrderModelMock.findOne).toHaveBeenCalledWith({ _id: purchaseOrder.id });
       expect(saveMock).toHaveBeenCalledTimes(1);
-      expect(PurchaseOrderModelMock.populate.mock.calls[0][1]).toEqual({ path: 'voucher', model: VoucherModel });
     });
 
     it('throws a RepositoryError if occur an unexpected error', async () => {
@@ -1007,58 +838,28 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
     });
 
     it('creates a new purchase order item', async () => {
-      expect.assertions(6);
-
-      const fakePurchaseOrderItem = {
-        _id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number().toString(), 10),
-        purchaseOrder: faker.datatype.uuid(),
-        product: {
-          _id: faker.datatype.uuid(),
-          name: faker.commerce.product(),
-          amount: faker.datatype.float(),
-        },
-      };
-
-      const populateProductMock = jest.fn().mockResolvedValue(fakePurchaseOrderItem);
-
-      PurchaseOrderItemModelMock.create
-        .mockImplementationOnce(() => Promise.resolve({ populate: populateProductMock }));
+      expect.assertions(1);
 
       const repository = new MongoosePurchaseOrderRepository();
 
-      const purchaseOrderItem = await repository.addPurchaseOrderItem(
-        new PurchaseOrderItem({
-          id: fakePurchaseOrderItem._id,
-          purchaseOrderId: fakePurchaseOrderItem.purchaseOrder,
-          quantity: fakePurchaseOrderItem.quantity,
-          product: new Product(
-            fakePurchaseOrderItem.product._id,
-            fakePurchaseOrderItem.product.name,
-            fakePurchaseOrderItem.product.amount,
-          ),
-        }),
-      );
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number().toString(), 10),
+        purchaseOrderId: faker.datatype.uuid(),
+        product: new Product(
+          faker.datatype.uuid(),
+          faker.commerce.product(),
+          faker.datatype.float(),
+        ),
+      });
 
-      expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem._id);
-      expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrder);
-      expect(purchaseOrderItem!.product).toEqual(new Product(
-        fakePurchaseOrderItem.product._id,
-        fakePurchaseOrderItem.product.name,
-        fakePurchaseOrderItem.product.amount,
-      ));
+      await repository.addPurchaseOrderItem(purchaseOrderItem);
 
       expect(PurchaseOrderItemModelMock.create).toHaveBeenCalledWith({
         _id: purchaseOrderItem.id,
         purchaseOrder: purchaseOrderItem.purchaseOrderId,
         quantity: purchaseOrderItem.quantity,
         product: purchaseOrderItem.product.id,
-      });
-      expect(populateProductMock).toHaveBeenCalledWith({
-        path: 'product',
-        select: '_id name amount',
-        model: ProductModel,
       });
     });
 
@@ -1095,7 +896,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
     });
 
     it('updates a specific purchase order item', async () => {
-      expect.assertions(5);
+      expect.assertions(1);
 
       const fakePurchaseOrderItem = {
         _id: faker.datatype.uuid(),
@@ -1113,7 +914,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
 
       const repository = new MongoosePurchaseOrderRepository();
 
-      const purchaseOrderItem = await repository.updatePurchaseOrderItem(
+      await repository.updatePurchaseOrderItem(
         new PurchaseOrderItem({
           id: fakePurchaseOrderItem._id,
           purchaseOrderId: fakePurchaseOrderItem.purchaseOrder,
@@ -1125,15 +926,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
           ),
         }),
       );
-
-      expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem._id);
-      expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrder);
-      expect(purchaseOrderItem!.product).toEqual(new Product(
-        fakePurchaseOrderItem.product._id,
-        fakePurchaseOrderItem.product.name,
-        fakePurchaseOrderItem.product.amount,
-      ));
 
       expect(PurchaseOrderItemModelMock.findOneAndUpdate).toHaveBeenCalledWith(
         { id: fakePurchaseOrderItem._id },
