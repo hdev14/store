@@ -4,7 +4,7 @@ import Product from '@catalog/domain/Product';
 import { fakeCategories, fakeProducts } from '../fakes';
 
 export class RepositoryStub implements IProductRepository {
-  getCategoryById(categoryId: string): Promise<Category | null> {
+  public async getCategoryById(categoryId: string): Promise<Category | null> {
     const category = fakeCategories.find((c) => c.id === categoryId);
 
     if (!category) {
@@ -14,41 +14,38 @@ export class RepositoryStub implements IProductRepository {
     return Promise.resolve(category as Category);
   }
 
-  getAllCategories(): Promise<Category[]> {
+  public async getAllCategories(): Promise<Category[]> {
     throw new Error('Method not implemented.');
   }
 
-  addCategory(_: Category): Promise<Category> {
+  public async addCategory(_: Category): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  updateCategory(_: Category): Promise<Category> {
+  public async updateCategory(_: Category): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  getAllProducts(): Promise<Product[]> {
+  public async getAllProducts(): Promise<Product[]> {
     return Promise.resolve(fakeProducts as any);
   }
 
-  getProductById(id: string): Promise<Product | null> {
+  public async getProductById(id: string): Promise<Product | null> {
     return Promise.resolve(fakeProducts.find((p) => p.id === id) as any);
   }
 
-  getProductsByCategory(categoryId: string): Promise<Product[]> {
+  public async getProductsByCategory(categoryId: string): Promise<Product[]> {
     return Promise.resolve(fakeProducts.filter((p) => p.category.id === categoryId) as any);
   }
 
-  addProduct(product: Product): Promise<Product> {
+  public async addProduct(product: Product): Promise<void> {
     fakeProducts.push(product);
-    return Promise.resolve(product);
   }
 
-  updateProduct(product: Product): Promise<Product> {
+  public async updateProduct(product: Product): Promise<void> {
     const index = fakeProducts.findIndex((p) => p.id === product.id);
 
     fakeProducts[index] = product;
-
-    return Promise.resolve(product);
   }
 }
 

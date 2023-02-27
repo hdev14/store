@@ -20,7 +20,7 @@ beforeEach(() => {
 describe('PrismaProductRepository\'s Unit Tests', () => {
   describe('PrismaProductRepository.addProduct()', () => {
     it('adds a new product', async () => {
-      expect.assertions(3);
+      expect.assertions(2);
 
       const product = new Product({
         id: 'test',
@@ -64,9 +64,8 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         createdAt: product.createdAt,
       } as any);
 
-      const result = await productRepository.addProduct(product);
+      await productRepository.addProduct(product);
 
-      expect(result.id).toEqual(product.id);
       expect(prismaMock.product.create).toHaveBeenCalled();
       expect(prismaMock.product.create).toHaveBeenCalledWith({
         data: {
@@ -229,7 +228,7 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
   describe('PrismaProductRepository.addCategory()', () => {
     it('adds a new category', async () => {
-      expect.assertions(3);
+      expect.assertions(2);
 
       const productRepository = new PrismaProductRepository();
       const category = new Category({
@@ -244,9 +243,8 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         code: category.code,
       });
 
-      const result = await productRepository.addCategory(category);
+      await productRepository.addCategory(category);
 
-      expect(result.isEqual(category)).toBe(true);
       expect(prismaMock.category.create).toHaveBeenCalled();
       expect(prismaMock.category.create).toHaveBeenCalledWith({
         data: {
