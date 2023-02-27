@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import AddPurchaseOrderItemCommand from '@sales/app/commands/AddPurchaseOrderItemCommand';
-import AddPurchaseOrderItemCommandHandler from '@sales/app/commands/AddPurchaseOrderItemCommandHandler';
+import AddPurchaseOrderItemCommandHandler from '@sales/app/handlers/AddPurchaseOrderItemCommandHandler';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import Product from '@sales/domain/Product';

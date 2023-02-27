@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import GetVoucherQuery from '@sales/app/queries/GetVoucherQuery';
-import GetVoucherQueryHandler from '@sales/app/queries/GetVoucherQueryHandler';
+import GetVoucherQueryHandler from '@sales/app/handlers/GetVoucherQueryHandler';
 import VoucherNotFoundError from '@sales/app/VoucherNotFoundError';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';

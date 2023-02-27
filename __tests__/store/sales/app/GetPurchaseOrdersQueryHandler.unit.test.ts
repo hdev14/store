@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import GetPurchaseOrdersQuery from '@sales/app/queries/GetPurchaseOrdersQuery';
-import GetPurchaseOrdersQueryHandler from '@sales/app/queries/GetPurchaseOrdersQueryHandler';
+import GetPurchaseOrdersQueryHandler from '@sales/app/handlers/GetPurchaseOrdersQueryHandler';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 

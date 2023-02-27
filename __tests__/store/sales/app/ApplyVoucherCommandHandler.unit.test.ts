@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import ApplyVoucherCommand from '@sales/app/commands/ApplyVoucherCommand';
-import ApplyVoucherCommandHandler from '@sales/app/commands/ApplyVoucherCommandHandler';
+import ApplyVoucherCommandHandler from '@sales/app/handlers/ApplyVoucherCommandHandler';
 import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
 import VoucherInvalidError from '@sales/app/VoucherInvalidError';
 import VoucherNotFoundError from '@sales/app/VoucherNotFoundError';

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
 import GetPurchaseOrderItemQuery from '@sales/app/queries/GetPurchaseOrderItemQuery';
-import GetPurchaseOrderItemQueryHandler from '@sales/app/queries/GetPurchaseOrderItemQueryHandler';
+import GetPurchaseOrderItemQueryHandler from '@sales/app/handlers/GetPurchaseOrderItemQueryHandler';
 import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';

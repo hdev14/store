@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import StartPurchaseOrderCommand from '@sales/app/commands/StartPurchaseOrderCommand';
-import StartPurchaseOrderCommandHandler from '@sales/app/commands/StartPurchaseOrderCommandHandler';
+import StartPurchaseOrderCommandHandler from '@sales/app/handlers/StartPurchaseOrderCommandHandler';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
 import { mock } from 'jest-mock-extended';
