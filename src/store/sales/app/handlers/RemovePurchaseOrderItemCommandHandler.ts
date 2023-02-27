@@ -3,7 +3,7 @@ import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRe
 import IEventQueue from '@shared/abstractions/IEventQueue';
 import IHandler from '@shared/abstractions/IHandler';
 import PurchaseOrderItemNotDeletedError from '../PurchaseOrderItemNotDeletedError.ts';
-import RemovePurchaseOrderItemCommand from './RemovePurchaseOrderItemCommand';
+import RemovePurchaseOrderItemCommand from '../commands/RemovePurchaseOrderItemCommand';
 
 // eslint-disable-next-line max-len
 export default class RemovePurchaseOrderItemCommandHandler implements IHandler<RemovePurchaseOrderItemCommand, void> {

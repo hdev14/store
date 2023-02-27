@@ -9,7 +9,7 @@ import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrd
 import AddPurchaseOrderItemEvent from '@sales/domain/events/AddPurchaseOrderItemEvent';
 import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
 import UpdateDraftPurchaseOrderEvent from '@sales/domain/events/UpdateDraftPurchaseOrderEvent';
-import AddPurchaseOrderItemCommand from './AddPurchaseOrderItemCommand';
+import AddPurchaseOrderItemCommand from '../commands/AddPurchaseOrderItemCommand';
 
 // eslint-disable-next-line max-len
 export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddPurchaseOrderItemCommand, void> {

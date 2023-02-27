@@ -3,7 +3,7 @@ import IEventQueue from '@shared/abstractions/IEventQueue';
 import IHandler from '@shared/abstractions/IHandler';
 import ChargePurchaseOrderEvent from '@shared/events/ChargePurchaseOrderEvent';
 import PurchaseOrderNotFoundError from '../PurchaseOrderNotFoundError';
-import StartPurchaseOrderCommand from './StartPurchaseOrderCommand';
+import StartPurchaseOrderCommand from '../commands/StartPurchaseOrderCommand';
 
 // eslint-disable-next-line max-len
 export default class StartPurchaseOrderCommandHandler implements IHandler<StartPurchaseOrderCommand, void> {

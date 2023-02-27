@@ -2,7 +2,7 @@ import { IPurchaseOrderRepositoryQueries } from '@sales/domain/IPurchaseOrderRep
 import Voucher from '@sales/domain/Voucher';
 import IHandler from '@shared/abstractions/IHandler';
 import VoucherNotFoundError from '../VoucherNotFoundError';
-import GetVoucherQuery from './GetVoucherQuery';
+import GetVoucherQuery from '../queries/GetVoucherQuery';
 
 export default class GetVoucherQueryHandler implements IHandler<GetVoucherQuery, Voucher> {
   constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }

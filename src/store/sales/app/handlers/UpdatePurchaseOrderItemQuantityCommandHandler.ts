@@ -3,7 +3,7 @@ import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import IEventQueue from '@shared/abstractions/IEventQueue';
 import IHandler from '@shared/abstractions/IHandler';
 import PurchaseOrderItemNotFoundError from '../PurchaseOrderItemNotFoundError';
-import UpdatePurchaseOrderItemQuantityCommand from './UpdatePurchaseOrderItemQuantityCommand';
+import UpdatePurchaseOrderItemQuantityCommand from '../commands/UpdatePurchaseOrderItemQuantityCommand';
 
 // eslint-disable-next-line max-len
 export default class UpdatePurchaseOrderItemQuantityCommandHandler implements IHandler<UpdatePurchaseOrderItemQuantityCommand, void> {

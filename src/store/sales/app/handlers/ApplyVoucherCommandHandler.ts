@@ -3,7 +3,7 @@ import IHandler from '@shared/abstractions/IHandler';
 import PurchaseOrderNotFoundError from '../PurchaseOrderNotFoundError';
 import VoucherInvalidError from '../VoucherInvalidError';
 import VoucherNotFoundError from '../VoucherNotFoundError';
-import ApplyVoucherCommand from './ApplyVoucherCommand';
+import ApplyVoucherCommand from '../commands/ApplyVoucherCommand';
 
 // eslint-disable-next-line max-len
 export default class ApplyVoucherCommandHandler implements IHandler<ApplyVoucherCommand, void> {

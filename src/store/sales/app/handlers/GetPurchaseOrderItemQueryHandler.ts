@@ -2,7 +2,7 @@ import { IPurchaseOrderRepositoryQueries } from '@sales/domain/IPurchaseOrderRep
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import IHandler from '@shared/abstractions/IHandler';
 import PurchaseOrderItemNotFoundError from '../PurchaseOrderItemNotFoundError';
-import GetPurchaseOrderItemQuery from './GetPurchaseOrderItemQuery';
+import GetPurchaseOrderItemQuery from '../queries/GetPurchaseOrderItemQuery';
 
 // eslint-disable-next-line max-len
 export default class GetPurchaseOrderItemQueryHandler implements IHandler<GetPurchaseOrderItemQuery, PurchaseOrderItem> {

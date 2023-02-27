@@ -1,7 +1,7 @@
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import IHandler from '@shared/abstractions/IHandler';
 import { IPurchaseOrderRepositoryQueries } from '@sales/domain/IPurchaseOrderRepository';
-import GetPurchaseOrderQuery from './GetPurchaseOrderQuery';
+import GetPurchaseOrderQuery from '../queries/GetPurchaseOrderQuery';
 import PurchaseOrderNotFoundError from '../PurchaseOrderNotFoundError';
 
 // eslint-disable-next-line max-len
