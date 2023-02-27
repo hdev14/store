@@ -3,23 +3,23 @@ import Payment from '@payment/domain/Payment';
 import Transaction from '@payment/domain/Transaction';
 
 export default class PrismaPaymentRepository implements IPaymentRepository {
-  getPaymentsByPurchaseOrderId(id: string): Promise<Payment[]> {
+  public async getPaymentsByPurchaseOrderId(id: string): Promise<Payment[]> {
     throw new Error('Method not implemented.');
   }
 
-  getPaymentById(id: string): Promise<Payment> {
+  public async getPaymentById(id: string): Promise<Payment> {
     throw new Error('Method not implemented.');
   }
 
-  addPayment(payment: Payment): Promise<Payment> {
+  public async addPayment(payment: Payment): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  updatePayment(payment: Payment): Promise<Payment> {
+  public async updatePayment(payment: Payment): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  addTransaction(transaction: Transaction): Promise<Transaction> {
+  public async addTransaction(transaction: Transaction): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }

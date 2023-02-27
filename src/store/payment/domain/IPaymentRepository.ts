@@ -6,11 +6,11 @@ interface IPaymentRepository {
 
   getPaymentById(id: string): Promise<Payment>;
 
-  addPayment(payment: Payment): Promise<Payment>;
+  addPayment(payment: Payment): Promise<void>;
 
-  updatePayment(payment: Payment): Promise<Payment>;
+  updatePayment(payment: Payment): Promise<void>;
 
-  addTransaction(transaction: Transaction): Promise<Transaction>;
+  addTransaction(transaction: Transaction): Promise<void>;
 }
 
 export default IPaymentRepository;
