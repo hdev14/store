@@ -18,13 +18,13 @@ export interface IPurchaseOrderRepositoryQueries {
 }
 
 export interface IPurchaseOrderRepositoryCommands {
-  addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder>;
+  addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<void>;
 
-  updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<PurchaseOrder>;
+  updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<void>;
 
-  addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem>;
+  addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<void>;
 
-  updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<PurchaseOrderItem>;
+  updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<void>;
 
   deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<void>;
 }
