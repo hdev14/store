@@ -42,7 +42,7 @@ export default class ProductService implements IProductService {
       throw new CategoryNotFoundError();
     }
 
-    const product = await this.repository.addProduct(new Product({
+    const product = new Product({
       id: crypto.randomUUID(),
       name: params.name,
       description: params.description,
@@ -52,7 +52,9 @@ export default class ProductService implements IProductService {
       stockQuantity: params.stockQuantity,
       createdAt: new Date(),
       category,
-    }));
+    });
+
+    await this.repository.addProduct(product);
 
     return product;
   }
@@ -75,9 +77,9 @@ export default class ProductService implements IProductService {
 
     const product = new Product(productParams);
 
-    const updatedProduct = await this.repository.updateProduct(product);
+    await this.repository.updateProduct(product);
 
-    return updatedProduct;
+    return product;
   }
 
   public async updateProductStock(productId: string, quantity: number): Promise<boolean> {

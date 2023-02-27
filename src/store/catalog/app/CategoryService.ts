@@ -18,11 +18,13 @@ export default class CategoryService implements ICategoryService {
   public async createCategory(params: CreateCategoryParams): Promise<Category> {
     const allCategories = await this.repository.getAllCategories();
 
-    const category = await this.repository.addCategory(new Category({
+    const category = new Category({
       id: crypto.randomUUID(),
       name: params.name,
       code: allCategories.length + 1,
-    }));
+    });
+
+    await this.repository.addCategory(category);
 
     return category;
   }
@@ -41,8 +43,8 @@ export default class CategoryService implements ICategoryService {
 
     const category = new Category(categoryParams);
 
-    const updatedCategory = await this.repository.updateCategory(category);
+    await this.repository.updateCategory(category);
 
-    return updatedCategory;
+    return category;
   }
 }
