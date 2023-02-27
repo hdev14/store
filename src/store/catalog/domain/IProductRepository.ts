@@ -6,9 +6,9 @@ export interface ICategoryOperations {
 
   getAllCategories(): Promise<Category[]>;
 
-  addCategory(category: Category): Promise<Category>;
+  addCategory(category: Category): Promise<void>;
 
-  updateCategory(category: Category): Promise<Category>;
+  updateCategory(category: Category): Promise<void>;
 }
 
 export interface IProductOperations {
@@ -18,9 +18,9 @@ export interface IProductOperations {
 
   getProductsByCategory(categoryId: string): Promise<Product[]>;
 
-  addProduct(product: Product): Promise<Product>;
+  addProduct(product: Product): Promise<void>;
 
-  updateProduct(product: Product): Promise<Product>;
+  updateProduct(product: Product): Promise<void>;
 }
 
 interface IProductRepository extends IProductOperations, ICategoryOperations { }
