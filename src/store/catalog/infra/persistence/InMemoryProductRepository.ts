@@ -62,8 +62,8 @@ export class InMemoryProductRepository implements IProductRepository {
     return Promise.resolve(this._categories.map(this.mapCategory.bind(this)));
   }
 
-  public addProduct(product: Product): Promise<Product> {
-    const length = this._products.push({
+  public async addProduct(product: Product): Promise<void> {
+    this._products.push({
       _id: product.id,
       name: product.name,
       description: product.description,
@@ -76,11 +76,9 @@ export class InMemoryProductRepository implements IProductRepository {
       stockQuantity: product.stockQuantity,
       category: product.category.id,
     });
-
-    return Promise.resolve(this.mapProduct(this._products[length - 1]));
   }
 
-  public updateProduct(product: Product): Promise<Product> {
+  public async updateProduct(product: Product): Promise<void> {
     const inMemoryProduct = this._products.find((p) => p._id === product.id);
 
     if (inMemoryProduct === undefined) {
@@ -105,21 +103,17 @@ export class InMemoryProductRepository implements IProductRepository {
       ...this._products.filter((p) => p._id !== product.id),
       newInMemoryProduct,
     ];
-
-    return Promise.resolve(this.mapProduct(newInMemoryProduct));
   }
 
-  public addCategory(category: Category): Promise<Category> {
-    const length = this._categories.push({
+  public async addCategory(category: Category): Promise<void> {
+    this._categories.push({
       _id: category.id,
       name: category.name,
       code: category.code,
     });
-
-    return Promise.resolve(this.mapCategory(this._categories[length - 1]));
   }
 
-  public updateCategory(category: Category): Promise<Category> {
+  public async updateCategory(category: Category): Promise<void> {
     const inMemoryCategory = this._categories.find((c) => c._id === category.id);
 
     if (!inMemoryCategory) {
@@ -136,8 +130,6 @@ export class InMemoryProductRepository implements IProductRepository {
       ...this._categories.filter((p) => p._id !== category.id),
       newInMemoryCategory,
     ];
-
-    return Promise.resolve(this.mapCategory(newInMemoryCategory));
   }
 
   get products() {

@@ -73,9 +73,9 @@ export default class PrismaProductRepository implements IProductRepository {
     }
   }
 
-  public async addProduct(product: Product): Promise<Product> {
+  public async addProduct(product: Product): Promise<void> {
     try {
-      const createdProduct = await this.connection.product.create({
+      await this.connection.product.create({
         data: {
           id: product.id,
           name: product.name,
@@ -92,8 +92,6 @@ export default class PrismaProductRepository implements IProductRepository {
         },
         include: { category: true },
       });
-
-      return this.mapProduct(createdProduct);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -115,9 +113,9 @@ export default class PrismaProductRepository implements IProductRepository {
     }
   }
 
-  public async updateProduct(product: Product): Promise<Product> {
+  public async updateProduct(product: Product): Promise<void> {
     try {
-      const updatedProduct = await this.connection.product.update({
+      await this.connection.product.update({
         where: {
           id: product.id,
         },
@@ -136,8 +134,6 @@ export default class PrismaProductRepository implements IProductRepository {
         },
         include: { category: true },
       });
-
-      return this.mapProduct(updatedProduct);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -145,17 +141,15 @@ export default class PrismaProductRepository implements IProductRepository {
     }
   }
 
-  public async addCategory(category: Category): Promise<Category> {
+  public async addCategory(category: Category): Promise<void> {
     try {
-      const addedCategory = await this.connection.category.create({
+      await this.connection.category.create({
         data: {
           id: category.id,
           name: category.name,
           code: category.code,
         },
       });
-
-      return this.mapCategory(addedCategory);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -163,17 +157,15 @@ export default class PrismaProductRepository implements IProductRepository {
     }
   }
 
-  public async updateCategory(category: Category): Promise<Category> {
+  public async updateCategory(category: Category): Promise<void> {
     try {
-      const updatedCategory = await this.connection.category.update({
+      await this.connection.category.update({
         where: { id: category.id },
         data: {
           name: category.name,
           code: category.code,
         },
       });
-
-      return this.mapCategory(updatedCategory);
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
