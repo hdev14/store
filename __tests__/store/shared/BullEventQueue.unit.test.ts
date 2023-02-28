@@ -84,6 +84,39 @@ describe("BullEventQueue's unit tests", () => {
     });
   });
 
+  describe('BullEventQueue.enqueueInBatch()', () => {
+    it('calls Queue.addBulk with the correct Events', async () => {
+      expect.assertions(1);
+
+      const bullEventQueue = new BullEventQueue();
+
+      const eventStub1 = new EventStub();
+      const eventStub2 = new EventStub();
+
+      await bullEventQueue.enqueueInBach([eventStub1, eventStub2]);
+
+      expect(queueMock.addBulk).toHaveBeenCalledWith([
+        { name: 'event', data: eventStub1 },
+        { name: 'event', data: eventStub2 },
+      ]);
+    });
+
+    it('throws a QueueError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      queueMock.addBulk.mockRejectedValueOnce(new Error('test'));
+
+      const bullEventQueue = new BullEventQueue();
+
+      try {
+        await bullEventQueue.enqueueInBach([new EventStub()]);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(QueueError);
+        expect(e.message).toEqual('test');
+      }
+    });
+  });
+
   describe('BullEventQueue.closeConnection()', () => {
     it('calls Queue.close method', async () => {
       expect.assertions(1);
