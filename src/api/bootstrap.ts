@@ -36,24 +36,10 @@ const eventQueue = new BullEventQueue();
 // Repositories
 const productRepository = new PrismaProductRepository();
 const prismaPurchaseOrderRepository = new PrismaPurchaseOrderRepository();
-// const mongoPurchaseOrderRepository = new MongoPurchaseOrderRepository();
 
 // Events
 const lowStockProductEventHandler = new LowStockProductEventHandler(emailService);
-
-// Event Handlers
-// const addDraftPurchaseOrderEventHandler = new AddDraftPurchaseOrderEventHandler(mongoPurchaseOrderRepository);
-// const addPurchaseOrderItemEventHandler = new AddPurchaseOrderItemEventHandler(mongoPurchaseOrderRepository);
-// const removePurchaseOrderItemEventHandler = new RemovePurchaseOrderItemEventHandler(mongoPurchaseOrderRepository);
-// const updateDraftPurchaseOrderEventHandler = new UpdateDraftPurchaseOrderEventHandler(mongoPurchaseOrderRepository);
-// const updatePurchaseOrderItemEventHandler = new UpdatePurchaseOrderItemEventHandler(mongoPurchaseOrderRepository);
-
 mediator.register(LowStockProductEvent.name, lowStockProductEventHandler);
-// mediator.register(AddDraftPurchaseOrderEvent.name, addDraftPurchaseOrderEventHandler);
-// mediator.register(RemovePurchaseOrderItemEvent.name, removePurchaseOrderItemEventHandler);
-// mediator.register(AddPurchaseOrderItemEvent.name, addPurchaseOrderItemEventHandler);
-// mediator.register(UpdateDraftPurchaseOrderEvent.name, updateDraftPurchaseOrderEventHandler);
-// mediator.register(UpdatePurchaseOrderItemEvent.name, updatePurchaseOrderItemEventHandler);
 
 // Services
 const stockService = new StockService(productRepository, mediator);
