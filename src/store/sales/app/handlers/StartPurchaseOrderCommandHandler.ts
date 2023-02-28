@@ -2,6 +2,7 @@ import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import IEventQueue from '@shared/abstractions/IEventQueue';
 import IHandler from '@shared/abstractions/IHandler';
 import ChargePurchaseOrderEvent from '@shared/events/ChargePurchaseOrderEvent';
+import UpdatePurchaseOrderEvent from '@sales/domain/events/UpdatePurchaseOrderEvent';
 import PurchaseOrderNotFoundError from '../PurchaseOrderNotFoundError';
 import StartPurchaseOrderCommand from '../commands/StartPurchaseOrderCommand';
 
@@ -23,20 +24,31 @@ export default class StartPurchaseOrderCommandHandler implements IHandler<StartP
 
     await this.repository.updatePurchaseOrder(purchaseOrder);
 
-    this.eventQueue.enqueue(new ChargePurchaseOrderEvent(
-      purchaseOrder.id,
-      purchaseOrder.customerId,
-      purchaseOrder.code,
-      purchaseOrder.totalAmount,
-      event.cardToken,
-      event.installments,
-      purchaseOrder.items.map((i) => ({
-        itemId: i.id,
-        productId: i.product.id,
-        quantity: i.quantity,
-      })),
-    )).catch(console.error.bind(console));
-
-    // TODO: add event to update purchase order
+    this.eventQueue.enqueueInBatch([
+      new ChargePurchaseOrderEvent(
+        purchaseOrder.id,
+        purchaseOrder.customerId,
+        purchaseOrder.code,
+        purchaseOrder.totalAmount,
+        event.cardToken,
+        event.installments,
+        purchaseOrder.items.map((i) => ({
+          itemId: i.id,
+          productId: i.product.id,
+          quantity: i.quantity,
+        })),
+      ),
+      new UpdatePurchaseOrderEvent(
+        purchaseOrder.id,
+        purchaseOrder.customerId,
+        purchaseOrder.code,
+        purchaseOrder.createdAt,
+        purchaseOrder.status,
+        purchaseOrder.totalAmount,
+        purchaseOrder.discountAmount,
+        purchaseOrder.voucher,
+        purchaseOrder.items,
+      ),
+    ]).catch(console.error.bind(console));
   }
 }
