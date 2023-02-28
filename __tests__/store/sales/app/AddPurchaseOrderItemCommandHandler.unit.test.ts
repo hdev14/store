@@ -18,6 +18,7 @@ beforeEach(() => {
   mockClear(eventQueueMock);
 
   eventQueueMock.enqueue.mockImplementation(() => Promise.resolve());
+  eventQueueMock.enqueueInBatch.mockImplementation(() => Promise.resolve());
   eventQueueMock.closeConnection.mockImplementation(() => Promise.resolve());
 });
 
@@ -302,8 +303,8 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     expect(updatePurchaseOrderSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('calls Queue.enqueue with AddDraftPurchaseOrderEvent after complete the operation of adding the purchase order item', async () => {
-    expect.assertions(1);
+  it('calls Queue.enqueueInBatch with AddDraftPurchaseOrderEvent and AddPurchaseOrderItemEvent after complete the operation of adding the purchase order item', async () => {
+    expect.assertions(2);
 
     const repository = new RepositoryStub();
 
@@ -324,7 +325,10 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     await addPurchaseOrderItemCommandHandler.handle(command);
 
-    expect(eventQueueMock.enqueue.mock.calls[0][0]).toBeInstanceOf(AddDraftPurchaseOrderEvent);
+    const events = eventQueueMock.enqueueInBatch.mock.calls[0][0];
+
+    expect(events[0]).toBeInstanceOf(AddDraftPurchaseOrderEvent);
+    expect(events[1]).toBeInstanceOf(AddPurchaseOrderItemEvent);
   });
 
   it("doesn't throw a Error if Queue.enqueue method throws a QueueError when it is adding the AddDraftPurchaseOrderEvent", async () => {
@@ -333,58 +337,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const repository = new RepositoryStub();
 
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
-    eventQueueMock.enqueue.mockRejectedValueOnce(new Error('test'));
-
-    const command = new AddPurchaseOrderItemCommand(
-      faker.datatype.uuid(),
-      faker.datatype.uuid(),
-      faker.commerce.product(),
-      faker.datatype.float(),
-      1,
-    );
-
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
-      repository,
-      eventQueueMock,
-    );
-
-    expect(
-      async () => addPurchaseOrderItemCommandHandler.handle(command),
-    ).not.toThrow();
-  });
-
-  it('calls Queue.enqueue with AddPurchaseOrderItemEvent after complete the operation of adding the purchase order item', async () => {
-    expect.assertions(1);
-
-    const repository = new RepositoryStub();
-
-    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
-
-    const command = new AddPurchaseOrderItemCommand(
-      faker.datatype.uuid(),
-      faker.datatype.uuid(),
-      faker.commerce.product(),
-      faker.datatype.float(),
-      1,
-    );
-
-    const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(
-      repository,
-      eventQueueMock,
-    );
-
-    await addPurchaseOrderItemCommandHandler.handle(command);
-
-    expect(eventQueueMock.enqueue.mock.calls[1][0]).toBeInstanceOf(AddPurchaseOrderItemEvent);
-  });
-
-  it("doesn't throw a Error if Queue.enqueue method throws a QueueError when it is adding the AddPurchaseOrderItemEvent", async () => {
-    expect.assertions(1);
-
-    const repository = new RepositoryStub();
-
-    repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(null);
-    eventQueueMock.enqueue.mockRejectedValueOnce(new Error('test'));
+    eventQueueMock.enqueueInBatch.mockRejectedValueOnce(new Error('test'));
 
     const command = new AddPurchaseOrderItemCommand(
       faker.datatype.uuid(),
