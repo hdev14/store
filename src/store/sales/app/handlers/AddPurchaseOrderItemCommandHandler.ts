@@ -106,22 +106,23 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddP
 
     await this.repository.addPurchaseOrderItem(purchaseOrderItem);
 
-    this.eventQueue.enqueue(new AddDraftPurchaseOrderEvent(
-      newDraftPurchaseOrder.id,
-      newDraftPurchaseOrder.customerId,
-      newDraftPurchaseOrder.totalAmount,
-      newDraftPurchaseOrder.discountAmount,
-      newDraftPurchaseOrder.createdAt,
-      newDraftPurchaseOrder.code,
-    )).catch(console.error.bind(console));
-
-    this.eventQueue.enqueue(new AddPurchaseOrderItemEvent(
-      purchaseOrderItem.id,
-      purchaseOrderItem.purchaseOrderId,
-      purchaseOrderItem.quantity,
-      purchaseOrderItem.product.id,
-      purchaseOrderItem.product.name,
-      purchaseOrderItem.product.amount,
-    )).catch(console.error.bind(console));
+    this.eventQueue.enqueueInBatch([
+      new AddDraftPurchaseOrderEvent(
+        newDraftPurchaseOrder.id,
+        newDraftPurchaseOrder.customerId,
+        newDraftPurchaseOrder.totalAmount,
+        newDraftPurchaseOrder.discountAmount,
+        newDraftPurchaseOrder.createdAt,
+        newDraftPurchaseOrder.code,
+      ),
+      new AddPurchaseOrderItemEvent(
+        purchaseOrderItem.id,
+        purchaseOrderItem.purchaseOrderId,
+        purchaseOrderItem.quantity,
+        purchaseOrderItem.product.id,
+        purchaseOrderItem.product.name,
+        purchaseOrderItem.product.amount,
+      ),
+    ]).catch(console.error.bind(console));
   }
 }
