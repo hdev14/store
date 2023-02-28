@@ -35,7 +35,7 @@ export default class BullEventQueue implements IEventQueue {
     }
   }
 
-  public async enqueueInBach(events: Event[]): Promise<void> {
+  public async enqueueInBatch(events: Event[]): Promise<void> {
     try {
       await this.queue.addBulk(events.map((event) => ({
         name: 'event',

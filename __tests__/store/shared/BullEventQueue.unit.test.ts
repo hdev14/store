@@ -93,7 +93,7 @@ describe("BullEventQueue's unit tests", () => {
       const eventStub1 = new EventStub();
       const eventStub2 = new EventStub();
 
-      await bullEventQueue.enqueueInBach([eventStub1, eventStub2]);
+      await bullEventQueue.enqueueInBatch([eventStub1, eventStub2]);
 
       expect(queueMock.addBulk).toHaveBeenCalledWith([
         { name: 'event', data: eventStub1 },
@@ -109,7 +109,7 @@ describe("BullEventQueue's unit tests", () => {
       const bullEventQueue = new BullEventQueue();
 
       try {
-        await bullEventQueue.enqueueInBach([new EventStub()]);
+        await bullEventQueue.enqueueInBatch([new EventStub()]);
       } catch (e: any) {
         expect(e).toBeInstanceOf(QueueError);
         expect(e.message).toEqual('test');
