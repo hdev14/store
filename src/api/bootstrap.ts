@@ -7,29 +7,31 @@ import StockService from '@catalog/domain/StockService';
 import NodemailerEmailService from '@catalog/infra/notification/NodemailerEmailService';
 import PrismaProductRepository from '@catalog/infra/persistence/PrismaProductRepository';
 import AddPurchaseOrderItemCommand from '@sales/app/commands/AddPurchaseOrderItemCommand';
-import AddPurchaseOrderItemCommandHandler from '@sales/app/commands/AddPurchaseOrderItemCommandHandler';
+import AddPurchaseOrderItemCommandHandler from '@sales/app/handlers/AddPurchaseOrderItemCommandHandler';
 import ApplyVoucherCommand from '@sales/app/commands/ApplyVoucherCommand';
-import ApplyVoucherCommandHandler from '@sales/app/commands/ApplyVoucherCommandHandler';
 import RemovePurchaseOrderItemCommand from '@sales/app/commands/RemovePurchaseOrderItemCommand';
-import RemovePurchaseOrderItemCommandHandler from '@sales/app/commands/RemovePurchaseOrderItemCommandHandler';
 import UpdatePurchaseOrderItemQuantityCommand from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
-import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommandHandler';
 import GetPurchaseOrderItemQuery from '@sales/app/queries/GetPurchaseOrderItemQuery';
-import GetPurchaseOrderItemQueryHandler from '@sales/app/queries/GetPurchaseOrderItemQueryHandler';
 import GetPurchaseOrderQuery from '@sales/app/queries/GetPurchaseOrderQuery';
-import GetPurchaseOrderQueryHandler from '@sales/app/queries/GetPurchaseOrderQueryHandler';
 import GetPurchaseOrdersQuery from '@sales/app/queries/GetPurchaseOrdersQuery';
-import GetPurchaseOrdersQueryHandler from '@sales/app/queries/GetPurchaseOrdersQueryHandler';
 import GetVoucherQuery from '@sales/app/queries/GetVoucherQuery';
-import GetVoucherQueryHandler from '@sales/app/queries/GetVoucherQueryHandler';
 import PrismaPurchaseOrderRepository from '@sales/infra/persistence/PrismaPurchaseOrderRepository';
 import Mediator from '@shared/Mediator';
-import CatalogController from './controllers/CatalogController';
+import ApplyVoucherCommandHandler from '@sales/app/handlers/ApplyVoucherCommandHandler';
+import GetPurchaseOrderItemQueryHandler from '@sales/app/handlers/GetPurchaseOrderItemQueryHandler';
+import GetPurchaseOrderQueryHandler from '@sales/app/handlers/GetPurchaseOrderQueryHandler';
+import GetPurchaseOrdersQueryHandler from '@sales/app/handlers/GetPurchaseOrdersQueryHandler';
+import GetVoucherQueryHandler from '@sales/app/handlers/GetVoucherQueryHandler';
+import RemovePurchaseOrderItemCommandHandler from '@sales/app/handlers/RemovePurchaseOrderItemCommandHandler';
+import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/handlers/UpdatePurchaseOrderItemQuantityCommandHandler';
+import BullEventQueue from '@shared/BullEventQueue';
 import SalesController from './controllers/SalesController';
+import CatalogController from './controllers/CatalogController';
 
 // Utils
 const mediator = new Mediator();
 const emailService = new NodemailerEmailService();
+const eventQueue = new BullEventQueue();
 
 // Repositories
 const productRepository = new PrismaProductRepository();
@@ -59,10 +61,10 @@ const productService = new ProductService(productRepository, stockService);
 const categoryService = new CategoryService(productRepository);
 
 // Command Handlers
-const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository);
-const removePurchaseOrderItemCommandHandler = new RemovePurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository);
+const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository, eventQueue);
+const removePurchaseOrderItemCommandHandler = new RemovePurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository, eventQueue);
 const applyVoucherCommandHandler = new ApplyVoucherCommandHandler(prismaPurchaseOrderRepository);
-const updatePurchaseOrderItemQuantityCommandHandler = new UpdatePurchaseOrderItemQuantityCommandHandler(prismaPurchaseOrderRepository);
+const updatePurchaseOrderItemQuantityCommandHandler = new UpdatePurchaseOrderItemQuantityCommandHandler(prismaPurchaseOrderRepository, eventQueue);
 
 mediator.register(AddPurchaseOrderItemCommand.name, addPurchaseOrderItemCommandHandler);
 mediator.register(RemovePurchaseOrderItemCommand.name, removePurchaseOrderItemCommandHandler);
