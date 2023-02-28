@@ -29,7 +29,7 @@ export default class BullEventQueue implements IEventQueue {
 
   public async enqueue(event: Event): Promise<void> {
     try {
-      await this.queue.add('event', event);
+      await this.queue.add(event.eventName, event);
     } catch (e: any) {
       throw new QueueError(e.message, { cause: e.stack });
     }
@@ -38,7 +38,7 @@ export default class BullEventQueue implements IEventQueue {
   public async enqueueInBatch(events: Event[]): Promise<void> {
     try {
       await this.queue.addBulk(events.map((event) => ({
-        name: 'event',
+        name: event.eventName,
         data: event,
       })));
     } catch (e: any) {
