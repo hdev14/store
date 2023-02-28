@@ -65,7 +65,7 @@ describe("BullEventQueue's unit tests", () => {
 
       await bullEventQueue.enqueue(eventStub);
 
-      expect(queueMock.add).toHaveBeenCalledWith('event', eventStub);
+      expect(queueMock.add).toHaveBeenCalledWith('EventStub', eventStub);
     });
 
     it('throws a QueueError if occur an unexpected error', async () => {
@@ -96,8 +96,8 @@ describe("BullEventQueue's unit tests", () => {
       await bullEventQueue.enqueueInBatch([eventStub1, eventStub2]);
 
       expect(queueMock.addBulk).toHaveBeenCalledWith([
-        { name: 'event', data: eventStub1 },
-        { name: 'event', data: eventStub2 },
+        { name: 'EventStub', data: eventStub1 },
+        { name: 'EventStub', data: eventStub2 },
       ]);
     });
 
