@@ -6,11 +6,12 @@ import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
 import { mock } from 'jest-mock-extended';
 import IEventQueue from '@shared/abstractions/IEventQueue';
 import ChargePurchaseOrderEvent from '@shared/events/ChargePurchaseOrderEvent';
+import UpdatePurchaseOrderEvent from '@sales/domain/events/UpdatePurchaseOrderEvent';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 const eventQueueMock = mock<IEventQueue>();
 
-eventQueueMock.enqueue.mockImplementation(() => Promise.resolve());
+eventQueueMock.enqueueInBatch.mockImplementation(() => Promise.resolve());
 
 describe("StartPurchaseOrderCommandHandler's unit tests", () => {
   it('calls repository.getPurchaseOrderById with correct param', async () => {
@@ -110,8 +111,8 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
     expect(updatePurchaseOrderSpy.mock.calls[0][0].status).toBe(PurchaseOrderStatus.STARTED);
   });
 
-  it('calls EventQueue.enqueue with ChargePurchaseOrderEvent after updating the purchase order', async () => {
-    expect.assertions(1);
+  it('calls EventQueue.enqueueInBatch with ChargePurchaseOrderEvent and UpdatePurchaseOrderEvent after updating the purchase order', async () => {
+    expect.assertions(2);
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
@@ -134,10 +135,13 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
 
     await handler.handle(command);
 
-    expect(eventQueueMock.enqueue.mock.calls[0][0]).toBeInstanceOf(ChargePurchaseOrderEvent);
+    const events = eventQueueMock.enqueueInBatch.mock.calls[0][0];
+
+    expect(events[0]).toBeInstanceOf(ChargePurchaseOrderEvent);
+    expect(events[1]).toBeInstanceOf(UpdatePurchaseOrderEvent);
   });
 
-  it("doesn't throw a Error if EventQueue.enqueue throws a QueueError when it is called with ChargePurchaseOrderEvent", async () => {
+  it("doesn't throw a Error if EventQueue.enqueueInBatch throws a QueueError when it is called", async () => {
     expect.assertions(1);
 
     const purchaseOrder = new PurchaseOrder({
@@ -151,7 +155,7 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
 
     jest.spyOn(repositoryStub, 'getPurchaseOrderById').mockResolvedValueOnce(purchaseOrder);
 
-    eventQueueMock.enqueue.mockRejectedValueOnce(new Error('test'));
+    eventQueueMock.enqueueInBatch.mockRejectedValueOnce(new Error('test'));
 
     const handler = new StartPurchaseOrderCommandHandler(repositoryStub, eventQueueMock);
 
@@ -163,8 +167,4 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
 
     expect(async () => handler.handle(command)).not.toThrow();
   });
-
-  it.todo('calls EventQueue.enqueue with UpdatePurchaseOrderEvent after updating the purchase order');
-
-  it.todo("doesn't throw a Error if EventQueue.enqueue throws a QueueError when it is called with UpdatePurchaseOrderEvent");
 });
