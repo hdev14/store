@@ -7,6 +7,7 @@ export default class BullmqEventWorker implements IEventWorker<Parameters<Proces
   constructor(private readonly eventMediator: IMediator) { }
 
   public async process(job: Job<Event, any, string>, token?: string | undefined): Promise<void> {
+    console.info(job.name, token);
     await this.eventMediator.send(job.data);
   }
 }
