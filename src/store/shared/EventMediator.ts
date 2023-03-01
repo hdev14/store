@@ -6,6 +6,10 @@ import MediatorError from './errors/MediatorError';
 export default class EventMediator implements IMediator {
   private _handlers: Map<string, IHandler[]> = new Map<string, IHandler[]>();
 
+  get handlers() {
+    return this._handlers;
+  }
+
   public register(eventName: string, handler: IHandler) {
     if (this._handlers.has(eventName)) {
       this.registerNewHandler(eventName, handler);
