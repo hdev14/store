@@ -1,9 +1,7 @@
 import { Worker } from 'bullmq';
-import BullmqEventWorker from '@shared/BullmqEventWorker';
-import EventMediator from '@shared/EventMediator';
+import bootstrap from './bootstrap';
 
-const eventMediator = new EventMediator();
-const eventWorker = new BullmqEventWorker(eventMediator);
+const { eventWorker } = bootstrap;
 
 const worker = new Worker(
   'event',
