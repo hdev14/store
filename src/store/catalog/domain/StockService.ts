@@ -35,7 +35,6 @@ export default class StockService implements IStockService {
     await this.productRepository.updateProduct(product);
 
     if (product.stockQuantity < 5) {
-      // TODO: don't wait for the promise
       await this.mediator.send(new LowStockProductEvent(
         product.id,
         product.name,
