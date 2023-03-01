@@ -1,7 +1,5 @@
-import Event from './Event';
-
-interface IEventWorker {
-  process(event: Event): Promise<void>;
+interface IEventWorker<Params extends Array<any>> {
+  process(...params: Params): Promise<void>;
 }
 
 export default IEventWorker;
