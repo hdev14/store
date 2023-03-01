@@ -1,4 +1,4 @@
-import BullEventQueue from '@shared/BullEventQueue';
+import BullmqEventQueue from '@shared/BullmqEventQueue';
 import Event from '@shared/abstractions/Event';
 import QueueError from '@shared/errors/QueueError';
 import { Queue } from 'bullmq';
@@ -12,7 +12,7 @@ jest.mock('bullmq', () => ({
 
 class EventStub extends Event { }
 
-describe("BullEventQueue's unit tests", () => {
+describe("BullmqEventQueue's unit tests", () => {
   const OLD_ENV = process.env;
 
   beforeAll(() => {
@@ -34,7 +34,7 @@ describe("BullEventQueue's unit tests", () => {
     const queueConstructorMock = jest.mocked(Queue);
 
     // eslint-disable-next-line no-new
-    new BullEventQueue();
+    new BullmqEventQueue();
 
     expect(queueConstructorMock).toHaveBeenCalledTimes(1);
     expect(queueConstructorMock).toHaveBeenCalledWith(
@@ -55,15 +55,15 @@ describe("BullEventQueue's unit tests", () => {
     );
   });
 
-  describe('BullEventQueue.enqueue()', () => {
+  describe('BullmqEventQueue.enqueue()', () => {
     it('calls Queue.add with the correct Event', async () => {
       expect.assertions(1);
 
-      const bullEventQueue = new BullEventQueue();
+      const bullmqEventQueue = new BullmqEventQueue();
 
       const eventStub = new EventStub();
 
-      await bullEventQueue.enqueue(eventStub);
+      await bullmqEventQueue.enqueue(eventStub);
 
       expect(queueMock.add).toHaveBeenCalledWith('EventStub', eventStub);
     });
@@ -73,10 +73,10 @@ describe("BullEventQueue's unit tests", () => {
 
       queueMock.add.mockRejectedValueOnce(new Error('test'));
 
-      const bullEventQueue = new BullEventQueue();
+      const bullmqEventQueue = new BullmqEventQueue();
 
       try {
-        await bullEventQueue.enqueue(new EventStub());
+        await bullmqEventQueue.enqueue(new EventStub());
       } catch (e: any) {
         expect(e).toBeInstanceOf(QueueError);
         expect(e.message).toEqual('test');
@@ -84,16 +84,16 @@ describe("BullEventQueue's unit tests", () => {
     });
   });
 
-  describe('BullEventQueue.enqueueInBatch()', () => {
+  describe('BullmqEventQueue.enqueueInBatch()', () => {
     it('calls Queue.addBulk with the correct Events', async () => {
       expect.assertions(1);
 
-      const bullEventQueue = new BullEventQueue();
+      const bullmqEventQueue = new BullmqEventQueue();
 
       const eventStub1 = new EventStub();
       const eventStub2 = new EventStub();
 
-      await bullEventQueue.enqueueInBatch([eventStub1, eventStub2]);
+      await bullmqEventQueue.enqueueInBatch([eventStub1, eventStub2]);
 
       expect(queueMock.addBulk).toHaveBeenCalledWith([
         { name: 'EventStub', data: eventStub1 },
@@ -106,10 +106,10 @@ describe("BullEventQueue's unit tests", () => {
 
       queueMock.addBulk.mockRejectedValueOnce(new Error('test'));
 
-      const bullEventQueue = new BullEventQueue();
+      const bullmqEventQueue = new BullmqEventQueue();
 
       try {
-        await bullEventQueue.enqueueInBatch([new EventStub()]);
+        await bullmqEventQueue.enqueueInBatch([new EventStub()]);
       } catch (e: any) {
         expect(e).toBeInstanceOf(QueueError);
         expect(e.message).toEqual('test');
@@ -117,13 +117,13 @@ describe("BullEventQueue's unit tests", () => {
     });
   });
 
-  describe('BullEventQueue.closeConnection()', () => {
+  describe('BullmqEventQueue.closeConnection()', () => {
     it('calls Queue.close method', async () => {
       expect.assertions(1);
 
-      const bullEventQueue = new BullEventQueue();
+      const bullmqEventQueue = new BullmqEventQueue();
 
-      await bullEventQueue.closeConnection();
+      await bullmqEventQueue.closeConnection();
 
       expect(queueMock.close).toHaveBeenCalled();
     });
@@ -133,10 +133,10 @@ describe("BullEventQueue's unit tests", () => {
 
       queueMock.close.mockRejectedValueOnce(new Error('test'));
 
-      const bullEventQueue = new BullEventQueue();
+      const bullmqEventQueue = new BullmqEventQueue();
 
       try {
-        await bullEventQueue.closeConnection();
+        await bullmqEventQueue.closeConnection();
       } catch (e: any) {
         expect(e).toBeInstanceOf(QueueError);
         expect(e.message).toEqual('test');

@@ -3,7 +3,7 @@ import Event from './abstractions/Event';
 import IEventQueue from './abstractions/IEventQueue';
 import QueueError from './errors/QueueError';
 
-export default class BullEventQueue implements IEventQueue {
+export default class BullmqEventQueue implements IEventQueue {
   private readonly queue: Queue;
 
   constructor() {
