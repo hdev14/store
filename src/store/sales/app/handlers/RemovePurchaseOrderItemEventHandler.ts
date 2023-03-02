@@ -1,17 +1,18 @@
-// import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
-// import IEventHandler, { EventData } from '@shared/abstractions/IEventHandler';
-// import EventHandlerError from '@shared/errors/EventHandlerError';
+import RemovePurchaseOrderItemEvent from '@sales/domain/events/RemovePurchaseOrderItemEvent';
+import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
+import IHandler from '@shared/abstractions/IHandler';
+import EventHandlerError from '@shared/errors/EventHandlerError';
 
-// // eslint-disable-next-line max-len
-// export default class RemovePurchaseOrderItemEventHandler implements IEventHandler {
-//   constructor(private readonly repository: IPurchaseOrderRepositoryCommands) { }
+// eslint-disable-next-line max-len
+export default class RemovePurchaseOrderItemEventHandler implements IHandler<RemovePurchaseOrderItemEvent> {
+  constructor(private readonly repository: IPurchaseOrderRepositoryCommands) { }
 
-//   public async handle(data: EventData): Promise<void> {
-//     try {
-//       await this.repository.deletePurchaseOrderItem(data.principalId);
-//     } catch (e: any) {
-//       console.error(e.stack);
-//       throw new EventHandlerError('Erro ao excluir um item.');
-//     }
-//   }
-// }
+  public async handle(event: RemovePurchaseOrderItemEvent): Promise<any> {
+    try {
+      await this.repository.deletePurchaseOrderItem(event.principalId);
+    } catch (e: any) {
+      console.error(e.stack);
+      throw new EventHandlerError('Erro ao excluir um item.');
+    }
+  }
+}

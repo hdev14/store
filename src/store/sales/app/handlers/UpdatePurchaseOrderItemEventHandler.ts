@@ -1,31 +1,30 @@
-// import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
-// import Product from '@sales/domain/Product';
-// import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-// import IEventHandler, { EventData } from '@shared/abstractions/IEventHandler';
-// import EventHandlerError from '@shared/errors/EventHandlerError';
-// import { UpdatePurchaserOrderItemEventData } from './UpdatePurchaseOrderItemEvent';
+import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
+import Product from '@sales/domain/Product';
+import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
+import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
+import IHandler from '@shared/abstractions/IHandler';
+import EventHandlerError from '@shared/errors/EventHandlerError';
 
-// // eslint-disable-next-line max-len
-// export default class UpdatePurchaseOrderItemEventHandler implements
-// IEventHandler<UpdatePurchaserOrderItemEventData> {
-//   constructor(private readonly repository: IPurchaseOrderRepositoryCommands) { }
+// eslint-disable-next-line max-len
+export default class UpdatePurchaseOrderItemEventHandler implements IHandler<UpdatePurchaseOrderItemEvent> {
+  constructor(private readonly repository: IPurchaseOrderRepositoryCommands) { }
 
-//   public async handle(data: EventData<UpdatePurchaserOrderItemEventData>): Promise<void> {
-//     try {
-//       const purchaseOrderItem = new PurchaseOrderItem({
-//         id: data.principalId,
-//         quantity: data.quantity,
-//         product: new Product(
-//           data.productId,
-//           data.productName,
-//           data.productAmount,
-//         ),
-//       });
+  public async handle(event: UpdatePurchaseOrderItemEvent): Promise<any> {
+    try {
+      const purchaseOrderItem = new PurchaseOrderItem({
+        id: event.principalId,
+        quantity: event.quantity,
+        product: new Product(
+          event.productId,
+          event.productName,
+          event.productAmount,
+        ),
+      });
 
-//       await this.repository.updatePurchaseOrderItem(purchaseOrderItem);
-//     } catch (e: any) {
-//       console.error(e.stack);
-//       throw new EventHandlerError('Erro ao atualizar um item.', { cause: e.stack });
-//     }
-//   }
-// }
+      await this.repository.updatePurchaseOrderItem(purchaseOrderItem);
+    } catch (e: any) {
+      console.error(e.stack);
+      throw new EventHandlerError('Erro ao atualizar um item.', { cause: e.stack });
+    }
+  }
+}
