@@ -476,4 +476,8 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       }
     });
   });
+
+  test.todo('PrismaProductRepository.getProductsByCategory()');
+
+  test.todo('PrismaProductRepository.getAllCategories()');
 });
