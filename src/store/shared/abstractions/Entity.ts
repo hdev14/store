@@ -14,6 +14,11 @@ export default abstract class Entity {
       || (this.id === (obj as Entity).id);
   }
 
+  public toObject() {
+    return Object.fromEntries(Object.entries(this)
+      .filter(([, value]) => typeof value !== 'function'));
+  }
+
   public toString() {
     return JSON.stringify(this, null, 2);
   }
