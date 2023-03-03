@@ -4,6 +4,7 @@ import IHandler from '@shared/abstractions/IHandler';
 import PurchaseOrderItemNotFoundError from '../PurchaseOrderItemNotFoundError';
 import GetPurchaseOrderItemQuery from '../queries/GetPurchaseOrderItemQuery';
 
+// TODO: change return
 // eslint-disable-next-line max-len
 export default class GetPurchaseOrderItemQueryHandler implements IHandler<GetPurchaseOrderItemQuery, PurchaseOrderItem> {
   constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }

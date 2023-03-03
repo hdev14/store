@@ -8,6 +8,7 @@ export type CreateUserData = {
 
 export type UpdateUserData = Partial<CreateUserData>;
 
+// TODO: change return
 interface IUserService {
   createUser(data: CreateUserData): Promise<User>;
 

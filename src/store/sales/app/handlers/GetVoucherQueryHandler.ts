@@ -4,6 +4,7 @@ import IHandler from '@shared/abstractions/IHandler';
 import VoucherNotFoundError from '../VoucherNotFoundError';
 import GetVoucherQuery from '../queries/GetVoucherQuery';
 
+// TODO: change return
 export default class GetVoucherQueryHandler implements IHandler<GetVoucherQuery, Voucher> {
   constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 

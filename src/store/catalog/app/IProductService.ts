@@ -13,6 +13,7 @@ export type DefaultProductParams = {
 
 export type UpdateProductParams = Partial<DefaultProductParams>;
 
+// TODO: change return
 interface IProductService {
   getProductById(productId: string): Promise<Product>;
 

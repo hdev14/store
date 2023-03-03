@@ -9,6 +9,7 @@ export type CreateCategoryParams = Pick<DefaultCategoryParams, 'name'>;
 
 export type UpdateCategoryParams = Partial<DefaultCategoryParams>;
 
+// TODO: change return
 interface ICategoryService {
   getAllCategories(): Promise<Category[]>;
 
