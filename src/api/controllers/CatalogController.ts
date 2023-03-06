@@ -19,7 +19,7 @@ export default class CatalogController {
 
       const product = await this.productService.getProductById(id);
 
-      return response.status(HttpStatusCodes.OK).json({ product });
+      return response.status(HttpStatusCodes.OK).json(product.toObject());
     } catch (e) {
       if (e instanceof ProductNotFoundError) {
         return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
@@ -33,7 +33,9 @@ export default class CatalogController {
     try {
       const products = await this.productService.getAllProducts();
 
-      return response.status(HttpStatusCodes.OK).json({ results: products });
+      return response.status(HttpStatusCodes.OK).json({
+        results: products.map((p) => p.toObject()),
+      });
     } catch (e) {
       return next(e);
     }
@@ -45,7 +47,9 @@ export default class CatalogController {
 
       const products = await this.productService.getProductsByCategory(categoryId);
 
-      return response.status(HttpStatusCodes.OK).json({ results: products });
+      return response.status(HttpStatusCodes.OK).json({
+        results: products.map((p) => p.toObject()),
+      });
     } catch (e) {
       return next(e);
     }
@@ -69,7 +73,7 @@ export default class CatalogController {
         },
       });
 
-      return response.status(HttpStatusCodes.CREATED).json(product);
+      return response.status(HttpStatusCodes.CREATED).json(product.toObject());
     } catch (e) {
       if (e instanceof CategoryNotFoundError) {
         return response.status(HttpStatusCodes.BAD_REQUEST).json({ message: e.message });
@@ -90,7 +94,7 @@ export default class CatalogController {
 
       const product = await this.productService.updateProduct(productId, data);
 
-      return response.status(HttpStatusCodes.OK).json(product);
+      return response.status(HttpStatusCodes.OK).json(product.toObject());
     } catch (e) {
       if (e instanceof ProductNotFoundError) {
         return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
@@ -121,7 +125,9 @@ export default class CatalogController {
     try {
       const categories = await this.categoryService.getAllCategories();
 
-      return response.status(HttpStatusCodes.OK).json({ results: categories });
+      return response.status(HttpStatusCodes.OK).json({
+        results: categories.map((c) => c.toObject()),
+      });
     } catch (e) {
       return next(e);
     }
@@ -133,7 +139,7 @@ export default class CatalogController {
 
       const category = await this.categoryService.createCategory(data);
 
-      return response.status(HttpStatusCodes.CREATED).json(category);
+      return response.status(HttpStatusCodes.CREATED).json(category.toObject());
     } catch (e) {
       if (e instanceof ValidationError) {
         return response.status(HttpStatusCodes.BAD_REQUEST).json({ errors: e.errors });
@@ -150,7 +156,7 @@ export default class CatalogController {
 
       const category = await this.categoryService.updateCategory(categoryId, data);
 
-      return response.status(HttpStatusCodes.OK).json(category);
+      return response.status(HttpStatusCodes.OK).json(category.toObject());
     } catch (e) {
       if (e instanceof ValidationError) {
         return response.status(HttpStatusCodes.BAD_REQUEST).json({ errors: e.errors });

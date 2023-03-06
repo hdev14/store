@@ -24,14 +24,14 @@ import GetPurchaseOrdersQueryHandler from '@sales/app/handlers/GetPurchaseOrders
 import GetVoucherQueryHandler from '@sales/app/handlers/GetVoucherQueryHandler';
 import RemovePurchaseOrderItemCommandHandler from '@sales/app/handlers/RemovePurchaseOrderItemCommandHandler';
 import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/handlers/UpdatePurchaseOrderItemQuantityCommandHandler';
-import BullEventQueue from '@shared/BullEventQueue';
+import BullmqEventQueue from '@shared/BullmqEventQueue';
 import SalesController from './controllers/SalesController';
 import CatalogController from './controllers/CatalogController';
 
 // Utils
 const mediator = new Mediator();
 const emailService = new NodemailerEmailService();
-const eventQueue = new BullEventQueue();
+const eventQueue = new BullmqEventQueue();
 
 // Repositories
 const productRepository = new PrismaProductRepository();
