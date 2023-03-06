@@ -567,7 +567,7 @@ describe('Sales Integration Tests', () => {
         .send();
 
       expect(response.status).toEqual(200);
-      expect(response.body).toHaveLength(2);
+      expect(response.body.results).toHaveLength(2);
     });
 
     it("returns an empty array if the customer doesn't have any purchase order", async () => {
@@ -579,7 +579,7 @@ describe('Sales Integration Tests', () => {
         .send();
 
       expect(response.status).toEqual(200);
-      expect(response.body).toHaveLength(0);
+      expect(response.body.results).toHaveLength(0);
     });
   });
 

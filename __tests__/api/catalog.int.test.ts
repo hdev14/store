@@ -60,9 +60,9 @@ describe("Catalog's Integration Tests", () => {
         .set('Accept', 'application/json');
 
       expect(response.status).toEqual(200);
-      expect(response.body.product.id).toEqual(product.id);
-      expect(response.body.product.name).toEqual(product.name);
-      expect(response.body.product.category.id).toEqual(category.id);
+      expect(response.body.id).toEqual(product.id);
+      expect(response.body.name).toEqual(product.name);
+      expect(response.body.category.id).toEqual(category.id);
     });
   });
 
