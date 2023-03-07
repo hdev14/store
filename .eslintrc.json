@@ -54,7 +54,8 @@
       "error",
       {
         "code": 120,
-        "ignoreComments": true
+        "ignoreComments": true,
+        "ignoreTemplateLiterals": true
       }
     ]
   }
