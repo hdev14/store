@@ -1,7 +1,5 @@
 import { Worker } from 'bullmq';
-import bootstrap from './bootstrap';
-
-const { eventWorker } = bootstrap;
+import eventWorker from './bootstrap';
 
 const worker = new Worker(
   'event',
