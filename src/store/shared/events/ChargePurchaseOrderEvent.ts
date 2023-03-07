@@ -1,8 +1,8 @@
-import DomainEvent from '@shared/abstractions/DomainEvent';
+import Event from '@shared/abstractions/Event';
 
-export default class ChargePurchaseOrderEvent extends DomainEvent {
+export default class ChargePurchaseOrderEvent extends Event {
   constructor(
-    readonly principalId: string,
+    readonly id: string,
     readonly customerId: string,
     readonly code: number,
     readonly totalAmount: number,
@@ -14,6 +14,6 @@ export default class ChargePurchaseOrderEvent extends DomainEvent {
       quantity: number
     }>,
   ) {
-    super(principalId);
+    super();
   }
 }
