@@ -55,7 +55,8 @@
       {
         "code": 120,
         "ignoreComments": true,
-        "ignoreTemplateLiterals": true
+        "ignoreTemplateLiterals": true,
+        "igonreRegex": true,
       }
     ]
   }
