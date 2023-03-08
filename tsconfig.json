@@ -16,8 +16,8 @@
       "@payment/*": [
         "src/store/payment/*"
       ],
-      "@registration/*": [
-        "src/store/registration/*"
+      "@users/*": [
+        "src/store/users/*"
       ],
       "@sales/*": [
         "src/store/sales/*"

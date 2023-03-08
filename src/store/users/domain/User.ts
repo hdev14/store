@@ -1,29 +1,29 @@
 import Entity from '@shared/abstractions/Entity';
-import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
-import PurchaseOrder from './PurchaseOrder';
+import CPF from './CPF';
+import Email from './Email';
 
 type UserParams = {
-  id?: string;
+  id: string;
   name: string;
   email: string;
-  purchaseOrders: PurchaseOrder[];
+  document: string;
   createdAt: Date;
 }
 
-export default class User extends Entity implements IAggregateRoot {
+export default class User extends Entity {
   public readonly name: string;
 
-  public readonly email: string;
+  public readonly document: CPF;
 
-  public readonly purchaseOrders: PurchaseOrder[];
+  public readonly email: Email;
 
   public readonly createdAt: Date;
 
   constructor(params: UserParams) {
     super(params.id);
     this.name = params.name;
-    this.email = params.email;
-    this.purchaseOrders = params.purchaseOrders;
+    this.email = new Email(params.email);
+    this.document = new CPF(params.document);
     this.createdAt = params.createdAt;
   }
 
