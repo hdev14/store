@@ -1,6 +1,5 @@
 import Entity from '@shared/abstractions/Entity';
 import CPF from './CPF';
-import Email from './Email';
 
 type UserParams = {
   id: string;
@@ -15,14 +14,14 @@ export default class User extends Entity {
 
   public readonly document: CPF;
 
-  public readonly email: Email;
+  public readonly email: string;
 
   public readonly createdAt: Date;
 
   constructor(params: UserParams) {
     super(params.id);
     this.name = params.name;
-    this.email = new Email(params.email);
+    this.email = params.email;
     this.document = new CPF(params.document);
     this.createdAt = params.createdAt;
   }
