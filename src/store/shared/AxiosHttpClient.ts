@@ -9,7 +9,11 @@ export default class AxiosHttpClient implements IHttpClient {
   }
 
   public setDefaultHeaders(headers: Record<string, string>): void {
-    throw new Error("Method not implemented.");
+    const headerKeys = Object.keys(headers);
+
+    headerKeys.forEach((headerKey) => {
+      this.axiosInstance.defaults.headers.common[headerKey] = headers[headerKey];
+    });
   }
 
   public async get<R = any>(url: string, options?: HttpOptions): Promise<R> {
