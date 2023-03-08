@@ -1,7 +1,7 @@
 import IIdentityAccessManagement from 'src/store/users/app/IIdentityAccessManagement';
 import User from 'src/store/users/domain/User';
 
-// TODO: add keycloack sdk (https://github.com/keycloak/keycloak/tree/main/js/libs/keycloak-admin-client)
+// TODO: add HttpClient
 export default class KeyCloakIAM implements IIdentityAccessManagement {
   public async auth(email: string, password: string): Promise<any> {
     throw new Error('Method not implemented.');
