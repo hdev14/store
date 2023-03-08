@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import ValidationError, { GenericError } from '../errors/ValidationError';
 
-// eslint-disable-next-line no-useless-escape
 const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -107,9 +105,13 @@ export default class Validator {
         const params = [field, value];
 
         // @ts-ignore
-        if (RULE_FUNCTIONS[name](...params)) {
+        const isNotValid = RULE_FUNCTIONS[name](...params);
+
+        if (isNotValid) {
           // @ts-ignore
-          messages.push(RULE_MESSAGES[name](fieldName, value, typeof field === 'string'));
+          const message = RULE_MESSAGES[name](fieldName, value, typeof field === 'string');
+
+          messages.push(message);
         }
       });
 
