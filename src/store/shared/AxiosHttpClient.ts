@@ -30,13 +30,7 @@ export default class AxiosHttpClient implements IHttpClient {
 
       return response.data;
     } catch (e: any) {
-      if (e.response) {
-        throw new HttpError(e.response.status, e.response.data, {
-          cause: e.stack,
-        });
-      }
-
-      throw new Error('Unexpected error', { cause: e.stack });
+      throw this.getError(e);
     }
   }
 
@@ -48,11 +42,34 @@ export default class AxiosHttpClient implements IHttpClient {
     throw new Error('Method not implemented.');
   }
 
-  public async delete<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R> {
-    throw new Error('Method not implemented.');
+  public async delete<R = any>(url: string, options?: HttpOptions): Promise<R> {
+    try {
+      const config: AxiosRequestConfig = {};
+
+      if (options) {
+        config.params = options.query;
+        config.headers = options.headers;
+      }
+
+      const response = await this.axiosInstance.delete<R>(url, config);
+
+      return response.data;
+    } catch (e: any) {
+      throw this.getError(e);
+    }
   }
 
   public async patch<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R> {
     throw new Error('Method not implemented.');
+  }
+
+  private getError(e: any) {
+    if (e.response) {
+      return new HttpError(e.response.status, e.response.data, {
+        cause: e.stack,
+      });
+    }
+
+    return new Error('Unexpected error', { cause: e.stack });
   }
 }
