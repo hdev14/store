@@ -147,4 +147,111 @@ describe("AxiosHttpClient's unit tests", () => {
       }
     });
   });
+
+  describe('AxiosHttpClient.delete()', () => {
+    beforeEach(() => {
+      axiosInstanceMock.delete.mockResolvedValue({ data: {} });
+    });
+
+    afterEach(() => {
+      axiosInstanceMock.delete.mockClear();
+    });
+
+    it('calls axios.delete with correct url', async () => {
+      expect.assertions(1);
+
+      const httpClient = new AxiosHttpClient();
+
+      const fakeUrl = faker.internet.url();
+
+      await httpClient.delete(fakeUrl);
+
+      expect(axiosInstanceMock.delete).toHaveBeenCalledWith(fakeUrl, {});
+    });
+
+    it('calls axios.delete with correct url and options', async () => {
+      expect.assertions(1);
+
+      const httpClient = new AxiosHttpClient();
+
+      const fakeUrl = faker.internet.url();
+      const fakeQuery = new URLSearchParams({ test1: 'test1', test2: 'test2' });
+      const fakeHeaders = { test_header: 'test' };
+
+      await httpClient.delete(fakeUrl, { query: fakeQuery, headers: fakeHeaders });
+
+      expect(axiosInstanceMock.delete).toHaveBeenCalledWith(fakeUrl, {
+        params: fakeQuery,
+        headers: fakeHeaders,
+      });
+    });
+
+    it('returns the correct data after call axios.delete', async () => {
+      expect.assertions(1);
+
+      const httpClient = new AxiosHttpClient();
+
+      const fakeData = {
+        test1: 'test',
+        test2: 123,
+        test3: false,
+        test4: {},
+      };
+
+      const fakeAxiosResponse = {
+        status: faker.internet.httpStatusCode(),
+        data: fakeData,
+      };
+
+      axiosInstanceMock.delete.mockResolvedValueOnce(fakeAxiosResponse);
+
+      const fakeUrl = faker.internet.url();
+
+      const result = await httpClient.delete<typeof fakeData>(fakeUrl);
+
+      expect(result).toStrictEqual(fakeData);
+    });
+
+    it('throws a HttpError if axios.delete returns a error', async () => {
+      expect.assertions(3);
+
+      const httpClient = new AxiosHttpClient();
+
+      const fakeAxiosResponse = {
+        response: {
+          status: faker.internet.httpStatusCode(),
+          data: { error: 'test' },
+        },
+      };
+
+      axiosInstanceMock.delete.mockRejectedValueOnce(fakeAxiosResponse);
+
+      const fakeUrl = faker.internet.url();
+
+      try {
+        await httpClient.delete(fakeUrl);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(HttpError);
+        expect(e.statusCode).toEqual(fakeAxiosResponse.response.status);
+        expect(e.body).toEqual(fakeAxiosResponse.response.data);
+      }
+    });
+
+    it('throws a generic error if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      const httpClient = new AxiosHttpClient();
+
+      axiosInstanceMock.delete.mockRejectedValueOnce(new Error('test'));
+
+      const fakeUrl = faker.internet.url();
+
+      try {
+        await httpClient.delete(fakeUrl);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(Error);
+        expect(e.message).toEqual('Unexpected error');
+      }
+    });
+  });
 });
