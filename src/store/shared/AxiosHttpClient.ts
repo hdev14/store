@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import HttpError from './abstractions/HttpError';
+import HttpError from './errors/HttpError';
 import IHttpClient, { HttpBody, HttpOptions, HttpResponse } from './abstractions/IHttpClient';
 
 export default class AxiosHttpClient implements IHttpClient {

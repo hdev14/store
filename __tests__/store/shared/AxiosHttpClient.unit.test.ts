@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import AxiosHttpClient from '@shared/AxiosHttpClient';
 import { mockClear, mockDeep } from 'jest-mock-extended';
 import { faker } from '@faker-js/faker';
-import HttpError from '@shared/abstractions/HttpError';
+import HttpError from '@shared/errors/HttpError';
 
 jest.mock('axios');
 
