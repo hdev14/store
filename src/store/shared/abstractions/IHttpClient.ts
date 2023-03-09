@@ -17,7 +17,6 @@ interface IHttpClient {
   delete<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R>;
 
   patch<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R>;
-};
-
+}
 
 export default IHttpClient;
