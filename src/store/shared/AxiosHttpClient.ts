@@ -19,12 +19,7 @@ export default class AxiosHttpClient implements IHttpClient {
 
   public async get<R = any>(url: string, options?: HttpOptions): Promise<R> {
     try {
-      const config: AxiosRequestConfig = {};
-
-      if (options) {
-        config.params = options.query;
-        config.headers = options.headers;
-      }
+      const config = this.getConfig(options);
 
       const response = await this.axiosInstance.get<R>(url, config);
 
@@ -35,21 +30,32 @@ export default class AxiosHttpClient implements IHttpClient {
   }
 
   public async post<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R> {
-    throw new Error('Method not implemented.');
+    try {
+      const config: AxiosRequestConfig = this.getConfig(options);
+
+      const response = await this.axiosInstance.post<R>(url, data, config);
+
+      return response.data;
+    } catch (e: any) {
+      throw this.getError(e);
+    }
   }
 
   public async put<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R> {
-    throw new Error('Method not implemented.');
+    try {
+      const config = this.getConfig(options);
+
+      const response = await this.axiosInstance.put<R>(url, data, config);
+
+      return response.data;
+    } catch (e: any) {
+      throw this.getError(e);
+    }
   }
 
   public async delete<R = any>(url: string, options?: HttpOptions): Promise<R> {
     try {
-      const config: AxiosRequestConfig = {};
-
-      if (options) {
-        config.params = options.query;
-        config.headers = options.headers;
-      }
+      const config = this.getConfig(options);
 
       const response = await this.axiosInstance.delete<R>(url, config);
 
@@ -60,7 +66,26 @@ export default class AxiosHttpClient implements IHttpClient {
   }
 
   public async patch<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R> {
-    throw new Error('Method not implemented.');
+    try {
+      const config: AxiosRequestConfig = this.getConfig(options);
+
+      const response = await this.axiosInstance.patch<R>(url, data, config);
+
+      return response.data;
+    } catch (e: any) {
+      throw this.getError(e);
+    }
+  }
+
+  private getConfig(options?: HttpOptions) {
+    const config: AxiosRequestConfig = {};
+
+    if (options) {
+      config.params = options.query;
+      config.headers = options.headers;
+    }
+
+    return config;
   }
 
   private getError(e: any) {
