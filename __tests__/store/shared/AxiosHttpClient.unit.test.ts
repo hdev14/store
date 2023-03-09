@@ -79,30 +79,31 @@ describe("AxiosHttpClient's unit tests", () => {
       });
     });
 
-    it('returns the correct data after call axios.get', async () => {
-      expect.assertions(1);
+    it('returns the correct status and body after call axios.get', async () => {
+      expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
 
-      const fakeData = {
-        test1: 'test',
-        test2: 123,
-        test3: false,
-        test4: {},
+      const fakeResponseBody = {
+        test1: faker.datatype.string(),
+        test2: faker.datatype.number(),
+        test3: faker.datatype.boolean(),
+        test4: faker.datatype.array(),
       };
 
-      const fakeAxiosResponse = {
+      const fakeResponse = {
         status: faker.internet.httpStatusCode(),
-        data: fakeData,
+        data: fakeResponseBody,
       };
 
-      axiosInstanceMock.get.mockResolvedValueOnce(fakeAxiosResponse);
+      axiosInstanceMock.get.mockResolvedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
-      const result = await httpClient.get<typeof fakeData>(fakeUrl);
+      const response = await httpClient.get<typeof fakeResponseBody>(fakeUrl);
 
-      expect(result).toStrictEqual(fakeData);
+      expect(response.status).toStrictEqual(fakeResponse.status);
+      expect(response.body).toStrictEqual(fakeResponseBody);
     });
 
     it('throws a HttpError if axios.get returns a error', async () => {
@@ -110,14 +111,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      const fakeAxiosResponse = {
+      const fakeResponse = {
         response: {
           status: faker.internet.httpStatusCode(),
           data: { error: 'test' },
         },
       };
 
-      axiosInstanceMock.get.mockRejectedValueOnce(fakeAxiosResponse);
+      axiosInstanceMock.get.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -125,8 +126,8 @@ describe("AxiosHttpClient's unit tests", () => {
         await httpClient.get(fakeUrl);
       } catch (e: any) {
         expect(e).toBeInstanceOf(HttpError);
-        expect(e.statusCode).toEqual(fakeAxiosResponse.response.status);
-        expect(e.body).toEqual(fakeAxiosResponse.response.data);
+        expect(e.statusCode).toEqual(fakeResponse.response.status);
+        expect(e.body).toEqual(fakeResponse.response.data);
       }
     });
 
@@ -186,30 +187,31 @@ describe("AxiosHttpClient's unit tests", () => {
       });
     });
 
-    it('returns the correct data after call axios.delete', async () => {
-      expect.assertions(1);
+    it('returns the correct status and body after call axios.delete', async () => {
+      expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
 
-      const fakeData = {
-        test1: 'test',
-        test2: 123,
-        test3: false,
-        test4: {},
+      const fakeResponseBody = {
+        test1: faker.datatype.string(),
+        test2: faker.datatype.number(),
+        test3: faker.datatype.boolean(),
+        test4: faker.datatype.array(),
       };
 
-      const fakeAxiosResponse = {
+      const fakeResponse = {
         status: faker.internet.httpStatusCode(),
-        data: fakeData,
+        data: fakeResponseBody,
       };
 
-      axiosInstanceMock.delete.mockResolvedValueOnce(fakeAxiosResponse);
+      axiosInstanceMock.delete.mockResolvedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
-      const result = await httpClient.delete<typeof fakeData>(fakeUrl);
+      const response = await httpClient.delete<typeof fakeResponseBody>(fakeUrl);
 
-      expect(result).toStrictEqual(fakeData);
+      expect(response.status).toStrictEqual(fakeResponse.status);
+      expect(response.body).toStrictEqual(fakeResponseBody);
     });
 
     it('throws a HttpError if axios.delete returns a error', async () => {
@@ -217,14 +219,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      const fakeAxiosResponse = {
+      const fakeResponse = {
         response: {
           status: faker.internet.httpStatusCode(),
           data: { error: 'test' },
         },
       };
 
-      axiosInstanceMock.delete.mockRejectedValueOnce(fakeAxiosResponse);
+      axiosInstanceMock.delete.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -232,8 +234,8 @@ describe("AxiosHttpClient's unit tests", () => {
         await httpClient.delete(fakeUrl);
       } catch (e: any) {
         expect(e).toBeInstanceOf(HttpError);
-        expect(e.statusCode).toEqual(fakeAxiosResponse.response.status);
-        expect(e.body).toEqual(fakeAxiosResponse.response.data);
+        expect(e.statusCode).toEqual(fakeResponse.response.status);
+        expect(e.body).toEqual(fakeResponse.response.data);
       }
     });
 
@@ -320,8 +322,8 @@ describe("AxiosHttpClient's unit tests", () => {
       });
     });
 
-    it('returns the correct type after call axios.post', async () => {
-      expect.assertions(1);
+    it('returns the correct status and body after call axios.post', async () => {
+      expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
 
@@ -331,6 +333,7 @@ describe("AxiosHttpClient's unit tests", () => {
         test1: faker.datatype.string(),
         test2: faker.datatype.number(),
         test3: faker.datatype.boolean(),
+        test4: faker.datatype.array(),
       };
 
       const fakeResponse = {
@@ -340,9 +343,10 @@ describe("AxiosHttpClient's unit tests", () => {
 
       axiosInstanceMock.post.mockResolvedValueOnce(fakeResponse);
 
-      const result = await httpClient.post<typeof fakeResponseBody>(fakeUrl);
+      const response = await httpClient.post<typeof fakeResponseBody>(fakeUrl);
 
-      expect(result).toStrictEqual(fakeResponseBody);
+      expect(response.status).toStrictEqual(fakeResponse.status);
+      expect(response.body).toStrictEqual(fakeResponseBody);
     });
 
     it('throws a HttpError if axios.post returns a error', async () => {
@@ -350,14 +354,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      const fakeAxiosResponse = {
+      const fakeResponse = {
         response: {
           status: faker.internet.httpStatusCode(),
           data: { error: 'test' },
         },
       };
 
-      axiosInstanceMock.post.mockRejectedValueOnce(fakeAxiosResponse);
+      axiosInstanceMock.post.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -365,8 +369,8 @@ describe("AxiosHttpClient's unit tests", () => {
         await httpClient.post(fakeUrl);
       } catch (e: any) {
         expect(e).toBeInstanceOf(HttpError);
-        expect(e.statusCode).toEqual(fakeAxiosResponse.response.status);
-        expect(e.body).toEqual(fakeAxiosResponse.response.data);
+        expect(e.statusCode).toEqual(fakeResponse.response.status);
+        expect(e.body).toEqual(fakeResponse.response.data);
       }
     });
 
@@ -453,8 +457,8 @@ describe("AxiosHttpClient's unit tests", () => {
       });
     });
 
-    it('returns the correct type after call axios.patch', async () => {
-      expect.assertions(1);
+    it('returns the correct status and body after call axios.patch', async () => {
+      expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
 
@@ -464,6 +468,7 @@ describe("AxiosHttpClient's unit tests", () => {
         test1: faker.datatype.string(),
         test2: faker.datatype.number(),
         test3: faker.datatype.boolean(),
+        test4: faker.datatype.array(),
       };
 
       const fakeResponse = {
@@ -473,9 +478,10 @@ describe("AxiosHttpClient's unit tests", () => {
 
       axiosInstanceMock.patch.mockResolvedValueOnce(fakeResponse);
 
-      const result = await httpClient.patch<typeof fakeResponseBody>(fakeUrl);
+      const response = await httpClient.patch<typeof fakeResponseBody>(fakeUrl);
 
-      expect(result).toStrictEqual(fakeResponseBody);
+      expect(response.status).toEqual(fakeResponse.status);
+      expect(response.body).toEqual(fakeResponseBody);
     });
 
     it('throws a HttpError if axios.patch returns a error', async () => {
@@ -483,14 +489,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      const fakeAxiosResponse = {
+      const fakeResponse = {
         response: {
           status: faker.internet.httpStatusCode(),
           data: { error: 'test' },
         },
       };
 
-      axiosInstanceMock.patch.mockRejectedValueOnce(fakeAxiosResponse);
+      axiosInstanceMock.patch.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -498,8 +504,8 @@ describe("AxiosHttpClient's unit tests", () => {
         await httpClient.patch(fakeUrl);
       } catch (e: any) {
         expect(e).toBeInstanceOf(HttpError);
-        expect(e.statusCode).toEqual(fakeAxiosResponse.response.status);
-        expect(e.body).toEqual(fakeAxiosResponse.response.data);
+        expect(e.statusCode).toEqual(fakeResponse.response.status);
+        expect(e.body).toEqual(fakeResponse.response.data);
       }
     });
 
@@ -587,7 +593,7 @@ describe("AxiosHttpClient's unit tests", () => {
     });
 
     it('returns the correct type after call axios.put', async () => {
-      expect.assertions(1);
+      expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
 
@@ -597,6 +603,7 @@ describe("AxiosHttpClient's unit tests", () => {
         test1: faker.datatype.string(),
         test2: faker.datatype.number(),
         test3: faker.datatype.boolean(),
+        test4: faker.datatype.array(),
       };
 
       const fakeResponse = {
@@ -606,9 +613,10 @@ describe("AxiosHttpClient's unit tests", () => {
 
       axiosInstanceMock.put.mockResolvedValueOnce(fakeResponse);
 
-      const result = await httpClient.put<typeof fakeResponseBody>(fakeUrl);
+      const response = await httpClient.put<typeof fakeResponseBody>(fakeUrl);
 
-      expect(result).toStrictEqual(fakeResponseBody);
+      expect(response.status).toEqual(fakeResponse.status);
+      expect(response.body).toEqual(fakeResponseBody);
     });
 
     it('throws a HttpError if axios.put returns a error', async () => {
@@ -616,14 +624,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      const fakeAxiosResponse = {
+      const fakeResponse = {
         response: {
           status: faker.internet.httpStatusCode(),
           data: { error: 'test' },
         },
       };
 
-      axiosInstanceMock.put.mockRejectedValueOnce(fakeAxiosResponse);
+      axiosInstanceMock.put.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -631,8 +639,8 @@ describe("AxiosHttpClient's unit tests", () => {
         await httpClient.put(fakeUrl);
       } catch (e: any) {
         expect(e).toBeInstanceOf(HttpError);
-        expect(e.statusCode).toEqual(fakeAxiosResponse.response.status);
-        expect(e.body).toEqual(fakeAxiosResponse.response.data);
+        expect(e.statusCode).toEqual(fakeResponse.response.status);
+        expect(e.body).toEqual(fakeResponse.response.data);
       }
     });
 
