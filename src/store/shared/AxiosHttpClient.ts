@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import HttpError from './abstractions/HttpError';
-import IHttpClient, { HttpBody, HttpOptions } from './abstractions/IHttpClient';
+import IHttpClient, { HttpBody, HttpOptions, HttpResponse } from './abstractions/IHttpClient';
 
 export default class AxiosHttpClient implements IHttpClient {
   private readonly axiosInstance: AxiosInstance;
@@ -17,61 +17,76 @@ export default class AxiosHttpClient implements IHttpClient {
     });
   }
 
-  public async get<R = any>(url: string, options?: HttpOptions): Promise<R> {
+  public async get<R = any>(url: string, options?: HttpOptions): Promise<HttpResponse<R>> {
     try {
       const config = this.getConfig(options);
 
       const response = await this.axiosInstance.get<R>(url, config);
 
-      return response.data;
+      return {
+        status: response.status,
+        body: response.data,
+      };
     } catch (e: any) {
       throw this.getError(e);
     }
   }
 
-  public async post<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R> {
+  public async post<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<HttpResponse<R>> {
     try {
       const config: AxiosRequestConfig = this.getConfig(options);
 
       const response = await this.axiosInstance.post<R>(url, data, config);
 
-      return response.data;
+      return {
+        status: response.status,
+        body: response.data,
+      };
     } catch (e: any) {
       throw this.getError(e);
     }
   }
 
-  public async put<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R> {
+  public async put<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<HttpResponse<R>> {
     try {
       const config = this.getConfig(options);
 
       const response = await this.axiosInstance.put<R>(url, data, config);
 
-      return response.data;
+      return {
+        status: response.status,
+        body: response.data,
+      };
     } catch (e: any) {
       throw this.getError(e);
     }
   }
 
-  public async delete<R = any>(url: string, options?: HttpOptions): Promise<R> {
+  public async delete<R = any>(url: string, options?: HttpOptions): Promise<HttpResponse<R>> {
     try {
       const config = this.getConfig(options);
 
       const response = await this.axiosInstance.delete<R>(url, config);
 
-      return response.data;
+      return {
+        status: response.status,
+        body: response.data,
+      };
     } catch (e: any) {
       throw this.getError(e);
     }
   }
 
-  public async patch<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<R> {
+  public async patch<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<HttpResponse<R>> {
     try {
       const config: AxiosRequestConfig = this.getConfig(options);
 
       const response = await this.axiosInstance.patch<R>(url, data, config);
 
-      return response.data;
+      return {
+        status: response.status,
+        body: response.data,
+      };
     } catch (e: any) {
       throw this.getError(e);
     }
