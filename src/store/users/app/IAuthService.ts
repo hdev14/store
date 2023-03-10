@@ -1,10 +1,10 @@
-export type TokenPayload = {
+export type AuthPayload = {
   token: string;
-  expiredAt: number;
+  expiredAt: Date;
 }
 
 interface IAuthService {
-  auth(email: string, password: string): Promise<TokenPayload>;
+  auth(email: string, password: string): Promise<AuthPayload>;
 
   addPermissions(userId: string, permissions: string[]): Promise<void>;
 

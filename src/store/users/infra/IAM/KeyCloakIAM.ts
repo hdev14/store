@@ -1,10 +1,41 @@
-import IIdentityAccessManagement from 'src/store/users/app/IIdentityAccessManagement';
+import IHttpClient from '@shared/abstractions/IHttpClient';
+import IIdentityAccessManagement, { TokenPayload } from 'src/store/users/app/IIdentityAccessManagement';
 import User from 'src/store/users/domain/User';
 
-// TODO: add HttpClient
 export default class KeyCloakIAM implements IIdentityAccessManagement {
-  public async auth(email: string, password: string): Promise<any> {
-    throw new Error('Method not implemented.');
+  private readonly baseUrl: string;
+
+  private readonly realm: string;
+
+  private readonly clientId: string;
+
+  private readonly clientSecret: string;
+
+  constructor(private readonly httpClient: IHttpClient) {
+    this.baseUrl = process.env.KEYCLOAK_BASE_URL;
+    this.realm = process.env.KEYCLOAK_REALM_NAME;
+    this.clientId = process.env.KEYCLOAK_CLIENT_ID;
+    this.clientSecret = process.env.KEYCLOAK_CLIENT_SECRET;
+  }
+
+  public async auth(email: string, password: string): Promise<TokenPayload> {
+    const response = await this.httpClient.post(
+      `${this.baseUrl}/realms/${this.realm}/protocol/openid-connect/token`,
+      new URLSearchParams({
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
+        grant_type: 'password',
+        username: email,
+        password,
+        scope: 'openid',
+      }),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+
+    return {
+      accessToken: response.body.access_token,
+      expiresIn: response.body.expires_in,
+    };
   }
 
   public async registerUser(_user: User): Promise<any> {

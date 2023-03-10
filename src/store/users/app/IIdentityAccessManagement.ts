@@ -1,7 +1,12 @@
 import User from 'src/store/users/domain/User';
 
+export type TokenPayload = {
+  accessToken: string;
+  expiresIn: number;
+};
+
 interface IIdentityAccessManagement {
-  auth(email: string, password: string): Promise<any>;
+  auth(email: string, password: string): Promise<TokenPayload>;
 
   registerUser(user: User): Promise<void>;
 
