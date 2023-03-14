@@ -11,11 +11,33 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
 
   private readonly clientSecret: string;
 
+  private clientAccessToken = '';
+
   constructor(private readonly httpClient: IHttpClient) {
     this.baseUrl = process.env.KEYCLOAK_BASE_URL;
     this.realm = process.env.KEYCLOAK_REALM_NAME;
     this.clientId = process.env.KEYCLOAK_CLIENT_ID;
     this.clientSecret = process.env.KEYCLOAK_CLIENT_SECRET;
+
+    this.authClient().then((accessToken: string) => {
+      this.clientAccessToken = accessToken;
+      setInterval(() => this.authClient().catch(console.error.bind(console)), 58 * 1000);
+    }).catch(console.error.bind(console));
+  }
+
+  private async authClient() {
+    const response = await this.httpClient.post(
+      `${this.baseUrl}/realms/${this.realm}/protocol/openid-connect/token`,
+      new URLSearchParams({
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
+        grant_type: 'client_credentials',
+        scope: 'openid',
+      }),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+
+    return response.body.access_token;
   }
 
   public async auth(email: string, password: string): Promise<TokenPayload> {
@@ -38,7 +60,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     };
   }
 
-  public async registerUser(_user: User): Promise<any> {
+  public async registerUser(_user: User): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
