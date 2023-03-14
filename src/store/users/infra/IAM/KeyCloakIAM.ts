@@ -84,7 +84,26 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async updateUser(user: User): Promise<void> {
-    throw new Error('Method not implemented.');
+    const [firstName, ...rest] = user.name.split(' ');
+    const lastName = rest.join(' ');
+
+    await this.httpClient.put(
+      `${this.baseUrl}/admin/realms/${this.realm}/users/${user.id}`,
+      {
+        firstName,
+        lastName,
+        email: user.email,
+        attributes: {
+          document: user.document,
+        },
+        credentials: [{
+          type: 'password',
+          value: user.password,
+          temporary: false,
+        }],
+      },
+      { headers: { Authorization: `Bearer ${this.clientAccessToken}` } },
+    );
   }
 
   public async getUser(userId: string): Promise<User> {
