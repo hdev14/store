@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import IHttpClient from '@shared/abstractions/IHttpClient';
-// import User from '@users/domain/User';
+import User from '@users/domain/User';
 import KeyCloakIAM from '@users/infra/IAM/KeyCloakIAM';
 import { mock, mockClear } from 'jest-mock-extended';
 
@@ -8,6 +8,10 @@ const httpClientMock = mock<IHttpClient>();
 
 jest.useFakeTimers();
 const setIntervalSpy = jest.spyOn(global, 'setInterval');
+
+function waitForAccessToken(callback: any) {
+  setTimeout(callback);
+}
 
 describe("KeyCloakIAM's unit tests", () => {
   const OLD_ENV = process.env;
@@ -35,7 +39,7 @@ describe("KeyCloakIAM's unit tests", () => {
   it('calls HttpClient.post with correct params to request the auth endpont of keycloak admin API', () => {
     httpClientMock.post.mockResolvedValueOnce({
       status: 200,
-      body: { access_token: faker.random.alphaNumeric(), expires_in: faker.datatype.number() },
+      body: { access_token: faker.random.alphaNumeric(10), expires_in: faker.datatype.number() },
     });
 
     // eslint-disable-next-line no-new
@@ -56,7 +60,7 @@ describe("KeyCloakIAM's unit tests", () => {
   it('calls setInterval to request the auth endpoint of keycloak admin API every 58 seconds', () => {
     httpClientMock.post.mockResolvedValueOnce({
       status: 200,
-      body: { access_token: faker.random.alphaNumeric(), expires_in: faker.datatype.number() },
+      body: { access_token: faker.random.alphaNumeric(10), expires_in: faker.datatype.number() },
     });
 
     // eslint-disable-next-line no-new
@@ -72,13 +76,13 @@ describe("KeyCloakIAM's unit tests", () => {
 
       httpClientMock.post.mockResolvedValue({
         status: 200,
-        body: { access_token: faker.random.alphaNumeric(), expires_in: faker.datatype.number() },
+        body: { access_token: faker.random.alphaNumeric(10), expires_in: faker.datatype.number() },
       });
 
       const iam = new KeyCloakIAM(httpClientMock);
 
       const fakeEmail = faker.internet.email();
-      const fakePassword = faker.random.alphaNumeric();
+      const fakePassword = faker.random.alphaNumeric(10);
 
       await iam.auth(fakeEmail, fakePassword);
 
@@ -101,7 +105,7 @@ describe("KeyCloakIAM's unit tests", () => {
       expect.assertions(2);
 
       const fakeBody = {
-        access_token: faker.random.alphaNumeric(),
+        access_token: faker.random.alphaNumeric(10),
         expires_in: faker.datatype.number(),
       };
 
@@ -113,7 +117,7 @@ describe("KeyCloakIAM's unit tests", () => {
       const iam = new KeyCloakIAM(httpClientMock);
 
       const fakeEmail = faker.internet.email();
-      const fakePassword = faker.random.alphaNumeric();
+      const fakePassword = faker.random.alphaNumeric(10);
 
       const payload = await iam.auth(fakeEmail, fakePassword);
 
@@ -122,44 +126,52 @@ describe("KeyCloakIAM's unit tests", () => {
     });
   });
 
-  // describe('KeyCloakIAM.registerUser()', () => {
-  //   it('calls HttpClient.post with correct params to request keycloak admin API', async () => {
-  //     expect.assertions(1);
+  describe('KeyCloakIAM.registerUser()', () => {
+    it('calls HttpClient.post with correct params to request keycloak admin API', async () => {
+      const fakeAccessToken = faker.random.alphaNumeric(10);
 
-  //     const iam = new KeyCloakIAM(httpClientMock);
+      httpClientMock.post.mockResolvedValue({
+        status: 200,
+        body: { access_token: fakeAccessToken, expires_in: faker.datatype.number() },
+      });
 
-  //     const firstName = faker.name.firstName();
-  //     const lastName = faker.name.lastName();
+      const iam = new KeyCloakIAM(httpClientMock);
 
-  //     const user = new User({
-  //       id: faker.datatype.uuid(),
-  //       name: `${firstName} ${lastName}`,
-  //       document: '123.456.789-10',
-  //       email: faker.internet.email(),
-  //       createdAt: new Date(),
-  //       password: faker.random.alphaNumeric(),
-  //     });
+      const firstName = faker.name.firstName();
+      const lastName = faker.name.lastName();
 
-  //     await iam.registerUser(user);
+      const user = new User({
+        id: faker.datatype.uuid(),
+        name: `${firstName} ${lastName}`,
+        document: '123.456.789-10',
+        email: faker.internet.email(),
+        createdAt: new Date(),
+        password: faker.random.alphaNumeric(10),
+      });
 
-  //     expect(httpClientMock.post).toHaveBeenCalledWith(
-  //       'http://keycloak.test/admin/realms/test_realm/users',
-  //       {
-  //         id: user.id,
-  //         firstName,
-  //         lastName,
-  //         email: user.email,
-  //         attributes: {
-  //           document: user.document,
-  //         },
-  //         credentials: [{
-  //           type: 'password',
-  //           value: user.password,
-  //           temporary: false,
-  //         }],
-  //       },
-  //       { headers: { Authorization: 'Bearer test_token' } },
-  //     );
-  //   });
-  // });
+      waitForAccessToken(async () => {
+        await iam.registerUser(user);
+
+        expect(httpClientMock.post).toHaveBeenNthCalledWith(
+          2,
+          'http://keycloak.test/admin/realms/test_realm/users',
+          {
+            id: user.id,
+            firstName,
+            lastName,
+            email: user.email,
+            attributes: {
+              document: user.document,
+            },
+            credentials: [{
+              type: 'password',
+              value: user.password,
+              temporary: false,
+            }],
+          },
+          { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
+        );
+      });
+    });
+  });
 });
