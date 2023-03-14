@@ -1,6 +1,22 @@
 import IHttpClient from '@shared/abstractions/IHttpClient';
-import IIdentityAccessManagement, { TokenPayload } from 'src/store/users/app/IIdentityAccessManagement';
-import User from 'src/store/users/domain/User';
+import IIdentityAccessManagement, { TokenPayload } from '@users/app/IIdentityAccessManagement';
+import User from '@users/domain/User';
+
+type UserRepresentation = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  createdTimestamp: number;
+  attributes: {
+    document: string;
+  },
+  credentials: [{
+    type: string;
+    value: any;
+    temporary: boolean;
+  }],
+}
 
 export default class KeyCloakIAM implements IIdentityAccessManagement {
   private readonly baseUrl: string;
@@ -71,13 +87,14 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
         lastName,
         email: user.email,
         attributes: {
-          document: user.document,
+          document: user.document.value,
         },
         credentials: [{
           type: 'password',
           value: user.password,
           temporary: false,
         }],
+        createdTimestamp: user.createdAt.getTime(),
       },
       { headers: { Authorization: `Bearer ${this.clientAccessToken}` } },
     );
@@ -94,7 +111,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
         lastName,
         email: user.email,
         attributes: {
-          document: user.document,
+          document: user.document.value,
         },
         credentials: [{
           type: 'password',
@@ -107,7 +124,17 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async getUser(userId: string): Promise<User> {
-    throw new Error('Method not implemented.');
+    const { body } = await this.httpClient.get<UserRepresentation>(`${this.baseUrl}/admin/realms/${this.realm}/users/${userId}`, {
+      headers: { Authorization: `Bearer ${this.clientAccessToken}` },
+    });
+
+    return new User({
+      id: body.id,
+      name: `${body.firstName} ${body.lastName}`,
+      email: body.email,
+      document: body.attributes.document,
+      createdAt: new Date(body.createdTimestamp),
+    });
   }
 
   public async getUsers(): Promise<User[]> {
