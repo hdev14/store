@@ -19,8 +19,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     this.clientId = process.env.KEYCLOAK_CLIENT_ID;
     this.clientSecret = process.env.KEYCLOAK_CLIENT_SECRET;
 
-    this.authClient().then((accessToken: string) => {
-      this.clientAccessToken = accessToken;
+    this.authClient().then(() => {
       setInterval(() => this.authClient().catch(console.error.bind(console)), 58 * 1000);
     }).catch(console.error.bind(console));
   }
@@ -37,7 +36,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
     );
 
-    return response.body.access_token;
+    this.clientAccessToken = response.body.access_token;
   }
 
   public async auth(email: string, password: string): Promise<TokenPayload> {
@@ -60,8 +59,28 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     };
   }
 
-  public async registerUser(_user: User): Promise<void> {
-    throw new Error('Method not implemented.');
+  public async registerUser(user: User): Promise<void> {
+    const [firstName, ...rest] = user.name.split(' ');
+    const lastName = rest.join(' ');
+
+    await this.httpClient.post(
+      `${this.baseUrl}/admin/realms/${this.realm}/users`,
+      {
+        id: user.id,
+        firstName,
+        lastName,
+        email: user.email,
+        attributes: {
+          document: user.document,
+        },
+        credentials: [{
+          type: 'password',
+          value: user.password,
+          temporary: false,
+        }],
+      },
+      { headers: { Authorization: `Bearer ${this.clientAccessToken}` } },
+    );
   }
 
   public async updateUser(user: User): Promise<void> {
