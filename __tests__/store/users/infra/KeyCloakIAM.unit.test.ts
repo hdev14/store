@@ -162,13 +162,14 @@ describe("KeyCloakIAM's unit tests", () => {
             lastName,
             email: user.email,
             attributes: {
-              document: user.document,
+              document: user.document.value,
             },
             credentials: [{
               type: 'password',
               value: user.password,
               temporary: false,
             }],
+            createdTimestamp: user.createdAt.getTime(),
           },
           { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
         );
@@ -189,41 +190,115 @@ describe("KeyCloakIAM's unit tests", () => {
       iam = new KeyCloakIAM(httpClientMock);
     });
 
-    it(
-      'calls HttpClient.post with correct params to request the endpoint to update an user in keycloak admin API',
-      async () => {
-        const firstName = faker.name.firstName();
-        const lastName = faker.name.lastName();
+    it('calls HttpClient.post with correct params to request the endpoint to update an user in keycloak admin API', async () => {
+      const firstName = faker.name.firstName();
+      const lastName = faker.name.lastName();
 
-        const user = new User({
-          id: faker.datatype.uuid(),
-          name: `${firstName} ${lastName}`,
-          document: '123.456.789-10',
-          email: faker.internet.email(),
-          createdAt: new Date(),
-          password: faker.random.alphaNumeric(10),
-        });
+      const user = new User({
+        id: faker.datatype.uuid(),
+        name: `${firstName} ${lastName}`,
+        document: '123.456.789-10',
+        email: faker.internet.email(),
+        createdAt: new Date(),
+        password: faker.random.alphaNumeric(10),
+      });
 
-        await iam.updateUser(user);
+      await iam.updateUser(user);
 
-        expect(httpClientMock.put).toHaveBeenCalledWith(
-          `http://keycloak.test/admin/realms/test_realm/users/${user.id}`,
-          {
-            firstName,
-            lastName,
-            email: user.email,
-            attributes: {
-              document: user.document,
-            },
-            credentials: [{
-              type: 'password',
-              value: user.password,
-              temporary: false,
-            }],
+      expect(httpClientMock.put).toHaveBeenCalledWith(
+        `http://keycloak.test/admin/realms/test_realm/users/${user.id}`,
+        {
+          firstName,
+          lastName,
+          email: user.email,
+          attributes: {
+            document: user.document.value,
           },
-          { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
-        );
-      },
-    );
+          credentials: [{
+            type: 'password',
+            value: user.password,
+            temporary: false,
+          }],
+        },
+        { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
+      );
+    });
+  });
+
+  describe('KeyCloakIAM.getUser()', () => {
+    let iam: KeyCloakIAM;
+    const fakeAccessToken = faker.random.alphaNumeric(10);
+
+    beforeAll(() => {
+      httpClientMock.post.mockResolvedValue({
+        status: 200,
+        body: { access_token: fakeAccessToken, expires_in: faker.datatype.number() },
+      });
+
+      iam = new KeyCloakIAM(httpClientMock);
+    });
+
+    it('calls HttpClient.get with correct params to request the endpoint to retrieve the user info from keycloak admin API', async () => {
+      const fakeUserId = faker.datatype.uuid();
+
+      httpClientMock.get.mockResolvedValueOnce({
+        status: 200,
+        body: {
+          id: fakeUserId,
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          attributes: {
+            document: '123.456.789-10',
+          },
+          credentials: [{
+            type: 'password',
+            value: faker.random.alphaNumeric(5),
+            temporary: false,
+          }],
+        },
+      });
+
+      await iam.getUser(fakeUserId);
+
+      expect(httpClientMock.get).toHaveBeenCalledWith(
+        `http://keycloak.test/admin/realms/test_realm/users/${fakeUserId}`,
+        { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
+      );
+    });
+
+    it('returns an User after it call HttpClient.get method', async () => {
+      const fakeUserId = faker.datatype.uuid();
+
+      const fakeBody = {
+        id: fakeUserId,
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        createdTimestamp: new Date().getTime(),
+        attributes: {
+          document: '123.456.789-10',
+        },
+        credentials: [{
+          type: 'password',
+          value: faker.random.alphaNumeric(5),
+          temporary: false,
+        }],
+      };
+
+      httpClientMock.get.mockResolvedValueOnce({
+        status: 200,
+        body: fakeBody,
+      });
+
+      const user = await iam.getUser(fakeUserId);
+
+      expect(user).toBeInstanceOf(User);
+      expect(user.id).toEqual(fakeBody.id);
+      expect(user.name).toEqual(`${fakeBody.firstName} ${fakeBody.lastName}`);
+      expect(user.email).toEqual(fakeBody.email);
+      expect(user.document.value).toEqual(fakeBody.attributes.document);
+      expect(user.createdAt).toEqual(new Date(fakeBody.createdTimestamp));
+    });
   });
 });
