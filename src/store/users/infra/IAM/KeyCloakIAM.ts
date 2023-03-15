@@ -137,6 +137,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     });
   }
 
+  // TODO: add pagination
   public async getUsers(): Promise<User[]> {
     const { body } = await this.httpClient.get<UserRepresentation[]>(`${this.baseUrl}/admin/realms/${this.realm}/users`, {
       headers: { Authorization: `Bearer ${this.clientAccessToken}` },
