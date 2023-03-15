@@ -406,5 +406,39 @@ describe("KeyCloakIAM's unit tests", () => {
       expect(users[1].document.value).toEqual(fakeBody[1].attributes.document);
       expect(users[1].createdAt).toEqual(new Date(fakeBody[1].createdTimestamp));
     });
+
+    it('calls HttpClient.get with pagaintion options if pagination is passed', async () => {
+      expect.assertions(1);
+
+      httpClientMock.get.mockResolvedValueOnce({
+        status: 200,
+        body: [{
+          id: faker.datatype.uuid(),
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          attributes: {
+            document: '123.456.789-10',
+          },
+          credentials: [{
+            type: 'password',
+            value: faker.random.alphaNumeric(5),
+            temporary: false,
+          }],
+        }],
+      });
+
+      const pagination = {
+        offset: 10.5,
+        limit: 10.5,
+      };
+
+      await iam.getUsers(pagination);
+
+      expect(httpClientMock.get.mock.calls[0][1]!.query).toEqual(new URLSearchParams({
+        first: '11',
+        max: '11',
+      }));
+    });
   });
 });
