@@ -270,7 +270,7 @@ describe("KeyCloakIAM's unit tests", () => {
       );
     });
 
-    it('returns an User after it call HttpClient.get method', async () => {
+    it('returns an User after calling HttpClient.get method', async () => {
       expect.assertions(6);
 
       const fakeUserId = faker.datatype.uuid();
@@ -349,7 +349,7 @@ describe("KeyCloakIAM's unit tests", () => {
       );
     });
 
-    it('returns an User after it call HttpClient.get method', async () => {
+    it('returns an array of User after calling HttpClient.get method', async () => {
       expect.assertions(11);
 
       const fakeBody = [
