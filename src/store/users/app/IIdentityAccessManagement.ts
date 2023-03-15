@@ -1,9 +1,15 @@
+import e from 'express';
 import User from 'src/store/users/domain/User';
 
 export type TokenPayload = {
   accessToken: string;
   expiresIn: number;
 };
+
+export type PaginationOptions = {
+  limit: number;
+  offset: number;
+}
 
 interface IIdentityAccessManagement {
   auth(email: string, password: string): Promise<TokenPayload>;
@@ -14,7 +20,7 @@ interface IIdentityAccessManagement {
 
   getUser(userId: string): Promise<User>;
 
-  getUsers(): Promise<User[]>;
+  getUsers(pagination?: PaginationOptions): Promise<User[]>;
 
   addRole(userId: string, role: string): Promise<void>;
 

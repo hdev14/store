@@ -1,5 +1,5 @@
 import IHttpClient from '@shared/abstractions/IHttpClient';
-import IIdentityAccessManagement, { TokenPayload } from '@users/app/IIdentityAccessManagement';
+import IIdentityAccessManagement, { PaginationOptions, TokenPayload } from '@users/app/IIdentityAccessManagement';
 import User from '@users/domain/User';
 
 type UserRepresentation = {
@@ -137,9 +137,14 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     });
   }
 
-  // TODO: add pagination
-  public async getUsers(): Promise<User[]> {
+  public async getUsers(pagination?: PaginationOptions): Promise<User[]> {
+    const query = pagination && new URLSearchParams({
+      first: pagination.offset.toFixed(0),
+      max: pagination.limit.toFixed(0),
+    });
+
     const { body } = await this.httpClient.get<UserRepresentation[]>(`${this.baseUrl}/admin/realms/${this.realm}/users`, {
+      query,
       headers: { Authorization: `Bearer ${this.clientAccessToken}` },
     });
 
