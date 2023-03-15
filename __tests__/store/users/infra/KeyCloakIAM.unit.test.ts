@@ -67,23 +67,26 @@ describe("KeyCloakIAM's unit tests", () => {
   });
 
   describe('KeyCloakIAM.auth()', () => {
-    it('calls HttpClient.post with correct params to request the auth endpont of keycloak admin API', async () => {
-      expect.assertions(1);
+    let iam: KeyCloakIAM;
 
+    beforeAll(() => {
       httpClientMock.post.mockResolvedValue({
         status: 200,
         body: { access_token: faker.random.alphaNumeric(10), expires_in: faker.datatype.number() },
       });
 
-      const iam = new KeyCloakIAM(httpClientMock);
+      iam = new KeyCloakIAM(httpClientMock);
+    });
+
+    it('calls HttpClient.post with correct params to request the auth endpont of keycloak admin API', async () => {
+      expect.assertions(1);
 
       const fakeEmail = faker.internet.email();
       const fakePassword = faker.random.alphaNumeric(10);
 
       await iam.auth(fakeEmail, fakePassword);
 
-      expect(httpClientMock.post).toHaveBeenNthCalledWith(
-        2,
+      expect(httpClientMock.post).toHaveBeenCalledWith(
         'http://keycloak.test/realms/test_realm/protocol/openid-connect/token',
         new URLSearchParams({
           client_id: 'test_client_id',
@@ -105,12 +108,10 @@ describe("KeyCloakIAM's unit tests", () => {
         expires_in: faker.datatype.number(),
       };
 
-      httpClientMock.post.mockResolvedValue({
+      httpClientMock.post.mockResolvedValueOnce({
         status: 200,
         body: fakeBody,
       });
-
-      const iam = new KeyCloakIAM(httpClientMock);
 
       const fakeEmail = faker.internet.email();
       const fakePassword = faker.random.alphaNumeric(10);
