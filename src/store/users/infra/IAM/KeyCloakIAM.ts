@@ -138,7 +138,17 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async getUsers(): Promise<User[]> {
-    throw new Error('Method not implemented.');
+    const { body } = await this.httpClient.get<UserRepresentation[]>(`${this.baseUrl}/admin/realms/${this.realm}/users`, {
+      headers: { Authorization: `Bearer ${this.clientAccessToken}` },
+    });
+
+    return body.map((userRep) => new User({
+      id: userRep.id,
+      name: `${userRep.firstName} ${userRep.lastName}`,
+      email: userRep.email,
+      document: userRep.attributes.document,
+      createdAt: new Date(userRep.createdTimestamp),
+    }));
   }
 
   public async addRole(userId: string, role: string): Promise<void> {
