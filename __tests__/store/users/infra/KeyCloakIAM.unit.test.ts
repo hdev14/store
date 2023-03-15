@@ -240,6 +240,8 @@ describe("KeyCloakIAM's unit tests", () => {
     });
 
     it('calls HttpClient.get with correct params to request the endpoint to retrieve the user info from keycloak admin API', async () => {
+      expect.assertions(1);
+
       const fakeUserId = faker.datatype.uuid();
 
       httpClientMock.get.mockResolvedValueOnce({
@@ -269,6 +271,8 @@ describe("KeyCloakIAM's unit tests", () => {
     });
 
     it('returns an User after it call HttpClient.get method', async () => {
+      expect.assertions(6);
+
       const fakeUserId = faker.datatype.uuid();
 
       const fakeBody = {
@@ -300,6 +304,107 @@ describe("KeyCloakIAM's unit tests", () => {
       expect(user.email).toEqual(fakeBody.email);
       expect(user.document.value).toEqual(fakeBody.attributes.document);
       expect(user.createdAt).toEqual(new Date(fakeBody.createdTimestamp));
+    });
+  });
+
+  describe('KeyCloakIAM.getUsers()', () => {
+    let iam: KeyCloakIAM;
+    const fakeAccessToken = faker.random.alphaNumeric(10);
+
+    beforeAll(() => {
+      httpClientMock.post.mockResolvedValue({
+        status: 200,
+        body: { access_token: fakeAccessToken, expires_in: faker.datatype.number() },
+      });
+
+      iam = new KeyCloakIAM(httpClientMock);
+    });
+
+    it('calls HttpClient.get with correct params to request the endpoint to retrieve the users info from keycloak admin API', async () => {
+      expect.assertions(1);
+
+      httpClientMock.get.mockResolvedValueOnce({
+        status: 200,
+        body: [{
+          id: faker.datatype.uuid(),
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          attributes: {
+            document: '123.456.789-10',
+          },
+          credentials: [{
+            type: 'password',
+            value: faker.random.alphaNumeric(5),
+            temporary: false,
+          }],
+        }],
+      });
+
+      await iam.getUsers();
+
+      expect(httpClientMock.get).toHaveBeenCalledWith(
+        'http://keycloak.test/admin/realms/test_realm/users',
+        { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
+      );
+    });
+
+    it('returns an User after it call HttpClient.get method', async () => {
+      expect.assertions(11);
+
+      const fakeBody = [
+        {
+          id: faker.datatype.uuid(),
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          createdTimestamp: new Date().getTime(),
+          attributes: {
+            document: '123.456.789-10',
+          },
+          credentials: [{
+            type: 'password',
+            value: faker.random.alphaNumeric(5),
+            temporary: false,
+          }],
+        },
+        {
+          id: faker.datatype.uuid(),
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          createdTimestamp: new Date().getTime(),
+          attributes: {
+            document: '123.456.789-11',
+          },
+          credentials: [{
+            type: 'password',
+            value: faker.random.alphaNumeric(5),
+            temporary: false,
+          }],
+        },
+      ];
+
+      httpClientMock.get.mockResolvedValueOnce({
+        status: 200,
+        body: fakeBody,
+      });
+
+      const users = await iam.getUsers();
+
+      expect(users).toHaveLength(2);
+
+      expect(users[0].id).toEqual(fakeBody[0].id);
+      expect(users[0].name).toEqual(`${fakeBody[0].firstName} ${fakeBody[0].lastName}`);
+      expect(users[0].email).toEqual(fakeBody[0].email);
+      expect(users[0].document.value).toEqual(fakeBody[0].attributes.document);
+      expect(users[0].createdAt).toEqual(new Date(fakeBody[0].createdTimestamp));
+
+      expect(users[1].id).toEqual(fakeBody[1].id);
+      expect(users[1].name).toEqual(`${fakeBody[1].firstName} ${fakeBody[1].lastName}`);
+      expect(users[1].email).toEqual(fakeBody[1].email);
+      expect(users[1].document.value).toEqual(fakeBody[1].attributes.document);
+      expect(users[1].createdAt).toEqual(new Date(fakeBody[1].createdTimestamp));
     });
   });
 });
