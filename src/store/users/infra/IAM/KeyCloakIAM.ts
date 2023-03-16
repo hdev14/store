@@ -152,7 +152,11 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async removeRole(userId: string, role: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.httpClient.delete(
+      `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}/role-mappings/realm`,
+      [{ name: role, containerId: this.realm }],
+      this.getDefaultHttpClientOptions(),
+    );
   }
 
   public async removeRoles(userId: string, role: string): Promise<void> {
