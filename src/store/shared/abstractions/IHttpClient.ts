@@ -5,7 +5,7 @@ export type HttpOptions = {
 
 export type HttpBody = Record<string, any> | URLSearchParams;
 
-export type HttpResponse<T = Record<string, any>> = {
+export type HttpResponse<T = Record<string, any> | Array<any>> = {
   status: number;
   body: T;
 }
