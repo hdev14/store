@@ -179,11 +179,35 @@ describe("AxiosHttpClient's unit tests", () => {
       const fakeQuery = new URLSearchParams({ test1: 'test1', test2: 'test2' });
       const fakeHeaders = { test_header: 'test' };
 
-      await httpClient.delete(fakeUrl, { query: fakeQuery, headers: fakeHeaders });
+      await httpClient.delete(fakeUrl, undefined, { query: fakeQuery, headers: fakeHeaders });
 
       expect(axiosInstanceMock.delete).toHaveBeenCalledWith(fakeUrl, {
         params: fakeQuery,
         headers: fakeHeaders,
+      });
+    });
+
+    it('calls axios.delete with correct url, data and options', async () => {
+      expect.assertions(1);
+
+      const httpClient = new AxiosHttpClient();
+
+      const fakeUrl = faker.internet.url();
+      const fakeQuery = new URLSearchParams({ test1: 'test1', test2: 'test2' });
+      const fakeHeaders = { test_header: 'test' };
+      const fakeData = {
+        test1: faker.datatype.string(),
+        test2: faker.datatype.number(),
+        test3: faker.datatype.boolean(),
+        test4: faker.datatype.array(),
+      };
+
+      await httpClient.delete(fakeUrl, fakeData, { query: fakeQuery, headers: fakeHeaders });
+
+      expect(axiosInstanceMock.delete).toHaveBeenCalledWith(fakeUrl, {
+        params: fakeQuery,
+        headers: fakeHeaders,
+        data: fakeData,
       });
     });
 
