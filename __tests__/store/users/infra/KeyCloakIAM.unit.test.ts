@@ -441,4 +441,107 @@ describe("KeyCloakIAM's unit tests", () => {
       }));
     });
   });
+
+  describe('KeyCloakIAM.addRole()', () => {
+    let iam: KeyCloakIAM;
+    const fakeAccessToken = faker.random.alphaNumeric(10);
+
+    beforeAll(() => {
+      httpClientMock.post.mockResolvedValue({
+        status: 200,
+        body: { access_token: fakeAccessToken, expires_in: faker.datatype.number() },
+      });
+
+      iam = new KeyCloakIAM(httpClientMock);
+    });
+
+    it('calls HttpClient.get with correct params to request the endpoint to retrieve the role info', async () => {
+      expect.assertions(1);
+
+      httpClientMock.get.mockResolvedValueOnce({
+        status: 204,
+        body: {
+          id: '12345678-1234-1234-1234-123456789abc',
+          name: 'example-role',
+          description: 'An example role.',
+          composite: false,
+          clientRole: false,
+          containerId: 'realm-name',
+          attributes: {},
+        },
+      });
+
+      const fakeUserId = faker.datatype.uuid();
+      const fakeRole = faker.word.verb();
+
+      await iam.addRole(fakeUserId, fakeRole);
+
+      expect(httpClientMock.get).toHaveBeenCalledWith(
+        `http://keycloak.test/admin/realms/test_realm/roles/${fakeRole}`,
+        { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
+      );
+    });
+
+    it('calls HttpClient.get with correct params to request the endpoint to retrieve the role info', async () => {
+      expect.assertions(1);
+
+      httpClientMock.get.mockResolvedValueOnce({
+        status: 204,
+        body: {
+          id: '12345678-1234-1234-1234-123456789abc',
+          name: 'example-role',
+          description: 'An example role.',
+          composite: false,
+          clientRole: false,
+          containerId: 'realm-name',
+          attributes: {},
+        },
+      });
+
+      const fakeUserId = faker.datatype.uuid();
+      const fakeRole = faker.word.verb();
+
+      await iam.addRole(fakeUserId, fakeRole);
+
+      expect(httpClientMock.get).toHaveBeenCalledWith(
+        `http://keycloak.test/admin/realms/test_realm/roles/${fakeRole}`,
+        { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
+      );
+    });
+
+    it('calls HttpClient.post with correct params to request the endpoint to add role to the user', async () => {
+      expect.assertions(1);
+
+      const fakeRoleId = faker.datatype.uuid();
+      const fakeRole = faker.word.verb();
+
+      httpClientMock.get.mockResolvedValueOnce({
+        status: 204,
+        body: {
+          id: fakeRoleId,
+          name: fakeRole,
+          description: 'An example role.',
+          composite: false,
+          clientRole: false,
+          containerId: 'realm-name',
+          attributes: {},
+        },
+      });
+
+      const fakeUserId = faker.datatype.uuid();
+
+      await iam.addRole(fakeUserId, fakeRole);
+
+      expect(httpClientMock.post).toHaveBeenCalledWith(
+        `http://keycloak.test/admin/realms/test_realm/users/${fakeUserId}/role-mappings/realm`,
+        [
+          {
+            id: fakeRoleId,
+            name: fakeRole,
+          },
+        ],
+        { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
+      );
+    });
+  });
 });
