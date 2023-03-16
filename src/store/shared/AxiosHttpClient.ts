@@ -62,11 +62,11 @@ export default class AxiosHttpClient implements IHttpClient {
     }
   }
 
-  public async delete<R = any>(url: string, options?: HttpOptions): Promise<HttpResponse<R>> {
+  public async delete<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<HttpResponse<R>> {
     try {
       const config = this.getConfig(options);
 
-      const response = await this.axiosInstance.delete<R>(url, config);
+      const response = await this.axiosInstance.delete<R>(url, { ...config, data });
 
       return {
         status: response.status,

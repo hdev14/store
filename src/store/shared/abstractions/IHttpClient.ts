@@ -19,7 +19,7 @@ interface IHttpClient {
 
   put<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<HttpResponse<R>>;
 
-  delete<R = any>(url: string, options?: HttpOptions): Promise<HttpResponse<R>>;
+  delete<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<HttpResponse<R>>;
 
   patch<R = any>(url: string, data?: HttpBody, options?: HttpOptions): Promise<HttpResponse<R>>;
 }
