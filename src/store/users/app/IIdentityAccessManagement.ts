@@ -25,8 +25,6 @@ interface IIdentityAccessManagement {
   addRole(userId: string, role: string): Promise<void>;
 
   removeRole(userId: string, role: string): Promise<void>;
-
-  removeRoles(userId: string, role: string): Promise<void>;
 }
 
 export default IIdentityAccessManagement;
