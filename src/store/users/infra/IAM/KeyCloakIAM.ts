@@ -1,4 +1,4 @@
-import IHttpClient from '@shared/abstractions/IHttpClient';
+import IHttpClient, { HttpOptions } from '@shared/abstractions/IHttpClient';
 import IIdentityAccessManagement, { PaginationOptions, TokenPayload } from '@users/app/IIdentityAccessManagement';
 import User from '@users/domain/User';
 
@@ -38,21 +38,6 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     this.authClient().then(() => {
       setInterval(() => this.authClient().catch(console.error.bind(console)), 58 * 1000);
     }).catch(console.error.bind(console));
-  }
-
-  private async authClient() {
-    const response = await this.httpClient.post(
-      `${this.baseUrl}/realms/${this.realm}/protocol/openid-connect/token`,
-      new URLSearchParams({
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
-        grant_type: 'client_credentials',
-        scope: 'openid',
-      }),
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
-    );
-
-    this.clientAccessToken = response.body.access_token;
   }
 
   public async auth(email: string, password: string): Promise<TokenPayload> {
@@ -96,7 +81,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
         }],
         createdTimestamp: user.createdAt.getTime(),
       },
-      { headers: { Authorization: `Bearer ${this.clientAccessToken}` } },
+      this.getDefaultHttpClientOptions(),
     );
   }
 
@@ -119,14 +104,15 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
           temporary: false,
         }],
       },
-      { headers: { Authorization: `Bearer ${this.clientAccessToken}` } },
+      this.getDefaultHttpClientOptions(),
     );
   }
 
   public async getUser(userId: string): Promise<User> {
-    const { body } = await this.httpClient.get<UserRepresentation>(`${this.baseUrl}/admin/realms/${this.realm}/users/${userId}`, {
-      headers: { Authorization: `Bearer ${this.clientAccessToken}` },
-    });
+    const { body } = await this.httpClient.get<UserRepresentation>(
+      `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}`,
+      this.getDefaultHttpClientOptions(),
+    );
 
     return new User({
       id: body.id,
@@ -143,10 +129,10 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
       max: pagination.limit.toFixed(0),
     });
 
-    const { body } = await this.httpClient.get<UserRepresentation[]>(`${this.baseUrl}/admin/realms/${this.realm}/users`, {
-      query,
-      headers: { Authorization: `Bearer ${this.clientAccessToken}` },
-    });
+    const { body } = await this.httpClient.get<UserRepresentation[]>(
+      `${this.baseUrl}/admin/realms/${this.realm}/users`,
+      this.getDefaultHttpClientOptions({ query }),
+    );
 
     return body.map((userRep) => new User({
       id: userRep.id,
@@ -158,17 +144,11 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async addRole(userId: string, role: string): Promise<void> {
-    const { body } = await this.httpClient.get(`${this.baseUrl}/admin/realms/${this.realm}/roles/${role}`, {
-      headers: { Authorization: `Bearer ${this.clientAccessToken}` },
-    });
-
-    await this.httpClient.post(`${this.baseUrl}/admin/realms/${this.realm}/users/${userId}/role-mappings/realm`, [
-      { id: body.id, name: body.name },
-    ], { headers: { Authorization: `Bearer ${this.clientAccessToken}` } });
-  }
-
-  public async addRoles(userId: string, roles: string[]): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.httpClient.post(
+      `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}/role-mappings/realm`,
+      [{ name: role, containerId: this.realm }],
+      this.getDefaultHttpClientOptions(),
+    );
   }
 
   public async removeRole(userId: string, role: string): Promise<void> {
@@ -177,5 +157,29 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
 
   public async removeRoles(userId: string, role: string): Promise<void> {
     throw new Error('Method not implemented.');
+  }
+
+  private async authClient() {
+    const response = await this.httpClient.post(
+      `${this.baseUrl}/realms/${this.realm}/protocol/openid-connect/token`,
+      new URLSearchParams({
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
+        grant_type: 'client_credentials',
+        scope: 'openid',
+      }),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+
+    this.clientAccessToken = response.body.access_token;
+  }
+
+  private getDefaultHttpClientOptions(options?: HttpOptions): HttpOptions {
+    const defaultOptions: HttpOptions = {
+      headers: { Authorization: `Bearer ${this.clientAccessToken}` },
+      ...(options || {}),
+    };
+
+    return defaultOptions;
   }
 }
