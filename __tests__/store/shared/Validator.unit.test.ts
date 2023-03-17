@@ -195,5 +195,19 @@ describe("Validator's unit tests", () => {
     });
   });
 
-  test.todo('Dates');
+  describe('Dates', () => {
+    it('throws a ValidationError if field is not a date', () => {
+      expect.assertions(3);
+      try {
+        Validator
+          .setData({ test: faker.datatype.string() })
+          .setRule('test', ['date'])
+          .validate();
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(ValidationError);
+        expect(e.errors[0].field).toEqual('test');
+        expect(e.errors[0].messages[0]).toEqual('The field test must be a validate date.');
+      }
+    });
+  });
 });

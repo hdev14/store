@@ -47,7 +47,7 @@ const RULE_FUNCTIONS = {
   integer: (value: any) => typeof value === 'number' && !Number.isInteger(value),
   float: (value: any) => typeof value === 'number' && Number.isInteger(value),
   uuid: (value: any) => typeof value === 'string' && !UUID_REGEX.test(value),
-  date: (value: any) => String(new Date(value)) !== 'Invalid Date',
+  date: (value: any) => String(new Date(value)) === 'Invalid Date',
   boolean: (value: any) => typeof value !== 'boolean',
 };
 
