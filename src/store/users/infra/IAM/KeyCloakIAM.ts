@@ -159,10 +159,6 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     );
   }
 
-  public async removeRoles(userId: string, role: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-
   private async authClient() {
     const response = await this.httpClient.post(
       `${this.baseUrl}/realms/${this.realm}/protocol/openid-connect/token`,
