@@ -5,7 +5,7 @@ interface IMediator {
   /** @throws {MediatorError} */
   register(eventName: string, handler: IHandler): void;
 
-  /** @throws {RepositoryError} */
+  /** @throws {MediatorError} */
   send<R = any>(event: Event): Promise<void | R>;
 }
 
