@@ -35,6 +35,7 @@ export default class User extends Entity {
     Validator.setData(this)
       .setRule('name', ['required', 'string'])
       .setRule('email', ['required', 'string', 'email'])
+      .setRule('document', () => this.document.isValid())
       .setRule('createdAt', ['required', 'date'])
       .setRule('password', ['string'])
       .validate();
