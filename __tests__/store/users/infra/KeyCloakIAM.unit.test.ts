@@ -147,7 +147,7 @@ describe("KeyCloakIAM's unit tests", () => {
         const user = new User({
           id: faker.datatype.uuid(),
           name: `${firstName} ${lastName}`,
-          document: '123.456.789-10',
+          document: '992.427.420-23',
           email: faker.internet.email(),
           createdAt: new Date(),
           password: faker.random.alphaNumeric(10),
@@ -198,7 +198,7 @@ describe("KeyCloakIAM's unit tests", () => {
       const user = new User({
         id: faker.datatype.uuid(),
         name: `${firstName} ${lastName}`,
-        document: '123.456.789-10',
+        document: '992.427.420-23',
         email: faker.internet.email(),
         createdAt: new Date(),
         password: faker.random.alphaNumeric(10),
@@ -252,7 +252,7 @@ describe("KeyCloakIAM's unit tests", () => {
           lastName: faker.name.lastName(),
           email: faker.internet.email(),
           attributes: {
-            document: '123.456.789-10',
+            document: '992.427.420-23',
           },
           credentials: [{
             type: 'password',
@@ -282,7 +282,7 @@ describe("KeyCloakIAM's unit tests", () => {
         email: faker.internet.email(),
         createdTimestamp: new Date().getTime(),
         attributes: {
-          document: '123.456.789-10',
+          document: '992.427.420-23',
         },
         credentials: [{
           type: 'password',
@@ -302,7 +302,7 @@ describe("KeyCloakIAM's unit tests", () => {
       expect(user.id).toEqual(fakeBody.id);
       expect(user.name).toEqual(`${fakeBody.firstName} ${fakeBody.lastName}`);
       expect(user.email).toEqual(fakeBody.email);
-      expect(user.document.value).toEqual(fakeBody.attributes.document);
+      expect(user.document.value).toEqual('99242742023');
       expect(user.createdAt).toEqual(new Date(fakeBody.createdTimestamp));
     });
   });
@@ -331,7 +331,7 @@ describe("KeyCloakIAM's unit tests", () => {
           lastName: faker.name.lastName(),
           email: faker.internet.email(),
           attributes: {
-            document: '123.456.789-10',
+            document: '992.427.420-23',
           },
           credentials: [{
             type: 'password',
@@ -360,7 +360,7 @@ describe("KeyCloakIAM's unit tests", () => {
           email: faker.internet.email(),
           createdTimestamp: new Date().getTime(),
           attributes: {
-            document: '123.456.789-10',
+            document: '992.427.420-23',
           },
           credentials: [{
             type: 'password',
@@ -375,7 +375,7 @@ describe("KeyCloakIAM's unit tests", () => {
           email: faker.internet.email(),
           createdTimestamp: new Date().getTime(),
           attributes: {
-            document: '123.456.789-11',
+            document: '452.334.350-04',
           },
           credentials: [{
             type: 'password',
@@ -397,13 +397,13 @@ describe("KeyCloakIAM's unit tests", () => {
       expect(users[0].id).toEqual(fakeBody[0].id);
       expect(users[0].name).toEqual(`${fakeBody[0].firstName} ${fakeBody[0].lastName}`);
       expect(users[0].email).toEqual(fakeBody[0].email);
-      expect(users[0].document.value).toEqual(fakeBody[0].attributes.document);
+      expect(users[0].document.value).toEqual('99242742023');
       expect(users[0].createdAt).toEqual(new Date(fakeBody[0].createdTimestamp));
 
       expect(users[1].id).toEqual(fakeBody[1].id);
       expect(users[1].name).toEqual(`${fakeBody[1].firstName} ${fakeBody[1].lastName}`);
       expect(users[1].email).toEqual(fakeBody[1].email);
-      expect(users[1].document.value).toEqual(fakeBody[1].attributes.document);
+      expect(users[1].document.value).toEqual('45233435004');
       expect(users[1].createdAt).toEqual(new Date(fakeBody[1].createdTimestamp));
     });
 
@@ -418,7 +418,7 @@ describe("KeyCloakIAM's unit tests", () => {
           lastName: faker.name.lastName(),
           email: faker.internet.email(),
           attributes: {
-            document: '123.456.789-10',
+            document: '992.427.420-23',
           },
           credentials: [{
             type: 'password',
