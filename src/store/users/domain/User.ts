@@ -1,4 +1,5 @@
 import Entity from '@shared/abstractions/Entity';
+import Validator from '@shared/utils/Validator';
 import CPF from './CPF';
 
 type UserParams = {
@@ -31,6 +32,11 @@ export default class User extends Entity {
   }
 
   public validate(): boolean | void {
-    throw new Error('Method not implemented.');
+    Validator.setData(this)
+      .setRule('name', ['required', 'string'])
+      .setRule('email', ['required', 'string', 'email'])
+      .setRule('createdAt', ['required', 'date'])
+      .setRule('password', ['string'])
+      .validate();
   }
 }
