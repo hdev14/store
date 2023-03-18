@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import ValidationError, { GenericError } from '../errors/ValidationError';
 
-const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
+const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const RULE_FUNCTIONS = {
@@ -76,10 +76,12 @@ const RULE_MESSAGES = {
   boolean: (field: string) => `The field ${field} must be a boolean.`,
 };
 
+type FunctionValidator = (value: any) => boolean;
+
 export default class Validator {
   private data: Record<string, unknown>;
 
-  private rules: Map<string, string[]> = new Map<string, string[]>();
+  private rules: Map<string, string[] | FunctionValidator> = new Map<string, string[] | FunctionValidator>();
 
   private errors: GenericError[] = [];
 
@@ -91,30 +93,36 @@ export default class Validator {
     return new Validator(data);
   }
 
-  public setRule(field: string, rules: string[]) {
-    this.rules.set(field, rules);
+  public setRule(field: string, criteria: string[] | FunctionValidator) {
+    this.rules.set(field, criteria);
     return this;
   }
 
   public validate(doNotThrows = false) {
-    this.rules.forEach((fieldRules, fieldName) => {
+    this.rules.forEach((criteria, fieldName) => {
       const field = this.data[fieldName];
       const messages: string[] = [];
 
-      fieldRules.forEach((fr) => {
-        const [name, value] = fr.split(':');
-        const params = [field, value];
-
-        // @ts-ignore
-        const isNotValid = RULE_FUNCTIONS[name](...params);
-
-        if (isNotValid) {
-          // @ts-ignore
-          const message = RULE_MESSAGES[name](fieldName, value, typeof field === 'string');
-
-          messages.push(message);
+      if (typeof criteria === 'function') {
+        if (!criteria(field)) {
+          messages.push(`The field ${fieldName} is not valid.`);
         }
-      });
+      } else {
+        criteria.forEach((fr) => {
+          const [name, value] = fr.split(':');
+          const params = [field, value];
+
+          // @ts-ignore
+          const isNotValid = RULE_FUNCTIONS[name](...params);
+
+          if (isNotValid) {
+            // @ts-ignore
+            const message = RULE_MESSAGES[name](fieldName, value, typeof field === 'string');
+
+            messages.push(message);
+          }
+        });
+      }
 
       if (messages.length > 0) {
         this.addError({ field: fieldName, messages });

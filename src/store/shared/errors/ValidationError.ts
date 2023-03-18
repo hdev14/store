@@ -7,7 +7,7 @@ export default class ValidationError extends Error {
   public errors: GenericError[] = [];
 
   constructor(errors: GenericError[]) {
-    super('ValidationEntityError');
+    super('ValidationError');
     this.errors = errors;
     this.name = this.constructor.name;
 

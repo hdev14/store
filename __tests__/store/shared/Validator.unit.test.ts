@@ -210,4 +210,45 @@ describe("Validator's unit tests", () => {
       }
     });
   });
+
+  describe('Custom', () => {
+    it('calls the custom function validator', () => {
+      const customValidationFunction = jest.fn().mockReturnValue(true);
+
+      const test = faker.datatype.string();
+
+      Validator
+        .setData({ test })
+        .setRule('test', customValidationFunction)
+        .validate();
+
+      expect(customValidationFunction).toHaveBeenCalledWith(test);
+    });
+
+    it('throws a ValidationError if custom function validator returns FALSE', () => {
+      expect.assertions(3);
+
+      try {
+        Validator
+          .setData({ test: faker.datatype.string() })
+          .setRule('test', () => false)
+          .validate();
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(ValidationError);
+        expect(e.errors[0].field).toEqual('test');
+        expect(e.errors[0].messages[0]).toEqual('The field test is not valid.');
+      }
+    });
+
+    it("doesn't throws a ValidationError if custom function validator returns TRUE", () => {
+      expect.assertions(1);
+
+      expect(() => {
+        Validator
+          .setData({ test: faker.datatype.string() })
+          .setRule('test', () => true)
+          .validate();
+      }).not.toThrowError(ValidationError);
+    });
+  });
 });
