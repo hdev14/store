@@ -11,10 +11,8 @@ describe("CPF's unit tests", () => {
   it('validates the value', () => {
     const cpf = new CPF('99242742223');
 
-    try {
-      cpf.isValid();
-    } catch (e) {
-      expect(e).toBeInstanceOf(ValidationError);
-    }
+    const result = cpf.isValid();
+
+    expect(result).toBeFalsy();
   });
 });

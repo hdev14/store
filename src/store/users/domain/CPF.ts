@@ -16,13 +16,10 @@ export default class CPF implements IValueObject {
   }
 
   public isValid() {
-    Validator
-      .setData({ document: this.value })
-      .setRule('value', (value) => this.checkFirstNineNumbers(value) && this.checkFirstTenNumbers(value))
-      .validate();
+    return this.checkFirstNineNumbers() && this.checkFirstTenNumbers();
   }
 
-  private checkFirstNineNumbers(value: string) {
+  private checkFirstNineNumbers() {
     const firstNineNumbers = this.value.substring(0, this.value.length - 2).split('');
 
     const firstSum = firstNineNumbers.reduce((acc, number, index) => {
@@ -46,7 +43,7 @@ export default class CPF implements IValueObject {
     return true;
   }
 
-  private checkFirstTenNumbers(value: string) {
+  private checkFirstTenNumbers() {
     const firstTenNumbers = this.value.substring(0, this.value.length - 1).split('');
 
     const secondSum = firstTenNumbers.reduce((acc, number, index) => {
