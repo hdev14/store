@@ -12,7 +12,7 @@ export default class CPF implements IValueObject {
   }
 
   public format() {
-    return this.value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3.$4');
+    return this.value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   }
 
   public isValid() {
