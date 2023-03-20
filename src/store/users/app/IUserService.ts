@@ -4,6 +4,7 @@ export type CreateUserData = {
   name: string;
   email: string;
   password: string;
+  document: string;
 };
 
 export type UpdateUserData = Partial<CreateUserData>;
@@ -16,8 +17,6 @@ interface IUserService {
   getUser(userId: string): Promise<User>;
 
   getUsers(): Promise<User[]>;
-
-  deleteUser(userId: string): Promise<void>;
 }
 
 export default IUserService;

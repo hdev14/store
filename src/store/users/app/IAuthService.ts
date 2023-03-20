@@ -6,9 +6,9 @@ export type AuthPayload = {
 interface IAuthService {
   auth(email: string, password: string): Promise<AuthPayload>;
 
-  addPermissions(userId: string, permissions: string[]): Promise<void>;
+  addPermission(userId: string, permission: string): Promise<void>;
 
-  removePermissions(userId: string, permissions: string[]): Promise<void>;
+  removePermission(userId: string, permission: string): Promise<void>;
 }
 
 export default IAuthService;
