@@ -1,5 +1,4 @@
 import IValueObject from '@shared/abstractions/IValueObject';
-import Validator from '@shared/utils/Validator';
 
 export default class CPF implements IValueObject {
   public readonly value: string;
@@ -22,11 +21,13 @@ export default class CPF implements IValueObject {
   private checkFirstNineNumbers() {
     const firstNineNumbers = this.value.substring(0, this.value.length - 2).split('');
 
-    const firstSum = firstNineNumbers.reduce((acc, number, index) => {
-      const result = Number(number) * (10 - index);
+    let firstSum = 0;
 
-      return acc + result;
-    }, 0);
+    for (let index = 0, len = firstNineNumbers.length; index < len; index += 1) {
+      const number = firstNineNumbers[index];
+      const result = Number(number) * (10 - index);
+      firstSum += result;
+    }
 
     let restOfFirstSum = (firstSum * 10) % 11;
 
@@ -46,11 +47,13 @@ export default class CPF implements IValueObject {
   private checkFirstTenNumbers() {
     const firstTenNumbers = this.value.substring(0, this.value.length - 1).split('');
 
-    const secondSum = firstTenNumbers.reduce((acc, number, index) => {
-      const result = Number(number) * (11 - index);
+    let secondSum = 0;
 
-      return acc + result;
-    }, 0);
+    for (let index = 0, len = firstTenNumbers.length; index < len; index += 1) {
+      const number = firstTenNumbers[index];
+      const result = Number(number) * (10 - index);
+      secondSum += result;
+    }
 
     let restOfSecondSum = (secondSum * 10) % 11;
 
