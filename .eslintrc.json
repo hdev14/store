@@ -59,6 +59,7 @@
         "ignoreRegExpLiterals": true,
         "ignoreStrings": true
       }
-    ]
+    ],
+    "no-restricted-syntax": "off"
   }
 }

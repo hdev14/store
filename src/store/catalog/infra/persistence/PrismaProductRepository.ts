@@ -19,7 +19,13 @@ export default class PrismaProductRepository implements IProductRepository {
         include: { category: true },
       });
 
-      return products.map(this.mapProduct.bind(this));
+      const results: Product[] = [];
+
+      for (const product of products) {
+        results.push(this.mapProduct(product));
+      }
+
+      return results;
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -53,7 +59,13 @@ export default class PrismaProductRepository implements IProductRepository {
         include: { category: true },
       });
 
-      return products.map(this.mapProduct.bind(this));
+      const results: Product[] = [];
+
+      for (const product of products) {
+        results.push(this.mapProduct(product));
+      }
+
+      return results;
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,
@@ -65,7 +77,13 @@ export default class PrismaProductRepository implements IProductRepository {
     try {
       const categories = await this.connection.category.findMany();
 
-      return categories.map(this.mapCategory.bind(this));
+      const results: Category[] = [];
+
+      for (const category of categories) {
+        results.push(this.mapCategory(category));
+      }
+
+      return results;
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,

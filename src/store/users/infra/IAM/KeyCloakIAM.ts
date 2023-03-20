@@ -134,13 +134,19 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
       this.getDefaultHttpClientOptions({ query }),
     );
 
-    return body.map((userRep) => new User({
-      id: userRep.id,
-      name: `${userRep.firstName} ${userRep.lastName}`,
-      email: userRep.email,
-      document: userRep.attributes.document,
-      createdAt: new Date(userRep.createdTimestamp),
-    }));
+    const results: User[] = [];
+
+    for (const userRep of body) {
+      results.push(new User({
+        id: userRep.id,
+        name: `${userRep.firstName} ${userRep.lastName}`,
+        email: userRep.email,
+        document: userRep.attributes.document,
+        createdAt: new Date(userRep.createdTimestamp),
+      }));
+    }
+
+    return results;
   }
 
   public async addRole(userId: string, role: string): Promise<void> {

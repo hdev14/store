@@ -124,7 +124,7 @@ describe("Validator's unit tests", () => {
       expect.assertions(3);
       try {
         Validator
-          .setData({ test: faker.datatype.float() + 0.01 })
+          .setData({ test: 1.5 })
           .setRule('test', ['number', 'integer'])
           .validate();
       } catch (e: any) {

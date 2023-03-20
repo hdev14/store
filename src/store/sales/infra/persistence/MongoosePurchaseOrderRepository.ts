@@ -48,7 +48,13 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
           },
         });
 
-      return purchaseOrders.map(this.mapPurchaseOrder.bind(this));
+      const results: PurchaseOrder[] = [];
+
+      for (const purchaseOrder of purchaseOrders) {
+        results.push(this.mapPurchaseOrder(purchaseOrder));
+      }
+
+      return results;
     } catch (e: any) {
       throw new RepositoryError(this.constructor.name, e.message, {
         cause: e.stack,

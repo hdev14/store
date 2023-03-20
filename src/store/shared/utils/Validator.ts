@@ -81,7 +81,7 @@ type FunctionValidator = (value: any) => boolean;
 export default class Validator {
   private data: Record<string, unknown>;
 
-  private rules: Map<string, string[] | FunctionValidator> = new Map<string, string[] | FunctionValidator>();
+  private ruleMap: Map<string, string[] | FunctionValidator> = new Map<string, string[] | FunctionValidator>();
 
   private errors: GenericError[] = [];
 
@@ -93,27 +93,27 @@ export default class Validator {
     return new Validator(data);
   }
 
-  public setRule(field: string, criteria: string[] | FunctionValidator) {
-    this.rules.set(field, criteria);
+  public setRule(field: string, rule: string[] | FunctionValidator) {
+    this.ruleMap.set(field, rule);
     return this;
   }
 
   public validate(doNotThrows = false) {
-    const entries = this.rules.entries();
+    const entries = this.ruleMap.entries();
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const [fieldName, criteria] of entries) {
+    for (const [fieldName, rule] of entries) {
       const field = this.data[fieldName];
       const messages: string[] = [];
 
-      if (typeof criteria === 'function') {
-        if (!criteria(field)) {
+      if (typeof rule === 'function') {
+        if (!rule(field)) {
           messages.push(`The field ${fieldName} is not valid.`);
         }
       } else {
-        for (let i = 0, len = criteria.length; i < len; i += 1) {
-          const rule = criteria[i];
-          const [name, value] = rule.split(':');
+        for (let i = 0, len = rule.length; i < len; i += 1) {
+          const ruleString = rule[i];
+          const [name, value] = ruleString.split(':');
           const params = [field, value];
 
           // @ts-ignore

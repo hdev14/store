@@ -49,7 +49,13 @@ export class InMemoryProductRepository implements IProductRepository {
   public getProductsByCategory(categoryId: string): Promise<Product[]> {
     const inMemoryProducts = this._products.filter((p) => p.category === categoryId);
 
-    return Promise.resolve(inMemoryProducts.map(this.mapProduct.bind(this)));
+    const results: Product[] = [];
+
+    for (const product of inMemoryProducts) {
+      results.push(this.mapProduct(product));
+    }
+
+    return Promise.resolve(results);
   }
 
   public getCategoryById(categoryId: string): Promise<Category> {
@@ -59,7 +65,13 @@ export class InMemoryProductRepository implements IProductRepository {
   }
 
   public getAllCategories(): Promise<Category[]> {
-    return Promise.resolve(this._categories.map(this.mapCategory.bind(this)));
+    const results: Category[] = [];
+
+    for (const category of this._categories) {
+      results.push(this.mapCategory(category));
+    }
+
+    return Promise.resolve(results);
   }
 
   public async addProduct(product: Product): Promise<void> {
