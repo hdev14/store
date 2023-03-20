@@ -261,12 +261,12 @@ describe("PurchaseOrder's unit tests", () => {
         }),
       ];
 
-      purchaseOrderItems.forEach((item) => purchaseOrder.addItem(item));
-
-      const expectedTotalAmount = purchaseOrderItems.reduce(
-        (acc, item) => acc + (item.quantity * item.product.amount),
-        0,
-      );
+      let expectedTotalAmount = 0;
+      for (let i = 0, len = purchaseOrderItems.length; i < len; i += 1) {
+        const item = purchaseOrderItems[i];
+        purchaseOrder.addItem(item);
+        expectedTotalAmount += item.quantity * item.product.amount;
+      }
 
       const calculateTotalDiscountAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalDiscountAmount');
 

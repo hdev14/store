@@ -253,10 +253,8 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
 
     const po = new PurchaseOrder(params);
 
-    if (purchaseOrder.items) {
-      purchaseOrder.items.forEach((item) => {
-        po.addItem(this.mapPurchaseOrderItem(item as unknown as IPurchaseOrderItem));
-      });
+    for (let i = 0, len = purchaseOrder.items.length; i < len; i += 1) {
+      po.addItem(this.mapPurchaseOrderItem(purchaseOrder.items[i] as unknown as IPurchaseOrderItem));
     }
 
     return po;

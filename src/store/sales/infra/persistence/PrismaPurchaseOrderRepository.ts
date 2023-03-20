@@ -343,9 +343,9 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     const po = new PurchaseOrder(params);
 
     if (purchaseOrder.items) {
-      purchaseOrder.items.forEach((item) => {
-        po.addItem(this.mapPurchaseOrderItem(item));
-      });
+      for (let i = 0, len = purchaseOrder.items.length; i < len; i += 1) {
+        po.addItem(this.mapPurchaseOrderItem(purchaseOrder.items[i]));
+      }
     }
 
     return po;

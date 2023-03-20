@@ -99,7 +99,10 @@ export default class Validator {
   }
 
   public validate(doNotThrows = false) {
-    this.rules.forEach((criteria, fieldName) => {
+    const entries = this.rules.entries();
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [fieldName, criteria] of entries) {
       const field = this.data[fieldName];
       const messages: string[] = [];
 
@@ -108,8 +111,9 @@ export default class Validator {
           messages.push(`The field ${fieldName} is not valid.`);
         }
       } else {
-        criteria.forEach((fr) => {
-          const [name, value] = fr.split(':');
+        for (let i = 0, len = criteria.length; i < len; i += 1) {
+          const rule = criteria[i];
+          const [name, value] = rule.split(':');
           const params = [field, value];
 
           // @ts-ignore
@@ -121,13 +125,13 @@ export default class Validator {
 
             messages.push(message);
           }
-        });
+        }
       }
 
       if (messages.length > 0) {
         this.addError({ field: fieldName, messages });
       }
-    });
+    }
 
     const hasErrors = this.errors.length > 0;
 

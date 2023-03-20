@@ -103,14 +103,16 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       expect(purchaseOrder!.voucher!.expiresAt).toEqual(fakePurchaseOrder.voucher.expiresAt);
       expect(purchaseOrder!.voucher!.usedAt).toEqual(null);
 
-      purchaseOrder!.items.forEach((item, index) => {
-        expect(item.id).toEqual(fakePurchaseOrder.items[index]._id);
-        expect(item.product.id).toEqual(fakePurchaseOrder.items[index].product._id);
-        expect(item.product.name).toEqual(fakePurchaseOrder.items[index].product.name);
-        expect(item.product.amount).toEqual(fakePurchaseOrder.items[index].product.amount);
-        expect(item.quantity).toEqual(fakePurchaseOrder.items[index].quantity);
-        expect(item.purchaseOrderId).toEqual(fakePurchaseOrder.items[index].purchaseOrder);
-      });
+      for (let i = 0, len = purchaseOrder!.items.length; i < len; i += 1) {
+        const item = purchaseOrder!.items[i];
+
+        expect(item.id).toEqual(fakePurchaseOrder.items[i]._id);
+        expect(item.product.id).toEqual(fakePurchaseOrder.items[i].product._id);
+        expect(item.product.name).toEqual(fakePurchaseOrder.items[i].product.name);
+        expect(item.product.amount).toEqual(fakePurchaseOrder.items[i].product.amount);
+        expect(item.quantity).toEqual(fakePurchaseOrder.items[i].quantity);
+        expect(item.purchaseOrderId).toEqual(fakePurchaseOrder.items[i].purchaseOrder);
+      }
 
       expect(PurchaseOrderModelMock.findOne).toHaveBeenCalledWith({ _id: purchaseOrderId });
       expect(populateVoucherMock).toHaveBeenCalledWith({ path: 'voucher', model: VoucherModel });
@@ -212,36 +214,40 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
 
       const purchaseOrders = await repository.getPurchaseOrdersByCustomerId(customerId);
 
-      purchaseOrders.forEach((purchaseOrder, index) => {
-        expect(purchaseOrder!.id).toEqual(fakePurchaseOrders[index]._id);
-        expect(purchaseOrder!.customerId).toEqual(fakePurchaseOrders[index].customer);
-        expect(purchaseOrder!.code).toEqual(fakePurchaseOrders[index].code);
-        expect(purchaseOrder!.createdAt).toEqual(fakePurchaseOrders[index].createdAt);
-        expect(purchaseOrder!.discountAmount).toEqual(fakePurchaseOrders[index].discountAmount);
-        expect(purchaseOrder!.voucher!.id).toEqual(fakePurchaseOrders[index].voucher._id);
-        expect(purchaseOrder!.voucher!.active).toEqual(fakePurchaseOrders[index].voucher.active);
-        expect(purchaseOrder!.voucher!.code).toEqual(fakePurchaseOrders[index].voucher.code);
-        expect(purchaseOrder!.voucher!.type).toEqual(fakePurchaseOrders[index].voucher.type);
-        expect(purchaseOrder!.voucher!.percentageAmount)
-          .toEqual(fakePurchaseOrders[index].voucher.percentageAmount);
+      for (let i = 0, poLength = purchaseOrders.length; i < poLength; i += 1) {
+        const purchaseOrder = purchaseOrders[i];
+
+        expect(purchaseOrder.id).toEqual(fakePurchaseOrders[i]._id);
+        expect(purchaseOrder.customerId).toEqual(fakePurchaseOrders[i].customer);
+        expect(purchaseOrder.code).toEqual(fakePurchaseOrders[i].code);
+        expect(purchaseOrder.createdAt).toEqual(fakePurchaseOrders[i].createdAt);
+        expect(purchaseOrder.discountAmount).toEqual(fakePurchaseOrders[i].discountAmount);
+        expect(purchaseOrder.voucher!.id).toEqual(fakePurchaseOrders[i].voucher._id);
+        expect(purchaseOrder.voucher!.active).toEqual(fakePurchaseOrders[i].voucher.active);
+        expect(purchaseOrder.voucher!.code).toEqual(fakePurchaseOrders[i].voucher.code);
+        expect(purchaseOrder.voucher!.type).toEqual(fakePurchaseOrders[i].voucher.type);
+        expect(purchaseOrder.voucher!.percentageAmount)
+          .toEqual(fakePurchaseOrders[i].voucher.percentageAmount);
         expect(purchaseOrder!.voucher!.rawDiscountAmount)
-          .toEqual(fakePurchaseOrders[index].voucher.rawDiscountAmount);
+          .toEqual(fakePurchaseOrders[i].voucher.rawDiscountAmount);
         expect(purchaseOrder!.voucher!.createdAt)
-          .toEqual(fakePurchaseOrders[index].voucher.createdAt);
+          .toEqual(fakePurchaseOrders[i].voucher.createdAt);
         expect(purchaseOrder!.voucher!.expiresAt)
-          .toEqual(fakePurchaseOrders[index].voucher.expiresAt);
+          .toEqual(fakePurchaseOrders[i].voucher.expiresAt);
         expect(purchaseOrder!.voucher!.usedAt).toEqual(null);
 
-        purchaseOrder!.items.forEach((item, idx) => {
-          expect(item.id).toEqual(fakePurchaseOrders[index].items[idx]._id);
-          expect(item.product.id).toEqual(fakePurchaseOrders[index].items[idx].product._id);
-          expect(item.product.name).toEqual(fakePurchaseOrders[index].items[idx].product.name);
-          expect(item.product.amount).toEqual(fakePurchaseOrders[index].items[idx].product.amount);
-          expect(item.quantity).toEqual(fakePurchaseOrders[index].items[idx].quantity);
+        for (let h = 0, iLength = purchaseOrder.items.length; h < iLength; h += 1) {
+          const item = purchaseOrder.items[h];
+
+          expect(item.id).toEqual(fakePurchaseOrders[i].items[h]._id);
+          expect(item.product.id).toEqual(fakePurchaseOrders[i].items[h].product._id);
+          expect(item.product.name).toEqual(fakePurchaseOrders[i].items[h].product.name);
+          expect(item.product.amount).toEqual(fakePurchaseOrders[i].items[h].product.amount);
+          expect(item.quantity).toEqual(fakePurchaseOrders[i].items[h].quantity);
           expect(item.purchaseOrderId)
-            .toEqual(fakePurchaseOrders[index].items[idx].purchaseOrder);
-        });
-      });
+            .toEqual(fakePurchaseOrders[i].items[h].purchaseOrder);
+        }
+      }
 
       expect(PurchaseOrderModelMock.find).toHaveBeenCalledTimes(1);
       expect(PurchaseOrderModelMock.find).toHaveBeenCalledWith(
@@ -329,15 +335,17 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       expect(purchaseOrder!.createdAt).toEqual(fakeDraftPurchaseOrder.createdAt);
       expect(purchaseOrder!.discountAmount).toEqual(fakeDraftPurchaseOrder.discountAmount);
 
-      purchaseOrder!.items.forEach((item, idx) => {
-        expect(item.id).toEqual(fakeDraftPurchaseOrder.items[idx]._id);
-        expect(item.product.id).toEqual(fakeDraftPurchaseOrder.items[idx].product._id);
-        expect(item.product.name).toEqual(fakeDraftPurchaseOrder.items[idx].product.name);
-        expect(item.product.amount).toEqual(fakeDraftPurchaseOrder.items[idx].product.amount);
-        expect(item.quantity).toEqual(fakeDraftPurchaseOrder.items[idx].quantity);
+      for (let i = 0, poLength = purchaseOrder!.items.length; i < poLength; i += 1) {
+        const item = purchaseOrder!.items[i];
+
+        expect(item.id).toEqual(fakeDraftPurchaseOrder.items[i]._id);
+        expect(item.product.id).toEqual(fakeDraftPurchaseOrder.items[i].product._id);
+        expect(item.product.name).toEqual(fakeDraftPurchaseOrder.items[i].product.name);
+        expect(item.product.amount).toEqual(fakeDraftPurchaseOrder.items[i].product.amount);
+        expect(item.quantity).toEqual(fakeDraftPurchaseOrder.items[i].quantity);
         expect(item.purchaseOrderId)
-          .toEqual(fakeDraftPurchaseOrder.items[idx].purchaseOrder);
-      });
+          .toEqual(fakeDraftPurchaseOrder.items[i].purchaseOrder);
+      }
 
       expect(PurchaseOrderModelMock.findOne).toHaveBeenCalledWith({
         customer: customerId, status: PurchaseOrderStatus.DRAFT,

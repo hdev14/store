@@ -12,9 +12,10 @@ export default class AxiosHttpClient implements IHttpClient {
   public setDefaultHeaders(headers: Record<string, string>): void {
     const headerKeys = Object.keys(headers);
 
-    headerKeys.forEach((headerKey) => {
+    for (let i = 0, len = headerKeys.length; i < len; i += 1) {
+      const headerKey = headerKeys[i];
       this.axiosInstance.defaults.headers.common[headerKey] = headers[headerKey];
-    });
+    }
   }
 
   public async get<R = any>(url: string, options?: HttpOptions): Promise<HttpResponse<R>> {
