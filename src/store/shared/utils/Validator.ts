@@ -101,7 +101,6 @@ export default class Validator {
   public validate(doNotThrows = false) {
     const entries = this.ruleMap.entries();
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const [fieldName, rule] of entries) {
       const field = this.data[fieldName];
       const messages: string[] = [];
@@ -111,21 +110,7 @@ export default class Validator {
           messages.push(`The field ${fieldName} is not valid.`);
         }
       } else {
-        for (let i = 0, len = rule.length; i < len; i += 1) {
-          const ruleString = rule[i];
-          const [name, value] = ruleString.split(':');
-          const params = [field, value];
-
-          // @ts-ignore
-          const isNotValid = RULE_FUNCTIONS[name](...params);
-
-          if (isNotValid) {
-            // @ts-ignore
-            const message = RULE_MESSAGES[name](fieldName, value, typeof field === 'string');
-
-            messages.push(message);
-          }
-        }
+        messages.push(...this.validateByArray(rule, field, fieldName));
       }
 
       if (messages.length > 0) {
@@ -140,6 +125,27 @@ export default class Validator {
     }
 
     return this.errors;
+  }
+
+  private validateByArray(rule: string[], field: unknown, fieldName: string) {
+    const messages: string[] = [];
+
+    for (let i = 0, len = rule.length; i < len; i += 1) {
+      const ruleString = rule[i];
+      const [name, value] = ruleString.split(':');
+
+      // @ts-ignore
+      const isNotValid = RULE_FUNCTIONS[name](field, value);
+
+      if (isNotValid) {
+        // @ts-ignore
+        const message = RULE_MESSAGES[name](fieldName, value, typeof field === 'string');
+
+        messages.push(message);
+      }
+    }
+
+    return messages;
   }
 
   private addError(error: GenericError) {
