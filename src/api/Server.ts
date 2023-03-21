@@ -21,6 +21,7 @@ export class Server {
   private setApplicationRouters() {
     this._application.use('/catalog', catalog);
     this._application.use('/sales', sales);
+    this._application.use('/users', sales);
   }
 
   private setGlobalTopMiddlewares() {

@@ -27,6 +27,7 @@ import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/handlers/U
 import BullmqEventQueue from '@shared/BullmqEventQueue';
 import SalesController from './controllers/SalesController';
 import CatalogController from './controllers/CatalogController';
+import UserController from './controllers/UserController';
 
 // Utils
 const mediator = new Mediator();
@@ -71,10 +72,12 @@ mediator.register(GetVoucherQuery.name, getVoucherQueryHandler);
 // Controllers
 const catalogController = new CatalogController(productService, categoryService);
 const salesController = new SalesController(mediator);
+const userController = new UserController();
 
 export default {
   controllers: {
     salesController,
     catalogController,
+    userController,
   },
 };
