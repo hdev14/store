@@ -1,5 +1,4 @@
 import Category from '@catalog/domain/Category';
-import Dimensions from '@catalog/domain/Dimensions';
 import Product from '@catalog/domain/Product';
 import { InMemoryProductRepository } from '@catalog/infra/persistence/InMemoryProductRepository';
 
@@ -19,14 +18,14 @@ describe('InMemoryProductRepository\'s Unit Tests', () => {
       name: 'test',
       description: 'test description',
       amount: Math.random() * 100,
-      dimensions: new Dimensions({ height: 1, width: 1, depth: 1 }),
+      dimensions: { height: 1, width: 1, depth: 1 },
       image: 'http://test.com/jpg',
       stockQuantity: 10,
-      category: new Category({
+      category: {
         id: fakeCategories[0]._id,
         name: fakeCategories[0].name,
         code: fakeCategories[0].code,
-      }),
+      },
       createdAt: new Date(),
     });
 
@@ -72,18 +71,18 @@ describe('InMemoryProductRepository\'s Unit Tests', () => {
       name: fakeProducts[0].name,
       description: fakeProducts[0].description,
       amount: fakeProducts[0].amount,
-      dimensions: new Dimensions({
+      dimensions: {
         height: fakeProducts[0].height,
         width: fakeProducts[0].width,
         depth: fakeProducts[0].depth,
-      }),
+      },
       image: fakeProducts[0].image,
       stockQuantity: fakeProducts[0].stockQuantity,
-      category: new Category({
+      category: {
         id: fakeCategories[0]._id,
         name: fakeCategories[0].name,
         code: fakeCategories[0].code,
-      }),
+      },
       createdAt,
     });
 

@@ -1,10 +1,10 @@
 import Entity from '@shared/abstractions/Entity';
 import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
 import Validator from '@shared/utils/Validator';
-import Category from './Category';
-import Dimensions from './Dimensions';
+import Category, { CategoryProps } from './Category';
+import Dimensions, { DimensionsProps } from './Dimensions';
 
-export type ProductParams = {
+export type ProductProps = {
   id: string;
   name: string;
   description: string;
@@ -12,11 +12,11 @@ export type ProductParams = {
   image: string;
   stockQuantity: number;
   createdAt: Date;
-  dimensions: Dimensions;
-  category: Category;
+  dimensions: DimensionsProps;
+  category: CategoryProps;
 }
 
-export default class Product extends Entity implements IAggregateRoot {
+export default class Product extends Entity<ProductProps> implements IAggregateRoot {
   public readonly name: string;
 
   public description: string;
@@ -35,16 +35,16 @@ export default class Product extends Entity implements IAggregateRoot {
 
   public readonly dimensions: Dimensions;
 
-  constructor(params: ProductParams) {
-    super(params.id);
-    this.name = params.name;
-    this.description = params.description;
-    this.amount = params.amount;
-    this.image = params.image;
-    this.stockQuantity = params.stockQuantity;
-    this.createdAt = params.createdAt;
-    this.dimensions = params.dimensions;
-    this.category = params.category;
+  constructor(props: ProductProps) {
+    super(props.id);
+    this.name = props.name;
+    this.description = props.description;
+    this.amount = props.amount;
+    this.image = props.image;
+    this.stockQuantity = props.stockQuantity;
+    this.createdAt = props.createdAt;
+    this.dimensions = new Dimensions(props.dimensions);
+    this.category = new Category(props.category);
 
     this.validate();
   }

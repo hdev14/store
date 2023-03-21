@@ -1,12 +1,11 @@
 import Category from '@catalog/domain/Category';
-import Dimensions from '@catalog/domain/Dimensions';
 import Product from '@catalog/domain/Product';
 import ValidationError from '@shared/errors/ValidationError';
 
 describe("Product's Unit Tests", () => {
   it('doesn\'t throw a ValidationError if params are correct', () => {
-    const dimensions = new Dimensions({ height: 1, width: 1, depth: 1 });
-    const category = new Category({ id: 'testid', name: 'test', code: 1 });
+    const dimensions = { height: 1, width: 1, depth: 1 };
+    const category = { id: 'testid', name: 'test', code: 1 };
 
     expect(() => new Product({
       id: 'testid',
@@ -22,8 +21,8 @@ describe("Product's Unit Tests", () => {
   });
 
   it('throws a ValidationError if params are invalid', () => {
-    const dimensions = new Dimensions({ height: 1, width: 1, depth: 1 });
-    const category = new Category({ id: 'testid', name: 'test', code: 1 });
+    const dimensions = { height: 1, width: 1, depth: 1 };
+    const category = { id: 'testid', name: 'test', code: 1 };
 
     expect(() => new Product({
       id: 'testid',
@@ -80,8 +79,8 @@ describe("Product's Unit Tests", () => {
       name: 'test',
       description: 'test',
       amount: Math.random() * 100,
-      category: new Category({ id: 'testid', name: 'test', code: 1 }),
-      dimensions: new Dimensions({ height: 1, width: 1, depth: 1 }),
+      category: { id: 'testid', name: 'test', code: 1 },
+      dimensions: { height: 1, width: 1, depth: 1 },
       createdAt: new Date(),
       image: 'http://example.com/test',
       stockQuantity: 10,
@@ -98,8 +97,8 @@ describe("Product's Unit Tests", () => {
       name: 'test',
       description: 'test',
       amount: Math.random() * 100,
-      category: new Category({ id: 'testid', name: 'test', code: 1 }),
-      dimensions: new Dimensions({ height: 1, width: 1, depth: 1 }),
+      category: { id: 'testid', name: 'test', code: 1 },
+      dimensions: { height: 1, width: 1, depth: 1 },
       createdAt: new Date(),
       image: 'http://example.com/test',
       stockQuantity: 10,
@@ -116,8 +115,8 @@ describe("Product's Unit Tests", () => {
       name: 'test',
       description: 'test',
       amount: Math.random() * 100,
-      category: new Category({ id: 'categoryid1', name: 'test', code: 1 }),
-      dimensions: new Dimensions({ height: 1, width: 1, depth: 1 }),
+      category: { id: 'categoryid1', name: 'test', code: 1 },
+      dimensions: { height: 1, width: 1, depth: 1 },
       createdAt: new Date(),
       image: 'http://example.com/test',
       stockQuantity: 10,
@@ -134,8 +133,8 @@ describe("Product's Unit Tests", () => {
       name: 'test',
       description: 'test',
       amount: Math.random() * 100,
-      category: new Category({ id: 'testid', name: 'test', code: 1 }),
-      dimensions: new Dimensions({ height: 1, width: 1, depth: 1 }),
+      category: { id: 'testid', name: 'test', code: 1 },
+      dimensions: { height: 1, width: 1, depth: 1 },
       createdAt: new Date(),
       image: 'http://example.com/test',
       stockQuantity: 10,
@@ -152,8 +151,8 @@ describe("Product's Unit Tests", () => {
       name: 'test',
       description: 'test',
       amount: Math.random() * 100,
-      category: new Category({ id: 'testid', name: 'test', code: 1 }),
-      dimensions: new Dimensions({ height: 1, width: 1, depth: 1 }),
+      category: { id: 'testid', name: 'test', code: 1 },
+      dimensions: { height: 1, width: 1, depth: 1 },
       createdAt: new Date(),
       image: 'http://example.com/test',
       stockQuantity: 10,
@@ -170,8 +169,8 @@ describe("Product's Unit Tests", () => {
       name: 'test',
       description: 'test',
       amount: Math.random() * 100,
-      category: new Category({ id: 'testid', name: 'test', code: 1 }),
-      dimensions: new Dimensions({ height: 1, width: 1, depth: 1 }),
+      category: { id: 'testid', name: 'test', code: 1 },
+      dimensions: { height: 1, width: 1, depth: 1 },
       createdAt: new Date(),
       image: 'http://example.com/test',
       stockQuantity: 10,

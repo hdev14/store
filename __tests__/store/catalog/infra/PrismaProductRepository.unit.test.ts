@@ -27,18 +27,18 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         name: 'test',
         description: 'test',
         amount: 123,
-        dimensions: new Dimensions({
+        dimensions: {
           height: 1,
           width: 2,
           depth: 3,
-        }),
+        },
         image: 'https://example.com',
         stockQuantity: 10,
-        category: new Category({
+        category: {
           id: 'test',
           name: 'test',
           code: 1234,
-        }),
+        },
         createdAt: new Date(),
       });
 
@@ -94,18 +94,18 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         name: 'test',
         description: 'test',
         amount: 123,
-        dimensions: new Dimensions({
+        dimensions: {
           height: 1,
           width: 2,
           depth: 3,
-        }),
+        },
         image: 'https://example.com',
         stockQuantity: 10,
-        category: new Category({
+        category: {
           id: 'test',
           name: 'test',
           code: 1234,
-        }),
+        },
         createdAt: new Date(),
       });
 
@@ -131,18 +131,18 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         name: 'test',
         description: 'test',
         amount: 123,
-        dimensions: new Dimensions({
+        dimensions: {
           height: 1,
           width: 2,
           depth: 3,
-        }),
+        },
         image: 'https://example.com',
         stockQuantity: 10,
-        category: new Category({
+        category: {
           id: 'test',
           name: 'test',
           code: 1234,
-        }),
+        },
         createdAt: new Date(),
       });
 
@@ -198,18 +198,18 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         name: 'test',
         description: 'test',
         amount: 123,
-        dimensions: new Dimensions({
+        dimensions: {
           height: 1,
           width: 2,
           depth: 3,
-        }),
+        },
         image: 'https://example.com',
         stockQuantity: 10,
-        category: new Category({
+        category: {
           id: 'test',
           name: 'test',
           code: 1234,
-        }),
+        },
         createdAt: new Date(),
       });
 

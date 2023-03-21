@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import IProductRepository from '@catalog/domain/IProductRepository';
-import Product, { ProductParams } from '@catalog/domain/Product';
+import Product, { ProductProps } from '@catalog/domain/Product';
 import IStockService from '@catalog/domain/IStockService';
 import ProductNotFoundError from './ProductNotFoundError';
 import IProductService, { DefaultProductParams, UpdateProductParams } from './IProductService';
@@ -70,12 +70,12 @@ export default class ProductService implements IProductService {
       throw new ProductNotFoundError();
     }
 
-    const productParams = {
+    const props = {
       ...currentProduct,
       ...params,
-    } as ProductParams;
+    } as ProductProps;
 
-    const product = new Product(productParams);
+    const product = new Product(props);
 
     await this.repository.updateProduct(product);
 

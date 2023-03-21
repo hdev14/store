@@ -1,6 +1,6 @@
 import IValueObject from '@shared/abstractions/IValueObject';
 
-export type DimensionsParams = {
+export type DimensionsProps = {
   height: number;
   width: number;
   depth: number;
@@ -13,10 +13,10 @@ export default class Dimensions implements IValueObject {
 
   public readonly depth: number;
 
-  constructor(params: DimensionsParams) {
-    this.height = params.height;
-    this.width = params.width;
-    this.depth = params.depth;
+  constructor(props: DimensionsProps) {
+    this.height = props.height;
+    this.width = props.width;
+    this.depth = props.depth;
   }
 
   public toString() {

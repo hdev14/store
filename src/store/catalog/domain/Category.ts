@@ -1,21 +1,21 @@
 import Entity from '@shared/abstractions/Entity';
 import Validator from '@shared/utils/Validator';
 
-export type CategoryParams = {
+export type CategoryProps = {
   id: string;
   name: string;
   code: number;
 };
 
-export default class Category extends Entity {
+export default class Category extends Entity<CategoryProps> {
   public readonly name: string;
 
   public readonly code: number;
 
-  constructor(params: CategoryParams) {
-    super(params.id);
-    this.name = params.name;
-    this.code = params.code;
+  constructor(props: CategoryProps) {
+    super(props.id);
+    this.name = props.name;
+    this.code = props.code;
 
     this.validate();
   }
