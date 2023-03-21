@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-export default abstract class Entity {
+export default abstract class Entity<Props = Record<string, any>> {
   public readonly id: string;
 
   protected constructor(id?: string) {
@@ -14,9 +14,9 @@ export default abstract class Entity {
       || (this.id === (obj as Entity).id);
   }
 
-  public toObject() {
-    return Object.fromEntries(Object.entries(this)
-      .filter(([, value]) => typeof value !== 'function'));
+  public toObject(): Props {
+    const object = JSON.parse(JSON.stringify(this));
+    return object as Props;
   }
 
   public toString() {
