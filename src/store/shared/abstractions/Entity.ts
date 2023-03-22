@@ -1,5 +1,7 @@
 import crypto from 'crypto';
 
+const DATE_REGEX = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\w+/g;
+
 export default abstract class Entity<Props = Record<string, any>> {
   public readonly id: string;
 
@@ -15,7 +17,14 @@ export default abstract class Entity<Props = Record<string, any>> {
   }
 
   public toObject(): Props {
-    const object = JSON.parse(JSON.stringify(this));
+    const object = JSON.parse(JSON.stringify(this), (key, value) => {
+      if (DATE_REGEX.test(value)) {
+        console.info(key, value);
+        return new Date(value);
+      }
+
+      return value;
+    });
     return object as Props;
   }
 
