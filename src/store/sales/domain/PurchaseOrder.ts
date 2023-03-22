@@ -26,7 +26,7 @@ export type PurchaseOrderProps = {
   items: Array<PurchaseOrderItemProps>;
 }
 
-export default class PurchaseOrder extends Entity implements IAggregateRoot {
+export default class PurchaseOrder extends Entity<PurchaseOrderProps> implements IAggregateRoot {
   public readonly code: number;
 
   public readonly customerId: string;

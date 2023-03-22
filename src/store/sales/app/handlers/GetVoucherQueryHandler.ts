@@ -1,20 +1,19 @@
 import { IPurchaseOrderRepositoryQueries } from '@sales/domain/IPurchaseOrderRepository';
-import Voucher from '@sales/domain/Voucher';
+import { VoucherProps } from '@sales/domain/Voucher';
 import IHandler from '@shared/abstractions/IHandler';
 import VoucherNotFoundError from '../VoucherNotFoundError';
 import GetVoucherQuery from '../queries/GetVoucherQuery';
 
-// TODO: change return
-export default class GetVoucherQueryHandler implements IHandler<GetVoucherQuery, Voucher> {
+export default class GetVoucherQueryHandler implements IHandler<GetVoucherQuery, VoucherProps> {
   constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 
-  public async handle(event: GetVoucherQuery): Promise<Voucher> {
+  public async handle(event: GetVoucherQuery): Promise<VoucherProps> {
     const voucher = await this.repository.getVoucherByCode(event.voucherCode);
 
     if (!voucher) {
       throw new VoucherNotFoundError();
     }
 
-    return voucher;
+    return voucher.toObject();
   }
 }

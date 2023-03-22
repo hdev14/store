@@ -1,4 +1,4 @@
-import User from 'src/store/users/domain/User';
+import { UserProps } from 'src/store/users/domain/User';
 
 export type CreateUserData = {
   name: string;
@@ -10,13 +10,13 @@ export type CreateUserData = {
 export type UpdateUserData = Partial<CreateUserData>;
 
 interface IUserService {
-  createUser(data: CreateUserData): Promise<User>;
+  createUser(data: CreateUserData): Promise<UserProps>;
 
-  updateUser(userId: string, data: UpdateUserData): Promise<User>;
+  updateUser(userId: string, data: UpdateUserData): Promise<UserProps>;
 
-  getUser(userId: string): Promise<User>;
+  getUser(userId: string): Promise<UserProps>;
 
-  getUsers(): Promise<User[]>;
+  getUsers(): Promise<UserProps[]>;
 }
 
 export default IUserService;

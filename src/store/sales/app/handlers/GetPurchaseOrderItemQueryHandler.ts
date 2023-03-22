@@ -1,15 +1,14 @@
 import { IPurchaseOrderRepositoryQueries } from '@sales/domain/IPurchaseOrderRepository';
-import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
+import { PurchaseOrderItemProps } from '@sales/domain/PurchaseOrderItem';
 import IHandler from '@shared/abstractions/IHandler';
 import PurchaseOrderItemNotFoundError from '../PurchaseOrderItemNotFoundError';
 import GetPurchaseOrderItemQuery from '../queries/GetPurchaseOrderItemQuery';
 
-// TODO: change return
 // eslint-disable-next-line max-len
-export default class GetPurchaseOrderItemQueryHandler implements IHandler<GetPurchaseOrderItemQuery, PurchaseOrderItem> {
+export default class GetPurchaseOrderItemQueryHandler implements IHandler<GetPurchaseOrderItemQuery, PurchaseOrderItemProps> {
   constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 
-  public async handle(event: GetPurchaseOrderItemQuery): Promise<PurchaseOrderItem> {
+  public async handle(event: GetPurchaseOrderItemQuery): Promise<PurchaseOrderItemProps> {
     const purchaseOrderItem = await this.repository
       .getPurchaseOrderItemById(event.purchaseOrderItemId);
 
@@ -17,6 +16,6 @@ export default class GetPurchaseOrderItemQueryHandler implements IHandler<GetPur
       throw new PurchaseOrderItemNotFoundError();
     }
 
-    return purchaseOrderItem;
+    return purchaseOrderItem.toObject();
   }
 }

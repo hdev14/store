@@ -2,7 +2,7 @@ import Entity from '@shared/abstractions/Entity';
 import Validator from '@shared/utils/Validator';
 import CPF from './CPF';
 
-type UserProps = {
+export type UserProps = {
   id: string;
   name: string;
   email: string;
@@ -11,7 +11,7 @@ type UserProps = {
   password?: string;
 }
 
-export default class User extends Entity {
+export default class User extends Entity<UserProps> {
   public readonly name: string;
 
   public readonly document: CPF;

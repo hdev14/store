@@ -10,7 +10,7 @@ export type PurchaseOrderItemProps = {
   purchaseOrderId?: string;
 }
 
-export default class PurchaseOrderItem extends Entity {
+export default class PurchaseOrderItem extends Entity<PurchaseOrderItemProps> {
   public purchaseOrderId: string;
 
   public readonly product: Product;

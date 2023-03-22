@@ -1,4 +1,4 @@
-import User from 'src/store/users/domain/User';
+import { UserProps } from 'src/store/users/domain/User';
 import IIdentityAccessManagement from './IIdentityAccessManagement';
 import IUserService, { CreateUserData, UpdateUserData } from './IUserService';
 
@@ -6,23 +6,19 @@ import IUserService, { CreateUserData, UpdateUserData } from './IUserService';
 export default class UserService implements IUserService {
   constructor(private readonly IAM: IIdentityAccessManagement) {}
 
-  public async createUser(data: CreateUserData): Promise<User> {
+  public async createUser(data: CreateUserData): Promise<UserProps> {
     throw new Error('Method not implemented.');
   }
 
-  public async updateUser(userId: string, data: UpdateUserData): Promise<User> {
+  public async updateUser(userId: string, data: UpdateUserData): Promise<UserProps> {
     throw new Error('Method not implemented.');
   }
 
-  public async getUser(userId: string): Promise<User> {
+  public async getUser(userId: string): Promise<UserProps> {
     throw new Error('Method not implemented.');
   }
 
-  public async getUsers(): Promise<User[]> {
-    throw new Error('Method not implemented.');
-  }
-
-  public async deleteUser(userId: string): Promise<void> {
+  public async getUsers(): Promise<UserProps[]> {
     throw new Error('Method not implemented.');
   }
 }

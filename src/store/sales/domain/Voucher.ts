@@ -20,7 +20,7 @@ export type VoucherProps = {
   usedAt: Date | null;
 }
 
-export default class Voucher extends Entity {
+export default class Voucher extends Entity<VoucherProps> {
   public readonly code: number;
 
   public readonly percentageAmount: number;
