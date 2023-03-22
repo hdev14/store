@@ -9,13 +9,20 @@ export default class CategoryService implements ICategoryService {
     private readonly repository: ICategoryOperations,
   ) { }
 
-  public async getAllCategories(): Promise<Category[]> {
+  public async getAllCategories(): Promise<CategoryProps[]> {
     const categories = await this.repository.getAllCategories();
 
-    return categories;
+    const results: CategoryProps[] = [];
+
+    for (const category of categories) {
+      results.push(category.toObject());
+    }
+
+    return results;
   }
 
-  public async createCategory(params: CreateCategoryParams): Promise<Category> {
+  public async createCategory(params: CreateCategoryParams): Promise<CategoryProps> {
+    // TODO: change to a count method
     const allCategories = await this.repository.getAllCategories();
 
     const category = new Category({
@@ -26,10 +33,10 @@ export default class CategoryService implements ICategoryService {
 
     await this.repository.addCategory(category);
 
-    return category;
+    return category.toObject();
   }
 
-  public async updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<Category> {
+  public async updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<CategoryProps> {
     const currentCategory = await this.repository.getCategoryById(categoryId);
 
     if (!currentCategory) {
@@ -45,6 +52,6 @@ export default class CategoryService implements ICategoryService {
 
     await this.repository.updateCategory(category);
 
-    return category;
+    return category.toObject();
   }
 }

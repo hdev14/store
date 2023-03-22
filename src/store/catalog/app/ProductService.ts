@@ -13,29 +13,41 @@ export default class ProductService implements IProductService {
     private readonly stockService: IStockService,
   ) { }
 
-  public async getProductById(productId: string): Promise<Product> {
+  public async getProductById(productId: string): Promise<ProductProps> {
     const product = await this.repository.getProductById(productId);
 
     if (!product) {
       throw new ProductNotFoundError();
     }
 
-    return product;
+    return product.toObject();
   }
 
-  public async getAllProducts(): Promise<Product[]> {
+  public async getAllProducts(): Promise<ProductProps[]> {
     const products = await this.repository.getAllProducts();
 
-    return products;
+    const results: ProductProps[] = [];
+
+    for (const product of products) {
+      results.push(product.toObject());
+    }
+
+    return results;
   }
 
-  public async getProductsByCategory(categoryId: string): Promise<Product[]> {
+  public async getProductsByCategory(categoryId: string): Promise<ProductProps[]> {
     const products = await this.repository.getProductsByCategory(categoryId);
 
-    return products;
+    const results: ProductProps[] = [];
+
+    for (const product of products) {
+      results.push(product.toObject());
+    }
+
+    return results;
   }
 
-  public async createProduct(params: DefaultProductParams): Promise<Product> {
+  public async createProduct(params: DefaultProductParams): Promise<ProductProps> {
     const category = await this.repository.getCategoryById(params.categoryId);
 
     if (!category) {
@@ -56,10 +68,10 @@ export default class ProductService implements IProductService {
 
     await this.repository.addProduct(product);
 
-    return product;
+    return product.toObject();
   }
 
-  public async updateProduct(productId: string, params: UpdateProductParams): Promise<Product> {
+  public async updateProduct(productId: string, params: UpdateProductParams): Promise<ProductProps> {
     const currentProduct = await this.repository.getProductById(productId);
 
     if (params.categoryId && !(await this.repository.getCategoryById(params.categoryId))) {
@@ -79,7 +91,7 @@ export default class ProductService implements IProductService {
 
     await this.repository.updateProduct(product);
 
-    return product;
+    return product.toObject();
   }
 
   public async updateProductStock(productId: string, quantity: number): Promise<boolean> {

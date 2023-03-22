@@ -8,6 +8,7 @@ import { fakeCategories, fakeProducts } from '@tests/store/fakes';
 import { faker } from '@faker-js/faker';
 import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 
+// TODO: change repositoryStub for a mock
 describe('ProductsService\'s unit tests', () => {
   describe('ProductService.getAllProducts()', () => {
     it('returns all products', async () => {

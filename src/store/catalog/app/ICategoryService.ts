@@ -1,4 +1,4 @@
-import Category from '@catalog/domain/Category';
+import { CategoryProps } from '@catalog/domain/Category';
 
 export type DefaultCategoryParams = {
   name: string;
@@ -9,13 +9,12 @@ export type CreateCategoryParams = Pick<DefaultCategoryParams, 'name'>;
 
 export type UpdateCategoryParams = Partial<DefaultCategoryParams>;
 
-// TODO: change return
 interface ICategoryService {
-  getAllCategories(): Promise<Category[]>;
+  getAllCategories(): Promise<CategoryProps[]>;
 
-  createCategory(params: CreateCategoryParams): Promise<Category>;
+  createCategory(params: CreateCategoryParams): Promise<CategoryProps>;
 
-  updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<Category>;
+  updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<CategoryProps>;
 }
 
 export default ICategoryService;

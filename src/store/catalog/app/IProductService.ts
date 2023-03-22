@@ -1,5 +1,5 @@
-import Dimensions from '@catalog/domain/Dimensions';
-import Product from '@catalog/domain/Product';
+import { DimensionsProps } from '@catalog/domain/Dimensions';
+import { ProductProps } from '@catalog/domain/Product';
 
 export type DefaultProductParams = {
   name: string;
@@ -7,23 +7,22 @@ export type DefaultProductParams = {
   amount: number;
   image: string;
   stockQuantity: number;
-  dimensions: Dimensions;
+  dimensions: DimensionsProps;
   categoryId: string;
 }
 
 export type UpdateProductParams = Partial<DefaultProductParams>;
 
-// TODO: change return
 interface IProductService {
-  getProductById(productId: string): Promise<Product>;
+  getProductById(productId: string): Promise<ProductProps>;
 
-  getAllProducts(): Promise<Product[]>;
+  getAllProducts(): Promise<ProductProps[]>;
 
-  getProductsByCategory(categoryId: string): Promise<Product[]>;
+  getProductsByCategory(categoryId: string): Promise<ProductProps[]>;
 
-  createProduct(params: DefaultProductParams): Promise<Product>;
+  createProduct(params: DefaultProductParams): Promise<ProductProps>;
 
-  updateProduct(productId: string, params: UpdateProductParams): Promise<Product>;
+  updateProduct(productId: string, params: UpdateProductParams): Promise<ProductProps>;
 
   updateProductStock(productId: string, quantity: number): Promise<boolean>;
 }
