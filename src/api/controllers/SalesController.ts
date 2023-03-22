@@ -15,9 +15,9 @@ import IMediator from '@shared/abstractions/IMediator';
 import VoucherInvalidError from '@sales/app/VoucherInvalidError';
 import PurchaseOrderItemNotDeletedError from '@sales/app/PurchaseOrderItemNotDeletedError.ts';
 import HttpStatusCodes from '@api/HttpStatusCodes';
-import PurchaseOrder from '@sales/domain/PurchaseOrder';
-import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import Voucher from '@sales/domain/Voucher';
+import { PurchaseOrderProps } from '@sales/domain/PurchaseOrder';
+import { PurchaseOrderItemProps } from '@sales/domain/PurchaseOrderItem';
+import { VoucherProps } from '@sales/domain/Voucher';
 
 export default class SalesController {
   constructor(private readonly mediator: IMediator) { }
@@ -98,7 +98,6 @@ export default class SalesController {
     }
   }
 
-  // eslint-disable-next-line max-len
   public async updatePurchaseOrderItemQuantity(request: Request, response: Response, next: NextFunction) {
     try {
       const { id } = request.params;
@@ -120,9 +119,9 @@ export default class SalesController {
 
   public async getPurchaseOrder(request: Request, response: Response, next: NextFunction) {
     try {
-      const purchaseOrder = await this.mediator.send<PurchaseOrder>(new GetPurchaseOrderQuery(request.params.id));
+      const purchaseOrder = await this.mediator.send<PurchaseOrderProps>(new GetPurchaseOrderQuery(request.params.id));
 
-      return response.status(HttpStatusCodes.OK).json(purchaseOrder!.toObject());
+      return response.status(HttpStatusCodes.OK).json(purchaseOrder);
     } catch (e) {
       if (e instanceof PurchaseOrderNotFoundError) {
         return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
@@ -134,13 +133,11 @@ export default class SalesController {
 
   public async getPurchaseOrders(request: Request, response: Response, next: NextFunction) {
     try {
-      const purchaseOrders = await this.mediator.send<PurchaseOrder[]>(
+      const purchaseOrders = await this.mediator.send<PurchaseOrderProps[]>(
         new GetPurchaseOrdersQuery(request.params.id),
       );
 
-      return response.status(HttpStatusCodes.OK).json({
-        results: purchaseOrders!.map((po) => po.toObject()),
-      });
+      return response.status(HttpStatusCodes.OK).json({ results: purchaseOrders });
     } catch (e) {
       return next(e);
     }
@@ -148,11 +145,11 @@ export default class SalesController {
 
   public async getPurchaseOrderItem(request: Request, response: Response, next: NextFunction) {
     try {
-      const purchaseOrderItem = await this.mediator.send<PurchaseOrderItem>(
+      const purchaseOrderItem = await this.mediator.send<PurchaseOrderItemProps>(
         new GetPurchaseOrderItemQuery(request.params.id),
       );
 
-      return response.status(HttpStatusCodes.OK).json(purchaseOrderItem!.toObject());
+      return response.status(HttpStatusCodes.OK).json(purchaseOrderItem);
     } catch (e) {
       if (e instanceof PurchaseOrderItemNotFoundError) {
         return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
@@ -166,9 +163,9 @@ export default class SalesController {
     try {
       const { code } = request.params;
 
-      const voucher = await this.mediator.send<Voucher>(new GetVoucherQuery(Number(code)));
+      const voucher = await this.mediator.send<VoucherProps>(new GetVoucherQuery(Number(code)));
 
-      return response.status(HttpStatusCodes.OK).json(voucher!.toObject());
+      return response.status(HttpStatusCodes.OK).json(voucher);
     } catch (e) {
       if (e instanceof VoucherNotFoundError) {
         return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
