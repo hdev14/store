@@ -34,6 +34,7 @@ describe("AddDraftPurchaseOrderEventHandler's unit tests", () => {
         createdAt: event.createdAt,
         status: null,
         voucher: null,
+        items: [],
       }),
     );
   });

@@ -19,6 +19,7 @@ export default class UpdateDraftPurchaseOrderEventHandler implements IHandler<Up
         createdAt: new Date(),
         status: null,
         voucher: null,
+        items: [],
       });
 
       await this.repository.updatePurchaseOrder(purchaseOrder);

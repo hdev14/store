@@ -63,6 +63,7 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     const startSpy = jest.spyOn(purchaseOrder, 'start');
@@ -92,6 +93,7 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     jest.spyOn(repositoryStub, 'getPurchaseOrderById').mockResolvedValueOnce(purchaseOrder);
@@ -121,6 +123,7 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     jest.spyOn(repositoryStub, 'getPurchaseOrderById').mockResolvedValueOnce(purchaseOrder);
@@ -151,6 +154,7 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     jest.spyOn(repositoryStub, 'getPurchaseOrderById').mockResolvedValueOnce(purchaseOrder);

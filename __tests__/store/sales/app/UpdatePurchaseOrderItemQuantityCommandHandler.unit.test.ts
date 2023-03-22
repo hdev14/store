@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import UpdatePurchaseOrderItemQuantityCommand from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
 import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/handlers/UpdatePurchaseOrderItemQuantityCommandHandler';
-import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
 import { mock } from 'jest-mock-extended';
@@ -65,11 +64,11 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
       purchaseOrderId: faker.datatype.uuid(),
-      product: new Product(
-        faker.datatype.uuid(),
-        faker.commerce.product(),
-        faker.datatype.float(),
-      ),
+      product: {
+        id: faker.datatype.uuid(),
+        name: faker.commerce.product(),
+        amount: faker.datatype.float(),
+      },
     });
 
     repositoryStub.getPurchaseOrderItemById = jest.fn()
@@ -103,11 +102,11 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
       purchaseOrderId: faker.datatype.uuid(),
-      product: new Product(
-        faker.datatype.uuid(),
-        faker.commerce.product(),
-        faker.datatype.float(),
-      ),
+      product: {
+        id: faker.datatype.uuid(),
+        name: faker.commerce.product(),
+        amount: faker.datatype.float(),
+      },
     });
 
     repositoryStub.getPurchaseOrderItemById = jest.fn()
@@ -135,11 +134,11 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
       purchaseOrderId: faker.datatype.uuid(),
-      product: new Product(
-        faker.datatype.uuid(),
-        faker.commerce.product(),
-        faker.datatype.float(),
-      ),
+      product: {
+        id: faker.datatype.uuid(),
+        name: faker.commerce.product(),
+        amount: faker.datatype.float(),
+      },
     });
 
     repositoryStub.getPurchaseOrderItemById = jest.fn()

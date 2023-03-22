@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import UpdatePurchaseOrderItemEventHandler from '@sales/app/handlers/UpdatePurchaseOrderItemEventHandler';
 import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
-import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 
 import EventHandlerError from '@shared/errors/EventHandlerError';
@@ -30,11 +29,11 @@ describe("UpdatePurchaseOrderItemEventHandler's unit tests", () => {
       new PurchaseOrderItem({
         id: event.principalId,
         quantity: event.quantity,
-        product: new Product(
-          event.productId,
-          event.productName,
-          event.productAmount,
-        ),
+        product: {
+          id: event.productId,
+          name: event.productName,
+          amount: event.productAmount,
+        },
       }),
     );
   });

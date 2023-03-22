@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
 import GetPurchaseOrderItemQuery from '@sales/app/queries/GetPurchaseOrderItemQuery';
 import GetPurchaseOrderItemQueryHandler from '@sales/app/handlers/GetPurchaseOrderItemQueryHandler';
-import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
@@ -27,11 +26,11 @@ describe("GetPurchaseOrderItemQueryHandler's unit tests", () => {
     const purchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-      product: new Product(
-        faker.datatype.uuid(),
-        faker.commerce.product(),
-        faker.datatype.float(),
-      ),
+      product: {
+        id: faker.datatype.uuid(),
+        name: faker.commerce.product(),
+        amount: faker.datatype.float(),
+      },
     });
 
     jest.spyOn(repositoryStub, 'getPurchaseOrderItemById')

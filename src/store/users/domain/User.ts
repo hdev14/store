@@ -2,7 +2,7 @@ import Entity from '@shared/abstractions/Entity';
 import Validator from '@shared/utils/Validator';
 import CPF from './CPF';
 
-type UserParams = {
+type UserProps = {
   id: string;
   name: string;
   email: string;
@@ -22,13 +22,13 @@ export default class User extends Entity {
 
   public readonly password?: string;
 
-  constructor(params: UserParams) {
-    super(params.id);
-    this.name = params.name;
-    this.email = params.email;
-    this.document = new CPF(params.document);
-    this.createdAt = params.createdAt;
-    this.password = params.password;
+  constructor(props: UserProps) {
+    super(props.id);
+    this.name = props.name;
+    this.email = props.email;
+    this.document = new CPF(props.document);
+    this.createdAt = props.createdAt;
+    this.password = props.password;
   }
 
   public validate(): boolean | void {

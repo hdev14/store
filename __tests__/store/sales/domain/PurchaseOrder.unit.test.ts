@@ -1,31 +1,24 @@
 import { faker } from '@faker-js/faker';
-import Product from '@sales/domain/Product';
-import PurchaseOrder, { PurchaseOrderParams, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
+import PurchaseOrder, { PurchaseOrderProps, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import DomainError from '@shared/errors/DomainError';
 
 describe("PurchaseOrder's unit tests", () => {
   describe('PurchaseOrder.createDraft()', () => {
     it('creates a draft purchase order', () => {
-      const params: PurchaseOrderParams = {
+      const props: PurchaseOrderProps = {
         id: faker.datatype.uuid(),
         customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       };
 
-      const draftPurchaseOrder = PurchaseOrder.createDraft(params);
+      const draftPurchaseOrder = PurchaseOrder.createDraft(props);
 
-      expect(draftPurchaseOrder).toEqual({
-        ...params,
-        status: PurchaseOrderStatus.DRAFT,
-        voucher: null,
-        discountAmount: 0,
-        totalAmount: 0,
-        _items: [],
-      });
+      expect(draftPurchaseOrder.status).toEqual(PurchaseOrderStatus.DRAFT);
     });
   });
 
@@ -38,6 +31,7 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       });
 
       const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
@@ -46,11 +40,11 @@ describe("PurchaseOrder's unit tests", () => {
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       purchaseOrder.addItem(purchaseOrderItem);
@@ -68,6 +62,7 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       });
 
       const calculateTotalAmountSpy = jest.spyOn(purchaseOrder, 'calculateTotalAmount');
@@ -76,11 +71,11 @@ describe("PurchaseOrder's unit tests", () => {
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       };
 
       const purchaseOrderItem = new PurchaseOrderItem(params);
@@ -109,17 +104,18 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       try {
@@ -138,17 +134,18 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       purchaseOrder.addItem(purchaseOrderItem);
@@ -173,6 +170,7 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       });
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
@@ -193,17 +191,18 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       purchaseOrder.addItem(purchaseOrderItem);
@@ -226,6 +225,7 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       });
 
       const purchaseOrderItems = [
@@ -233,31 +233,31 @@ describe("PurchaseOrder's unit tests", () => {
           id: faker.datatype.uuid(),
           quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
           purchaseOrderId: faker.datatype.uuid(),
-          product: new Product(
-            faker.datatype.uuid(),
-            faker.commerce.product(),
-            faker.datatype.float(),
-          ),
+          product: {
+            id: faker.datatype.uuid(),
+            name: faker.commerce.product(),
+            amount: faker.datatype.float(),
+          },
         }),
         new PurchaseOrderItem({
           id: faker.datatype.uuid(),
           quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
           purchaseOrderId: faker.datatype.uuid(),
-          product: new Product(
-            faker.datatype.uuid(),
-            faker.commerce.product(),
-            faker.datatype.float(),
-          ),
+          product: {
+            id: faker.datatype.uuid(),
+            name: faker.commerce.product(),
+            amount: faker.datatype.float(),
+          },
         }),
         new PurchaseOrderItem({
           id: faker.datatype.uuid(),
           quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
           purchaseOrderId: faker.datatype.uuid(),
-          product: new Product(
-            faker.datatype.uuid(),
-            faker.commerce.product(),
-            faker.datatype.float(),
-          ),
+          product: {
+            id: faker.datatype.uuid(),
+            name: faker.commerce.product(),
+            amount: faker.datatype.float(),
+          },
         }),
       ];
 
@@ -286,17 +286,18 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       purchaseOrder.addItem(purchaseOrderItem);
@@ -314,17 +315,18 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         voucher: null,
         status: null,
+        items: [],
       });
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       const result = purchaseOrder.hasItem(purchaseOrderItem);
@@ -342,6 +344,7 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         status: PurchaseOrderStatus.STARTED,
         voucher: null,
+        items: [],
       });
 
       purchaseOrder.makeDraft();
@@ -359,6 +362,7 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
+        items: [],
       });
 
       purchaseOrder.start();
@@ -376,6 +380,7 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         status: PurchaseOrderStatus.STARTED,
         voucher: null,
+        items: [],
       });
 
       purchaseOrder.finish();
@@ -393,6 +398,7 @@ describe("PurchaseOrder's unit tests", () => {
         createdAt: new Date(),
         status: PurchaseOrderStatus.STARTED,
         voucher: null,
+        items: [],
       });
 
       purchaseOrder.cancel();

@@ -31,11 +31,11 @@ describe("AddPurchaseOrderItemEventHandler's unit tests", () => {
         id: event.principalId,
         quantity: event.quantity,
         purchaseOrderId: event.purchaseOrderId,
-        product: new Product(
-          event.productId,
-          event.productName,
-          event.productAmount,
-        ),
+        product: {
+          id: event.productId,
+          name: event.productName,
+          amount: event.productAmount,
+        },
       }),
     );
   });

@@ -10,7 +10,7 @@ export enum TransactionStatus {
   CANCELED = 'canceled',
 }
 
-export type TransactionParams = {
+export type TransactionProps = {
   id: string;
   transactionId: string;
   status: TransactionStatus;
@@ -33,14 +33,14 @@ export default class Transaction extends Entity {
 
   public readonly registedAt: Date;
 
-  constructor(params: TransactionParams) {
-    super(params.id);
-    this.transactionId = params.transactionId;
-    this.status = params.status;
-    this.details = params.details;
-    this.payload = params.payload;
-    this.paymentId = params.paymentId;
-    this.registedAt = params.registedAt;
+  constructor(props: TransactionProps) {
+    super(props.id);
+    this.transactionId = props.transactionId;
+    this.status = props.status;
+    this.details = props.details;
+    this.payload = props.payload;
+    this.paymentId = props.paymentId;
+    this.registedAt = props.registedAt;
   }
 
   public validate(): boolean | void {

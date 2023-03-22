@@ -1,6 +1,5 @@
 import crypto from 'crypto';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
-import Product from '@sales/domain/Product';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import IHandler from '@shared/abstractions/IHandler';
@@ -21,11 +20,11 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddP
   public async handle(event: AddPurchaseOrderItemCommand): Promise<void> {
     const purchaseOrderItem = new PurchaseOrderItem({
       id: crypto.randomUUID(),
-      product: new Product(
-        event.productId,
-        event.productName,
-        event.productAmount,
-      ),
+      product: {
+        id: event.productId,
+        name: event.productName,
+        amount: event.productAmount,
+      },
       quantity: event.quantity,
     });
 
@@ -98,6 +97,7 @@ export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddP
       code,
       voucher: null,
       status: null,
+      items: [],
     });
 
     newDraftPurchaseOrder.addItem(purchaseOrderItem);

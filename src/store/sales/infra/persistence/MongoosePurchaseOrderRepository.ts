@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';
-import PurchaseOrder, { PurchaseOrderParams, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
+import PurchaseOrder, { PurchaseOrderProps, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
 import RepositoryError from '@shared/errors/RepositoryError';
@@ -244,7 +244,7 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
   }
 
   private mapPurchaseOrder(purchaseOrder: IPurchaseOrder): PurchaseOrder {
-    const params: PurchaseOrderParams = {
+    const params: PurchaseOrderProps = {
       id: purchaseOrder._id,
       customerId: purchaseOrder.customer,
       code: purchaseOrder.code,
@@ -255,6 +255,7 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
       voucher: purchaseOrder.voucher
         ? this.mapVoucher(purchaseOrder.voucher as unknown as IVoucher)
         : null,
+      items: [],
     };
 
     const po = new PurchaseOrder(params);
@@ -288,11 +289,10 @@ export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRe
       id: purchaseOrderItem._id,
       purchaseOrderId: String(purchaseOrderItem.purchaseOrder),
       quantity: purchaseOrderItem.quantity,
-      product: new Product(
-        product._id,
-        product.name,
-        product.amount,
-      ),
+      product: {
+        ...product,
+        id: product._id,
+      },
     });
   }
 }

@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker';
-import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import DomainError from '@shared/errors/DomainError';
 
@@ -9,11 +8,11 @@ describe("PurchaseOrderItem's unit tests", () => {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       const fakePurchaseOrderId = faker.datatype.uuid();
@@ -29,11 +28,11 @@ describe("PurchaseOrderItem's unit tests", () => {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          10,
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: 10,
+        },
       });
 
       const expectedAmount = purchaseOrderItem.quantity * 10;
@@ -51,11 +50,11 @@ describe("PurchaseOrderItem's unit tests", () => {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          10,
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: 10,
+        },
       });
 
       try {
@@ -70,11 +69,11 @@ describe("PurchaseOrderItem's unit tests", () => {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          10,
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: 10,
+        },
       });
 
       const currentQuantity = purchaseOrderItem.quantity;
@@ -92,11 +91,11 @@ describe("PurchaseOrderItem's unit tests", () => {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          10,
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: 10,
+        },
       });
 
       try {
@@ -111,11 +110,11 @@ describe("PurchaseOrderItem's unit tests", () => {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          10,
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: 10,
+        },
       });
 
       purchaseOrderItem.updateQuantity(10);

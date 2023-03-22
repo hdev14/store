@@ -19,6 +19,7 @@ export default class AddDraftPurchaseOrderEventHandler implements IHandler<AddDr
         createdAt: event.createdAt,
         status: null,
         voucher: null,
+        items: [],
       });
 
       await this.repository.addPurchaseOrder(draftPurchaseOrder);

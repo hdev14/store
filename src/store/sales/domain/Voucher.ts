@@ -7,7 +7,7 @@ export enum VoucherDiscountTypes {
   ABSOLUTE
 }
 
-export type VoucherParams = {
+export type VoucherProps = {
   id: string;
   code: number;
   percentageAmount: number;
@@ -39,17 +39,17 @@ export default class Voucher extends Entity {
 
   public readonly usedAt: Date | null;
 
-  constructor(params: VoucherParams) {
-    super(params.id);
-    this.code = params.code;
-    this.percentageAmount = params.percentageAmount;
-    this.rawDiscountAmount = params.rawDiscountAmount;
-    this.quantity = params.quantity;
-    this.type = params.type;
-    this.createdAt = params.createdAt;
-    this.usedAt = params.usedAt || null;
-    this.expiresAt = params.expiresAt;
-    this.active = params.active;
+  constructor(props: VoucherProps) {
+    super(props.id);
+    this.code = props.code;
+    this.percentageAmount = props.percentageAmount;
+    this.rawDiscountAmount = props.rawDiscountAmount;
+    this.quantity = props.quantity;
+    this.type = props.type;
+    this.createdAt = props.createdAt;
+    this.usedAt = props.usedAt || null;
+    this.expiresAt = props.expiresAt;
+    this.active = props.active;
 
     this.validate();
   }

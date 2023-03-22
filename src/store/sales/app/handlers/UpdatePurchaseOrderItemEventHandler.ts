@@ -1,5 +1,4 @@
 import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
-import Product from '@sales/domain/Product';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
 import IHandler from '@shared/abstractions/IHandler';
@@ -14,11 +13,11 @@ export default class UpdatePurchaseOrderItemEventHandler implements IHandler<Upd
       const purchaseOrderItem = new PurchaseOrderItem({
         id: event.principalId,
         quantity: event.quantity,
-        product: new Product(
-          event.productId,
-          event.productName,
-          event.productAmount,
-        ),
+        product: {
+          id: event.productId,
+          name: event.productName,
+          amount: event.productAmount,
+        },
       });
 
       await this.repository.updatePurchaseOrderItem(purchaseOrderItem);

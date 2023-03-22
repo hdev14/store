@@ -30,6 +30,7 @@ describe("GetPurchaseOrderQueryHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     jest.spyOn(repositoryStub, 'getPurchaseOrderById')

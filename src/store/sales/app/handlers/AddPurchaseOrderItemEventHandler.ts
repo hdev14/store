@@ -1,4 +1,3 @@
-import Product from '@sales/domain/Product';
 import AddPurchaseOrderItemEvent from '@sales/domain/events/AddPurchaseOrderItemEvent';
 import { IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
@@ -15,11 +14,11 @@ export default class AddPurchaseOrderItemEventHandler implements IHandler<AddPur
         id: event.principalId,
         quantity: event.quantity,
         purchaseOrderId: event.purchaseOrderId,
-        product: new Product(
-          event.productId,
-          event.productName,
-          event.productAmount,
-        ),
+        product: {
+          id: event.productId,
+          name: event.productName,
+          amount: event.productAmount,
+        },
       });
 
       await this.repository.addPurchaseOrderItem(purchaseOrderItem);

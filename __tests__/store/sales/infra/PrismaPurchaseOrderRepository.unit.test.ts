@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
+import { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import PrismaPurchaseOrderRepository from '@sales/infra/persistence/PrismaPurchaseOrderRepository';
 import RepositoryError from '@shared/errors/RepositoryError';
 import { DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended';
@@ -367,7 +367,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         customerId: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
-        voucher: new Voucher({
+        voucher: {
           id: faker.datatype.uuid(),
           percentageAmount: 0,
           rawDiscountAmount: 0,
@@ -378,8 +378,9 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
           expiresAt: new Date(),
           createdAt: new Date(),
           usedAt: null,
-        }),
+        },
         createdAt: new Date(),
+        items: [],
       });
 
       const repository = new PrismaPurchaseOrderRepository();
@@ -415,6 +416,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         discountAmount: 0,
         createdAt: new Date(),
         voucher: null,
+        items: [],
       });
 
       const repository = new PrismaPurchaseOrderRepository();
@@ -450,6 +452,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
         createdAt: new Date(),
+        items: [],
       });
 
       const repository = new PrismaPurchaseOrderRepository();
@@ -476,6 +479,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         discountAmount: 0,
         createdAt: new Date(),
         voucher: null,
+        items: [],
       });
 
       const repository = new PrismaPurchaseOrderRepository();
@@ -521,6 +525,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
         createdAt: new Date(),
+        items: [],
       });
 
       const repository = new PrismaPurchaseOrderRepository();
@@ -558,11 +563,11 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
       expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
-      expect(purchaseOrderItem!.product).toEqual(new Product(
-        fakePurchaseOrderItem.product.id,
-        fakePurchaseOrderItem.product.name,
-        fakePurchaseOrderItem.product.amount,
-      ));
+      expect(purchaseOrderItem!.product).toEqual(new Product({
+        id: fakePurchaseOrderItem.product.id,
+        name: fakePurchaseOrderItem.product.name,
+        amount: fakePurchaseOrderItem.product.amount,
+      }));
 
       expect(prismaMock.purchaseOrderItem.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.purchaseOrderItem.findUnique).toHaveBeenCalledWith({
@@ -654,11 +659,11 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
       expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
-      expect(purchaseOrderItem!.product).toEqual(new Product(
-        fakePurchaseOrderItem.product.id,
-        fakePurchaseOrderItem.product.name,
-        fakePurchaseOrderItem.product.amount,
-      ));
+      expect(purchaseOrderItem!.product).toEqual(new Product({
+        id: fakePurchaseOrderItem.product.id,
+        name: fakePurchaseOrderItem.product.name,
+        amount: fakePurchaseOrderItem.product.amount,
+      }));
 
       expect(prismaMock.purchaseOrderItem.findFirst).toHaveBeenCalledTimes(1);
       expect(prismaMock.purchaseOrderItem.findFirst).toHaveBeenCalledWith({
@@ -707,11 +712,11 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       await repository.addPurchaseOrderItem(purchaseOrderItem);
@@ -748,11 +753,11 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
             id: faker.datatype.uuid(),
             quantity: parseInt(faker.datatype.number().toString(), 10),
             purchaseOrderId: faker.datatype.uuid(),
-            product: new Product(
-              faker.datatype.uuid(),
-              faker.commerce.product(),
-              faker.datatype.float(),
-            ),
+            product: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              amount: faker.datatype.float(),
+            },
           }),
         );
       } catch (e: any) {
@@ -772,11 +777,11 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       await repository.updatePurchaseOrderItem(purchaseOrderItem);
@@ -813,11 +818,11 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
             id: faker.datatype.uuid(),
             quantity: parseInt(faker.datatype.number().toString(), 10),
             purchaseOrderId: faker.datatype.uuid(),
-            product: new Product(
-              faker.datatype.uuid(),
-              faker.commerce.product(),
-              faker.datatype.float(),
-            ),
+            product: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              amount: faker.datatype.float(),
+            },
           }),
         );
       } catch (e: any) {

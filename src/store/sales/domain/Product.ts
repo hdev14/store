@@ -1,15 +1,21 @@
 import Entity from '@shared/abstractions/Entity';
 import Validator from '@shared/utils/Validator';
 
+export type ProductProps = {
+  id: string;
+  name: string;
+  amount: number;
+};
+
 export default class Product extends Entity {
   public readonly name: string;
 
   public readonly amount: number;
 
-  constructor(id: string, name: string, amount: number) {
-    super(id);
-    this.name = name;
-    this.amount = amount;
+  constructor(props: ProductProps) {
+    super(props.id);
+    this.name = props.name;
+    this.amount = props.amount;
 
     this.validate();
   }

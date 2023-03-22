@@ -3,8 +3,8 @@ import Entity from '@shared/abstractions/Entity';
 import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
 import DomainError from '@shared/errors/DomainError';
 import Validator from '@shared/utils/Validator';
-import PurchaseOrderItem from './PurchaseOrderItem';
-import Voucher, { VoucherDiscountTypes } from './Voucher';
+import PurchaseOrderItem, { PurchaseOrderItemProps } from './PurchaseOrderItem';
+import Voucher, { VoucherDiscountTypes, VoucherProps } from './Voucher';
 
 export enum PurchaseOrderStatus {
   DRAFT = 'draft',
@@ -14,16 +14,16 @@ export enum PurchaseOrderStatus {
   CANCELED = 'canceled',
 }
 
-export type PurchaseOrderParams = {
+export type PurchaseOrderProps = {
   id: string;
   customerId: string;
   code: number;
   createdAt: Date;
-  voucher: Voucher | null;
+  voucher: VoucherProps | null;
   discountAmount?: number;
   totalAmount?: number;
   status: PurchaseOrderStatus | null;
-  items?: Array<PurchaseOrderItem>;
+  items: Array<PurchaseOrderItemProps>;
 }
 
 export default class PurchaseOrder extends Entity implements IAggregateRoot {
@@ -41,24 +41,26 @@ export default class PurchaseOrder extends Entity implements IAggregateRoot {
 
   public status: PurchaseOrderStatus;
 
-  private _items: Array<PurchaseOrderItem>;
+  private _items: Array<PurchaseOrderItem> = [];
 
-  constructor(params: PurchaseOrderParams) {
-    super(params.id);
-    this.customerId = params.customerId;
-    this.createdAt = params.createdAt;
-    this.code = params.code;
-    this.voucher = params.voucher;
-    this.totalAmount = params.totalAmount || 0;
-    this.discountAmount = params.discountAmount || 0;
-    this.status = params.status || PurchaseOrderStatus.DRAFT;
-    this._items = params.items || [];
+  constructor(props: PurchaseOrderProps) {
+    super(props.id);
+    this.customerId = props.customerId;
+    this.createdAt = props.createdAt;
+    this.code = props.code;
+    this.voucher = props.voucher ? new Voucher(props.voucher) : null;
+    this.totalAmount = props.totalAmount || 0;
+    this.discountAmount = props.discountAmount || 0;
+    this.status = props.status || PurchaseOrderStatus.DRAFT;
+    for (const itemProps of props.items) {
+      this._items.push(new PurchaseOrderItem(itemProps));
+    }
 
     this.validate();
   }
 
-  public static createDraft(params: PurchaseOrderParams) {
-    return new PurchaseOrder(params);
+  public static createDraft(props: PurchaseOrderProps) {
+    return new PurchaseOrder(props);
   }
 
   get items() {

@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-import Product from '@sales/domain/Product';
 import { faker } from '@faker-js/faker';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
@@ -16,6 +14,7 @@ export class RepositoryStub implements IPurchaseOrderRepository {
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.STARTED,
         voucher: null,
+        items: [],
       }),
     );
   }
@@ -29,6 +28,7 @@ export class RepositoryStub implements IPurchaseOrderRepository {
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.STARTED,
         voucher: null,
+        items: [],
       }),
     ]);
   }
@@ -42,6 +42,7 @@ export class RepositoryStub implements IPurchaseOrderRepository {
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
+        items: [],
       }),
     );
   }
@@ -60,11 +61,11 @@ export class RepositoryStub implements IPurchaseOrderRepository {
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       }),
     );
   }
@@ -73,7 +74,7 @@ export class RepositoryStub implements IPurchaseOrderRepository {
 
   getPurchaseOrderItem(_: { productId: string; }): Promise<PurchaseOrderItem | null>;
 
-  getPurchaseOrderItem(_: { purchaseOrderId?: string | undefined; productId?: string | undefined; }): Promise<PurchaseOrderItem | null>;
+  getPurchaseOrderItem(_: { purchaseOrderId?: string; productId?: string; }): Promise<PurchaseOrderItem | null>;
 
   getPurchaseOrderItem(_: unknown): Promise<PurchaseOrderItem | null> {
     return Promise.resolve(
@@ -81,11 +82,11 @@ export class RepositoryStub implements IPurchaseOrderRepository {
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       }),
     );
   }

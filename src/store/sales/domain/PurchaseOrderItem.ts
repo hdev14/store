@@ -1,11 +1,11 @@
 import Entity from '@shared/abstractions/Entity';
 import DomainError from '@shared/errors/DomainError';
 import Validator from '@shared/utils/Validator';
-import Product from './Product';
+import Product, { ProductProps } from './Product';
 
-export type PurchaseOrderItemParams = {
+export type PurchaseOrderItemProps = {
   id: string;
-  product: Product;
+  product: ProductProps;
   quantity: number;
   purchaseOrderId?: string;
 }
@@ -17,11 +17,11 @@ export default class PurchaseOrderItem extends Entity {
 
   public quantity: number;
 
-  constructor(params: PurchaseOrderItemParams) {
-    super(params.id);
-    this.product = params.product;
-    this.quantity = params.quantity;
-    this.purchaseOrderId = params.purchaseOrderId || '';
+  constructor(props: PurchaseOrderItemProps) {
+    super(props.id);
+    this.product = new Product(props.product);
+    this.quantity = props.quantity;
+    this.purchaseOrderId = props.purchaseOrderId || '';
 
     this.validate();
   }

@@ -7,7 +7,7 @@ import {
 } from '@prisma/client';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import Product from '@sales/domain/Product';
-import PurchaseOrder, { PurchaseOrderParams, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
+import PurchaseOrder, { PurchaseOrderProps, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
 import RepositoryError from '@shared/errors/RepositoryError';
@@ -335,7 +335,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
   }
 
   private mapPurchaseOrder(purchaseOrder: PurchaseOrderWithVoucherAndItems) {
-    const params: PurchaseOrderParams = {
+    const props: PurchaseOrderProps = {
       id: purchaseOrder.id,
       customerId: purchaseOrder.customerId,
       code: purchaseOrder.code,
@@ -344,9 +344,10 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
       status: purchaseOrder.status as PurchaseOrderStatus,
       createdAt: purchaseOrder.createdAt,
       voucher: purchaseOrder.voucher ? this.mapVoucher(purchaseOrder.voucher) : null,
+      items: [],
     };
 
-    const po = new PurchaseOrder(params);
+    const po = new PurchaseOrder(props);
 
     if (purchaseOrder.items) {
       for (let i = 0, len = purchaseOrder.items.length; i < len; i += 1) {
@@ -377,11 +378,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
       id: purchaseOrderItem.id,
       quantity: purchaseOrderItem.quantity,
       purchaseOrderId: purchaseOrderItem.purchaseOrderId,
-      product: new Product(
-        purchaseOrderItem.product.id,
-        purchaseOrderItem.product.name,
-        purchaseOrderItem.product.amount,
-      ),
+      product: purchaseOrderItem.product,
     });
   }
 }

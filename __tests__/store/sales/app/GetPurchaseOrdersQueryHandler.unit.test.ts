@@ -31,6 +31,7 @@ describe("GetPurchaseOrdersQueryHandler's unit tests", () => {
           createdAt: new Date(),
           voucher: null,
           status: null,
+          items: [],
         }),
         new PurchaseOrder({
           id: faker.datatype.uuid(),
@@ -39,6 +40,7 @@ describe("GetPurchaseOrdersQueryHandler's unit tests", () => {
           createdAt: new Date(),
           voucher: null,
           status: null,
+          items: [],
         }),
       ]);
 

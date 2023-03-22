@@ -58,6 +58,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
+        items: [],
       }));
 
     const getVoucherByCodeSpy = jest.spyOn(repositoryStub, 'getVoucherByCode');
@@ -86,6 +87,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
+        items: [],
       }));
 
     repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(null);
@@ -115,6 +117,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
+        items: [],
       }));
 
     repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(new Voucher({
@@ -158,6 +161,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
+        items: [],
       }));
 
     repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(new Voucher({
@@ -235,6 +239,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
       id: faker.datatype.uuid(),
       status: PurchaseOrderStatus.DRAFT,
       voucher: null,
+      items: [],
     });
 
     repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()

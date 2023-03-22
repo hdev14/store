@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
-import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
+import { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import MongoosePurchaseOrderRepository from '@sales/infra/persistence/MongoosePurchaseOrderRepository';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Product from '@sales/domain/Product';
@@ -435,7 +435,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         customerId: fakePurchaseOrder.customer,
         code: fakePurchaseOrder.code,
         status: fakePurchaseOrder.status,
-        voucher: new Voucher({
+        voucher: {
           id: fakePurchaseOrder.voucher._id,
           active: fakePurchaseOrder.voucher.active,
           code: fakePurchaseOrder.voucher.code,
@@ -446,18 +446,19 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
           createdAt: fakePurchaseOrder.voucher.createdAt,
           expiresAt: fakePurchaseOrder.voucher.expiresAt,
           usedAt: null,
-        }),
+        },
         createdAt: fakePurchaseOrder.createdAt,
+        items: [],
       });
 
       purchaseOrder.addItem(new PurchaseOrderItem({
         id: fakePurchaseOrder.items[0]._id,
         quantity: fakePurchaseOrder.items[0].quantity,
-        product: new Product(
-          fakePurchaseOrder.items[0].product._id,
-          fakePurchaseOrder.items[0].product.name,
-          fakePurchaseOrder.items[0].product.amount,
-        ),
+        product: {
+          id: fakePurchaseOrder.items[0].product._id,
+          name: fakePurchaseOrder.items[0].product.name,
+          amount: fakePurchaseOrder.items[0].product.amount,
+        },
       }));
 
       const repository = new MongoosePurchaseOrderRepository();
@@ -489,17 +490,18 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         discountAmount: 0,
         createdAt: new Date(),
         voucher: null,
+        items: [],
       });
 
       purchaseOrder.addItem(new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
         purchaseOrderId: purchaseOrder.id,
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       }));
 
       const repository = new MongoosePurchaseOrderRepository();
@@ -533,6 +535,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         discountAmount: 0,
         createdAt: new Date(),
         voucher: null,
+        items: [],
       });
 
       const repository = new MongoosePurchaseOrderRepository();
@@ -568,7 +571,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         totalAmount: 0,
         discountAmount: 0,
         createdAt: new Date(),
-        voucher: new Voucher({
+        voucher: {
           id: faker.datatype.uuid(),
           percentageAmount: 0,
           rawDiscountAmount: 0,
@@ -579,18 +582,19 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
           expiresAt: new Date(),
           createdAt: new Date(),
           usedAt: null,
-        }),
+        },
+        items: [],
       });
 
       purchaseOrder.addItem(new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
         purchaseOrderId: purchaseOrder.id,
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       }));
 
       const repository = new MongoosePurchaseOrderRepository();
@@ -637,7 +641,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         customerId: fakePurchaseOrder.customer,
         code: fakePurchaseOrder.code,
         status: fakePurchaseOrder.status,
-        voucher: new Voucher({
+        voucher: {
           id: fakePurchaseOrder.voucher._id,
           active: fakePurchaseOrder.voucher.active,
           code: fakePurchaseOrder.voucher.code,
@@ -648,8 +652,9 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
           createdAt: fakePurchaseOrder.voucher.createdAt,
           expiresAt: fakePurchaseOrder.voucher.expiresAt,
           usedAt: null,
-        }),
+        },
         createdAt: fakePurchaseOrder.createdAt,
+        items: [],
       });
 
       const repository = new MongoosePurchaseOrderRepository();
@@ -691,11 +696,11 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
 
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem._id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-      expect(purchaseOrderItem!.product).toEqual(new Product(
-        fakePurchaseOrderItem.product._id,
-        fakePurchaseOrderItem.product.name,
-        fakePurchaseOrderItem.product.amount,
-      ));
+      expect(purchaseOrderItem!.product).toEqual(new Product({
+        id: fakePurchaseOrderItem.product._id,
+        name: fakePurchaseOrderItem.product.name,
+        amount: fakePurchaseOrderItem.product.amount,
+      }));
 
       expect(PurchaseOrderItemModelMock.findOne).toHaveBeenCalledWith(
         { _id: fakePurchaseOrderItem._id },
@@ -797,11 +802,11 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem._id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
       expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrder);
-      expect(purchaseOrderItem!.product).toEqual(new Product(
-        fakePurchaseOrderItem.product._id,
-        fakePurchaseOrderItem.product.name,
-        fakePurchaseOrderItem.product.amount,
-      ));
+      expect(purchaseOrderItem!.product).toEqual(new Product({
+        id: fakePurchaseOrderItem.product._id,
+        name: fakePurchaseOrderItem.product.name,
+        amount: fakePurchaseOrderItem.product.amount,
+      }));
 
       expect(PurchaseOrderItemModelMock.findOne).toHaveBeenCalledWith(
         {
@@ -854,11 +859,11 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
         purchaseOrderId: faker.datatype.uuid(),
-        product: new Product(
-          faker.datatype.uuid(),
-          faker.commerce.product(),
-          faker.datatype.float(),
-        ),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
       });
 
       await repository.addPurchaseOrderItem(purchaseOrderItem);
@@ -884,11 +889,11 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
             id: faker.datatype.uuid(),
             purchaseOrderId: faker.datatype.uuid(),
             quantity: parseInt(faker.datatype.number().toString(), 10),
-            product: new Product(
-              faker.datatype.uuid(),
-              faker.commerce.product(),
-              faker.datatype.float(),
-            ),
+            product: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              amount: faker.datatype.float(),
+            },
           }),
         );
       } catch (e: any) {
@@ -927,11 +932,11 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
           id: fakePurchaseOrderItem._id,
           purchaseOrderId: fakePurchaseOrderItem.purchaseOrder,
           quantity: fakePurchaseOrderItem.quantity,
-          product: new Product(
-            fakePurchaseOrderItem.product._id,
-            fakePurchaseOrderItem.product.name,
-            fakePurchaseOrderItem.product.amount,
-          ),
+          product: {
+            id: fakePurchaseOrderItem.product._id,
+            name: fakePurchaseOrderItem.product.name,
+            amount: fakePurchaseOrderItem.product.amount,
+          },
         }),
       );
 
@@ -964,11 +969,11 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
             id: faker.datatype.uuid(),
             quantity: parseInt(faker.datatype.number().toString(), 10),
             purchaseOrderId: faker.datatype.uuid(),
-            product: new Product(
-              faker.datatype.uuid(),
-              faker.commerce.product(),
-              faker.datatype.float(),
-            ),
+            product: {
+              id: faker.datatype.uuid(),
+              name: faker.commerce.product(),
+              amount: faker.datatype.float(),
+            },
           }),
         );
       } catch (e: any) {

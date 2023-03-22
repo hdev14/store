@@ -3,7 +3,6 @@ import AddPurchaseOrderItemCommand from '@sales/app/commands/AddPurchaseOrderIte
 import AddPurchaseOrderItemCommandHandler from '@sales/app/handlers/AddPurchaseOrderItemCommandHandler';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
-import Product from '@sales/domain/Product';
 import { mock, mockClear } from 'jest-mock-extended';
 import IEventQueue from '@shared/abstractions/IEventQueue';
 import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
@@ -199,11 +198,11 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const purchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-      product: new Product(
-        command.productId,
-        command.productName,
-        command.productAmount,
-      ),
+      product: {
+        id: command.productId,
+        name: command.productName,
+        amount: command.productAmount,
+      },
     });
 
     const purchaseOrder = new PurchaseOrder({
@@ -213,6 +212,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     purchaseOrder.addItem(purchaseOrderItem);
@@ -251,6 +251,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
@@ -287,6 +288,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
@@ -373,11 +375,11 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const purchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-      product: new Product(
-        command.productId,
-        command.productName,
-        command.productAmount,
-      ),
+      product: {
+        id: command.productId,
+        name: command.productName,
+        amount: command.productAmount,
+      },
     });
 
     const purchaseOrder = new PurchaseOrder({
@@ -387,6 +389,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     purchaseOrder.addItem(purchaseOrderItem);
@@ -419,11 +422,11 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     const purchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-      product: new Product(
-        command.productId,
-        command.productName,
-        command.productAmount,
-      ),
+      product: {
+        id: command.productId,
+        name: command.productName,
+        amount: command.productAmount,
+      },
     });
 
     const purchaseOrder = new PurchaseOrder({
@@ -433,6 +436,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     purchaseOrder.addItem(purchaseOrderItem);
@@ -469,6 +473,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
@@ -503,6 +508,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
@@ -536,6 +542,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
@@ -570,6 +577,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       createdAt: new Date(),
       voucher: null,
       status: null,
+      items: [],
     });
 
     repository.getDraftPurchaseOrderByCustomerId = jest.fn().mockResolvedValueOnce(purchaseOrder);
