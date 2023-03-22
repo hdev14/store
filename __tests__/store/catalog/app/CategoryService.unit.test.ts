@@ -4,7 +4,6 @@ import { CreateCategoryParams } from '@catalog/app/ICategoryService';
 import { fakeCategories } from '@tests/store/fakes';
 import repositoryStub from '@tests/store/stubs/CategoryRepositoryStub';
 
-// TODO: change repositoryStub for a mock
 describe('CategoryService.getAllCategories', () => {
   describe('CategoryService.getAllCategories()', () => {
     it('returns all categories', async () => {

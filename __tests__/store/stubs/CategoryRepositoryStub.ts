@@ -10,7 +10,7 @@ export class RepositoryStub implements ICategoryOperations {
       return Promise.resolve(null);
     }
 
-    return Promise.resolve(category as Category);
+    return Promise.resolve(category as any);
   }
 
   getAllCategories(): Promise<Category[]> {
@@ -18,7 +18,7 @@ export class RepositoryStub implements ICategoryOperations {
   }
 
   addCategory(category: Category): Promise<void> {
-    fakeCategories.push(category);
+    fakeCategories.push(category as any);
 
     return Promise.resolve();
   }
@@ -26,7 +26,7 @@ export class RepositoryStub implements ICategoryOperations {
   updateCategory(category: Category): Promise<void> {
     const index = fakeCategories.findIndex((c) => c.id === category.id);
 
-    fakeCategories[index] = category;
+    fakeCategories[index] = category as any;
 
     return Promise.resolve();
   }

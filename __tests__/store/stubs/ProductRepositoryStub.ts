@@ -11,7 +11,7 @@ export class RepositoryStub implements IProductRepository {
       return Promise.resolve(null);
     }
 
-    return Promise.resolve(category as Category);
+    return Promise.resolve(category as any);
   }
 
   getAllCategories(): Promise<Category[]> {
@@ -39,14 +39,14 @@ export class RepositoryStub implements IProductRepository {
   }
 
   addProduct(product: Product): Promise<void> {
-    fakeProducts.push(product);
+    fakeProducts.push(product as any);
     return Promise.resolve();
   }
 
   updateProduct(product: Product): Promise<void> {
     const index = fakeProducts.findIndex((p) => p.id === product.id);
 
-    fakeProducts[index] = product;
+    fakeProducts[index] = product as any;
 
     return Promise.resolve();
   }

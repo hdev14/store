@@ -45,7 +45,7 @@ describe("GetVoucherQueryHandler's unit tests", () => {
 
     const result = await handler.handle(query);
 
-    expect(result).toEqual(voucher);
+    expect(result).toEqual(voucher.toObject());
   });
 
   it("throws a VoucherNotFoundError if purchase order item doesn't exist", async () => {

@@ -3,11 +3,17 @@ export const fakeCategories = [
     id: 'test_category_id_1',
     name: 'test_category_1',
     code: 123,
+    toObject() {
+      return this;
+    },
   },
   {
     id: 'test_category_id_2',
     name: 'test_category_2',
     code: 124,
+    toObject() {
+      return this;
+    },
   },
 ];
 
@@ -26,6 +32,9 @@ export const fakeProducts = [
       depth: Math.random() * 50,
     },
     category: fakeCategories[0],
+    toObject() {
+      return this;
+    },
   },
   {
     id: 'test_product_id_2',
@@ -41,6 +50,9 @@ export const fakeProducts = [
       depth: Math.random() * 50,
     },
     category: fakeCategories[0],
+    toObject() {
+      return this;
+    },
   },
   {
     id: 'test_product_id_3',
@@ -56,5 +68,8 @@ export const fakeProducts = [
       depth: Math.random() * 50,
     },
     category: fakeCategories[1],
+    toObject() {
+      return this;
+    },
   },
 ];
