@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 import Entity from '@shared/abstractions/Entity';
+import Validator from '@shared/utils/Validator';
 
 export enum TransactionStatus {
   PAID = 'paid',
@@ -44,7 +45,13 @@ export default class Transaction extends Entity {
   }
 
   public validate(): boolean | void {
-    // TDOO: add validation
-    throw new Error('Method not implemented.');
+    Validator
+      .setData(this)
+      .setRule('transactionId', ['required', 'string', 'uuid'])
+      .setRule('status', ['required', 'string'])
+      .setRule('details', ['required', 'string'])
+      .setRule('paymentId', ['required', 'string'])
+      .setRule('registedAt', ['required', 'date'])
+      .validate();
   }
 }

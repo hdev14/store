@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 import Entity from '@shared/abstractions/Entity';
 import IAggregateRoot from '@shared/abstractions/IAggregateRoot';
+import Validator from '@shared/utils/Validator';
 import Transaction, { TransactionProps } from './Transaction';
 
 export enum PaymentMethods {
@@ -52,7 +53,12 @@ export default class Payment extends Entity<PaymentProps> implements IAggregateR
   }
 
   public validate(): boolean | void {
-    // TODO: add validation
-    throw new Error('Method not implemented.');
+    Validator.setData(this)
+      .setRule('purchaseOrderId', ['required', 'string', 'uuid'])
+      .setRule('value', ['required', 'number'])
+      .setRule('method', ['required', 'string'])
+      .setRule('status', ['required', 'string'])
+      .setRule('gateway', ['required', 'string'])
+      .validate();
   }
 }
