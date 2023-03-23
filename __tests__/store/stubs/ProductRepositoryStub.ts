@@ -1,9 +1,14 @@
 import Category from '@catalog/domain/Category';
 import IProductRepository from '@catalog/domain/IProductRepository';
 import Product from '@catalog/domain/Product';
+import { faker } from '@faker-js/faker';
 import { fakeCategories, fakeProducts } from '../fakes';
 
 export class RepositoryStub implements IProductRepository {
+  countCategories(): Promise<number> {
+    return Promise.resolve(parseInt(faker.datatype.number().toString(), 10));
+  }
+
   getCategoryById(categoryId: string): Promise<Category | null> {
     const category = fakeCategories.find((c) => c.id === categoryId);
 

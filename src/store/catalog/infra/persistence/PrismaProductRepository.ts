@@ -191,6 +191,18 @@ export default class PrismaProductRepository implements IProductRepository {
     }
   }
 
+  public async countCategories(): Promise<number> {
+    try {
+      const quantity = await this.connection.category.count();
+
+      return quantity;
+    } catch (e: any) {
+      throw new RepositoryError(this.constructor.name, e.message, {
+        cause: e.stack,
+      });
+    }
+  }
+
   private mapProduct(product: PrismaProduct & { category: PrismaCategory }): Product {
     return new Product({
       id: product.id,

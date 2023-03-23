@@ -36,6 +36,10 @@ export class InMemoryProductRepository implements IProductRepository {
     this._categories = categories || [];
   }
 
+  public countCategories(): Promise<number> {
+    return Promise.resolve(this._categories.length);
+  }
+
   public getAllProducts(): Promise<Product[]> {
     return Promise.resolve(this._products.map(this.mapProduct.bind(this)));
   }

@@ -1,8 +1,13 @@
 import Category from '@catalog/domain/Category';
 import { ICategoryOperations } from '@catalog/domain/IProductRepository';
+import { faker } from '@faker-js/faker';
 import { fakeCategories } from '../fakes';
 
 export class RepositoryStub implements ICategoryOperations {
+  countCategories(): Promise<number> {
+    return Promise.resolve(parseInt(faker.datatype.number().toString(), 10));
+  }
+
   getCategoryById(categoryId: string): Promise<Category | null> {
     const category = fakeCategories.find((c) => c.id === categoryId);
 

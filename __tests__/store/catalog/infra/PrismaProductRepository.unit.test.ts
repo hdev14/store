@@ -6,6 +6,7 @@ import Dimensions from '@catalog/domain/Dimensions';
 import { PrismaClient } from '@prisma/client';
 import { DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended';
 import RepositoryError from '@shared/errors/RepositoryError';
+import { faker } from '@faker-js/faker';
 
 const prismaMock = mockDeep<PrismaClient>() as unknown as DeepMockProxy<PrismaClient>;
 
@@ -18,6 +19,8 @@ beforeEach(() => {
 });
 
 describe('PrismaProductRepository\'s Unit Tests', () => {
+  const productRepository = new PrismaProductRepository();
+
   describe('PrismaProductRepository.addProduct()', () => {
     it('adds a new product', async () => {
       expect.assertions(2);
@@ -41,8 +44,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         },
         createdAt: new Date(),
       });
-
-      const productRepository = new PrismaProductRepository();
 
       prismaMock.product.create.mockResolvedValue({
         id: product.id,
@@ -109,8 +110,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         createdAt: new Date(),
       });
 
-      const productRepository = new PrismaProductRepository();
-
       prismaMock.product.create.mockRejectedValueOnce(new Error('test'));
 
       try {
@@ -166,8 +165,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         createdAt: product.createdAt,
       } as any);
 
-      const productRepository = new PrismaProductRepository();
-
       await productRepository.updateProduct(product);
 
       expect(prismaMock.product.update).toHaveBeenCalled();
@@ -215,8 +212,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
       prismaMock.product.update.mockRejectedValueOnce(new Error('test'));
 
-      const productRepository = new PrismaProductRepository();
-
       try {
         await productRepository.updateProduct(product);
       } catch (e: any) {
@@ -229,8 +224,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
   describe('PrismaProductRepository.addCategory()', () => {
     it('adds a new category', async () => {
       expect.assertions(2);
-
-      const productRepository = new PrismaProductRepository();
       const category = new Category({
         id: 'testid',
         name: 'test',
@@ -257,8 +250,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
     it('throws a RepositoryError if occur an unexpected error', async () => {
       expect.assertions(2);
-
-      const productRepository = new PrismaProductRepository();
       const category = new Category({
         id: 'testid',
         name: 'test',
@@ -279,8 +270,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
   describe('PrismaProductRepository.updateCategory()', () => {
     it('updates a existing category', async () => {
       expect.assertions(2);
-
-      const productRepository = new PrismaProductRepository();
 
       const category = new Category({
         id: 'testid',
@@ -308,8 +297,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
     it('throws a RepositoryError if occur an unexpected error', async () => {
       expect.assertions(2);
-
-      const productRepository = new PrismaProductRepository();
 
       const category = new Category({
         id: 'testid',
@@ -355,8 +342,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
       prismaMock.product.findMany.mockResolvedValue(fakeProducts as any);
 
-      const productRepository = new PrismaProductRepository();
-
       const products = await productRepository.getAllProducts();
 
       expect(products.every((p) => (p instanceof Product))).toBe(true);
@@ -371,8 +356,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       expect.assertions(2);
 
       prismaMock.product.findMany.mockRejectedValueOnce(new Error('test'));
-
-      const productRepository = new PrismaProductRepository();
 
       try {
         await productRepository.getAllProducts();
@@ -395,8 +378,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
       prismaMock.category.findUnique.mockResolvedValue(fakeCategory);
 
-      const productRepository = new PrismaProductRepository();
-
       const category = await productRepository.getCategoryById('test_category_id_1');
 
       expect(category!.id).toEqual(fakeCategory.id);
@@ -410,8 +391,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       expect.assertions(2);
 
       prismaMock.category.findUnique.mockRejectedValueOnce(new Error('test'));
-
-      const productRepository = new PrismaProductRepository();
 
       try {
         await productRepository.getCategoryById('test_category_id_1');
@@ -449,8 +428,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
       prismaMock.product.findUnique.mockResolvedValue(fakeProduct as any);
 
-      const productRepository = new PrismaProductRepository();
-
       const product = await productRepository.getProductById('testid');
 
       expect(product!.id).toEqual(fakeProduct.id);
@@ -466,8 +443,6 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
       prismaMock.product.findUnique.mockRejectedValueOnce(new Error('test'));
 
-      const productRepository = new PrismaProductRepository();
-
       try {
         await productRepository.getProductById('testid');
       } catch (e: any) {
@@ -477,7 +452,113 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
     });
   });
 
-  test.todo('PrismaProductRepository.getProductsByCategory()');
+  describe('PrismaProductRepository.getProductsByCategory()', () => {
+    it('returns an array of products', async () => {
+      expect.assertions(1);
 
-  test.todo('PrismaProductRepository.getAllCategories()');
+      const fakeCategory = {
+        id: 'category_testid',
+        name: 'category_test',
+        code: 1234,
+      };
+
+      const fakeProducts = [1, 2, 3].map((index) => ({
+        id: `testid${index}`,
+        name: `test ${index}`,
+        description: `test description ${index}`,
+        amount: Math.random() * 100,
+        height: index,
+        width: index,
+        depth: index,
+        image: `http://test.com/${index}.jpg`,
+        stockQuantity: 10,
+        categoryId: fakeCategory.id,
+        category: fakeCategory,
+        createdAt: new Date().toISOString(),
+      }));
+
+      prismaMock.product.findMany.mockResolvedValueOnce(fakeProducts as any);
+
+      const products = await productRepository.getProductsByCategory(fakeCategory.id);
+
+      expect(products.every((p) => p instanceof Product)).toBeTruthy();
+    });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      prismaMock.product.findMany.mockRejectedValueOnce(new Error('test'));
+
+      try {
+        await productRepository.getProductsByCategory('test_1');
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('PrismaProductRepository - test');
+      }
+    });
+  });
+
+  describe('PrismaProductRepository.getAllCategories()', () => {
+    it('returns an array of categories', async () => {
+      expect.assertions(1);
+
+      const fakeCategories = [
+        {
+          id: faker.datatype.uuid(),
+          name: faker.word.noun(),
+          code: faker.datatype.number(),
+        },
+        {
+          id: faker.datatype.uuid(),
+          name: faker.word.noun(),
+          code: faker.datatype.number(),
+        },
+      ];
+
+      prismaMock.category.findMany.mockResolvedValueOnce(fakeCategories as any);
+
+      const categories = await productRepository.getAllCategories();
+
+      expect(categories.every((c) => c instanceof Category)).toBeTruthy();
+    });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      prismaMock.category.findMany.mockRejectedValueOnce(new Error('test'));
+
+      try {
+        await productRepository.getAllCategories();
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('PrismaProductRepository - test');
+      }
+    });
+  });
+
+  describe('PrismaProductRepository.countCategories()', () => {
+    it('returns the quantity of category', async () => {
+      expect.assertions(2);
+
+      prismaMock.category.count.mockResolvedValueOnce(10);
+
+      const result = await productRepository.countCategories();
+
+      expect(prismaMock.category.count).toHaveBeenCalled();
+      expect(result).toEqual(10);
+    });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(2);
+
+      prismaMock.category.count.mockRejectedValueOnce(new Error('test'));
+
+      try {
+        await productRepository.countCategories();
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(RepositoryError);
+        expect(e.message).toEqual('PrismaProductRepository - test');
+      }
+    });
+  });
 });

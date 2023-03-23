@@ -13,6 +13,9 @@ export interface ICategoryOperations {
 
   /** @throws {RepositoryError} */
   updateCategory(category: Category): Promise<void>;
+
+  /** @throws {RepositoryError} */
+  countCategories(): Promise<number>;
 }
 
 export interface IProductOperations {
