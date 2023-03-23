@@ -22,13 +22,12 @@ export default class CategoryService implements ICategoryService {
   }
 
   public async createCategory(params: CreateCategoryParams): Promise<CategoryProps> {
-    // TODO: change to a count method
-    const allCategories = await this.repository.getAllCategories();
+    const quantity = await this.repository.countCategories();
 
     const category = new Category({
       id: crypto.randomUUID(),
       name: params.name,
-      code: allCategories.length + 1,
+      code: quantity + 1,
     });
 
     await this.repository.addCategory(category);

@@ -17,7 +17,7 @@ describe('CategoryService.getAllCategories', () => {
       const categories = await categoryService.getAllCategories();
 
       expect(categories).toHaveLength(fakeCategories.length);
-      expect(getAllCategoriesSpy).toHaveBeenCalled();
+      expect(getAllCategoriesSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -25,7 +25,7 @@ describe('CategoryService.getAllCategories', () => {
     it('creates a new category', async () => {
       expect.assertions(4);
 
-      const getAllCategoriesSpy = jest.spyOn(repositoryStub, 'getAllCategories');
+      const countCategoriesSpy = jest.spyOn(repositoryStub, 'countCategories');
       const addCategorySpy = jest.spyOn(repositoryStub, 'addCategory');
 
       const categoryService = new CategoryService(repositoryStub);
@@ -38,8 +38,8 @@ describe('CategoryService.getAllCategories', () => {
 
       expect(category.id).toBeTruthy();
       expect(category.code).toBeTruthy();
-      expect(getAllCategoriesSpy).toHaveBeenCalled();
-      expect(addCategorySpy).toHaveBeenCalled();
+      expect(countCategoriesSpy).toHaveBeenCalledTimes(1);
+      expect(addCategorySpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -59,7 +59,7 @@ describe('CategoryService.getAllCategories', () => {
       expect(category.name).toEqual('test_category_updated');
       expect(fakeCategories[1].name).toEqual('test_category_updated');
       expect(getCategoryByIdSpy).toHaveBeenCalledWith(fakeCategories[1].id);
-      expect(updateCategorySpy).toHaveBeenCalled();
+      expect(updateCategorySpy).toHaveBeenCalledTimes(1);
     });
 
     it('throws an exception of type CategoryNotFoundError if repository.getCategoryById returns null', async () => {
