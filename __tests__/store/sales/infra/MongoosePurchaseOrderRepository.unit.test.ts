@@ -20,6 +20,8 @@ const PurchaseOrderItemModelMock = jest.mocked(PurchaseOrderItemModel);
 const VoucherModelMock = jest.mocked(VoucherModel);
 
 describe("MongoosePurchaseOrderRepository's unit tests", () => {
+  const repository = new MongoosePurchaseOrderRepository();
+
   describe('MongoosePurchaseOrderRepository.getPurchaseOrderById()', () => {
     beforeEach(() => {
       PurchaseOrderModelMock.findOne.mockClear();
@@ -82,8 +84,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       PurchaseOrderModelMock.findOne
         .mockImplementationOnce(() => ({ populate: populateVoucherMock } as any));
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       const purchaseOrder = await repository.getPurchaseOrderById(purchaseOrderId);
 
       expect(purchaseOrder!.id).toEqual(fakePurchaseOrder._id);
@@ -135,8 +135,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       PurchaseOrderModelMock.findOne.mockImplementationOnce(() => {
         throw new Error('test');
       });
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.getPurchaseOrderById(purchaseOrderId);
@@ -210,8 +208,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       PurchaseOrderModelMock.find
         .mockImplementationOnce(() => ({ populate: populateVoucherMock } as any));
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       const purchaseOrders = await repository.getPurchaseOrdersByCustomerId(customerId);
 
       for (let i = 0, poLength = purchaseOrders.length; i < poLength; i += 1) {
@@ -274,8 +270,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       try {
         await repository.getPurchaseOrdersByCustomerId(customerId);
       } catch (e: any) {
@@ -325,8 +319,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       PurchaseOrderModelMock.findOne
         .mockImplementationOnce(() => ({ populate: populateItemsMock } as any));
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       const purchaseOrder = await repository.getDraftPurchaseOrderByCustomerId(customerId);
 
       expect(purchaseOrder!.id).toEqual(fakeDraftPurchaseOrder._id);
@@ -369,8 +361,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       PurchaseOrderModelMock.findOne.mockImplementationOnce(() => {
         throw new Error('test');
       });
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.getDraftPurchaseOrderByCustomerId(customerId);
@@ -461,8 +451,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         },
       }));
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       await repository.addPurchaseOrder(purchaseOrder);
 
       expect(PurchaseOrderModelMock.create).toHaveBeenCalledWith({
@@ -504,8 +492,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         },
       }));
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       await repository.addPurchaseOrder(purchaseOrder);
 
       expect(PurchaseOrderModelMock.create).toHaveBeenCalledWith({
@@ -537,8 +523,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         voucher: null,
         items: [],
       });
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.addPurchaseOrder(purchaseOrder);
@@ -596,8 +580,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
           amount: faker.datatype.float(),
         },
       }));
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       await repository.updatePurchaseOrder(purchaseOrder);
 
@@ -657,8 +639,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         items: [],
       });
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       try {
         await repository.updatePurchaseOrder(purchaseOrder);
       } catch (e: any) {
@@ -688,8 +668,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       };
 
       PurchaseOrderItemModelMock.findOne.mockResolvedValueOnce(fakePurchaseOrderItem as any);
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrderItem = await repository
         .getPurchaseOrderItemById(fakePurchaseOrderItem._id);
@@ -721,8 +699,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
       PurchaseOrderItemModelMock.findOne.mockResolvedValueOnce(null);
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrderItem = await repository.getPurchaseOrderItemById(fakePurchaseOrderItemId);
 
@@ -758,8 +734,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       try {
         await repository.getPurchaseOrderItemById(fakePurchaseOrderItem._id);
       } catch (e: any) {
@@ -791,8 +765,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       };
 
       PurchaseOrderItemModelMock.findOne.mockResolvedValueOnce(fakePurchaseOrderItem as any);
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrderItem = await repository.getPurchaseOrderItem({
         purchaseOrderId: fakePurchaseOrderId,
@@ -831,8 +803,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       try {
         await repository.getPurchaseOrderItem({
           purchaseOrderId: faker.datatype.uuid(),
@@ -852,8 +822,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
 
     it('creates a new purchase order item', async () => {
       expect.assertions(1);
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
@@ -880,8 +848,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       expect.assertions(2);
 
       PurchaseOrderItemModelMock.create.mockRejectedValueOnce(new Error('test') as never);
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.addPurchaseOrderItem(
@@ -925,8 +891,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       PurchaseOrderItemModelMock.findOneAndUpdate
         .mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       await repository.updatePurchaseOrderItem(
         new PurchaseOrderItem({
           id: fakePurchaseOrderItem._id,
@@ -961,8 +925,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       try {
         await repository.updatePurchaseOrderItem(
           new PurchaseOrderItem({
@@ -993,8 +955,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       PurchaseOrderItemModelMock.deleteOne.mockResolvedValueOnce({ deletedCount: 1 } as any);
 
       await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
@@ -1008,8 +968,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       expect.assertions(2);
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       PurchaseOrderItemModelMock.deleteOne.mockResolvedValueOnce({
         deletedCount: 0,
@@ -1027,8 +985,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       expect.assertions(2);
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       PurchaseOrderItemModelMock.deleteOne.mockImplementationOnce(() => {
         throw new Error('test');
@@ -1066,8 +1022,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
 
       VoucherModelMock.findOne.mockResolvedValueOnce(fakeVoucher as any);
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       const voucher = await repository.getVoucherByCode(fakeVoucher.code);
 
       expect(voucher!.id).toEqual(fakeVoucher._id);
@@ -1090,8 +1044,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
 
       VoucherModelMock.findOne.mockResolvedValueOnce(null);
 
-      const repository = new MongoosePurchaseOrderRepository();
-
       const voucher = await repository.getVoucherByCode(fakeVoucherCode);
 
       expect(voucher).toBeNull();
@@ -1106,8 +1058,6 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       VoucherModelMock.findOne.mockImplementationOnce(() => {
         throw new Error('test');
       });
-
-      const repository = new MongoosePurchaseOrderRepository();
 
       try {
         await repository.getVoucherByCode(fakeVoucherCode);

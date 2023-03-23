@@ -19,6 +19,8 @@ beforeEach(() => {
 });
 
 describe("PrismaPurchaseOrderRepository's unit tests", () => {
+  const repository = new PrismaPurchaseOrderRepository();
+
   describe('PrismaPurchaseOrderRepository.getPurchaseOrderById()', () => {
     it('returns a purchase order by id', async () => {
       expect.assertions(28);
@@ -69,8 +71,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       };
 
       prismaMock.purchaseOrder.findUnique.mockResolvedValueOnce(fakePurchaseOrder as any);
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       const purchaseOrder = await repository.getPurchaseOrderById(purchaseOrderId);
 
@@ -127,8 +127,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const purchaseOrderId = faker.datatype.uuid();
 
       prismaMock.purchaseOrder.findUnique.mockRejectedValueOnce(new Error('test'));
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       try {
         await repository.getPurchaseOrderById(purchaseOrderId);
@@ -190,8 +188,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       }];
 
       prismaMock.purchaseOrder.findMany.mockResolvedValueOnce(fakePurchaseOrders as any);
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       const purchaseOrders = await repository.getPurchaseOrdersByCustomerId(customerId);
 
@@ -256,8 +252,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrder.findMany.mockRejectedValueOnce(new Error('test'));
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       try {
         await repository.getPurchaseOrdersByCustomerId(customerId);
       } catch (e: any) {
@@ -298,8 +292,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       };
 
       prismaMock.purchaseOrder.findFirst.mockResolvedValueOnce(fakeDraftPurchaseOrder as any);
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       const purchaseOrder = await repository.getDraftPurchaseOrderByCustomerId(customerId);
 
@@ -347,8 +339,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrder.findFirst.mockRejectedValueOnce(new Error('test'));
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       try {
         await repository.getDraftPurchaseOrderByCustomerId(customerId);
       } catch (e: any) {
@@ -382,8 +372,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         createdAt: new Date(),
         items: [],
       });
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       await repository.addPurchaseOrder(purchaseOrder);
 
@@ -419,8 +407,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         items: [],
       });
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       await repository.addPurchaseOrder(purchaseOrder);
 
       expect(prismaMock.purchaseOrder.create).toHaveBeenCalledWith({
@@ -455,8 +441,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         items: [],
       });
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       try {
         await repository.addPurchaseOrder(purchaseOrder);
       } catch (e: any) {
@@ -481,8 +465,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         voucher: null,
         items: [],
       });
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       await repository.updatePurchaseOrder(purchaseOrder);
 
@@ -528,8 +510,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         items: [],
       });
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       try {
         await repository.updatePurchaseOrder(purchaseOrder);
       } catch (e: any) {
@@ -555,8 +535,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       };
 
       prismaMock.purchaseOrderItem.findUnique.mockResolvedValueOnce(fakePurchaseOrderItem as any);
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       const purchaseOrderItem = await repository.getPurchaseOrderItemById(fakePurchaseOrderItem.id);
 
@@ -591,8 +569,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrderItem.findUnique.mockResolvedValueOnce(null);
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       const purchaseOrderItem = await repository.getPurchaseOrderItemById(fakePurchaseOrderItemId);
 
       expect(purchaseOrderItem).toBeNull();
@@ -618,8 +594,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
       prismaMock.purchaseOrderItem.findUnique.mockRejectedValueOnce(new Error('test'));
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       try {
         await repository.getPurchaseOrderItemById(fakePurchaseOrderItemId);
@@ -648,8 +622,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       };
 
       prismaMock.purchaseOrderItem.findFirst.mockResolvedValueOnce(fakePurchaseOrderItem as any);
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       const purchaseOrderItem = await repository.getPurchaseOrderItem({
         purchaseOrderId: fakePurchaseOrderId,
@@ -688,8 +660,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrderItem.findFirst.mockRejectedValueOnce(new Error('test'));
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       try {
         await repository.getPurchaseOrderItem({
           purchaseOrderId: faker.datatype.uuid(),
@@ -705,8 +675,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
   describe('PrismaPurchaseOrderRepository.addPurchaseOrderItem()', () => {
     it('calls prisma.purchaseOrderItem.create method with correct params', async () => {
       expect.assertions(1);
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
@@ -745,8 +713,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrderItem.create.mockRejectedValueOnce(new Error('test'));
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       try {
         await repository.addPurchaseOrderItem(
           new PurchaseOrderItem({
@@ -770,8 +736,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
   describe('PrismaPurchaseOrderRepository.updatePurchaseOrderItem()', () => {
     it('calls prisma.purchaseOrderItem.update method with correct params', async () => {
       expect.assertions(1);
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
@@ -810,8 +774,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrderItem.update.mockRejectedValueOnce(new Error('test'));
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       try {
         await repository.updatePurchaseOrderItem(
           new PurchaseOrderItem({
@@ -849,8 +811,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrderItem.delete.mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       await repository.deletePurchaseOrderItem(fakePurchaseOrderItem.id);
 
       expect(prismaMock.purchaseOrderItem.delete).toHaveBeenCalledWith({
@@ -864,8 +824,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
       prismaMock.purchaseOrderItem.delete.mockRejectedValueOnce(new Error('test'));
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       try {
         await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
@@ -895,8 +853,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.voucher.findFirst.mockResolvedValueOnce(fakeVoucher as any);
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       const voucher = await repository.getVoucherByCode(fakeVoucher.code);
 
       expect(voucher!.id).toEqual(fakeVoucher.id);
@@ -922,8 +878,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.voucher.findFirst.mockResolvedValueOnce(null);
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       const voucher = await repository.getVoucherByCode(fakeVoucherCode);
 
       expect(voucher).toBeNull();
@@ -939,8 +893,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
 
       prismaMock.voucher.findFirst.mockRejectedValueOnce(new Error('test'));
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       try {
         await repository.getVoucherByCode(fakeVoucherCode);
@@ -959,8 +911,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrder.count.mockResolvedValueOnce(fakeQuantityOfPuchaseOrders);
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       const result = await repository.countPurchaseOrders();
 
       expect(prismaMock.purchaseOrder.count).toHaveBeenCalledTimes(1);
@@ -973,8 +923,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       prismaMock.purchaseOrder.count.mockImplementationOnce(() => {
         throw new Error('test');
       });
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       try {
         await repository.countPurchaseOrders();
@@ -993,8 +941,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrderItem.count.mockResolvedValueOnce(fakeQuantityOfPuchaseOrderItems);
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       const result = await repository.countPurchaseOrderItems();
 
       expect(prismaMock.purchaseOrderItem.count).toHaveBeenCalledTimes(1);
@@ -1007,8 +953,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       prismaMock.purchaseOrderItem.count.mockImplementationOnce(() => {
         throw new Error('test');
       });
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       try {
         await repository.countPurchaseOrderItems();
@@ -1027,8 +971,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.voucher.count.mockResolvedValueOnce(fakeQuantityOfVouchers);
 
-      const repository = new PrismaPurchaseOrderRepository();
-
       const result = await repository.countVouchers();
 
       expect(prismaMock.voucher.count).toHaveBeenCalledTimes(1);
@@ -1041,8 +983,6 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       prismaMock.voucher.count.mockImplementationOnce(() => {
         throw new Error('test');
       });
-
-      const repository = new PrismaPurchaseOrderRepository();
 
       try {
         await repository.countVouchers();

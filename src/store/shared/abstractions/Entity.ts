@@ -25,6 +25,7 @@ export default abstract class Entity<Props = Record<string, any>> {
 
       return value;
     });
+
     return object as Props;
   }
 
