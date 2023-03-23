@@ -4,8 +4,6 @@ import { IPurchaseOrderRepositoryQueries } from '@sales/domain/IPurchaseOrderRep
 import GetPurchaseOrderQuery from '../queries/GetPurchaseOrderQuery';
 import PurchaseOrderNotFoundError from '../PurchaseOrderNotFoundError';
 
-// TODO: change return
-// eslint-disable-next-line max-len
 export default class GetPurchaseOrderQueryHandler implements IHandler<GetPurchaseOrderQuery, PurchaseOrderProps> {
   constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 
