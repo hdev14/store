@@ -60,7 +60,7 @@ describe("Validator's unit tests", () => {
       }
     });
 
-    it('throws a ValidationError if field is not a url', () => {
+    it('throws a ValidationError if field is not an url', () => {
       expect.assertions(3);
       try {
         Validator
@@ -74,7 +74,7 @@ describe("Validator's unit tests", () => {
       }
     });
 
-    it('throws a ValidationError if field is not a uuid', () => {
+    it('throws a ValidationError if field is not an uuid', () => {
       expect.assertions(3);
 
       try {
@@ -86,6 +86,21 @@ describe("Validator's unit tests", () => {
         expect(e).toBeInstanceOf(ValidationError);
         expect(e.errors[0].field).toEqual('test');
         expect(e.errors[0].messages[0]).toEqual('The field test must be an UUID.');
+      }
+    });
+
+    it('throws a ValidationError if field is not an email', () => {
+      expect.assertions(3);
+
+      try {
+        Validator
+          .setData({ test: faker.word.verb() })
+          .setRule('test', ['string', 'email'])
+          .validate();
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(ValidationError);
+        expect(e.errors[0].field).toEqual('test');
+        expect(e.errors[0].messages[0]).toEqual('The field test must be a valid email address.');
       }
     });
   });

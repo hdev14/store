@@ -3,6 +3,7 @@ import ValidationError, { GenericError } from '../errors/ValidationError';
 
 const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*/;
 
 const RULE_FUNCTIONS = {
   required: (value: any) => {
@@ -49,6 +50,7 @@ const RULE_FUNCTIONS = {
   uuid: (value: any) => typeof value === 'string' && !UUID_REGEX.test(value),
   date: (value: any) => String(new Date(value)) === 'Invalid Date',
   boolean: (value: any) => typeof value !== 'boolean',
+  email: (value: any) => typeof value === 'string' && !EMAIL_REGEX.test(value),
 };
 
 const RULE_MESSAGES = {
@@ -74,6 +76,7 @@ const RULE_MESSAGES = {
   uuid: (field: string) => `The field ${field} must be an UUID.`,
   date: (field: string) => `The field ${field} must be a validate date.`,
   boolean: (field: string) => `The field ${field} must be a boolean.`,
+  email: (field: string) => `The field ${field} must be a valid email address.`,
 };
 
 type FunctionValidator = (value: any) => boolean;
