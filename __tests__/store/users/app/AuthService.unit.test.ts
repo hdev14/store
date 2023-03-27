@@ -106,4 +106,33 @@ describe("AuthService's unit tests", () => {
       expect(IAMMock.addRole).toHaveBeenCalledWith(fakeUserId, fakePermission);
     });
   });
+
+  describe('AuthService.removePermission()', () => {
+    it("throws an UserNotFoundError if user doesn't exist", async () => {
+      expect.assertions(2);
+
+      IAMMock.getUser.mockResolvedValueOnce(null);
+      const fakeUserId = faker.datatype.uuid();
+      const fakePermission = faker.word.verb();
+
+      try {
+        await authService.removePermission(fakeUserId, fakePermission);
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(UserNotFoundError);
+        expect(e.message).toEqual('Usuário não encontrado.');
+      }
+    });
+
+    it('calls IAM.removeRole with correct params', async () => {
+      expect.assertions(1);
+
+      IAMMock.getUser.mockResolvedValueOnce({} as User);
+      const fakeUserId = faker.datatype.uuid();
+      const fakePermission = faker.word.verb();
+
+      await authService.removePermission(fakeUserId, fakePermission);
+
+      expect(IAMMock.removeRole).toHaveBeenCalledWith(fakeUserId, fakePermission);
+    });
+  });
 });
