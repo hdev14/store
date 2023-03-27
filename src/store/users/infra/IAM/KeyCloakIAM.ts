@@ -1,4 +1,5 @@
 import IHttpClient, { HttpOptions } from '@shared/abstractions/IHttpClient';
+import HttpError from '@shared/errors/HttpError';
 import IIdentityAccessManagement, { PaginationOptions, TokenPayload } from '@users/app/IIdentityAccessManagement';
 import User from '@users/domain/User';
 
@@ -108,19 +109,27 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     );
   }
 
-  public async getUser(userId: string): Promise<User> {
-    const { body } = await this.httpClient.get<UserRepresentation>(
-      `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}`,
-      this.getDefaultHttpClientOptions(),
-    );
+  public async getUser(userId: string): Promise<User | null> {
+    try {
+      const { body } = await this.httpClient.get<UserRepresentation>(
+        `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}`,
+        this.getDefaultHttpClientOptions(),
+      );
 
-    return new User({
-      id: body.id,
-      name: `${body.firstName} ${body.lastName}`,
-      email: body.email,
-      document: body.attributes.document,
-      createdAt: new Date(body.createdTimestamp),
-    });
+      return new User({
+        id: body.id,
+        name: `${body.firstName} ${body.lastName}`,
+        email: body.email,
+        document: body.attributes.document,
+        createdAt: new Date(body.createdTimestamp),
+      });
+    } catch (e: any) {
+      if (e instanceof HttpError && e.statusCode === 404) {
+        return null;
+      }
+
+      throw e;
+    }
   }
 
   public async getUsers(pagination?: PaginationOptions): Promise<User[]> {

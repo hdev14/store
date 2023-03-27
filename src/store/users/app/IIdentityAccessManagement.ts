@@ -1,4 +1,3 @@
-import e from 'express';
 import User from 'src/store/users/domain/User';
 
 export type TokenPayload = {
@@ -18,7 +17,7 @@ interface IIdentityAccessManagement {
 
   updateUser(user: User): Promise<void>;
 
-  getUser(userId: string): Promise<User>;
+  getUser(userId: string): Promise<User | null>;
 
   getUsers(pagination?: PaginationOptions): Promise<User[]>;
 

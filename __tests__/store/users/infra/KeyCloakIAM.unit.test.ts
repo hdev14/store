@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import IHttpClient from '@shared/abstractions/IHttpClient';
+import HttpError from '@shared/errors/HttpError';
 import User from '@users/domain/User';
 import KeyCloakIAM from '@users/infra/IAM/KeyCloakIAM';
 import { mock, mockClear } from 'jest-mock-extended';
@@ -299,11 +300,23 @@ describe("KeyCloakIAM's unit tests", () => {
       const user = await iam.getUser(fakeUserId);
 
       expect(user).toBeInstanceOf(User);
-      expect(user.id).toEqual(fakeBody.id);
-      expect(user.name).toEqual(`${fakeBody.firstName} ${fakeBody.lastName}`);
-      expect(user.email).toEqual(fakeBody.email);
-      expect(user.document.value).toEqual('99242742023');
-      expect(user.createdAt).toEqual(new Date(fakeBody.createdTimestamp));
+      expect(user!.id).toEqual(fakeBody.id);
+      expect(user!.name).toEqual(`${fakeBody.firstName} ${fakeBody.lastName}`);
+      expect(user!.email).toEqual(fakeBody.email);
+      expect(user!.document.value).toEqual('99242742023');
+      expect(user!.createdAt).toEqual(new Date(fakeBody.createdTimestamp));
+    });
+
+    it('returns null if occur a HttpError with status code 404', async () => {
+      expect.assertions(1);
+
+      const fakeUserId = faker.datatype.uuid();
+
+      httpClientMock.get.mockRejectedValueOnce(new HttpError(404, {}));
+
+      const user = await iam.getUser(fakeUserId);
+
+      expect(user).toBeNull();
     });
   });
 
