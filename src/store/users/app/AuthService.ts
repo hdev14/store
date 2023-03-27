@@ -1,6 +1,7 @@
 import Validator from '@shared/utils/Validator';
 import IAuthService, { AuthPayload } from './IAuthService';
 import IIdentityAccessManagement from './IIdentityAccessManagement';
+import UserNotFoundError from './UserNotFoundError';
 
 export default class AuthService implements IAuthService {
   constructor(private readonly IAM: IIdentityAccessManagement) { }
@@ -23,7 +24,13 @@ export default class AuthService implements IAuthService {
   }
 
   public async addPermission(userId: string, permission: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    const user = await this.IAM.getUser(userId);
+
+    if (!user) {
+      throw new UserNotFoundError();
+    }
+
+    await this.IAM.addRole(userId, permission);
   }
 
   public async removePermission(userId: string, permission: string): Promise<void> {
