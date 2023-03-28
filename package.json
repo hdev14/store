@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clear": "npx jest --clearCache",
-    "test:unit": "npx jest unit --passWithNoTests --watch --silent=true --config=jest.unit.config.js",
+    "test:unit": "npx jest unit --passWithNoTests --watch --silent=false --config=jest.unit.config.js",
     "test:unit:cov": "npx jest unit --coverage --config=jest.unit.config.js",
     "test:int": "dotenv -e .env.test -- npx jest int --runInBand --passWithNoTests --watch --silent=true --config=jest.int.config.js",
     "test:int:cov": "dotenv -e .env.test -- npx jest int --runInBand --coverage --config=jest.int.config.js",
