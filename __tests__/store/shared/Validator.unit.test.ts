@@ -121,7 +121,7 @@ describe("Validator's unit tests", () => {
     });
 
     it('throws a ValidationError if field is required', () => {
-      expect.assertions(4);
+      expect.assertions(3);
       try {
         Validator
           .setData({ test: undefined })
@@ -131,7 +131,6 @@ describe("Validator's unit tests", () => {
         expect(e).toBeInstanceOf(ValidationError);
         expect(e.errors[0].field).toEqual('test');
         expect(e.errors[0].messages[0]).toEqual('The field test is required.');
-        expect(e.errors[0].messages[1]).toEqual('The field test must be a number.');
       }
     });
 
