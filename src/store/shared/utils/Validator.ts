@@ -13,6 +13,7 @@ const RULE_FUNCTIONS = {
       case 'string':
         return (value === undefined || value === null || value.length === 0);
       case 'object':
+        // don't use it with Date.
         return (
           value === undefined
           || value === null
@@ -23,34 +24,41 @@ const RULE_FUNCTIONS = {
     }
   },
   max: (value: any, max: number) => {
-    switch (typeof value) {
-      case 'number':
-        return value > max;
-      case 'string':
-        return value.length > max;
-      default:
-        return true;
+    if (value !== undefined) {
+      switch (typeof value) {
+        case 'number':
+          return value > max;
+        case 'string':
+          return value.length > max;
+        default:
+          return true;
+      }
     }
+    return false;
   },
   min: (value: any, min: number) => {
-    switch (typeof value) {
-      case 'number':
-        return value < min;
-      case 'string':
-        return value.length < min;
-      default:
-        return true;
+    if (value !== undefined) {
+      switch (typeof value) {
+        case 'number':
+          return value < min;
+        case 'string':
+          return value.length < min;
+        default:
+          return true;
+      }
     }
+
+    return false;
   },
-  url: (value: any) => (typeof value === 'string' && !URL_REGEX.test(value)),
-  string: (value: any) => typeof value !== 'string',
-  number: (value: any) => typeof value !== 'number',
-  integer: (value: any) => typeof value === 'number' && !Number.isInteger(value),
-  float: (value: any) => typeof value === 'number' && Number.isInteger(value),
-  uuid: (value: any) => typeof value === 'string' && !UUID_REGEX.test(value),
-  date: (value: any) => String(new Date(value)) === 'Invalid Date',
-  boolean: (value: any) => typeof value !== 'boolean',
-  email: (value: any) => typeof value === 'string' && !EMAIL_REGEX.test(value),
+  url: (value: any) => (value !== undefined && typeof value === 'string' && !URL_REGEX.test(value)),
+  string: (value: any) => (value !== undefined && typeof value !== 'string'),
+  number: (value: any) => (value !== undefined && typeof value !== 'number'),
+  integer: (value: any) => (value !== undefined && typeof value === 'number' && !Number.isInteger(value)),
+  float: (value: any) => (value !== undefined && typeof value === 'number' && Number.isInteger(value)),
+  uuid: (value: any) => (value !== undefined && typeof value === 'string' && !UUID_REGEX.test(value)),
+  date: (value: any) => (value !== undefined && !(value instanceof Date)),
+  boolean: (value: any) => (value !== undefined && typeof value !== 'boolean'),
+  email: (value: any) => (value !== undefined && typeof value === 'string' && !EMAIL_REGEX.test(value)),
 };
 
 const RULE_MESSAGES = {
