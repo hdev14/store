@@ -29,6 +29,8 @@ export default class User extends Entity<UserProps> {
     this.document = new CPF(props.document);
     this.createdAt = props.createdAt;
     this.password = props.password;
+
+    this.validate();
   }
 
   public validate(): boolean | void {
@@ -36,8 +38,8 @@ export default class User extends Entity<UserProps> {
       .setRule('name', ['required', 'string'])
       .setRule('email', ['required', 'string', 'email'])
       .setRule('document', () => this.document.isValid())
-      .setRule('createdAt', ['required', 'date'])
-      .setRule('password', ['string'])
+      .setRule('createdAt', ['date'])
+      .setRule('password', ['string', 'min:6'])
       .validate();
   }
 }

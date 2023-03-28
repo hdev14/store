@@ -6,7 +6,7 @@ export default class CPF implements IValueObject {
   private readonly digits: string;
 
   constructor(value: string) {
-    this.value = value.replace(/\D+/g, '');
+    this.value = value.toString().replace(/\D+/g, '');
     this.digits = this.value.substring(this.value.length - 2);
   }
 
