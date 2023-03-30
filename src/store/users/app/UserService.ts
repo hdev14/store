@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import User, { UserProps } from '@users/domain/User';
 import IIdentityAccessManagement from './IIdentityAccessManagement';
 import IUserService, { CreateUserData, UpdateUserData } from './IUserService';
+import UserNotFoundError from './UserNotFoundError';
 
 // TODO: add implementation
 export default class UserService implements IUserService {
@@ -17,11 +18,23 @@ export default class UserService implements IUserService {
       createdAt: new Date(),
     });
 
-    return {} as any;
+    await this.IAM.registerUser(user);
+
+    return user.toObject();
   }
 
   public async updateUser(userId: string, data: UpdateUserData): Promise<UserProps> {
-    throw new Error('Method not implemented.');
+    const user = await this.IAM.getUser(userId);
+
+    if (!user) {
+      throw new UserNotFoundError();
+    }
+
+    const updatedUser = new User({ ...user.toObject(), ...data });
+
+    await this.IAM.updateUser(updatedUser);
+
+    return updatedUser.toObject();
   }
 
   public async getUser(userId: string): Promise<UserProps> {

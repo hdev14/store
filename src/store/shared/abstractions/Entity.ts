@@ -17,7 +17,13 @@ export default abstract class Entity<Props = Record<string, any>> {
   }
 
   public toObject(): Props {
-    const object = JSON.parse(JSON.stringify(this), (key, value) => {
+    const object = this.transformToObject(this);
+
+    return object as Props;
+  }
+
+  protected transformToObject(object: any) {
+    return JSON.parse(JSON.stringify(object), (key, value) => {
       if (DATE_REGEX.test(value)) {
         console.info(key, value);
         return new Date(value);
@@ -25,8 +31,6 @@ export default abstract class Entity<Props = Record<string, any>> {
 
       return value;
     });
-
-    return object as Props;
   }
 
   public toString() {

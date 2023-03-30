@@ -42,4 +42,14 @@ export default class User extends Entity<UserProps> {
       .setRule('password', ['string', 'min:6'])
       .validate();
   }
+
+  public toObject(): UserProps {
+    const data = {
+      ...this,
+      document: this.document.value,
+      password: undefined,
+    };
+
+    return this.transformToObject(data);
+  }
 }
