@@ -226,5 +226,44 @@ describe("UserService's unit tests", () => {
     });
   });
 
-  test.todo('UserService.getUsers()');
+  describe('UserService.getUsers()', () => {
+    it('returns an array of user data', async () => {
+      expect.assertions(9);
+
+      const fakeUsers = [
+        new User({
+          id: faker.datatype.uuid(),
+          name: faker.name.fullName(),
+          email: faker.internet.email(),
+          document: '69156949430',
+          password: faker.random.alphaNumeric(6),
+          createdAt: new Date(),
+        }),
+        new User({
+          id: faker.datatype.uuid(),
+          name: faker.name.fullName(),
+          email: faker.internet.email(),
+          document: '69156949430',
+          password: faker.random.alphaNumeric(6),
+          createdAt: new Date(),
+        }),
+      ];
+
+      IAMMock.getUsers.mockResolvedValueOnce(fakeUsers);
+
+      const users = await userService.getUsers();
+
+      expect(users).toHaveLength(2);
+
+      expect(users[0].name).toEqual(fakeUsers[0].name);
+      expect(users[0].email).toEqual(fakeUsers[0].email);
+      expect(users[0].document).toEqual(fakeUsers[0].document.value);
+      expect(users[0].password).toBeUndefined();
+
+      expect(users[1].name).toEqual(fakeUsers[1].name);
+      expect(users[1].email).toEqual(fakeUsers[1].email);
+      expect(users[1].document).toEqual(fakeUsers[1].document.value);
+      expect(users[1].password).toBeUndefined();
+    });
+  });
 });

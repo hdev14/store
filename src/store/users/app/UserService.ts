@@ -47,6 +47,14 @@ export default class UserService implements IUserService {
   }
 
   public async getUsers(): Promise<UserProps[]> {
-    throw new Error('Method not implemented.');
+    const users = await this.IAM.getUsers();
+
+    const results: UserProps[] = [];
+
+    for (const user of users) {
+      results.push(user.toObject());
+    }
+
+    return results;
   }
 }
