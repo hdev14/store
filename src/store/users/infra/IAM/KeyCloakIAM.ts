@@ -90,22 +90,27 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     const [firstName, ...rest] = user.name.split(' ');
     const lastName = rest.join(' ');
 
+    const data: any = {
+      firstName,
+      lastName,
+      email: user.email,
+      attributes: {
+        document: user.document.value,
+      },
+      credentials: [],
+    };
+
+    if (user.password) {
+      data.credentials.push({
+        type: 'password',
+        value: user.password,
+        temporary: false,
+      });
+    }
+
     await this.httpClient.put(
       `${this.baseUrl}/admin/realms/${this.realm}/users/${user.id}`,
-      {
-        firstName,
-        lastName,
-        email: user.email,
-        attributes: {
-          document: user.document.value,
-        },
-        // TODO: check if undefined
-        credentials: [{
-          type: 'password',
-          value: user.password,
-          temporary: false,
-        }],
-      },
+      data,
       this.getDefaultHttpClientOptions(),
     );
   }
