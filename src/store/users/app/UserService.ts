@@ -4,7 +4,6 @@ import IIdentityAccessManagement from './IIdentityAccessManagement';
 import IUserService, { CreateUserData, UpdateUserData } from './IUserService';
 import UserNotFoundError from './UserNotFoundError';
 
-// TODO: add implementation
 export default class UserService implements IUserService {
   constructor(private readonly IAM: IIdentityAccessManagement) {}
 
@@ -38,7 +37,13 @@ export default class UserService implements IUserService {
   }
 
   public async getUser(userId: string): Promise<UserProps> {
-    throw new Error('Method not implemented.');
+    const user = await this.IAM.getUser(userId);
+
+    if (!user) {
+      throw new UserNotFoundError();
+    }
+
+    return user.toObject();
   }
 
   public async getUsers(): Promise<UserProps[]> {

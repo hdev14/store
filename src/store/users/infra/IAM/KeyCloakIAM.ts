@@ -99,6 +99,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
         attributes: {
           document: user.document.value,
         },
+        // TODO: check if undefined
         credentials: [{
           type: 'password',
           value: user.password,

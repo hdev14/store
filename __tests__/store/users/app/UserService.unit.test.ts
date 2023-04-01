@@ -186,7 +186,45 @@ describe("UserService's unit tests", () => {
     });
   });
 
-  test.todo('UserService.getUser()');
+  describe('UserService.getUser()', () => {
+    it('throws a UserNotFoundError if IAM.getUser returns NULL', async () => {
+      expect.assertions(1);
+
+      const fakeUserId = faker.datatype.uuid();
+
+      IAMMock.getUser.mockResolvedValueOnce(null);
+
+      try {
+        await userService.getUser(fakeUserId);
+      } catch (error) {
+        expect(error).toBeInstanceOf(UserNotFoundError);
+      }
+    });
+
+    it('returns a user data', async () => {
+      expect.assertions(4);
+
+      const fakeUserId = faker.datatype.uuid();
+
+      const fakeUser = new User({
+        id: faker.datatype.uuid(),
+        name: faker.name.fullName(),
+        email: faker.internet.email(),
+        document: '69156949430',
+        password: faker.random.alphaNumeric(6),
+        createdAt: new Date(),
+      });
+
+      IAMMock.getUser.mockResolvedValueOnce(fakeUser);
+
+      const user = await userService.getUser(fakeUserId);
+
+      expect(user.name).toEqual(fakeUser.name);
+      expect(user.email).toEqual(fakeUser.email);
+      expect(user.document).toEqual(fakeUser.document.value);
+      expect(user.password).toBeUndefined();
+    });
+  });
 
   test.todo('UserService.getUsers()');
 });
