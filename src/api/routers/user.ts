@@ -5,7 +5,9 @@ const router = Router();
 
 const { userController } = bootstrap.controllers;
 
-// TODO: add all endpoints
 router.post('/', userController.createUser.bind(userController));
+router.put('/:id', userController.updateUser.bind(userController));
+router.get('/:id', userController.getUser.bind(userController));
+router.get('/', userController.getUsers.bind(userController));
 
 export default router;

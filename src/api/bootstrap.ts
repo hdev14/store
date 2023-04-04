@@ -28,6 +28,7 @@ import BullmqEventQueue from '@shared/BullmqEventQueue';
 import SalesController from './controllers/SalesController';
 import CatalogController from './controllers/CatalogController';
 import UserController from './controllers/UserController';
+import AuthController from './controllers/AuthController';
 
 // Utils
 const mediator = new Mediator();
@@ -73,11 +74,13 @@ mediator.register(GetVoucherQuery.name, getVoucherQueryHandler);
 const catalogController = new CatalogController(productService, categoryService);
 const salesController = new SalesController(mediator);
 const userController = new UserController();
+const authController = new AuthController();
 
 export default {
   controllers: {
     salesController,
     catalogController,
     userController,
+    authController,
   },
 };
