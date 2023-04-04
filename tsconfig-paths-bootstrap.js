@@ -1,5 +1,5 @@
 const tsconfigPaths = require('tsconfig-paths');
-const tsconfig = require('./tsconfig.json');
+const tsconfig = require('./tsconfig.build.json');
 
 const baseUrl = './build';
 

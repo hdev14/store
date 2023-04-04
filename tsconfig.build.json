@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "lib": [
+      "esnext"
+    ],
+    "module": "commonjs",
+    "baseUrl": ".",
+    "paths": {
+      "@catalog/*": [
+        "src/store/catalog/*"
+      ],
+      "@fiscal/*": [
+        "src/store/fiscal/*"
+      ],
+      "@payment/*": [
+        "src/store/payment/*"
+      ],
+      "@users/*": [
+        "src/store/users/*"
+      ],
+      "@sales/*": [
+        "src/store/sales/*"
+      ],
+      "@shared/*": [
+        "src/store/shared/*"
+      ],
+      "@mocks/*": [
+        "__mocks__/*"
+      ],
+      "@tests/*": [
+        "__tests__/*"
+      ],
+      "@api/*": [
+        "src/api/*"
+      ],
+      "@mongoose/*": [
+        "_mongoose/*"
+      ]
+    },
+    "sourceMap": true,
+    "outDir": "./build",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "node_modules",
+    "__tests__",
+    "__mocks__"
+  ]
+}

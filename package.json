@@ -13,7 +13,7 @@
     "api:prod": "node -r dotenv/config -r ./tsconfig-paths-bootstrap.js ./build/src/api/index.js",
     "event_worker:dev": "dotenv -e .env.dev -- npx ts-node-dev -r tsconfig-paths/register src/event_worker/index.ts",
     "event_worker:prod": "node -r dotenv/config -r ./tsconfig-paths-bootstrap.js ./build/src/event_worker/index.js",
-    "build": "tsc",
+    "build": "tsc --project ./tsconfig.build.json",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --skip-generate",
     "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev --skip-generate"
   },
