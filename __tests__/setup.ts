@@ -2,6 +2,8 @@ import supertest from 'supertest';
 import Server from '@api/Server';
 import Prisma from '@shared/Prisma';
 
+jest.mock('axios');
+
 beforeAll(async () => {
   try {
     globalThis.request = supertest(Server.application);
