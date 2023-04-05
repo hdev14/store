@@ -25,6 +25,9 @@ import GetVoucherQueryHandler from '@sales/app/handlers/GetVoucherQueryHandler';
 import RemovePurchaseOrderItemCommandHandler from '@sales/app/handlers/RemovePurchaseOrderItemCommandHandler';
 import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/handlers/UpdatePurchaseOrderItemQuantityCommandHandler';
 import BullmqEventQueue from '@shared/BullmqEventQueue';
+import AuthService from '@users/app/AuthService';
+import KeyCloakIAM from '@users/infra/IAM/KeyCloakIAM';
+import AxiosHttpClient from '@shared/AxiosHttpClient';
 import SalesController from './controllers/SalesController';
 import CatalogController from './controllers/CatalogController';
 import UserController from './controllers/UserController';
@@ -34,6 +37,8 @@ import AuthController from './controllers/AuthController';
 const mediator = new Mediator();
 const emailService = new NodemailerEmailService();
 const eventQueue = new BullmqEventQueue();
+const httpClient = new AxiosHttpClient();
+const iam = new KeyCloakIAM(httpClient);
 
 // Repositories
 const productRepository = new PrismaProductRepository();
@@ -47,6 +52,7 @@ mediator.register(LowStockProductEvent.name, lowStockProductEventHandler);
 const stockService = new StockService(productRepository, mediator);
 const productService = new ProductService(productRepository, stockService);
 const categoryService = new CategoryService(productRepository);
+const authService = new AuthService(iam);
 
 // Command Handlers
 const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository, eventQueue);
@@ -74,7 +80,7 @@ mediator.register(GetVoucherQuery.name, getVoucherQueryHandler);
 const catalogController = new CatalogController(productService, categoryService);
 const salesController = new SalesController(mediator);
 const userController = new UserController();
-const authController = new AuthController();
+const authController = new AuthController(authService);
 
 export default {
   controllers: {

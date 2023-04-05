@@ -105,6 +105,8 @@ export default class AxiosHttpClient implements IHttpClient {
   }
 
   private getError(e: any) {
+    console.error(e);
+
     if (e.response) {
       return new HttpError(e.response.status, e.response.data, {
         cause: e.stack,

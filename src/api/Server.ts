@@ -3,6 +3,7 @@ import express from 'express';
 import errorHandler from './middlewares/errorHandler';
 import catalog from './routers/catalog';
 import sales from './routers/sales';
+import auth from './routers/auth';
 
 export class Server {
   private _application: express.Application;
@@ -22,6 +23,7 @@ export class Server {
     this._application.use('/catalog', catalog);
     this._application.use('/sales', sales);
     this._application.use('/users', sales);
+    this._application.use('/auth', auth);
   }
 
   private setGlobalTopMiddlewares() {
