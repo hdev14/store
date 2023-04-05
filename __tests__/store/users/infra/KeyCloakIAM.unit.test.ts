@@ -7,15 +7,10 @@ import { mock, mockClear } from 'jest-mock-extended';
 
 const httpClientMock = mock<IHttpClient>();
 
-jest.useFakeTimers();
-const setIntervalSpy = jest.spyOn(global, 'setInterval');
-
 describe("KeyCloakIAM's unit tests", () => {
   const OLD_ENV = process.env;
 
   beforeAll(() => {
-    setIntervalSpy.mockImplementation((() => faker.datatype.number()) as any);
-
     process.env = {
       ...OLD_ENV,
       KEYCLOAK_BASE_URL: 'http://keycloak.test',
@@ -31,40 +26,6 @@ describe("KeyCloakIAM's unit tests", () => {
 
   beforeEach(() => {
     mockClear(httpClientMock);
-  });
-
-  it('calls HttpClient.post with correct params to request the auth endpont of keycloak admin API', () => {
-    httpClientMock.post.mockResolvedValueOnce({
-      status: 200,
-      body: { access_token: faker.random.alphaNumeric(10), expires_in: faker.datatype.number() },
-    });
-
-    // eslint-disable-next-line no-new
-    new KeyCloakIAM(httpClientMock);
-
-    expect(httpClientMock.post).toHaveBeenCalledWith(
-      'http://keycloak.test/realms/test_realm/protocol/openid-connect/token',
-      new URLSearchParams({
-        client_id: 'test_client_id',
-        client_secret: 'test_client_secret',
-        grant_type: 'client_credentials',
-        scope: 'openid',
-      }),
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
-    );
-  });
-
-  it('calls setInterval to request the auth endpoint of keycloak admin API every 58 seconds', () => {
-    httpClientMock.post.mockResolvedValueOnce({
-      status: 200,
-      body: { access_token: faker.random.alphaNumeric(10), expires_in: faker.datatype.number() },
-    });
-
-    // eslint-disable-next-line no-new
-    new KeyCloakIAM(httpClientMock);
-
-    expect(setIntervalSpy).toHaveBeenCalledTimes(1);
-    expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 58000);
   });
 
   describe('KeyCloakIAM.auth()', () => {

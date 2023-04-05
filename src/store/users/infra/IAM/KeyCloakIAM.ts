@@ -28,6 +28,8 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
 
   private readonly clientSecret: string;
 
+  private expiredAt?: Date;
+
   private clientAccessToken = '';
 
   constructor(private readonly httpClient: IHttpClient) {
@@ -35,10 +37,6 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     this.realm = process.env.KEYCLOAK_REALM_NAME;
     this.clientId = process.env.KEYCLOAK_CLIENT_ID;
     this.clientSecret = process.env.KEYCLOAK_CLIENT_SECRET;
-
-    this.authClient().then(() => {
-      setInterval(() => this.authClient().catch(console.error.bind(console)), 58 * 1000);
-    }).catch(console.error.bind(console));
   }
 
   public async auth(email: string, password: string): Promise<TokenPayload> {
@@ -62,6 +60,8 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async registerUser(user: User): Promise<void> {
+    await this.authClient();
+
     const [firstName, ...rest] = user.name.split(' ');
     const lastName = rest.join(' ');
 
@@ -87,6 +87,8 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async updateUser(user: User): Promise<void> {
+    await this.authClient();
+
     const [firstName, ...rest] = user.name.split(' ');
     const lastName = rest.join(' ');
 
@@ -117,6 +119,8 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
 
   public async getUser(userId: string): Promise<User | null> {
     try {
+      await this.authClient();
+
       const { body } = await this.httpClient.get<UserRepresentation>(
         `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}`,
         this.getDefaultHttpClientOptions(),
@@ -139,6 +143,8 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async getUsers(pagination?: PaginationOptions): Promise<User[]> {
+    await this.authClient();
+
     const query = pagination && new URLSearchParams({
       first: pagination.offset.toFixed(0),
       max: pagination.limit.toFixed(0),
@@ -165,6 +171,8 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async addRole(userId: string, role: string): Promise<void> {
+    await this.authClient();
+
     await this.httpClient.post(
       `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}/role-mappings/realm`,
       [{ name: role, containerId: this.realm }],
@@ -173,6 +181,8 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   public async removeRole(userId: string, role: string): Promise<void> {
+    await this.authClient();
+
     await this.httpClient.delete(
       `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}/role-mappings/realm`,
       [{ name: role, containerId: this.realm }],
@@ -181,18 +191,24 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   }
 
   private async authClient() {
-    const response = await this.httpClient.post(
-      `${this.baseUrl}/realms/${this.realm}/protocol/openid-connect/token`,
-      new URLSearchParams({
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
-        grant_type: 'client_credentials',
-        scope: 'openid',
-      }),
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
-    );
+    if (this.clientAccessToken === '' || this.expiredAt === undefined || this.expiredAt < new Date()) {
+      const { body } = await this.httpClient.post(
+        `${this.baseUrl}/realms/${this.realm}/protocol/openid-connect/token`,
+        new URLSearchParams({
+          client_id: this.clientId,
+          client_secret: this.clientSecret,
+          grant_type: 'client_credentials',
+          scope: 'openid',
+        }),
+        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+      );
 
-    this.clientAccessToken = response.body.access_token;
+      const expiredAt = new Date();
+      expiredAt.setDate(expiredAt.getDate() + (body.expires_in / 60));
+
+      this.clientAccessToken = body.access_token;
+      this.expiredAt = expiredAt;
+    }
   }
 
   private getDefaultHttpClientOptions(options?: HttpOptions): HttpOptions {
