@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { getMock, postMock } from '@mocks/axios';
+import { deleteMock, getMock, postMock } from '@mocks/axios';
 
 describe("Auth's Integration Tests", () => {
   describe('POST: /auth', () => {
@@ -248,6 +248,148 @@ describe("Auth's Integration Tests", () => {
       const response = await globalThis.request
         .patch(`/auth/permissions/${fakeUserId}/${fakePermission}`)
         .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(204);
+    });
+  });
+
+  describe('DELETE: /auth/permissions/:userId/:permission', () => {
+    beforeAll(() => {
+      // Mock once because of the expiredAt.
+      postMock.mockResolvedValueOnce({
+        status: 200,
+        data: {
+          access_token: faker.random.alphaNumeric(10),
+          expires_in: faker.datatype.number(),
+        },
+      });
+    });
+
+    afterAll(() => {
+      postMock.mockClear();
+      getMock.mockClear();
+    });
+
+    it("returns a 404 if user doesn't exist", async () => {
+      expect.assertions(2);
+
+      const fakeUserId = faker.datatype.uuid();
+      const fakePermission = faker.word.verb();
+      getMock.mockRejectedValueOnce({
+        response: {
+          status: 404,
+        },
+      });
+
+      const response = await globalThis.request
+        .delete(`/auth/permissions/${fakeUserId}/${fakePermission}`)
+        .send();
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('Usuário não encontrado.');
+    });
+
+    it('returns a 400 if keycloak returns 400', async () => {
+      expect.assertions(2);
+
+      const fakeUserId = faker.datatype.uuid();
+      const fakePermission = faker.word.verb();
+      getMock.mockResolvedValueOnce({
+        data: {
+          id: fakeUserId,
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          attributes: {
+            document: '69156949430',
+          },
+          credentials: [{
+            type: 'password',
+            value: faker.random.alphaNumeric(7).toString(),
+            temporary: false,
+          }],
+        },
+      });
+      deleteMock.mockRejectedValueOnce({
+        response: {
+          status: 400,
+        },
+      });
+
+      const response = await globalThis.request
+        .delete(`/auth/permissions/${fakeUserId}/${fakePermission}`)
+        .send();
+
+      expect(response.status).toEqual(400);
+      expect(response.body.message).toEqual('Não foi possível vincular a permissão.');
+    });
+
+    it('returns a 400 if keycloak returns 404', async () => {
+      expect.assertions(2);
+
+      const fakeUserId = faker.datatype.uuid();
+      const fakePermission = faker.word.verb();
+      getMock.mockResolvedValueOnce({
+        data: {
+          id: fakeUserId,
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          attributes: {
+            document: '69156949430',
+          },
+          credentials: [{
+            type: 'password',
+            value: faker.random.alphaNumeric(7).toString(),
+            temporary: false,
+          }],
+        },
+      });
+      deleteMock.mockRejectedValueOnce({
+        response: {
+          status: 404,
+        },
+      });
+
+      const response = await globalThis.request
+        .delete(`/auth/permissions/${fakeUserId}/${fakePermission}`)
+        .send();
+
+      expect(response.status).toEqual(400);
+      expect(response.body.message).toEqual('Não foi possível vincular a permissão.');
+    });
+
+    it('returns a 204 after removing the permission', async () => {
+      expect.assertions(1);
+
+      const fakeUserId = faker.datatype.uuid();
+      const fakePermission = faker.word.verb();
+      getMock.mockResolvedValueOnce({
+        data: {
+          id: fakeUserId,
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          attributes: {
+            document: '69156949430',
+          },
+          credentials: [{
+            type: 'password',
+            value: faker.random.alphaNumeric(7).toString(),
+            temporary: false,
+          }],
+        },
+      });
+      deleteMock.mockResolvedValueOnce({
+        response: {
+          status: 204,
+          data: {},
+        },
+      });
+
+      const response = await globalThis.request
+        .delete(`/auth/permissions/${fakeUserId}/${fakePermission}`)
         .send();
 
       expect(response.status).toEqual(204);
