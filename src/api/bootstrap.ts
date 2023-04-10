@@ -28,6 +28,7 @@ import BullmqEventQueue from '@shared/BullmqEventQueue';
 import AuthService from '@users/app/AuthService';
 import KeyCloakIAM from '@users/infra/IAM/KeyCloakIAM';
 import AxiosHttpClient from '@shared/AxiosHttpClient';
+import UserService from '@users/app/UserService';
 import SalesController from './controllers/SalesController';
 import CatalogController from './controllers/CatalogController';
 import UserController from './controllers/UserController';
@@ -53,6 +54,7 @@ const stockService = new StockService(productRepository, mediator);
 const productService = new ProductService(productRepository, stockService);
 const categoryService = new CategoryService(productRepository);
 const authService = new AuthService(iam);
+const userService = new UserService(iam);
 
 // Command Handlers
 const addPurchaseOrderItemCommandHandler = new AddPurchaseOrderItemCommandHandler(prismaPurchaseOrderRepository, eventQueue);
@@ -79,7 +81,7 @@ mediator.register(GetVoucherQuery.name, getVoucherQueryHandler);
 // Controllers
 const catalogController = new CatalogController(productService, categoryService);
 const salesController = new SalesController(mediator);
-const userController = new UserController();
+const userController = new UserController(userService);
 const authController = new AuthController(authService);
 
 export default {
