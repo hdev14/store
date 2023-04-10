@@ -19,6 +19,7 @@ type UserRepresentation = {
   }],
 }
 
+// TODO: add getAllRoles
 export default class KeyCloakIAM implements IIdentityAccessManagement {
   private readonly baseUrl: string;
 
