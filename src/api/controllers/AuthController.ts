@@ -1,3 +1,4 @@
+import HttpStatusCodes from '@api/HttpStatusCodes';
 import HttpError from '@shared/errors/HttpError';
 import ValidationError from '@shared/errors/ValidationError';
 import IAuthService from '@users/app/IAuthService';
@@ -13,7 +14,7 @@ export default class AuthController {
 
       const paylaod = await this.authService.auth(email, password);
 
-      return response.status(200).json(paylaod);
+      return response.status(HttpStatusCodes.OK).json(paylaod);
     } catch (e: any) {
       if (e instanceof ValidationError) {
         return response.status(400).json({ errors: e.errors });
@@ -21,10 +22,10 @@ export default class AuthController {
 
       if (e instanceof HttpError) {
         if (e.statusCode === 401) {
-          return response.status(401).json(e.body);
+          return response.status(HttpStatusCodes.UNAUTHORIZED).json(e.body);
         }
 
-        return response.status(502).json({ message: 'Erro ao tentar se comunicar com o serviço de identidade.' });
+        return response.status(HttpStatusCodes.BAD_GATEWAY).json({ message: 'Erro ao tentar se comunicar com o serviço de identidade.' });
       }
 
       return next(e);
@@ -37,14 +38,14 @@ export default class AuthController {
 
       await this.authService.addPermission(userId, permission);
 
-      return response.status(204).json();
+      return response.status(HttpStatusCodes.NO_CONTENT).json();
     } catch (e) {
       if (e instanceof UserNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
 
       if (e instanceof HttpError && (e.statusCode === 400 || e.statusCode === 404)) {
-        return response.status(400).json({ message: 'Não foi possível vincular a permissão.' });
+        return response.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'Não foi possível vincular a permissão.' });
       }
 
       return next(e);
@@ -57,14 +58,14 @@ export default class AuthController {
 
       await this.authService.removePermission(userId, permission);
 
-      return response.status(204).json();
+      return response.status(HttpStatusCodes.NO_CONTENT).json();
     } catch (e) {
       if (e instanceof UserNotFoundError) {
-        return response.status(404).json({ message: e.message });
+        return response.status(HttpStatusCodes.NOT_FOUND).json({ message: e.message });
       }
 
       if (e instanceof HttpError && (e.statusCode === 400 || e.statusCode === 404)) {
-        return response.status(400).json({ message: 'Não foi possível vincular a permissão.' });
+        return response.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'Não foi possível vincular a permissão.' });
       }
 
       return next(e);
