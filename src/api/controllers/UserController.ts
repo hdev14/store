@@ -70,10 +70,20 @@ export default class UserController {
     }
   }
 
-  public async getUser(_: Request, response: Response, next: NextFunction) {
+  public async getUser(request: Request, response: Response, next: NextFunction) {
     try {
-      return response.status(204).json();
+      const { id } = request.params;
+
+      const user = await this.userService.getUser(id);
+
+      return response.status(200).json(user);
     } catch (e) {
+      if (e instanceof UserNotFoundError) {
+        return response.status(HttpStatusCodes.NOT_FOUND).json({
+          message: e.message,
+        });
+      }
+
       return next(e);
     }
   }
