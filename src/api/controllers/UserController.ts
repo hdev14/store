@@ -5,7 +5,6 @@ import IUserService from '@users/app/IUserService';
 import UserNotFoundError from '@users/app/UserNotFoundError';
 import { NextFunction, Request, Response } from 'express';
 
-// TODO: add all methods
 export default class UserController {
   constructor(private readonly userService: IUserService) { }
 
