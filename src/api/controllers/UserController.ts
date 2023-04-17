@@ -90,7 +90,9 @@ export default class UserController {
 
   public async getUsers(_: Request, response: Response, next: NextFunction) {
     try {
-      return response.status(204).json();
+      const users = await this.userService.getUsers();
+
+      return response.status(200).json({ results: users });
     } catch (e) {
       return next(e);
     }
