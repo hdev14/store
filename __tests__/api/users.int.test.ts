@@ -212,4 +212,69 @@ describe("User's Integration Tests", () => {
       });
     });
   });
+
+  describe('GET: /users/:id', () => {
+    it("returns 404 if user doesn't exists", async () => {
+      expect.assertions(2);
+
+      getMock.mockRejectedValueOnce({
+        response: {
+          status: 404,
+          data: {},
+        },
+      });
+
+      const fakeUserId = faker.datatype.uuid();
+
+      const response = await globalThis.request
+        .get(`/users/${fakeUserId}`)
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('Usuário não encontrado.');
+    });
+
+    it('returns 200 with the user data', async () => {
+      expect.assertions(2);
+
+      const fakeUserId = faker.datatype.uuid();
+      const fakeCreatedAt = new Date();
+
+      const fakeData = {
+        id: fakeUserId,
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        attributes: {
+          document: '69156949430',
+        },
+        credentials: [{
+          type: 'password',
+          value: faker.random.alphaNumeric(7).toString(),
+          temporary: false,
+        }],
+        createdTimestamp: fakeCreatedAt.getTime(),
+      };
+
+      getMock.mockResolvedValueOnce({
+        status: 200,
+        data: fakeData,
+      });
+
+      const response = await globalThis.request
+        .get(`/users/${fakeUserId}`)
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({
+        id: fakeUserId,
+        name: `${fakeData.firstName} ${fakeData.lastName}`,
+        email: fakeData.email,
+        document: fakeData.attributes.document,
+        createdAt: fakeCreatedAt.toISOString(),
+      });
+    });
+  });
 });
