@@ -34,7 +34,8 @@ export default class AuthController {
 
   public async addPermission(request: Request, response: Response, next: NextFunction) {
     try {
-      const { userId, permission } = request.params;
+      const { userId } = request.params;
+      const { permission } = request.body;
 
       await this.authService.addPermission(userId, permission);
 
@@ -54,7 +55,8 @@ export default class AuthController {
 
   public async removePermission(request: Request, response: Response, next: NextFunction) {
     try {
-      const { userId, permission } = request.params;
+      const { userId } = request.params;
+      const { permission } = request.body;
 
       await this.authService.removePermission(userId, permission);
 

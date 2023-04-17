@@ -108,7 +108,7 @@ describe("Auth's Integration Tests", () => {
     });
   });
 
-  describe('PATCH: /auth/permissions/:userId/:permission', () => {
+  describe('PATCH: /auth/permissions/:userId', () => {
     beforeAll(() => {
       // Mock once because of the expiredAt.
       postMock.mockResolvedValueOnce({
@@ -137,9 +137,9 @@ describe("Auth's Integration Tests", () => {
       });
 
       const response = await globalThis.request
-        .patch(`/auth/permissions/${fakeUserId}/${fakePermission}`)
+        .patch(`/auth/permissions/${fakeUserId}`)
         .set('Content-Type', 'application/json')
-        .send();
+        .send({ permission: fakePermission });
 
       expect(response.status).toEqual(404);
       expect(response.body.message).toEqual('Usuário não encontrado.');
@@ -173,9 +173,9 @@ describe("Auth's Integration Tests", () => {
       });
 
       const response = await globalThis.request
-        .patch(`/auth/permissions/${fakeUserId}/${fakePermission}`)
+        .patch(`/auth/permissions/${fakeUserId}`)
         .set('Content-Type', 'application/json')
-        .send();
+        .send({ permission: fakePermission });
 
       expect(response.status).toEqual(400);
       expect(response.body.message).toEqual('Não foi possível vincular a permissão.');
@@ -209,9 +209,9 @@ describe("Auth's Integration Tests", () => {
       });
 
       const response = await globalThis.request
-        .patch(`/auth/permissions/${fakeUserId}/${fakePermission}`)
+        .patch(`/auth/permissions/${fakeUserId}`)
         .set('Content-Type', 'application/json')
-        .send();
+        .send({ permission: fakePermission });
 
       expect(response.status).toEqual(400);
       expect(response.body.message).toEqual('Não foi possível vincular a permissão.');
@@ -246,15 +246,15 @@ describe("Auth's Integration Tests", () => {
       });
 
       const response = await globalThis.request
-        .patch(`/auth/permissions/${fakeUserId}/${fakePermission}`)
+        .patch(`/auth/permissions/${fakeUserId}`)
         .set('Content-Type', 'application/json')
-        .send();
+        .send({ permission: fakePermission });
 
       expect(response.status).toEqual(204);
     });
   });
 
-  describe('DELETE: /auth/permissions/:userId/:permission', () => {
+  describe('DELETE: /auth/permissions/:userId', () => {
     beforeAll(() => {
       // Mock once because of the expiredAt.
       postMock.mockResolvedValueOnce({
@@ -283,8 +283,8 @@ describe("Auth's Integration Tests", () => {
       });
 
       const response = await globalThis.request
-        .delete(`/auth/permissions/${fakeUserId}/${fakePermission}`)
-        .send();
+        .delete(`/auth/permissions/${fakeUserId}`)
+        .send({ permission: fakePermission });
 
       expect(response.status).toEqual(404);
       expect(response.body.message).toEqual('Usuário não encontrado.');
@@ -318,8 +318,8 @@ describe("Auth's Integration Tests", () => {
       });
 
       const response = await globalThis.request
-        .delete(`/auth/permissions/${fakeUserId}/${fakePermission}`)
-        .send();
+        .delete(`/auth/permissions/${fakeUserId}`)
+        .send({ permission: fakePermission });
 
       expect(response.status).toEqual(400);
       expect(response.body.message).toEqual('Não foi possível vincular a permissão.');
@@ -353,8 +353,8 @@ describe("Auth's Integration Tests", () => {
       });
 
       const response = await globalThis.request
-        .delete(`/auth/permissions/${fakeUserId}/${fakePermission}`)
-        .send();
+        .delete(`/auth/permissions/${fakeUserId}`)
+        .send({ permission: fakePermission });
 
       expect(response.status).toEqual(400);
       expect(response.body.message).toEqual('Não foi possível vincular a permissão.');
@@ -389,8 +389,8 @@ describe("Auth's Integration Tests", () => {
       });
 
       const response = await globalThis.request
-        .delete(`/auth/permissions/${fakeUserId}/${fakePermission}`)
-        .send();
+        .delete(`/auth/permissions/${fakeUserId}`)
+        .send({ permission: fakePermission });
 
       expect(response.status).toEqual(204);
     });
