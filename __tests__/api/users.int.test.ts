@@ -277,4 +277,53 @@ describe("User's Integration Tests", () => {
       });
     });
   });
+
+  describe('GET: /users', () => {
+    it('returns 200 with an array of users', async () => {
+      expect.assertions(2);
+
+      getMock.mockResolvedValueOnce({
+        status: 200,
+        data: [
+          {
+            id: faker.datatype.uuid(),
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            email: faker.internet.email(),
+            attributes: {
+              document: '69156949430',
+            },
+            credentials: [{
+              type: 'password',
+              value: faker.random.alphaNumeric(6).toString(),
+              temporary: false,
+            }],
+          },
+          {
+            id: faker.datatype.uuid(),
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            email: faker.internet.email(),
+            attributes: {
+              document: '69156949430',
+            },
+            credentials: [{
+              type: 'password',
+              value: faker.random.alphaNumeric(6).toString(),
+              temporary: false,
+            }],
+          },
+        ],
+
+      });
+
+      const response = await globalThis.request
+        .get('/users')
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body.results).toHaveLength(2);
+    });
+  });
 });
