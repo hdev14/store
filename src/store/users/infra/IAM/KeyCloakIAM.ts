@@ -34,10 +34,10 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   private clientAccessToken = '';
 
   constructor(private readonly httpClient: IHttpClient) {
-    this.baseUrl = process.env.KEYCLOAK_BASE_URL;
-    this.realm = process.env.KEYCLOAK_REALM_NAME;
-    this.clientId = process.env.KEYCLOAK_CLIENT_ID;
-    this.clientSecret = process.env.KEYCLOAK_CLIENT_SECRET;
+    this.baseUrl = process.env.KEYCLOAK_BASE_URL!;
+    this.realm = process.env.KEYCLOAK_REALM_NAME!;
+    this.clientId = process.env.KEYCLOAK_CLIENT_ID!;
+    this.clientSecret = process.env.KEYCLOAK_CLIENT_SECRET!;
   }
 
   public async auth(email: string, password: string): Promise<TokenPayload> {

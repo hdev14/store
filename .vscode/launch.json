@@ -17,11 +17,11 @@
         "${workspaceFolder}/node_modules/tsconfig-paths/register"
       ],
       "args": [
-        "${workspaceFolder}/dist/src/api/index.js"
+        "${workspaceFolder}/build/src/api/index.js"
       ],
       "envFile": "${workspaceFolder}/.env.dev",
       "outFiles": [
-        "${workspaceFolder}/dist/**/*.js",
+        "${workspaceFolder}/build/**/*.js",
         "!**/node_modules/**"
       ],
       "skipFiles": [
