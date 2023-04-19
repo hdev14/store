@@ -1,7 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { Product } from '@prisma/client';
+import createFakeAuthToken from '@tests/utils/createFakeAuthToken';
 
 describe("Catalog's Integration Tests", () => {
+  let fakeToken: string;
+
+  beforeAll(() => {
+    fakeToken = createFakeAuthToken();
+  });
+
   describe('GET: /catalog/products/:id', () => {
     let category: any;
     let product: any;
@@ -253,6 +260,35 @@ describe("Catalog's Integration Tests", () => {
     });
   });
 
+  describe('GET: /catalogs/categories', () => {
+    beforeAll(async () => {
+      const categories = [1, 2, 3].map((n) => ({
+        id: faker.datatype.uuid(),
+        code: parseInt(faker.random.numeric(5), 10),
+        name: faker.word.verb() + n,
+      }));
+
+      await globalThis.dbConnection.$transaction(
+        categories.map((data) => globalThis.dbConnection.category.create({ data })),
+      );
+    });
+
+    afterAll(async () => {
+      await globalThis.dbConnection.category.deleteMany({});
+    });
+
+    it('returns all categories', async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get('/catalog/categories')
+        .set('Accept', 'application/json');
+
+      expect(response.status).toEqual(200);
+      expect(response.body.results).toHaveLength(3);
+    });
+  });
+
   describe('PATCH: /catalog/products/:id/stock', () => {
     const products: Array<Product> = [];
 
@@ -339,6 +375,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .patch(`/catalog/products/${productWithStock!.id}/stock`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
         .send({ quantity: qtyToRemove * -1 });
@@ -358,6 +395,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .patch(`/catalog/products/${products[1].id}/stock`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
         .send({ quantity: qtyToAdd });
@@ -379,6 +417,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .patch(`/catalog/products/${productWithZeroStock!.id}/stock`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
         .send({ quantity: qtyToRemove * -1 });
@@ -395,41 +434,13 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .patch(`/catalog/products/${fakeProductId}/stock`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
         .send({ quantity: qtyToRemove * -1 });
 
       expect(response.status).toEqual(422);
       expect(response.body.message).toEqual('Não foi possível atualizar o estoque do produto.');
-    });
-  });
-
-  describe('GET: /catalogs/categories', () => {
-    beforeAll(async () => {
-      const categories = [1, 2, 3].map((n) => ({
-        id: faker.datatype.uuid(),
-        code: parseInt(faker.random.numeric(5), 10),
-        name: faker.word.verb() + n,
-      }));
-
-      await globalThis.dbConnection.$transaction(
-        categories.map((data) => globalThis.dbConnection.category.create({ data })),
-      );
-    });
-
-    afterAll(async () => {
-      await globalThis.dbConnection.category.deleteMany({});
-    });
-
-    it('returns all categories', async () => {
-      expect.assertions(2);
-
-      const response = await globalThis.request
-        .get('/catalog/categories')
-        .set('Accept', 'application/json');
-
-      expect(response.status).toEqual(200);
-      expect(response.body.results).toHaveLength(3);
     });
   });
 
@@ -468,6 +479,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .post('/catalog/products')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -497,6 +509,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .post('/catalog/products')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -522,6 +535,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .post('/catalog/products')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(invalidData);
@@ -598,6 +612,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .put(`/catalog/products/${fakeProductId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -624,6 +639,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .put(`/catalog/products/${productId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -664,6 +680,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .post('/catalog/categories')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -683,6 +700,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .post('/catalog/categories')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(invalidData);
@@ -723,6 +741,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .put(`/catalog/categories/${fakeCategoryId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -740,6 +759,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .put(`/catalog/categories/${categoryId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(invalidData);
@@ -758,6 +778,7 @@ describe("Catalog's Integration Tests", () => {
 
       const response = await globalThis.request
         .put(`/catalog/categories/${categoryId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);

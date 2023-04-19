@@ -1,7 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { deleteMock, getMock, postMock } from '@mocks/axios';
+import createFakeAuthToken from '@tests/utils/createFakeAuthToken';
 
 describe("Auth's Integration Tests", () => {
+  let fakeToken: string;
+
+  beforeAll(() => {
+    fakeToken = createFakeAuthToken();
+  });
+
   describe('POST: /auth', () => {
     afterEach(() => {
       postMock.mockClear();
@@ -138,6 +145,7 @@ describe("Auth's Integration Tests", () => {
 
       const response = await globalThis.request
         .patch(`/auth/permissions/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send({ permission: fakePermission });
 
@@ -174,6 +182,7 @@ describe("Auth's Integration Tests", () => {
 
       const response = await globalThis.request
         .patch(`/auth/permissions/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send({ permission: fakePermission });
 
@@ -210,6 +219,7 @@ describe("Auth's Integration Tests", () => {
 
       const response = await globalThis.request
         .patch(`/auth/permissions/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send({ permission: fakePermission });
 
@@ -247,6 +257,7 @@ describe("Auth's Integration Tests", () => {
 
       const response = await globalThis.request
         .patch(`/auth/permissions/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send({ permission: fakePermission });
 
@@ -284,6 +295,7 @@ describe("Auth's Integration Tests", () => {
 
       const response = await globalThis.request
         .delete(`/auth/permissions/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .send({ permission: fakePermission });
 
       expect(response.status).toEqual(404);
@@ -319,6 +331,7 @@ describe("Auth's Integration Tests", () => {
 
       const response = await globalThis.request
         .delete(`/auth/permissions/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .send({ permission: fakePermission });
 
       expect(response.status).toEqual(400);
@@ -354,6 +367,7 @@ describe("Auth's Integration Tests", () => {
 
       const response = await globalThis.request
         .delete(`/auth/permissions/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .send({ permission: fakePermission });
 
       expect(response.status).toEqual(400);
@@ -390,6 +404,7 @@ describe("Auth's Integration Tests", () => {
 
       const response = await globalThis.request
         .delete(`/auth/permissions/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .send({ permission: fakePermission });
 
       expect(response.status).toEqual(204);

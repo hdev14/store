@@ -1,8 +1,13 @@
 import { faker } from '@faker-js/faker';
 import { postMock, getMock, putMock } from '@mocks/axios';
+import createFakeAuthToken from '@tests/utils/createFakeAuthToken';
 
 describe("User's Integration Tests", () => {
+  let fakeToken: string;
+
   beforeAll(() => {
+    fakeToken = createFakeAuthToken();
+
     postMock.mockResolvedValueOnce({
       status: 200,
       data: {
@@ -31,6 +36,7 @@ describe("User's Integration Tests", () => {
 
       const response = await globalThis.request
         .post('/users/')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(invalidData);
 
@@ -57,6 +63,7 @@ describe("User's Integration Tests", () => {
 
       const response = await globalThis.request
         .post('/users/')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(data);
 
@@ -78,6 +85,7 @@ describe("User's Integration Tests", () => {
 
       const response = await globalThis.request
         .post('/users/')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(data);
 
@@ -113,6 +121,7 @@ describe("User's Integration Tests", () => {
 
       const response = await globalThis.request
         .put(`/users/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(data);
 
@@ -153,6 +162,7 @@ describe("User's Integration Tests", () => {
 
       const response = await globalThis.request
         .put(`/users/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(invalidData);
 
@@ -199,6 +209,7 @@ describe("User's Integration Tests", () => {
 
       const response = await globalThis.request
         .put(`/users/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(data);
 
@@ -228,6 +239,7 @@ describe("User's Integration Tests", () => {
 
       const response = await globalThis.request
         .get(`/users/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send();
 
@@ -264,6 +276,7 @@ describe("User's Integration Tests", () => {
 
       const response = await globalThis.request
         .get(`/users/${fakeUserId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send();
 
@@ -319,6 +332,7 @@ describe("User's Integration Tests", () => {
 
       const response = await globalThis.request
         .get('/users')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send();
 

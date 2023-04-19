@@ -1,8 +1,15 @@
 import { faker } from '@faker-js/faker';
 import { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import { VoucherDiscountTypes } from '@sales/domain/Voucher';
+import createFakeAuthToken from '@tests/utils/createFakeAuthToken';
 
 describe('Sales Integration Tests', () => {
+  let fakeToken: string;
+
+  beforeAll(() => {
+    fakeToken = createFakeAuthToken();
+  });
+
   describe('POST: /sales/orders/items', () => {
     let product: any;
     let user: any;
@@ -68,6 +75,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .post('/sales/orders/items')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -89,6 +97,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .post('/sales/orders/items')
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -198,6 +207,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .delete(`/sales/orders/items/${fakePurchaseOrderItemId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send();
@@ -219,6 +229,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .delete(`/sales/orders/items/${invalidPurchaseOrderItemId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send();
@@ -234,6 +245,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .delete(`/sales/orders/items/${noexistentPurchaseOrderItemId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send();
@@ -331,6 +343,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -356,6 +369,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -374,6 +388,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -392,6 +407,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -410,6 +426,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -428,6 +445,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .post(`/sales/orders/${fakePurchaseOrderId}/vouchers`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send(data);
@@ -473,6 +491,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .get(`/sales/orders/${fakePurchaseOrderId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .send();
 
@@ -487,6 +506,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .get(`/sales/orders/${nonexistPurchaseOrderId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .send();
 
@@ -563,6 +583,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .get(`/sales/customers/${fakeCustomerId1}/orders`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .send();
 
@@ -575,6 +596,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .get(`/sales/customers/${faker.datatype.uuid()}/orders`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .send();
 
@@ -656,6 +678,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .get(`/sales/orders/items/${fakePurchaseOrderItemId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .send();
 
@@ -670,6 +693,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .get(`/sales/orders/items/${nonexistPurchaseOrderId}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .send();
 
@@ -707,6 +731,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .get(`/sales/vouchers/${fakeVoucherCode}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .send();
 
@@ -721,6 +746,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .get(`/sales/vouchers/${nonexistentVoucherCode}`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Accept', 'application/json')
         .send();
 
@@ -812,6 +838,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .patch(`/sales/orders/items/${fakePurchaseOrderItemId}/quantities`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send({ quantity });
@@ -832,6 +859,7 @@ describe('Sales Integration Tests', () => {
 
       const response = await globalThis.request
         .patch(`/sales/orders/items/${nonexsitentPurchaseOrderItemId}/quantities`)
+        .auth(fakeToken, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send({ quantity });
