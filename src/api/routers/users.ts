@@ -1,9 +1,12 @@
 import { Router } from 'express';
+import auth from '@api/middlewares/auth';
 import bootstrap from '../bootstrap';
 
 const router = Router();
 
 const { userController } = bootstrap.controllers;
+
+router.use(auth);
 
 router.post('/', userController.createUser.bind(userController));
 router.put('/:id', userController.updateUser.bind(userController));

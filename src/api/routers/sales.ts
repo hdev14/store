@@ -1,9 +1,12 @@
 import { Router } from 'express';
+import auth from '@api/middlewares/auth';
 import bootstrap from '../bootstrap';
 
 const router = Router();
 
 const { salesController } = bootstrap.controllers;
+
+router.use(auth);
 
 router.get('/orders/:id', salesController.getPurchaseOrder.bind(salesController));
 
