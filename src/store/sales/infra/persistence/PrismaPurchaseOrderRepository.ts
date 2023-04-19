@@ -6,7 +6,6 @@ import {
   PurchaseOrderItem as PrismaPurchaseOrderItem,
 } from '@prisma/client';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
-import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderProps, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';

@@ -1,14 +1,13 @@
 /* eslint-disable max-len */
 import { IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands } from '@sales/domain/IPurchaseOrderRepository';
-import Product from '@sales/domain/Product';
 import PurchaseOrder, { PurchaseOrderProps, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
 import RepositoryError from '@shared/errors/RepositoryError';
-import ProductModel, { IProduct } from '@mongoose/models/ProductModel';
-import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@mongoose/models/PurchaseOrderItemModel';
-import PurchaseOrderModel, { IPurchaseOrder } from '@mongoose/models/PurchaseOrderModel';
-import VoucherModel, { IVoucher } from '@mongoose/models/VoucherModel';
+import ProductModel, { IProduct } from '@databases/mongoose/models/ProductModel';
+import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@databases/mongoose/models/PurchaseOrderItemModel';
+import PurchaseOrderModel, { IPurchaseOrder } from '@databases/mongoose/models/PurchaseOrderModel';
+import VoucherModel, { IVoucher } from '@databases/mongoose/models/VoucherModel';
 
 export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
