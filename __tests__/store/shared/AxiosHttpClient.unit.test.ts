@@ -1,30 +1,14 @@
-import axios, { AxiosInstance } from 'axios';
 import AxiosHttpClient from '@shared/AxiosHttpClient';
-import { mockClear, mockDeep } from 'jest-mock-extended';
 import { faker } from '@faker-js/faker';
 import HttpError from '@shared/errors/HttpError';
-
-jest.mock('axios');
-
-const axiosMocked = jest.mocked(axios);
+import { axiosMock, createMock } from '@mocks/axios';
 
 describe("AxiosHttpClient's unit tests", () => {
-  const axiosInstanceMock = mockDeep<AxiosInstance>();
-
-  beforeAll(() => {
-    axiosMocked.create.mockReturnValue(axiosInstanceMock);
-  });
-
-  afterEach(() => {
-    mockClear(axiosInstanceMock);
-    axiosMocked.mockClear();
-  });
-
   it('creates a new instance of axios', () => {
     // eslint-disable-next-line no-new
     new AxiosHttpClient();
 
-    expect(axiosMocked.create).toHaveBeenCalled();
+    expect(createMock).toHaveBeenCalled();
   });
 
   describe('AxiosHttpClient.setDefaultHeaders()', () => {
@@ -36,18 +20,18 @@ describe("AxiosHttpClient's unit tests", () => {
         test_header2: 'test2',
       });
 
-      expect(axiosInstanceMock.defaults.headers.common.test_header1).toEqual('test1');
-      expect(axiosInstanceMock.defaults.headers.common.test_header2).toEqual('test2');
+      expect(axiosMock.defaults.headers.common.test_header1).toEqual('test1');
+      expect(axiosMock.defaults.headers.common.test_header2).toEqual('test2');
     });
   });
 
   describe('AxiosHttpClient.get()', () => {
     beforeEach(() => {
-      axiosInstanceMock.get.mockResolvedValue({ data: {} });
+      axiosMock.get.mockResolvedValue({ data: {} });
     });
 
     afterEach(() => {
-      axiosInstanceMock.get.mockClear();
+      axiosMock.get.mockClear();
     });
 
     it('calls axios.get with correct url', async () => {
@@ -59,7 +43,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.get(fakeUrl);
 
-      expect(axiosInstanceMock.get).toHaveBeenCalledWith(fakeUrl, {});
+      expect(axiosMock.get).toHaveBeenCalledWith(fakeUrl, {});
     });
 
     it('calls axios.get with correct url and options', async () => {
@@ -73,7 +57,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.get(fakeUrl, { query: fakeQuery, headers: fakeHeaders });
 
-      expect(axiosInstanceMock.get).toHaveBeenCalledWith(fakeUrl, {
+      expect(axiosMock.get).toHaveBeenCalledWith(fakeUrl, {
         params: fakeQuery,
         headers: fakeHeaders,
       });
@@ -96,7 +80,7 @@ describe("AxiosHttpClient's unit tests", () => {
         data: fakeResponseBody,
       };
 
-      axiosInstanceMock.get.mockResolvedValueOnce(fakeResponse);
+      axiosMock.get.mockResolvedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -118,7 +102,7 @@ describe("AxiosHttpClient's unit tests", () => {
         },
       };
 
-      axiosInstanceMock.get.mockRejectedValueOnce(fakeResponse);
+      axiosMock.get.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -136,7 +120,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      axiosInstanceMock.get.mockRejectedValueOnce(new Error('test'));
+      axiosMock.get.mockRejectedValueOnce(new Error('test'));
 
       const fakeUrl = faker.internet.url();
 
@@ -151,11 +135,11 @@ describe("AxiosHttpClient's unit tests", () => {
 
   describe('AxiosHttpClient.delete()', () => {
     beforeEach(() => {
-      axiosInstanceMock.delete.mockResolvedValue({ data: {} });
+      axiosMock.delete.mockResolvedValue({ data: {} });
     });
 
     afterEach(() => {
-      axiosInstanceMock.delete.mockClear();
+      axiosMock.delete.mockClear();
     });
 
     it('calls axios.delete with correct url', async () => {
@@ -167,7 +151,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.delete(fakeUrl);
 
-      expect(axiosInstanceMock.delete).toHaveBeenCalledWith(fakeUrl, {});
+      expect(axiosMock.delete).toHaveBeenCalledWith(fakeUrl, {});
     });
 
     it('calls axios.delete with correct url and options', async () => {
@@ -181,7 +165,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.delete(fakeUrl, undefined, { query: fakeQuery, headers: fakeHeaders });
 
-      expect(axiosInstanceMock.delete).toHaveBeenCalledWith(fakeUrl, {
+      expect(axiosMock.delete).toHaveBeenCalledWith(fakeUrl, {
         params: fakeQuery,
         headers: fakeHeaders,
       });
@@ -204,7 +188,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.delete(fakeUrl, fakeData, { query: fakeQuery, headers: fakeHeaders });
 
-      expect(axiosInstanceMock.delete).toHaveBeenCalledWith(fakeUrl, {
+      expect(axiosMock.delete).toHaveBeenCalledWith(fakeUrl, {
         params: fakeQuery,
         headers: fakeHeaders,
         data: fakeData,
@@ -228,7 +212,7 @@ describe("AxiosHttpClient's unit tests", () => {
         data: fakeResponseBody,
       };
 
-      axiosInstanceMock.delete.mockResolvedValueOnce(fakeResponse);
+      axiosMock.delete.mockResolvedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -250,7 +234,7 @@ describe("AxiosHttpClient's unit tests", () => {
         },
       };
 
-      axiosInstanceMock.delete.mockRejectedValueOnce(fakeResponse);
+      axiosMock.delete.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -268,7 +252,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      axiosInstanceMock.delete.mockRejectedValueOnce(new Error('test'));
+      axiosMock.delete.mockRejectedValueOnce(new Error('test'));
 
       const fakeUrl = faker.internet.url();
 
@@ -283,11 +267,11 @@ describe("AxiosHttpClient's unit tests", () => {
 
   describe('AxiosHttpClient.post()', () => {
     beforeEach(() => {
-      axiosInstanceMock.post.mockResolvedValue({ data: {} });
+      axiosMock.post.mockResolvedValue({ data: {} });
     });
 
     afterEach(() => {
-      axiosInstanceMock.post.mockClear();
+      axiosMock.post.mockClear();
     });
 
     it('calls axios.post with correct url', async () => {
@@ -299,7 +283,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.post(fakeUrl);
 
-      expect(axiosInstanceMock.post).toHaveBeenCalledWith(fakeUrl, undefined, {});
+      expect(axiosMock.post).toHaveBeenCalledWith(fakeUrl, undefined, {});
     });
 
     it('calls axios.post with correct url and data', async () => {
@@ -316,7 +300,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.post(fakeUrl, fakeData);
 
-      expect(axiosInstanceMock.post).toHaveBeenCalledWith(fakeUrl, fakeData, {});
+      expect(axiosMock.post).toHaveBeenCalledWith(fakeUrl, fakeData, {});
     });
 
     it('calls axios.post with correct url, data and options', async () => {
@@ -340,7 +324,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.post(fakeUrl, fakeData, fakeOptions);
 
-      expect(axiosInstanceMock.post).toHaveBeenCalledWith(fakeUrl, fakeData, {
+      expect(axiosMock.post).toHaveBeenCalledWith(fakeUrl, fakeData, {
         params: fakeOptions.query,
         headers: fakeOptions.headers,
       });
@@ -365,7 +349,7 @@ describe("AxiosHttpClient's unit tests", () => {
         data: fakeResponseBody,
       };
 
-      axiosInstanceMock.post.mockResolvedValueOnce(fakeResponse);
+      axiosMock.post.mockResolvedValueOnce(fakeResponse);
 
       const response = await httpClient.post<typeof fakeResponseBody>(fakeUrl);
 
@@ -385,7 +369,7 @@ describe("AxiosHttpClient's unit tests", () => {
         },
       };
 
-      axiosInstanceMock.post.mockRejectedValueOnce(fakeResponse);
+      axiosMock.post.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -403,7 +387,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      axiosInstanceMock.post.mockRejectedValueOnce(new Error('test'));
+      axiosMock.post.mockRejectedValueOnce(new Error('test'));
 
       const fakeUrl = faker.internet.url();
 
@@ -418,11 +402,11 @@ describe("AxiosHttpClient's unit tests", () => {
 
   describe('AxiosHttpClient.patch()', () => {
     beforeEach(() => {
-      axiosInstanceMock.patch.mockResolvedValue({ data: {} });
+      axiosMock.patch.mockResolvedValue({ data: {} });
     });
 
     afterEach(() => {
-      axiosInstanceMock.patch.mockClear();
+      axiosMock.patch.mockClear();
     });
 
     it('calls axios.patch with correct url', async () => {
@@ -434,7 +418,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.patch(fakeUrl);
 
-      expect(axiosInstanceMock.patch).toHaveBeenCalledWith(fakeUrl, undefined, {});
+      expect(axiosMock.patch).toHaveBeenCalledWith(fakeUrl, undefined, {});
     });
 
     it('calls axios.patch with correct url and data', async () => {
@@ -451,7 +435,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.patch(fakeUrl, fakeData);
 
-      expect(axiosInstanceMock.patch).toHaveBeenCalledWith(fakeUrl, fakeData, {});
+      expect(axiosMock.patch).toHaveBeenCalledWith(fakeUrl, fakeData, {});
     });
 
     it('calls axios.patch with correct url, data and options', async () => {
@@ -475,7 +459,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.patch(fakeUrl, fakeData, fakeOptions);
 
-      expect(axiosInstanceMock.patch).toHaveBeenCalledWith(fakeUrl, fakeData, {
+      expect(axiosMock.patch).toHaveBeenCalledWith(fakeUrl, fakeData, {
         params: fakeOptions.query,
         headers: fakeOptions.headers,
       });
@@ -500,7 +484,7 @@ describe("AxiosHttpClient's unit tests", () => {
         data: fakeResponseBody,
       };
 
-      axiosInstanceMock.patch.mockResolvedValueOnce(fakeResponse);
+      axiosMock.patch.mockResolvedValueOnce(fakeResponse);
 
       const response = await httpClient.patch<typeof fakeResponseBody>(fakeUrl);
 
@@ -520,7 +504,7 @@ describe("AxiosHttpClient's unit tests", () => {
         },
       };
 
-      axiosInstanceMock.patch.mockRejectedValueOnce(fakeResponse);
+      axiosMock.patch.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -538,7 +522,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      axiosInstanceMock.patch.mockRejectedValueOnce(new Error('test'));
+      axiosMock.patch.mockRejectedValueOnce(new Error('test'));
 
       const fakeUrl = faker.internet.url();
 
@@ -553,11 +537,11 @@ describe("AxiosHttpClient's unit tests", () => {
 
   describe('AxiosHttpClient.put()', () => {
     beforeEach(() => {
-      axiosInstanceMock.put.mockResolvedValue({ data: {} });
+      axiosMock.put.mockResolvedValue({ data: {} });
     });
 
     afterEach(() => {
-      axiosInstanceMock.put.mockClear();
+      axiosMock.put.mockClear();
     });
 
     it('calls axios.put with correct url', async () => {
@@ -569,7 +553,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.put(fakeUrl);
 
-      expect(axiosInstanceMock.put).toHaveBeenCalledWith(fakeUrl, undefined, {});
+      expect(axiosMock.put).toHaveBeenCalledWith(fakeUrl, undefined, {});
     });
 
     it('calls axios.put with correct url and data', async () => {
@@ -586,7 +570,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.put(fakeUrl, fakeData);
 
-      expect(axiosInstanceMock.put).toHaveBeenCalledWith(fakeUrl, fakeData, {});
+      expect(axiosMock.put).toHaveBeenCalledWith(fakeUrl, fakeData, {});
     });
 
     it('calls axios.put with correct url, data and options', async () => {
@@ -610,7 +594,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       await httpClient.put(fakeUrl, fakeData, fakeOptions);
 
-      expect(axiosInstanceMock.put).toHaveBeenCalledWith(fakeUrl, fakeData, {
+      expect(axiosMock.put).toHaveBeenCalledWith(fakeUrl, fakeData, {
         params: fakeOptions.query,
         headers: fakeOptions.headers,
       });
@@ -635,7 +619,7 @@ describe("AxiosHttpClient's unit tests", () => {
         data: fakeResponseBody,
       };
 
-      axiosInstanceMock.put.mockResolvedValueOnce(fakeResponse);
+      axiosMock.put.mockResolvedValueOnce(fakeResponse);
 
       const response = await httpClient.put<typeof fakeResponseBody>(fakeUrl);
 
@@ -655,7 +639,7 @@ describe("AxiosHttpClient's unit tests", () => {
         },
       };
 
-      axiosInstanceMock.put.mockRejectedValueOnce(fakeResponse);
+      axiosMock.put.mockRejectedValueOnce(fakeResponse);
 
       const fakeUrl = faker.internet.url();
 
@@ -673,7 +657,7 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const httpClient = new AxiosHttpClient();
 
-      axiosInstanceMock.put.mockRejectedValueOnce(new Error('test'));
+      axiosMock.put.mockRejectedValueOnce(new Error('test'));
 
       const fakeUrl = faker.internet.url();
 

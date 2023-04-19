@@ -1,20 +1,18 @@
-export const getMock = jest.fn();
-export const postMock = jest.fn();
-export const putMock = jest.fn();
-export const deleteMock = jest.fn();
-export const patchMock = jest.fn();
+import { AxiosInstance } from 'axios';
+import { mock, DeepMockProxy } from 'jest-mock-extended';
+
+export const axiosMock = mock<AxiosInstance>() as unknown as DeepMockProxy<AxiosInstance>;
+
+Object.assign(axiosMock, {
+  defaults: {
+    headers: {
+      common: {},
+    },
+  },
+});
+
+export const createMock = jest.fn().mockReturnValue(axiosMock);
 
 export default {
-  create: jest.fn().mockReturnValue({
-    get: getMock,
-    post: postMock,
-    put: putMock,
-    delete: deleteMock,
-    patch: patchMock,
-    interceptors: {
-      request: {
-        use: jest.fn(),
-      },
-    },
-  }),
+  create: createMock,
 };

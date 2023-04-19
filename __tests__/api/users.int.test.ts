@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { postMock, getMock, putMock } from '@mocks/axios';
+import { axiosMock } from '@mocks/axios';
 import createFakeAuthToken from '@tests/utils/createFakeAuthToken';
 
 describe("User's Integration Tests", () => {
@@ -8,7 +8,7 @@ describe("User's Integration Tests", () => {
   beforeAll(() => {
     fakeToken = createFakeAuthToken();
 
-    postMock.mockResolvedValueOnce({
+    axiosMock.post.mockResolvedValueOnce({
       status: 200,
       data: {
         access_token: faker.random.alphaNumeric(10),
@@ -18,9 +18,9 @@ describe("User's Integration Tests", () => {
   });
 
   afterAll(() => {
-    postMock.mockClear();
-    getMock.mockClear();
-    putMock.mockClear();
+    axiosMock.post.mockClear();
+    axiosMock.get.mockClear();
+    axiosMock.put.mockClear();
   });
 
   describe('POST: /users', () => {
@@ -54,7 +54,7 @@ describe("User's Integration Tests", () => {
         password: faker.random.alphaNumeric(6),
       };
 
-      postMock.mockRejectedValueOnce({
+      axiosMock.post.mockRejectedValueOnce({
         response: {
           status: 400,
           data: {},
@@ -81,7 +81,7 @@ describe("User's Integration Tests", () => {
         password: faker.random.alphaNumeric(6),
       };
 
-      postMock.mockResolvedValueOnce({});
+      axiosMock.post.mockResolvedValueOnce({});
 
       const response = await globalThis.request
         .post('/users/')
@@ -103,7 +103,7 @@ describe("User's Integration Tests", () => {
     it("returns 404 if user doesn't exists", async () => {
       expect.assertions(2);
 
-      getMock.mockRejectedValueOnce({
+      axiosMock.get.mockRejectedValueOnce({
         response: {
           status: 404,
           data: {},
@@ -134,7 +134,7 @@ describe("User's Integration Tests", () => {
 
       const fakeUserId = faker.datatype.uuid();
 
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         status: 200,
         data: {
           id: fakeUserId,
@@ -176,7 +176,7 @@ describe("User's Integration Tests", () => {
       const fakeUserId = faker.datatype.uuid();
       const fakeCreatedAt = new Date();
 
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         status: 200,
         data: {
           id: fakeUserId,
@@ -195,7 +195,7 @@ describe("User's Integration Tests", () => {
         },
       });
 
-      putMock.mockResolvedValueOnce({
+      axiosMock.put.mockResolvedValueOnce({
         status: 200,
         data: {},
       });
@@ -228,7 +228,7 @@ describe("User's Integration Tests", () => {
     it("returns 404 if user doesn't exists", async () => {
       expect.assertions(2);
 
-      getMock.mockRejectedValueOnce({
+      axiosMock.get.mockRejectedValueOnce({
         response: {
           status: 404,
           data: {},
@@ -269,7 +269,7 @@ describe("User's Integration Tests", () => {
         createdTimestamp: fakeCreatedAt.getTime(),
       };
 
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         status: 200,
         data: fakeData,
       });
@@ -295,7 +295,7 @@ describe("User's Integration Tests", () => {
     it('returns 200 with an array of users', async () => {
       expect.assertions(2);
 
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         status: 200,
         data: [
           {

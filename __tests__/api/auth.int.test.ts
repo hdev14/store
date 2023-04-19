@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { deleteMock, getMock, postMock } from '@mocks/axios';
+import { axiosMock } from '@mocks/axios';
 import createFakeAuthToken from '@tests/utils/createFakeAuthToken';
 
 describe("Auth's Integration Tests", () => {
@@ -11,7 +11,7 @@ describe("Auth's Integration Tests", () => {
 
   describe('POST: /auth', () => {
     afterEach(() => {
-      postMock.mockClear();
+      axiosMock.post.mockClear();
     });
 
     it('returns a 400 if email and password are not valid', async () => {
@@ -34,7 +34,7 @@ describe("Auth's Integration Tests", () => {
     it('returns a 401 if the KeycloakIAM returns a HttpError of status code 401', async () => {
       expect.assertions(2);
 
-      postMock.mockRejectedValueOnce({
+      axiosMock.post.mockRejectedValueOnce({
         response: {
           status: 401,
           data: {
@@ -62,7 +62,7 @@ describe("Auth's Integration Tests", () => {
     it('returns a 502 if the KeycloakIAM returns a HttpError different of status code 401', async () => {
       expect.assertions(2);
 
-      postMock.mockRejectedValueOnce({
+      axiosMock.post.mockRejectedValueOnce({
         response: {
           status: faker.internet.httpStatusCode({ types: ['serverError', 'clientError'] }),
           data: {
@@ -92,7 +92,7 @@ describe("Auth's Integration Tests", () => {
 
       const fakeAccessToken = faker.random.alphaNumeric(10);
 
-      postMock.mockResolvedValueOnce({
+      axiosMock.post.mockResolvedValueOnce({
         status: 200,
         data: {
           access_token: fakeAccessToken,
@@ -118,7 +118,7 @@ describe("Auth's Integration Tests", () => {
   describe('PATCH: /auth/permissions/:userId', () => {
     beforeAll(() => {
       // Mock once because of the expiredAt.
-      postMock.mockResolvedValueOnce({
+      axiosMock.post.mockResolvedValueOnce({
         status: 200,
         data: {
           access_token: faker.random.alphaNumeric(10),
@@ -128,8 +128,8 @@ describe("Auth's Integration Tests", () => {
     });
 
     afterAll(() => {
-      postMock.mockClear();
-      getMock.mockClear();
+      axiosMock.post.mockClear();
+      axiosMock.get.mockClear();
     });
 
     it("returns a 404 if user doesn't exist", async () => {
@@ -137,7 +137,7 @@ describe("Auth's Integration Tests", () => {
 
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
-      getMock.mockRejectedValueOnce({
+      axiosMock.get.mockRejectedValueOnce({
         response: {
           status: 404,
         },
@@ -158,7 +158,7 @@ describe("Auth's Integration Tests", () => {
 
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         data: {
           id: fakeUserId,
           firstName: faker.name.firstName(),
@@ -174,7 +174,7 @@ describe("Auth's Integration Tests", () => {
           }],
         },
       });
-      postMock.mockRejectedValueOnce({
+      axiosMock.post.mockRejectedValueOnce({
         response: {
           status: 400,
         },
@@ -195,7 +195,7 @@ describe("Auth's Integration Tests", () => {
 
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         data: {
           id: fakeUserId,
           firstName: faker.name.firstName(),
@@ -211,7 +211,7 @@ describe("Auth's Integration Tests", () => {
           }],
         },
       });
-      postMock.mockRejectedValueOnce({
+      axiosMock.post.mockRejectedValueOnce({
         response: {
           status: 404,
         },
@@ -232,7 +232,7 @@ describe("Auth's Integration Tests", () => {
 
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         data: {
           id: fakeUserId,
           firstName: faker.name.firstName(),
@@ -248,7 +248,7 @@ describe("Auth's Integration Tests", () => {
           }],
         },
       });
-      postMock.mockResolvedValueOnce({
+      axiosMock.post.mockResolvedValueOnce({
         response: {
           status: 204,
           data: {},
@@ -268,7 +268,7 @@ describe("Auth's Integration Tests", () => {
   describe('DELETE: /auth/permissions/:userId', () => {
     beforeAll(() => {
       // Mock once because of the expiredAt.
-      postMock.mockResolvedValueOnce({
+      axiosMock.post.mockResolvedValueOnce({
         status: 200,
         data: {
           access_token: faker.random.alphaNumeric(10),
@@ -278,8 +278,8 @@ describe("Auth's Integration Tests", () => {
     });
 
     afterAll(() => {
-      postMock.mockClear();
-      getMock.mockClear();
+      axiosMock.post.mockClear();
+      axiosMock.get.mockClear();
     });
 
     it("returns a 404 if user doesn't exist", async () => {
@@ -287,7 +287,7 @@ describe("Auth's Integration Tests", () => {
 
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
-      getMock.mockRejectedValueOnce({
+      axiosMock.get.mockRejectedValueOnce({
         response: {
           status: 404,
         },
@@ -307,7 +307,7 @@ describe("Auth's Integration Tests", () => {
 
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         data: {
           id: fakeUserId,
           firstName: faker.name.firstName(),
@@ -323,7 +323,7 @@ describe("Auth's Integration Tests", () => {
           }],
         },
       });
-      deleteMock.mockRejectedValueOnce({
+      axiosMock.delete.mockRejectedValueOnce({
         response: {
           status: 400,
         },
@@ -343,7 +343,7 @@ describe("Auth's Integration Tests", () => {
 
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         data: {
           id: fakeUserId,
           firstName: faker.name.firstName(),
@@ -359,7 +359,7 @@ describe("Auth's Integration Tests", () => {
           }],
         },
       });
-      deleteMock.mockRejectedValueOnce({
+      axiosMock.delete.mockRejectedValueOnce({
         response: {
           status: 404,
         },
@@ -379,7 +379,7 @@ describe("Auth's Integration Tests", () => {
 
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
-      getMock.mockResolvedValueOnce({
+      axiosMock.get.mockResolvedValueOnce({
         data: {
           id: fakeUserId,
           firstName: faker.name.firstName(),
@@ -395,7 +395,7 @@ describe("Auth's Integration Tests", () => {
           }],
         },
       });
-      deleteMock.mockResolvedValueOnce({
+      axiosMock.delete.mockResolvedValueOnce({
         response: {
           status: 204,
           data: {},
