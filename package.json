@@ -18,7 +18,7 @@
     "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev --skip-generate"
   },
   "prisma": {
-    "schema": "databases/prisma/schema.prisma"
+    "schema": "db/prisma/schema.prisma"
   },
   "repository": {
     "type": "git",

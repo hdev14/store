@@ -34,8 +34,8 @@
       "@api/*": [
         "src/api/*"
       ],
-      "@databases/*": [
-        "databases/*"
+      "@db/*": [
+        "db/*"
       ]
     },
     "sourceMap": true,

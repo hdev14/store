@@ -7,13 +7,13 @@ import Product from '@sales/domain/Product';
 import RepositoryError from '@shared/errors/RepositoryError';
 import {
   ProductModel, PurchaseOrderItemModel, PurchaseOrderModel, VoucherModel,
-} from '@databases/mongoose/models';
+} from '@db/mongoose/models';
 
-jest.mock('../../../../databases/mongoose/models/PurchaseOrderModel');
-jest.mock('../../../../databases/mongoose/models/PurchaseOrderItemModel');
-jest.mock('../../../../databases/mongoose/models/VoucherModel');
-jest.mock('../../../../databases/mongoose/models/ProductModel');
-jest.mock('../../../../databases/mongoose/models/UserModel');
+jest.mock('../../../../db/mongoose/models/PurchaseOrderModel');
+jest.mock('../../../../db/mongoose/models/PurchaseOrderItemModel');
+jest.mock('../../../../db/mongoose/models/VoucherModel');
+jest.mock('../../../../db/mongoose/models/ProductModel');
+jest.mock('../../../../db/mongoose/models/UserModel');
 
 const PurchaseOrderModelMock = jest.mocked(PurchaseOrderModel);
 const PurchaseOrderItemModelMock = jest.mocked(PurchaseOrderItemModel);

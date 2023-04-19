@@ -4,10 +4,10 @@ import PurchaseOrder, { PurchaseOrderProps, PurchaseOrderStatus } from '@sales/d
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher from '@sales/domain/Voucher';
 import RepositoryError from '@shared/errors/RepositoryError';
-import ProductModel, { IProduct } from '@databases/mongoose/models/ProductModel';
-import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@databases/mongoose/models/PurchaseOrderItemModel';
-import PurchaseOrderModel, { IPurchaseOrder } from '@databases/mongoose/models/PurchaseOrderModel';
-import VoucherModel, { IVoucher } from '@databases/mongoose/models/VoucherModel';
+import ProductModel, { IProduct } from '@db/mongoose/models/ProductModel';
+import PurchaseOrderItemModel, { IPurchaseOrderItem } from '@db/mongoose/models/PurchaseOrderItemModel';
+import PurchaseOrderModel, { IPurchaseOrder } from '@db/mongoose/models/PurchaseOrderModel';
+import VoucherModel, { IVoucher } from '@db/mongoose/models/VoucherModel';
 
 export default class MongoosePurchaseOrderRepository implements IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {
   public async getPurchaseOrderById(id: string): Promise<PurchaseOrder | null> {
