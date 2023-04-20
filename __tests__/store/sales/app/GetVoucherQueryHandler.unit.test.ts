@@ -48,7 +48,7 @@ describe("GetVoucherQueryHandler's unit tests", () => {
     expect(result).toEqual(voucher.toObject());
   });
 
-  it("throws a VoucherNotFoundError if purchase order item doesn't exist", async () => {
+  it("throws a VoucherNotFoundError if purchase order item doesn't exist", () => {
     expect.assertions(2);
 
     jest.spyOn(repositoryStub, 'getVoucherByCode').mockResolvedValueOnce(null);
@@ -57,11 +57,9 @@ describe("GetVoucherQueryHandler's unit tests", () => {
 
     const query = new GetVoucherQuery(faker.datatype.number());
 
-    try {
-      await handler.handle(query);
-    } catch (e: any) {
+    handler.handle(query).catch((e: any) => {
       expect(e).toBeInstanceOf(VoucherNotFoundError);
       expect(e.message).toBe('Voucher não encontrado.');
-    }
+    });
   });
 });

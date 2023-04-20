@@ -87,7 +87,7 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const product = new Product({
@@ -112,12 +112,10 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
       prismaMock.product.create.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.addProduct(product);
-      } catch (e: any) {
+      return productRepository.addProduct(product).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 
@@ -187,7 +185,7 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const product = new Product({
@@ -212,12 +210,10 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
       prismaMock.product.update.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.updateProduct(product);
-      } catch (e: any) {
+      return productRepository.updateProduct(product).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 
@@ -248,7 +244,7 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
       const category = new Category({
         id: 'testid',
@@ -258,12 +254,10 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
       prismaMock.category.create.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.addCategory(category);
-      } catch (e: any) {
+      return productRepository.addCategory(category).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 
@@ -295,7 +289,7 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const category = new Category({
@@ -306,12 +300,10 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
 
       prismaMock.category.update.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.updateCategory(category);
-      } catch (e: any) {
+      return productRepository.updateCategory(category).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 
@@ -352,17 +344,15 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.product.findMany.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.getAllProducts();
-      } catch (e: any) {
+      return productRepository.getAllProducts().catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 
@@ -387,17 +377,15 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.category.findUnique.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.getCategoryById('test_category_id_1');
-      } catch (e: any) {
+      return productRepository.getCategoryById('test_category_id_1').catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 
@@ -438,17 +426,15 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.product.findUnique.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.getProductById('testid');
-      } catch (e: any) {
+      return productRepository.getProductById('testid').catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 
@@ -484,17 +470,15 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       expect(products.every((p) => p instanceof Product)).toBeTruthy();
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.product.findMany.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.getProductsByCategory('test_1');
-      } catch (e: any) {
+      return productRepository.getProductsByCategory('test_1').catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 
@@ -522,17 +506,15 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       expect(categories.every((c) => c instanceof Category)).toBeTruthy();
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.category.findMany.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.getAllCategories();
-      } catch (e: any) {
+      return productRepository.getAllCategories().catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 
@@ -548,17 +530,15 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
       expect(result).toEqual(10);
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.category.count.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await productRepository.countCategories();
-      } catch (e: any) {
+      return productRepository.countCategories().catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaProductRepository - test');
-      }
+      });
     });
   });
 });

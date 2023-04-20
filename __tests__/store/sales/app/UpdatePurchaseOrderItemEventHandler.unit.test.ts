@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import UpdatePurchaseOrderItemEventHandler from '@sales/app/handlers/UpdatePurchaseOrderItemEventHandler';
 import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-
 import EventHandlerError from '@shared/errors/EventHandlerError';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
@@ -53,11 +52,9 @@ describe("UpdatePurchaseOrderItemEventHandler's unit tests", () => {
       faker.datatype.float(),
     );
 
-    try {
-      await handler.handle(event);
-    } catch (e: any) {
+    return handler.handle(event).catch((e: any) => {
       expect(e).toBeInstanceOf(EventHandlerError);
       expect(e.message).toEqual('Erro ao atualizar um item.');
-    }
+    });
   });
 });

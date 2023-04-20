@@ -90,7 +90,7 @@ describe("AxiosHttpClient's unit tests", () => {
       expect(response.body).toStrictEqual(fakeResponseBody);
     });
 
-    it('throws a HttpError if axios.get returns a error', async () => {
+    it('throws a HttpError if axios.get returns a error', () => {
       expect.assertions(3);
 
       const httpClient = new AxiosHttpClient();
@@ -106,16 +106,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.get(fakeUrl);
-      } catch (e: any) {
+      return httpClient.get(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(HttpError);
         expect(e.statusCode).toEqual(fakeResponse.response.status);
         expect(e.body).toEqual(fakeResponse.response.data);
-      }
+      });
     });
 
-    it('throws a generic error if occur an unexpected error', async () => {
+    it('throws a generic error if occur an unexpected error', () => {
       expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
@@ -124,12 +122,10 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.get(fakeUrl);
-      } catch (e: any) {
+      return httpClient.get(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toEqual('Unexpected error');
-      }
+      });
     });
   });
 
@@ -222,7 +218,7 @@ describe("AxiosHttpClient's unit tests", () => {
       expect(response.body).toStrictEqual(fakeResponseBody);
     });
 
-    it('throws a HttpError if axios.delete returns a error', async () => {
+    it('throws a HttpError if axios.delete returns a error', () => {
       expect.assertions(3);
 
       const httpClient = new AxiosHttpClient();
@@ -238,16 +234,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.delete(fakeUrl);
-      } catch (e: any) {
+      return httpClient.delete(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(HttpError);
         expect(e.statusCode).toEqual(fakeResponse.response.status);
         expect(e.body).toEqual(fakeResponse.response.data);
-      }
+      });
     });
 
-    it('throws a generic error if occur an unexpected error', async () => {
+    it('throws a generic error if occur an unexpected error', () => {
       expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
@@ -256,12 +250,10 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.delete(fakeUrl);
-      } catch (e: any) {
+      return httpClient.delete(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toEqual('Unexpected error');
-      }
+      });
     });
   });
 
@@ -357,7 +349,7 @@ describe("AxiosHttpClient's unit tests", () => {
       expect(response.body).toStrictEqual(fakeResponseBody);
     });
 
-    it('throws a HttpError if axios.post returns a error', async () => {
+    it('throws a HttpError if axios.post returns a error', () => {
       expect.assertions(3);
 
       const httpClient = new AxiosHttpClient();
@@ -373,16 +365,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.post(fakeUrl);
-      } catch (e: any) {
+      return httpClient.post(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(HttpError);
         expect(e.statusCode).toEqual(fakeResponse.response.status);
         expect(e.body).toEqual(fakeResponse.response.data);
-      }
+      });
     });
 
-    it('throws a generic error if occur an unexpected error', async () => {
+    it('throws a generic error if occur an unexpected error', () => {
       expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
@@ -391,12 +381,10 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.post(fakeUrl);
-      } catch (e: any) {
+      return httpClient.post(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toEqual('Unexpected error');
-      }
+      });
     });
   });
 
@@ -492,7 +480,7 @@ describe("AxiosHttpClient's unit tests", () => {
       expect(response.body).toEqual(fakeResponseBody);
     });
 
-    it('throws a HttpError if axios.patch returns a error', async () => {
+    it('throws a HttpError if axios.patch returns a error', () => {
       expect.assertions(3);
 
       const httpClient = new AxiosHttpClient();
@@ -508,16 +496,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.patch(fakeUrl);
-      } catch (e: any) {
+      return httpClient.patch(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(HttpError);
         expect(e.statusCode).toEqual(fakeResponse.response.status);
         expect(e.body).toEqual(fakeResponse.response.data);
-      }
+      });
     });
 
-    it('throws a generic error if occur an unexpected error', async () => {
+    it('throws a generic error if occur an unexpected error', () => {
       expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
@@ -526,12 +512,10 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.patch(fakeUrl);
-      } catch (e: any) {
+      return httpClient.patch(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toEqual('Unexpected error');
-      }
+      });
     });
   });
 
@@ -627,7 +611,7 @@ describe("AxiosHttpClient's unit tests", () => {
       expect(response.body).toEqual(fakeResponseBody);
     });
 
-    it('throws a HttpError if axios.put returns a error', async () => {
+    it('throws a HttpError if axios.put returns a error', () => {
       expect.assertions(3);
 
       const httpClient = new AxiosHttpClient();
@@ -643,16 +627,14 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.put(fakeUrl);
-      } catch (e: any) {
+      return httpClient.put(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(HttpError);
         expect(e.statusCode).toEqual(fakeResponse.response.status);
         expect(e.body).toEqual(fakeResponse.response.data);
-      }
+      });
     });
 
-    it('throws a generic error if occur an unexpected error', async () => {
+    it('throws a generic error if occur an unexpected error', () => {
       expect.assertions(2);
 
       const httpClient = new AxiosHttpClient();
@@ -661,12 +643,10 @@ describe("AxiosHttpClient's unit tests", () => {
 
       const fakeUrl = faker.internet.url();
 
-      try {
-        await httpClient.put(fakeUrl);
-      } catch (e: any) {
+      return httpClient.put(fakeUrl).catch((e: any) => {
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toEqual('Unexpected error');
-      }
+      });
     });
   });
 });

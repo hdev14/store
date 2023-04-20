@@ -46,11 +46,9 @@ describe("UpdateDraftPurchaseOrderEventHandler's unit tests", () => {
       faker.datatype.float(),
     );
 
-    try {
-      await handler.handle(event);
-    } catch (e: any) {
+    return handler.handle(event).catch((e: any) => {
       expect(e).toBeInstanceOf(EventHandlerError);
       expect(e.message).toEqual('Erro ao atualizar o pedido.');
-    }
+    });
   });
 });

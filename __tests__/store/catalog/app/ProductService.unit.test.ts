@@ -50,7 +50,7 @@ describe('ProductsService\'s unit tests', () => {
       expect(product.category).toEqual(fakeProducts[0].category);
     });
 
-    it('throws an exception of type ProductNotFoundError if the product is null', async () => {
+    it('throws an exception of type ProductNotFoundError if the product is null', () => {
       expect.assertions(3);
 
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
@@ -60,13 +60,11 @@ describe('ProductsService\'s unit tests', () => {
         stockServiceStub,
       );
 
-      try {
-        await productService.getProductById('wrong_id');
-      } catch (e: any) {
+      return productService.getProductById('wrong_id').catch((e) => {
         expect(e).toBeInstanceOf(ProductNotFoundError);
         expect(e.message).toEqual('O produto não foi encontrado.');
         expect(getProductByIdSpy).toHaveBeenCalled();
-      }
+      });
     });
   });
 
@@ -121,7 +119,7 @@ describe('ProductsService\'s unit tests', () => {
       expect(addProductSpy).toHaveBeenCalled();
     });
 
-    it("throws an exception of CategoryNotFoundError if category doesn't exist", async () => {
+    it("throws an exception of CategoryNotFoundError if category doesn't exist", () => {
       expect.assertions(3);
 
       const fakeCategoryId = faker.datatype.uuid();
@@ -144,13 +142,11 @@ describe('ProductsService\'s unit tests', () => {
         stockQuantity: parseInt((Math.random() * 10).toString(), 10),
       };
 
-      try {
-        await productService.createProduct(params);
-      } catch (e) {
+      return productService.createProduct(params).catch((e) => {
         expect(getCategoryByIdSpy).toHaveBeenCalled();
         expect(getCategoryByIdSpy).toHaveBeenCalledWith(fakeCategoryId);
         expect(e).toBeInstanceOf(CategoryNotFoundError);
-      }
+      });
     });
   });
 
@@ -196,7 +192,7 @@ describe('ProductsService\'s unit tests', () => {
       expect(updateProductSpy).toHaveBeenCalled();
     });
 
-    it('throws an ProductNotFoundError if repository.getProductById returns null', async () => {
+    it('throws an ProductNotFoundError if repository.getProductById returns null', () => {
       expect.assertions(2);
 
       const getProductByIdSpy = jest.spyOn(repositoryStub, 'getProductById');
@@ -220,15 +216,13 @@ describe('ProductsService\'s unit tests', () => {
         stockQuantity: parseInt((Math.random() * 10).toString(), 10),
       };
 
-      try {
-        await productService.updateProduct('wrong_id', params);
-      } catch (e) {
+      return productService.updateProduct('wrong_id', params).catch((e) => {
         expect(e).toBeInstanceOf(ProductNotFoundError);
         expect(getProductByIdSpy).toHaveBeenCalled();
-      }
+      });
     });
 
-    it('throws an CategoryNotFound if repository.getCategoryById returns null', async () => {
+    it('throws an CategoryNotFound if repository.getCategoryById returns null', () => {
       expect.assertions(2);
 
       const getCategoryByIdSpy = jest.spyOn(repositoryStub, 'getCategoryById');
@@ -254,12 +248,10 @@ describe('ProductsService\'s unit tests', () => {
         stockQuantity: parseInt((Math.random() * 10).toString(), 10),
       };
 
-      try {
-        await productService.updateProduct(fakeProducts[0].id, params);
-      } catch (e) {
+      return productService.updateProduct(fakeProducts[0].id, params).catch((e) => {
         expect(e).toBeInstanceOf(CategoryNotFoundError);
         expect(getCategoryByIdSpy).toHaveBeenCalled();
-      }
+      });
     });
   });
 
@@ -302,7 +294,7 @@ describe('ProductsService\'s unit tests', () => {
       expect(addToStockSpy).toHaveBeenCalledWith(fakeProducts[2].id, 1);
     });
 
-    it('throws an expection of type StockError if StockService.removeFromStock returns false', async () => {
+    it('throws an expection of type StockError if StockService.removeFromStock returns false', () => {
       expect.assertions(2);
 
       stockServiceStub.removeFromStock = jest.fn(() => Promise.resolve(false));
@@ -312,15 +304,13 @@ describe('ProductsService\'s unit tests', () => {
         stockServiceStub,
       );
 
-      try {
-        await productService.updateProductStock(fakeProducts[2].id, -1);
-      } catch (e) {
+      return productService.updateProductStock(fakeProducts[2].id, -1).catch((e) => {
         expect(e).toBeInstanceOf(StockError);
         expect(stockServiceStub.removeFromStock).toHaveBeenCalled();
-      }
+      });
     });
 
-    it('throws an expection of type StockError if StockService.addToStock returns false', async () => {
+    it('throws an expection of type StockError if StockService.addToStock returns false', () => {
       expect.assertions(2);
 
       stockServiceStub.addToStock = jest.fn(() => Promise.resolve(false));
@@ -330,12 +320,10 @@ describe('ProductsService\'s unit tests', () => {
         stockServiceStub,
       );
 
-      try {
-        await productService.updateProductStock(fakeProducts[2].id, 1);
-      } catch (e) {
+      return productService.updateProductStock(fakeProducts[2].id, 1).catch((e) => {
         expect(e).toBeInstanceOf(StockError);
         expect(stockServiceStub.addToStock).toHaveBeenCalled();
-      }
+      });
     });
   });
 });

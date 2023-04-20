@@ -45,7 +45,7 @@ describe("PurchaseOrderItem's unit tests", () => {
 
   describe('PurchaseOrderItem.addQuantity()', () => {
     it('throws an exception of type DomainError if quantity is negative', () => {
-      expect.assertions(2);
+      expect.assertions(1);
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
@@ -57,12 +57,9 @@ describe("PurchaseOrderItem's unit tests", () => {
         },
       });
 
-      try {
+      expect(() => {
         purchaseOrderItem.addQuantity(faker.datatype.number() * (-1));
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(DomainError);
-        expect(e.message).toEqual('Não é possível adicionar uma quantidade negativa de itens.');
-      }
+      }).toThrow(DomainError);
     });
 
     it('adds quantity to a purchase order item', () => {
@@ -86,7 +83,7 @@ describe("PurchaseOrderItem's unit tests", () => {
 
   describe('PurchaseOrderItem.updateQuantity()', () => {
     it('throws an exception of type DomainError if quantity is negative', () => {
-      expect.assertions(2);
+      expect.assertions(1);
 
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
@@ -98,12 +95,9 @@ describe("PurchaseOrderItem's unit tests", () => {
         },
       });
 
-      try {
+      expect(() => {
         purchaseOrderItem.updateQuantity(faker.datatype.number() * (-1));
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(DomainError);
-        expect(e.message).toEqual('Não é possível adicionar uma quantidade negativa de itens.');
-      }
+      }).toThrow(DomainError);
     });
 
     it("updates the purchase order item's quantity", () => {

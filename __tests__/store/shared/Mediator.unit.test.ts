@@ -43,16 +43,15 @@ describe("Mediator's unit tests", () => {
     expect(handleMock).toHaveBeenCalledWith(event);
   });
 
-  it("throws an exception of type MediatorError if event name doesn't exist", async () => {
+  it("throws an exception of type MediatorError if event name doesn't exist", () => {
     expect.assertions(2);
-    try {
-      const mediator = new Mediator();
 
-      await mediator.send(new EventStub());
-    } catch (e: any) {
+    const mediator = new Mediator();
+
+    return mediator.send(new EventStub()).catch((e: any) => {
       expect(e).toBeInstanceOf(MediatorError);
       expect(e.message).toEqual('There is no event with this name: EventStub');
-    }
+    });
   });
 
   it('not adds the same even handler', () => {

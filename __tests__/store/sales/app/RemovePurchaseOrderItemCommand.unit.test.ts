@@ -2,10 +2,12 @@ import RemovePurchaseOrderItemCommand from '@sales/app/commands/RemovePurchaseOr
 import ValidationError from '@shared/errors/ValidationError';
 
 describe("RemovePurchaseOrderItemCommand's unit tests", () => {
-  it('throws a ValidationError if data is invalid', async () => {
+  it('throws a ValidationError if data is invalid', () => {
     expect.assertions(1);
 
-    expect(() => new RemovePurchaseOrderItemCommand('wrong'))
-      .toThrowError(ValidationError);
+    expect(() => {
+      // eslint-disable-next-line no-new
+      new RemovePurchaseOrderItemCommand('wrong');
+    }).toThrow(ValidationError);
   });
 });

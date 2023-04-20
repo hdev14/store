@@ -97,7 +97,7 @@ describe("EventMediator's unit tests", () => {
       expect(handleSpy2).toHaveBeenCalledWith(event);
     });
 
-    it('throws a MediatorError if there is no handler registered for the event', async () => {
+    it('throws a MediatorError if there is no handler registered for the event', () => {
       expect.assertions(2);
 
       const event = mock<Event>({
@@ -107,12 +107,10 @@ describe("EventMediator's unit tests", () => {
 
       const mediator = new EventMediator();
 
-      try {
-        await mediator.send(event);
-      } catch (e: any) {
+      return mediator.send(event).catch((e: any) => {
         expect(e).toBeInstanceOf(MediatorError);
         expect(e.message).toEqual('There is no event with this name.');
-      }
+      });
     });
   });
 });

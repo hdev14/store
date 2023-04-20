@@ -49,12 +49,10 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
       parseInt(faker.datatype.number().toString(), 10),
     );
 
-    try {
-      await handler.handle(command);
-    } catch (e: any) {
+    return handler.handle(command).catch((e: any) => {
       expect(e).toBeInstanceOf(PurchaseOrderItemNotFoundError);
       expect(e.message).toEqual('Item não encontrado.');
-    }
+    });
   });
 
   it('calls repository.updatePurchaseOrderItem if found the item', async () => {

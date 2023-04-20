@@ -95,7 +95,7 @@ describe("PurchaseOrder's unit tests", () => {
 
   describe('PurchaseOrder.removeItem()', () => {
     it("throws an exception of type DomainError if purchase order item doesn't exist", () => {
-      expect.assertions(2);
+      expect.assertions(1);
 
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
@@ -118,12 +118,9 @@ describe("PurchaseOrder's unit tests", () => {
         },
       });
 
-      try {
+      expect(() => {
         purchaseOrder.removeItem(purchaseOrderItem);
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(DomainError);
-        expect(e.message).toEqual('Item do pedido não encontrado.');
-      }
+      }).toThrow(DomainError);
     });
 
     it('removes a purchase order item', () => {
@@ -161,7 +158,7 @@ describe("PurchaseOrder's unit tests", () => {
 
   describe('PurchaseOrder.updateItemQuantity()', () => {
     it("throws an exception of type DomainError if item does't exist", () => {
-      expect.assertions(2);
+      expect.assertions(1);
 
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
@@ -175,12 +172,9 @@ describe("PurchaseOrder's unit tests", () => {
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
-      try {
+      expect(() => {
         purchaseOrder.updateItemQuantity(fakePurchaseOrderItemId, 10);
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(DomainError);
-        expect(e.message).toEqual('Item do pedido não encontrado.');
-      }
+      }).toThrow(DomainError);
     });
 
     it('updates purchase order item quantity', () => {

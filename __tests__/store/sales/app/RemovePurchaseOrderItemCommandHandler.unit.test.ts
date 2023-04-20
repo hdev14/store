@@ -36,12 +36,10 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
 
     const command = new RemovePurchaseOrderItemCommand(faker.datatype.uuid());
 
-    try {
-      await handler.handle(command);
-    } catch (e: any) {
+    return handler.handle(command).catch((e: any) => {
       expect(e).toBeInstanceOf(PurchaseOrderItemNotDeletedError);
       expect(e.message).toEqual('Não foi possível excluir o item.');
-    }
+    });
   });
 
   it('calls Queue.enqueue with RemovePurchaseOrderItemEvent after purchase order item was deleted', async () => {

@@ -16,7 +16,7 @@ describe("UserService's unit tests", () => {
   });
 
   describe('UserService.createUser()', () => {
-    it('throws a ValidationError if data is invalid', async () => {
+    it('throws a ValidationError if data is invalid', () => {
       const data: any = {
         name: 123,
         email: 'invalidemail.com',
@@ -24,15 +24,13 @@ describe("UserService's unit tests", () => {
         document: 123,
       };
 
-      try {
-        await userService.createUser(data);
-      } catch (e: any) {
+      return userService.createUser(data).catch((e: any) => {
         expect(e).toBeInstanceOf(ValidationError);
         expect(e.errors[0].field).toEqual('name');
         expect(e.errors[1].field).toEqual('email');
         expect(e.errors[2].field).toEqual('document');
         expect(e.errors[3].field).toEqual('password');
-      }
+      });
     });
 
     it('calls IAM.registerUser to register a new user', async () => {
@@ -71,24 +69,22 @@ describe("UserService's unit tests", () => {
   });
 
   describe('UserService.updateUser()', () => {
-    it("throws a UserNotFoundError if user doesn't exist", async () => {
+    it("throws a UserNotFoundError if user doesn't exist", () => {
       expect.assertions(1);
 
       IAMMock.getUser.mockResolvedValueOnce(null);
 
-      try {
-        const fakeUserId = faker.datatype.uuid();
-        const data = {
-          document: '69156949430',
-          name: faker.name.fullName(),
-          email: faker.internet.email(),
-          password: faker.random.alphaNumeric(6),
-        };
+      const fakeUserId = faker.datatype.uuid();
+      const data = {
+        document: '69156949430',
+        name: faker.name.fullName(),
+        email: faker.internet.email(),
+        password: faker.random.alphaNumeric(6),
+      };
 
-        await userService.updateUser(fakeUserId, data);
-      } catch (e: any) {
+      return userService.updateUser(fakeUserId, data).catch((e: any) => {
         expect(e).toBeInstanceOf(UserNotFoundError);
-      }
+      });
     });
 
     it('calls IAM.updateUser with correct params', async () => {
@@ -122,7 +118,7 @@ describe("UserService's unit tests", () => {
       });
     });
 
-    it('throws a ValidationError if data is invalid', async () => {
+    it('throws a ValidationError if data is invalid', () => {
       expect.assertions(5);
 
       const fakeUser = new User({
@@ -144,15 +140,13 @@ describe("UserService's unit tests", () => {
         document: 123,
       };
 
-      try {
-        await userService.updateUser(fakeUserId, data);
-      } catch (e: any) {
+      return userService.updateUser(fakeUserId, data).catch((e: any) => {
         expect(e).toBeInstanceOf(ValidationError);
         expect(e.errors[0].field).toEqual('name');
         expect(e.errors[1].field).toEqual('email');
         expect(e.errors[2].field).toEqual('document');
         expect(e.errors[3].field).toEqual('password');
-      }
+      });
     });
 
     it('returns a updated user', async () => {
@@ -187,18 +181,16 @@ describe("UserService's unit tests", () => {
   });
 
   describe('UserService.getUser()', () => {
-    it('throws a UserNotFoundError if IAM.getUser returns NULL', async () => {
+    it('throws a UserNotFoundError if IAM.getUser returns NULL', () => {
       expect.assertions(1);
 
       const fakeUserId = faker.datatype.uuid();
 
       IAMMock.getUser.mockResolvedValueOnce(null);
 
-      try {
-        await userService.getUser(fakeUserId);
-      } catch (error) {
+      return userService.getUser(fakeUserId).catch((error) => {
         expect(error).toBeInstanceOf(UserNotFoundError);
-      }
+      });
     });
 
     it('returns a user data', async () => {

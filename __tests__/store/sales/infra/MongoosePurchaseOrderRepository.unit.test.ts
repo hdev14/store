@@ -127,7 +127,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const purchaseOrderId = faker.datatype.uuid();
@@ -136,12 +136,10 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      try {
-        await repository.getPurchaseOrderById(purchaseOrderId);
-      } catch (e: any) {
+      return repository.getPurchaseOrderById(purchaseOrderId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -261,7 +259,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const customerId = faker.datatype.uuid();
@@ -270,12 +268,10 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      try {
-        await repository.getPurchaseOrdersByCustomerId(customerId);
-      } catch (e: any) {
+      return repository.getPurchaseOrdersByCustomerId(customerId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -353,7 +349,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const customerId = faker.datatype.uuid();
@@ -362,12 +358,10 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      try {
-        await repository.getDraftPurchaseOrderByCustomerId(customerId);
-      } catch (e: any) {
+      return repository.getDraftPurchaseOrderByCustomerId(customerId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -507,7 +501,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       PurchaseOrderModelMock.create.mockRejectedValueOnce(new Error('test') as never);
@@ -524,12 +518,10 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         items: [],
       });
 
-      try {
-        await repository.addPurchaseOrder(purchaseOrder);
-      } catch (e: any) {
+      return repository.addPurchaseOrder(purchaseOrder).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -639,12 +631,10 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         items: [],
       });
 
-      try {
-        await repository.updatePurchaseOrder(purchaseOrder);
-      } catch (e: any) {
+      return repository.updatePurchaseOrder(purchaseOrder).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -734,12 +724,10 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      try {
-        await repository.getPurchaseOrderItemById(fakePurchaseOrderItem._id);
-      } catch (e: any) {
+      return repository.getPurchaseOrderItemById(fakePurchaseOrderItem._id).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -796,22 +784,20 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       );
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       PurchaseOrderItemModelMock.findOne.mockImplementationOnce(() => {
         throw new Error('test');
       });
 
-      try {
-        await repository.getPurchaseOrderItem({
-          purchaseOrderId: faker.datatype.uuid(),
-          productId: faker.datatype.uuid(),
-        });
-      } catch (e: any) {
+      return repository.getPurchaseOrderItem({
+        purchaseOrderId: faker.datatype.uuid(),
+        productId: faker.datatype.uuid(),
+      }).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -844,28 +830,26 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       PurchaseOrderItemModelMock.create.mockRejectedValueOnce(new Error('test') as never);
 
-      try {
-        await repository.addPurchaseOrderItem(
-          new PurchaseOrderItem({
+      return repository.addPurchaseOrderItem(
+        new PurchaseOrderItem({
+          id: faker.datatype.uuid(),
+          purchaseOrderId: faker.datatype.uuid(),
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          product: {
             id: faker.datatype.uuid(),
-            purchaseOrderId: faker.datatype.uuid(),
-            quantity: parseInt(faker.datatype.number().toString(), 10),
-            product: {
-              id: faker.datatype.uuid(),
-              name: faker.commerce.product(),
-              amount: faker.datatype.float(),
-            },
-          }),
-        );
-      } catch (e: any) {
+            name: faker.commerce.product(),
+            amount: faker.datatype.float(),
+          },
+        }),
+      ).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -918,30 +902,28 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       );
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       PurchaseOrderItemModelMock.findOneAndUpdate.mockImplementationOnce(() => {
         throw new Error('test');
       });
 
-      try {
-        await repository.updatePurchaseOrderItem(
-          new PurchaseOrderItem({
+      return repository.updatePurchaseOrderItem(
+        new PurchaseOrderItem({
+          id: faker.datatype.uuid(),
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          purchaseOrderId: faker.datatype.uuid(),
+          product: {
             id: faker.datatype.uuid(),
-            quantity: parseInt(faker.datatype.number().toString(), 10),
-            purchaseOrderId: faker.datatype.uuid(),
-            product: {
-              id: faker.datatype.uuid(),
-              name: faker.commerce.product(),
-              amount: faker.datatype.float(),
-            },
-          }),
-        );
-      } catch (e: any) {
+            name: faker.commerce.product(),
+            amount: faker.datatype.float(),
+          },
+        }),
+      ).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -964,7 +946,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it("throws a RepositoryError if the purchase order wasn't deleted", async () => {
+    it("throws a RepositoryError if the purchase order wasn't deleted", () => {
       expect.assertions(2);
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
@@ -973,15 +955,13 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         deletedCount: 0,
       } as any);
 
-      try {
-        await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
-      } catch (e: any) {
+      return repository.deletePurchaseOrderItem(fakePurchaseOrderItemId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - Item não excluído');
-      }
+      });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
@@ -990,12 +970,10 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      try {
-        await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
-      } catch (e: any) {
+      return repository.deletePurchaseOrderItem(fakePurchaseOrderItemId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -1050,7 +1028,7 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
       expect(VoucherModelMock.findOne).toHaveBeenCalledWith({ code: fakeVoucherCode });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
@@ -1059,12 +1037,10 @@ describe("MongoosePurchaseOrderRepository's unit tests", () => {
         throw new Error('test');
       });
 
-      try {
-        await repository.getVoucherByCode(fakeVoucherCode);
-      } catch (e: any) {
+      return repository.getVoucherByCode(fakeVoucherCode).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('MongoosePurchaseOrderRepository - test');
-      }
+      });
     });
   });
 });

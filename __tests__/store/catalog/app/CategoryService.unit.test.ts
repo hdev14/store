@@ -62,18 +62,14 @@ describe('CategoryService.getAllCategories', () => {
       expect(updateCategorySpy).toHaveBeenCalledTimes(1);
     });
 
-    it('throws an exception of type CategoryNotFoundError if repository.getCategoryById returns null', async () => {
+    it('throws an exception of type CategoryNotFoundError if repository.getCategoryById returns null', () => {
       expect.assertions(1);
 
       const categoryService = new CategoryService(repositoryStub);
 
-      try {
-        await categoryService.updateCategory('wrong_id', {
-          name: 'test_category_updated',
-        });
-      } catch (e) {
+      return categoryService.updateCategory('wrong_id', { name: 'test_category_updated' }).catch((e) => {
         expect(e).toBeInstanceOf(CategoryNotFoundError);
-      }
+      });
     });
   });
 });

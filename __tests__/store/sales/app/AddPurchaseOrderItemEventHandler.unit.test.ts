@@ -40,7 +40,7 @@ describe("AddPurchaseOrderItemEventHandler's unit tests", () => {
     );
   });
 
-  it('throws an EventHandlerError when occurs an expected error', async () => {
+  it('throws an EventHandlerError when occurs an expected error', () => {
     expect.assertions(2);
 
     repositoryStub.addPurchaseOrderItem = jest.fn().mockRejectedValueOnce(new Error('test'));
@@ -56,11 +56,9 @@ describe("AddPurchaseOrderItemEventHandler's unit tests", () => {
       faker.datatype.float(),
     );
 
-    try {
-      await handler.handle(event);
-    } catch (e: any) {
+    return handler.handle(event).catch((e: any) => {
       expect(e).toBeInstanceOf(EventHandlerError);
       expect(e.message).toEqual('Erro ao cadastrar o item.');
-    }
+    });
   });
 });

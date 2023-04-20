@@ -31,7 +31,7 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
     expect(getPurchaseOrderByIdSpy).toHaveBeenCalledWith(command.purchaseOrderId);
   });
 
-  it("returns PurchaseOrderNotFound if purchase order doesn't exist", async () => {
+  it("returns PurchaseOrderNotFound if purchase order doesn't exist", () => {
     expect.assertions(2);
 
     jest.spyOn(repositoryStub, 'getPurchaseOrderById')
@@ -45,12 +45,10 @@ describe("StartPurchaseOrderCommandHandler's unit tests", () => {
       3,
     );
 
-    try {
-      await handler.handle(command);
-    } catch (e: any) {
+    return handler.handle(command).catch((e: any) => {
       expect(e).toBeInstanceOf(PurchaseOrderNotFoundError);
       expect(e.message).toEqual('Pedido não encontrado.');
-    }
+    });
   });
 
   it('calls PurchaseOrder.start method after found the purchase order by its id', async () => {

@@ -16,36 +16,32 @@ describe("AuthService's unit tests", () => {
   });
 
   describe('AuthService.auth()', () => {
-    it('throws an ValidationError if email is invalid', async () => {
+    it('throws an ValidationError if email is invalid', () => {
       expect.assertions(2);
 
       const invalidEmail = 'invalidemail.com';
 
-      try {
-        await authService.auth(invalidEmail, faker.datatype.string());
-      } catch (e: any) {
+      return authService.auth(invalidEmail, faker.datatype.string()).catch((e: any) => {
         expect(e).toBeInstanceOf(ValidationError);
         expect(e.errors[0]).toEqual({
           field: 'email',
           messages: ['The field email must be a valid email address.'],
         });
-      }
+      });
     });
 
-    it("throws an ValidationError if password doesn't have length greated than 6 caracters", async () => {
+    it("throws an ValidationError if password doesn't have length greated than 6 caracters", () => {
       expect.assertions(2);
 
       const smallPassword = faker.datatype.string(5);
 
-      try {
-        await authService.auth(faker.internet.email(), smallPassword);
-      } catch (e: any) {
+      return authService.auth(faker.internet.email(), smallPassword).catch((e: any) => {
         expect(e).toBeInstanceOf(ValidationError);
         expect(e.errors[0]).toEqual({
           field: 'password',
           messages: ['The text must have more or equal to 6 caracters.'],
         });
-      }
+      });
     });
 
     it('calls IAM.auth method with correct params', async () => {
@@ -79,19 +75,17 @@ describe("AuthService's unit tests", () => {
   });
 
   describe('AuthService.addPermission()', () => {
-    it("throws an UserNotFoundError if user doesn't exist", async () => {
+    it("throws an UserNotFoundError if user doesn't exist", () => {
       expect.assertions(2);
 
       IAMMock.getUser.mockResolvedValueOnce(null);
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
 
-      try {
-        await authService.addPermission(fakeUserId, fakePermission);
-      } catch (e: any) {
+      return authService.addPermission(fakeUserId, fakePermission).catch((e: any) => {
         expect(e).toBeInstanceOf(UserNotFoundError);
         expect(e.message).toEqual('Usuário não encontrado.');
-      }
+      });
     });
 
     it('calls IAM.addRole with correct params', async () => {
@@ -108,19 +102,17 @@ describe("AuthService's unit tests", () => {
   });
 
   describe('AuthService.removePermission()', () => {
-    it("throws an UserNotFoundError if user doesn't exist", async () => {
+    it("throws an UserNotFoundError if user doesn't exist", () => {
       expect.assertions(2);
 
       IAMMock.getUser.mockResolvedValueOnce(null);
       const fakeUserId = faker.datatype.uuid();
       const fakePermission = faker.word.verb();
 
-      try {
-        await authService.removePermission(fakeUserId, fakePermission);
-      } catch (e: any) {
+      return authService.removePermission(fakeUserId, fakePermission).catch((e: any) => {
         expect(e).toBeInstanceOf(UserNotFoundError);
         expect(e.message).toEqual('Usuário não encontrado.');
-      }
+      });
     });
 
     it('calls IAM.removeRole with correct params', async () => {

@@ -19,7 +19,7 @@ describe("RemovePurchaseOrderItemEventHandler's unit tests", () => {
     expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(event.principalId);
   });
 
-  it('throws a EventHandlerError if occurs an expected error', async () => {
+  it('throws a EventHandlerError if occurs an expected error', () => {
     expect.assertions(2);
 
     repositoryStub.deletePurchaseOrderItem = jest.fn().mockRejectedValueOnce(new Error('test'));
@@ -28,11 +28,9 @@ describe("RemovePurchaseOrderItemEventHandler's unit tests", () => {
 
     const event = new RemovePurchaseOrderItemEvent(faker.datatype.uuid());
 
-    try {
-      await handler.handle(event);
-    } catch (e: any) {
+    return handler.handle(event).catch((e: any) => {
       expect(e).toBeInstanceOf(EventHandlerError);
       expect(e.message).toEqual('Erro ao excluir um item.');
-    }
+    });
   });
 });

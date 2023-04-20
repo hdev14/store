@@ -121,19 +121,17 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const purchaseOrderId = faker.datatype.uuid();
 
       prismaMock.purchaseOrder.findUnique.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await repository.getPurchaseOrderById(purchaseOrderId);
-      } catch (e: any) {
+      return repository.getPurchaseOrderById(purchaseOrderId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -245,19 +243,17 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const customerId = faker.datatype.uuid();
 
       prismaMock.purchaseOrder.findMany.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await repository.getPurchaseOrdersByCustomerId(customerId);
-      } catch (e: any) {
+      return repository.getPurchaseOrdersByCustomerId(customerId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -339,12 +335,10 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrder.findFirst.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await repository.getDraftPurchaseOrderByCustomerId(customerId);
-      } catch (e: any) {
+      return repository.getDraftPurchaseOrderByCustomerId(customerId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -441,12 +435,10 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         items: [],
       });
 
-      try {
-        await repository.addPurchaseOrder(purchaseOrder);
-      } catch (e: any) {
+      return repository.addPurchaseOrder(purchaseOrder).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -495,7 +487,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.purchaseOrder.update.mockRejectedValueOnce(new Error('test'));
@@ -510,12 +502,10 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         items: [],
       });
 
-      try {
-        await repository.updatePurchaseOrder(purchaseOrder);
-      } catch (e: any) {
+      return repository.updatePurchaseOrder(purchaseOrder).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -588,19 +578,17 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
       prismaMock.purchaseOrderItem.findUnique.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await repository.getPurchaseOrderItemById(fakePurchaseOrderItemId);
-      } catch (e: any) {
+      return repository.getPurchaseOrderItemById(fakePurchaseOrderItemId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -655,20 +643,18 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.purchaseOrderItem.findFirst.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await repository.getPurchaseOrderItem({
-          purchaseOrderId: faker.datatype.uuid(),
-          productId: faker.datatype.uuid(),
-        });
-      } catch (e: any) {
+      return repository.getPurchaseOrderItem({
+        purchaseOrderId: faker.datatype.uuid(),
+        productId: faker.datatype.uuid(),
+      }).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -713,23 +699,21 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       prismaMock.purchaseOrderItem.create.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await repository.addPurchaseOrderItem(
-          new PurchaseOrderItem({
+      return repository.addPurchaseOrderItem(
+        new PurchaseOrderItem({
+          id: faker.datatype.uuid(),
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          purchaseOrderId: faker.datatype.uuid(),
+          product: {
             id: faker.datatype.uuid(),
-            quantity: parseInt(faker.datatype.number().toString(), 10),
-            purchaseOrderId: faker.datatype.uuid(),
-            product: {
-              id: faker.datatype.uuid(),
-              name: faker.commerce.product(),
-              amount: faker.datatype.float(),
-            },
-          }),
-        );
-      } catch (e: any) {
+            name: faker.commerce.product(),
+            amount: faker.datatype.float(),
+          },
+        }),
+      ).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -769,28 +753,26 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.purchaseOrderItem.update.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await repository.updatePurchaseOrderItem(
-          new PurchaseOrderItem({
+      return repository.updatePurchaseOrderItem(
+        new PurchaseOrderItem({
+          id: faker.datatype.uuid(),
+          quantity: parseInt(faker.datatype.number().toString(), 10),
+          purchaseOrderId: faker.datatype.uuid(),
+          product: {
             id: faker.datatype.uuid(),
-            quantity: parseInt(faker.datatype.number().toString(), 10),
-            purchaseOrderId: faker.datatype.uuid(),
-            product: {
-              id: faker.datatype.uuid(),
-              name: faker.commerce.product(),
-              amount: faker.datatype.float(),
-            },
-          }),
-        );
-      } catch (e: any) {
+            name: faker.commerce.product(),
+            amount: faker.datatype.float(),
+          },
+        }),
+      ).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -818,19 +800,17 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const fakePurchaseOrderItemId = faker.datatype.uuid();
 
       prismaMock.purchaseOrderItem.delete.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await repository.deletePurchaseOrderItem(fakePurchaseOrderItemId);
-      } catch (e: any) {
+      return repository.deletePurchaseOrderItem(fakePurchaseOrderItemId).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -887,19 +867,17 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       });
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       const fakeVoucherCode = parseInt(faker.datatype.number().toString(), 10);
 
       prismaMock.voucher.findFirst.mockRejectedValueOnce(new Error('test'));
 
-      try {
-        await repository.getVoucherByCode(fakeVoucherCode);
-      } catch (e: any) {
+      return repository.getVoucherByCode(fakeVoucherCode).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -917,19 +895,17 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(result).toEqual(fakeQuantityOfPuchaseOrders);
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.purchaseOrder.count.mockImplementationOnce(() => {
         throw new Error('test');
       });
 
-      try {
-        await repository.countPurchaseOrders();
-      } catch (e: any) {
+      return repository.countPurchaseOrders().catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -947,19 +923,17 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(result).toEqual(fakeQuantityOfPuchaseOrderItems);
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.purchaseOrderItem.count.mockImplementationOnce(() => {
         throw new Error('test');
       });
 
-      try {
-        await repository.countPurchaseOrderItems();
-      } catch (e: any) {
+      return repository.countPurchaseOrderItems().catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 
@@ -977,19 +951,17 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(result).toEqual(fakeQuantityOfVouchers);
     });
 
-    it('throws a RepositoryError if occur an unexpected error', async () => {
+    it('throws a RepositoryError if occur an unexpected error', () => {
       expect.assertions(2);
 
       prismaMock.voucher.count.mockImplementationOnce(() => {
         throw new Error('test');
       });
 
-      try {
-        await repository.countVouchers();
-      } catch (e: any) {
+      return repository.countVouchers().catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
-      }
+      });
     });
   });
 });

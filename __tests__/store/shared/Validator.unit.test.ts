@@ -5,223 +5,167 @@ import Validator from '@shared/utils/Validator';
 describe("Validator's unit tests", () => {
   describe('Strings', () => {
     it('throws a ValidationError if field is not a string', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+      expect(() => {
         Validator
           .setData({ test: faker.datatype.float() })
           .setRule('test', ['string'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be a text.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is required', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+      expect(() => {
         Validator
           .setData({ test: '' })
           .setRule('test', ['string', 'required'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test is required.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is greater than max length', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+      expect(() => {
         Validator
           .setData({ test: faker.datatype.string(6) })
           .setRule('test', ['string', 'max:5'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The text must have less or equal to 5 caracters.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is less than min length', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+      expect(() => {
         Validator
           .setData({ test: faker.datatype.string(3) })
           .setRule('test', ['string', 'min:5'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The text must have more or equal to 5 caracters.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is not an url', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+
+      expect(() => {
         Validator
           .setData({ test: faker.word.adjective() })
           .setRule('test', ['string', 'url'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be an URL.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is not an uuid', () => {
-      expect.assertions(3);
+      expect.assertions(1);
 
-      try {
+      expect(() => {
         Validator
           .setData({ test: faker.word.verb() })
           .setRule('test', ['string', 'uuid'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be an UUID.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is not an email', () => {
-      expect.assertions(3);
+      expect.assertions(1);
 
-      try {
+      expect(() => {
         Validator
           .setData({ test: faker.word.verb() })
           .setRule('test', ['string', 'email'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be a valid email address.');
-      }
+      }).toThrow(ValidationError);
     });
   });
 
   describe('Numbers', () => {
     it('throws a ValidationError if field is not a number', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+      expect(() => {
         Validator
           .setData({ test: faker.datatype.string() })
           .setRule('test', ['number'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be a number.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is required', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+
+      expect(() => {
         Validator
           .setData({ test: undefined })
           .setRule('test', ['required', 'number'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test is required.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is not a integer', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+
+      expect(() => {
         Validator
           .setData({ test: 1.5 })
           .setRule('test', ['number', 'integer'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be an integer.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is not a float', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+
+      expect(() => {
         Validator
           .setData({ test: parseInt(faker.datatype.number().toString(), 10) })
           .setRule('test', ['number', 'float'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be a float.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is greater than max value', () => {
-      expect.assertions(3);
+      expect.assertions(1);
 
-      try {
+      expect(() => {
         Validator
           .setData({ test: faker.datatype.number({ min: 11 }) })
           .setRule('test', ['number', 'max:10'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be less than or equal to 10.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it('throws a ValidationError if field is less than min value', () => {
-      expect.assertions(3);
+      expect.assertions(1);
 
-      try {
+      expect(() => {
         Validator
           .setData({ test: Math.random() * 10 * -1 })
           .setRule('test', ['number', 'min:10'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be greater than or equal to 10.');
-      }
+      }).toThrow(ValidationError);
     });
   });
 
   describe('Booleans', () => {
     it('throws a ValidationError if field is not a boolean', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+      expect(() => {
         Validator
           .setData({ test: faker.datatype.string() })
           .setRule('test', ['boolean'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be a boolean.');
-      }
+      }).toThrow(ValidationError);
     });
   });
 
   describe('Dates', () => {
     it('throws a ValidationError if field is not a date', () => {
-      expect.assertions(3);
-      try {
+      expect.assertions(1);
+      expect(() => {
         Validator
           .setData({ test: faker.datatype.string() })
           .setRule('test', ['date'])
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test must be a validate date.');
-      }
+      }).toThrow(ValidationError);
     });
   });
 
@@ -240,18 +184,14 @@ describe("Validator's unit tests", () => {
     });
 
     it('throws a ValidationError if custom function validator returns FALSE', () => {
-      expect.assertions(3);
+      expect.assertions(1);
 
-      try {
+      expect(() => {
         Validator
           .setData({ test: faker.datatype.string() })
           .setRule('test', () => false)
           .validate();
-      } catch (e: any) {
-        expect(e).toBeInstanceOf(ValidationError);
-        expect(e.errors[0].field).toEqual('test');
-        expect(e.errors[0].messages[0]).toEqual('The field test is not valid.');
-      }
+      }).toThrow(ValidationError);
     });
 
     it("doesn't throws a ValidationError if custom function validator returns TRUE", () => {

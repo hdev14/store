@@ -45,7 +45,7 @@ describe("GetPurchaseOrderItemQueryHandler's unit tests", () => {
     expect(result).toEqual(purchaseOrderItem);
   });
 
-  it("throws a PurchaseOrderItemNotFoundError if purchase order item doesn't exist", async () => {
+  it("throws a PurchaseOrderItemNotFoundError if purchase order item doesn't exist", () => {
     expect.assertions(2);
 
     jest.spyOn(repositoryStub, 'getPurchaseOrderItemById').mockResolvedValueOnce(null);
@@ -54,11 +54,9 @@ describe("GetPurchaseOrderItemQueryHandler's unit tests", () => {
 
     const query = new GetPurchaseOrderItemQuery(faker.datatype.uuid());
 
-    try {
-      await handler.handle(query);
-    } catch (e: any) {
+    return handler.handle(query).catch((e: any) => {
       expect(e).toBeInstanceOf(PurchaseOrderItemNotFoundError);
       expect(e.message).toBe('Item não encontrado.');
-    }
+    });
   });
 });

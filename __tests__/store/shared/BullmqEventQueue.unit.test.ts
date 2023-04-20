@@ -68,19 +68,17 @@ describe("BullmqEventQueue's unit tests", () => {
       expect(queueMock.add).toHaveBeenCalledWith('EventStub', eventStub);
     });
 
-    it('throws a QueueError if occur an unexpected error', async () => {
+    it('throws a QueueError if occur an unexpected error', () => {
       expect.assertions(2);
 
       queueMock.add.mockRejectedValueOnce(new Error('test'));
 
       const bullmqEventQueue = new BullmqEventQueue();
 
-      try {
-        await bullmqEventQueue.enqueue(new EventStub());
-      } catch (e: any) {
+      return bullmqEventQueue.enqueue(new EventStub()).catch((e: any) => {
         expect(e).toBeInstanceOf(QueueError);
         expect(e.message).toEqual('test');
-      }
+      });
     });
   });
 
@@ -101,19 +99,17 @@ describe("BullmqEventQueue's unit tests", () => {
       ]);
     });
 
-    it('throws a QueueError if occur an unexpected error', async () => {
+    it('throws a QueueError if occur an unexpected error', () => {
       expect.assertions(2);
 
       queueMock.addBulk.mockRejectedValueOnce(new Error('test'));
 
       const bullmqEventQueue = new BullmqEventQueue();
 
-      try {
-        await bullmqEventQueue.enqueueInBatch([new EventStub()]);
-      } catch (e: any) {
+      return bullmqEventQueue.enqueueInBatch([new EventStub()]).catch((e: any) => {
         expect(e).toBeInstanceOf(QueueError);
         expect(e.message).toEqual('test');
-      }
+      });
     });
   });
 
@@ -128,19 +124,17 @@ describe("BullmqEventQueue's unit tests", () => {
       expect(queueMock.close).toHaveBeenCalled();
     });
 
-    it('throws a QueueError if occur an unexpected error', async () => {
+    it('throws a QueueError if occur an unexpected error', () => {
       expect.assertions(2);
 
       queueMock.close.mockRejectedValueOnce(new Error('test'));
 
       const bullmqEventQueue = new BullmqEventQueue();
 
-      try {
-        await bullmqEventQueue.closeConnection();
-      } catch (e: any) {
+      return bullmqEventQueue.closeConnection().catch((e: any) => {
         expect(e).toBeInstanceOf(QueueError);
         expect(e.message).toEqual('test');
-      }
+      });
     });
   });
 });

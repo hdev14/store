@@ -27,7 +27,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledWith(command.customerId);
   });
 
-  it("throws a PurchaseOrderNotFoundError if purchase order doesn't exist", async () => {
+  it("throws a PurchaseOrderNotFoundError if purchase order doesn't exist", () => {
     expect.assertions(1);
 
     repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
@@ -40,11 +40,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
       parseInt(faker.datatype.number().toString(), 10),
     );
 
-    try {
-      await handler.handle(command);
-    } catch (e) {
+    return handler.handle(command).catch((e) => {
       expect(e).toBeInstanceOf(PurchaseOrderNotFoundError);
-    }
+    });
   });
 
   it('calls repository.getVoucherByCode', async () => {
@@ -76,7 +74,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     expect(getVoucherByCodeSpy).toHaveBeenCalledWith(command.voucherCode);
   });
 
-  it("throws a VoucherNotFoundError if voucher doesn't exist", async () => {
+  it("throws a VoucherNotFoundError if voucher doesn't exist", () => {
     expect.assertions(1);
 
     repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
@@ -99,14 +97,12 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
       parseInt(faker.datatype.number().toString(), 10),
     );
 
-    try {
-      await handler.handle(command);
-    } catch (e) {
+    return handler.handle(command).catch((e) => {
       expect(e).toBeInstanceOf(VoucherNotFoundError);
-    }
+    });
   });
 
-  it('throws a VoucherInvalidError if voucher is deactive', async () => {
+  it('throws a VoucherInvalidError if voucher is deactive', () => {
     expect.assertions(1);
 
     repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
@@ -140,14 +136,12 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
       parseInt(faker.datatype.number().toString(), 10),
     );
 
-    try {
-      await handler.handle(command);
-    } catch (e) {
+    return handler.handle(command).catch((e) => {
       expect(e).toBeInstanceOf(VoucherInvalidError);
-    }
+    });
   });
 
-  it('throws a VoucherInvalidError if voucher is expired', async () => {
+  it('throws a VoucherInvalidError if voucher is expired', () => {
     expect.assertions(1);
 
     const pastDate = new Date();
@@ -184,11 +178,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
       parseInt(faker.datatype.number().toString(), 10),
     );
 
-    try {
-      await handler.handle(command);
-    } catch (e) {
+    return handler.handle(command).catch((e) => {
       expect(e).toBeInstanceOf(VoucherInvalidError);
-    }
+    });
   });
 
   it('applies voucher to purchase order', async () => {
