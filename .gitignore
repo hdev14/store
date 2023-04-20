@@ -73,3 +73,6 @@ typings/
 
 build/
 
+
+# stryker temp files
+.stryker-tmp

@@ -1,5 +1,5 @@
 /* eslint-disable wrap-iife */
-import Mongo from '@mongoose/index';
+import Mongo from '@db/mongoose';
 import { Worker } from 'bullmq';
 import eventWorker from './bootstrap';
 
