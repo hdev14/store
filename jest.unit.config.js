@@ -9,6 +9,7 @@ module.exports = {
       "src/api/",
       "__tests__/"
     ],
+    clearMocks: true,
     setupFilesAfterEnv: [],
     testMatch: [
       "**/__tests__/**/*.unit.(spec|test).[jt]s?(x)"

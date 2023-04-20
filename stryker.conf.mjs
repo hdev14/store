@@ -21,11 +21,17 @@ const config = {
   },
   disableTypeChecks: true,
   mutate: [
-    'src/store/**/*.ts?(x)',
+    // executes one module per time, because it consumes a lot of memory
+    // 'src/store/catalog/**/*.ts?(x)',
+    'src/store/sales/**/*.ts?(x)',
+    // 'src/store/users/**/*.ts?(x)',
+    // 'src/store/shared/**/*.ts?(x)',
+    // 'src/store/payment/**/*.ts?(x)',
     '!**/__tests__/**/*.ts?(x)',
     '!**/__mocks__/**/*.ts?(x)',
     '!**/?(*.)+(spec|test).ts?(x)',
   ],
   ignoreStatic: true,
+  concurrency: 3,
 };
 export default config;
