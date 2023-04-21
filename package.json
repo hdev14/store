@@ -15,7 +15,8 @@
     "event_worker:prod": "node -r dotenv/config -r ./tsconfig-paths-bootstrap.js ./build/src/event_worker/index.js",
     "build": "tsc --project ./tsconfig.build.json",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --skip-generate",
-    "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev --skip-generate"
+    "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev --skip-generate",
+    "test:mutant": "stryker run"
   },
   "prisma": {
     "schema": "db/prisma/schema.prisma"
