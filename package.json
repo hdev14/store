@@ -5,18 +5,18 @@
   "main": "index.js",
   "scripts": {
     "clear": "npx jest --clearCache",
-    "test:unit": "node --expose-gc ./node_modules/.bin/jest unit --passWithNoTests --watch --silent=false --config=jest.unit.config.js",
+    "test:unit": "node --expose-gc ./node_modules/.bin/jest unit --passWithNoTests --watch --silent=false --maxWorkers=50% --config=jest.unit.config.js",
     "test:unit:cov": "node --expose-gc ./node_modules/.bin/jest unit --coverage --config=jest.unit.config.js",
     "test:int": "dotenv -e .env.test -- node --expose-gc ./node_modules/.bin/jest int --runInBand --passWithNoTests --watch --silent=false --config=jest.int.config.js",
     "test:int:cov": "dotenv -e .env.test -- node --expose-gc ./node_modules/.bin/jest int --runInBand --coverage --config=jest.int.config.js",
+    "test:mutant": "stryker run",
     "api:dev": "dotenv -e .env.dev -- npx ts-node-dev --files -r tsconfig-paths/register src/api/index.ts",
     "api:prod": "node -r dotenv/config -r ./tsconfig-paths-bootstrap.js ./build/src/api/index.js",
     "event_worker:dev": "dotenv -e .env.dev -- npx ts-node-dev -r tsconfig-paths/register src/event_worker/index.ts",
     "event_worker:prod": "node -r dotenv/config -r ./tsconfig-paths-bootstrap.js ./build/src/event_worker/index.js",
     "build": "tsc --project ./tsconfig.build.json",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --skip-generate",
-    "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev --skip-generate",
-    "test:mutant": "stryker run"
+    "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev --skip-generate"
   },
   "prisma": {
     "schema": "db/prisma/schema.prisma"
