@@ -2,7 +2,6 @@
 import PrismaProductRepository from '@catalog/infra/persistence/PrismaProductRepository';
 import Product from '@catalog/domain/Product';
 import Category from '@catalog/domain/Category';
-import Dimensions from '@catalog/domain/Dimensions';
 import { PrismaClient } from '@prisma/client';
 import { DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended';
 import RepositoryError from '@shared/errors/RepositoryError';

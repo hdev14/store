@@ -13,8 +13,8 @@
       "@fiscal/*": [
         "src/store/fiscal/*"
       ],
-      "@payment/*": [
-        "src/store/payment/*"
+      "@payments/*": [
+        "src/store/payments/*"
       ],
       "@users/*": [
         "src/store/users/*"
