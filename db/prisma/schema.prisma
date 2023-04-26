@@ -34,19 +34,10 @@ model Category {
   products Product[]
 }
 
-model User {
-  id             String          @id
-  name           String
-  purchaseOrders PurchaseOrder[]
-  // email String
-  // phoneNumber
-}
-
 model PurchaseOrder {
   id             String              @id
   code           Int
   customerId     String
-  customer       User                @relation(fields: [customerId], references: [id])
   voucherId      String?
   voucher        Voucher?            @relation(fields: [voucherId], references: [id])
   discountAmount Float
@@ -54,6 +45,7 @@ model PurchaseOrder {
   status         String
   items          PurchaseOrderItem[]
   createdAt      DateTime
+  Payment        Payment[]
 }
 
 model Voucher {
@@ -77,4 +69,26 @@ model PurchaseOrderItem {
   purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
   productId       String
   product         Product       @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+  id              String        @id
+  purchaseOrderId String
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  value           Float
+  method          String
+  status          String
+  gateway         String
+  transactions    Transaction[]
+}
+
+model Transaction {
+  id           String   @id
+  paymentId    String
+  Payment      Payment  @relation(fields: [paymentId], references: [id])
+  externalId   String
+  details      String
+  payload      Json
+  registeredAt DateTime
+  status       String
 }
