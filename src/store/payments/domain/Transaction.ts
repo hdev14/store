@@ -13,45 +13,45 @@ export enum TransactionStatus {
 
 export type TransactionProps = {
   id: string;
-  transactionId: string;
+  externalId: string;
   status: TransactionStatus;
   details: string;
   payload: string;
   paymentId: string;
-  registedAt: Date;
+  registeredAt: Date;
 }
 
 export default class Transaction extends Entity {
-  public readonly transactionId: string;
+  public readonly externalId: string;
 
   public readonly status: TransactionStatus;
 
   public readonly details: string;
 
-  public readonly payload: string;
+  public readonly payload: string; // JSON
 
   public readonly paymentId: string;
 
-  public readonly registedAt: Date;
+  public readonly registeredAt: Date;
 
   constructor(props: TransactionProps) {
     super(props.id);
-    this.transactionId = props.transactionId;
+    this.externalId = props.externalId;
     this.status = props.status;
     this.details = props.details;
     this.payload = props.payload;
     this.paymentId = props.paymentId;
-    this.registedAt = props.registedAt;
+    this.registeredAt = props.registeredAt;
   }
 
   public validate(): boolean | void {
     Validator
       .setData(this)
-      .setRule('transactionId', ['required', 'string', 'uuid'])
+      .setRule('externalId', ['required', 'string', 'uuid'])
       .setRule('status', ['required', 'string'])
       .setRule('details', ['required', 'string'])
       .setRule('paymentId', ['required', 'string'])
-      .setRule('registedAt', ['required', 'date'])
+      .setRule('registeredAt', ['required', 'date'])
       .validate();
   }
 }

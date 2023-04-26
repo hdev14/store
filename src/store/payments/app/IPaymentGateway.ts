@@ -1,4 +1,4 @@
-import Payment from '@payment/domain/Payment';
+import Payment from 'src/store/payments/domain/Payment';
 
 export type Item = {
   productName: string;
