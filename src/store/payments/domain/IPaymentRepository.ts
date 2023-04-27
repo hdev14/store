@@ -6,7 +6,7 @@ interface IPaymentRepository {
   getPaymentsByPurchaseOrderId(id: string): Promise<Payment[]>;
 
   /** @throws {RepositoryError} */
-  getPaymentById(id: string): Promise<Payment>;
+  getPaymentById(id: string): Promise<Payment | null>;
 
   /** @throws {RepositoryError} */
   addPayment(payment: Payment): Promise<void>;

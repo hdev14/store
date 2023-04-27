@@ -1,9 +1,13 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Payment as PrismaPayment, Transaction as PrismaTransaction } from '@prisma/client';
 import Prisma from '@shared/Prisma';
 import IPaymentRepository from '@payments/domain/IPaymentRepository';
 import Payment, { PaymentMethods, PaymentStatus } from '@payments/domain/Payment';
 import Transaction, { TransactionStatus } from '@payments/domain/Transaction';
 import RepositoryError from '@shared/errors/RepositoryError';
+
+type ResultPayment = PrismaPayment & {
+  transactions: PrismaTransaction[];
+};
 
 // TODO: Finish implementation
 export default class PrismaPaymentRepository implements IPaymentRepository {
@@ -23,29 +27,7 @@ export default class PrismaPaymentRepository implements IPaymentRepository {
       const payments: Payment[] = [];
 
       for (const result of results) {
-        const transactions: Transaction[] = [];
-
-        for (const resultTransaction of result.transactions) {
-          transactions.push(new Transaction({
-            id: resultTransaction.id,
-            details: resultTransaction.details,
-            externalId: resultTransaction.externalId,
-            payload: resultTransaction.payload as string,
-            paymentId: resultTransaction.paymentId,
-            registeredAt: resultTransaction.registeredAt,
-            status: resultTransaction.status as TransactionStatus,
-          }));
-        }
-
-        payments.push(new Payment({
-          id: result.id,
-          gateway: result.gateway,
-          method: result.method as PaymentMethods,
-          purchaseOrderId: result.purchaseOrderId,
-          status: result.status as PaymentStatus,
-          value: result.value,
-          transactions,
-        }));
+        payments.push(this.mapPayment(result));
       }
 
       return payments;
@@ -56,19 +38,102 @@ export default class PrismaPaymentRepository implements IPaymentRepository {
     }
   }
 
-  public async getPaymentById(id: string): Promise<Payment> {
-    throw new Error('Method not implemented.');
+  public async getPaymentById(id: string): Promise<Payment | null> {
+    try {
+      const payment = await this.connection.payment.findUnique({
+        where: { id },
+        include: { transactions: true },
+      });
+
+      return payment ? this.mapPayment(payment) : null;
+    } catch (e) {
+      throw new RepositoryError(this.constructor.name, 'Erro ao buscar os dados do pagamento.', {
+        cause: e,
+      });
+    }
   }
 
   public async addPayment(payment: Payment): Promise<void> {
-    throw new Error('Method not implemented.');
+    try {
+      await this.connection.payment.create({
+        data: {
+          id: payment.id,
+          purchaseOrderId: payment.purchaseOrderId,
+          value: payment.value,
+          method: payment.method,
+          status: payment.status,
+          gateway: payment.gateway,
+        },
+      });
+    } catch (e) {
+      throw new RepositoryError(this.constructor.name, 'Erro ao cadastrar um novo pagamento', {
+        cause: e,
+      });
+    }
   }
 
   public async updatePayment(payment: Payment): Promise<void> {
-    throw new Error('Method not implemented.');
+    try {
+      await this.connection.payment.update({
+        where: { id: payment.id },
+        data: {
+          purchaseOrderId: payment.purchaseOrderId,
+          value: payment.value,
+          method: payment.method,
+          status: payment.status,
+          gateway: payment.gateway,
+        },
+      });
+    } catch (e) {
+      throw new RepositoryError(this.constructor.name, 'Erro ao atualizar um pagamento', {
+        cause: e,
+      });
+    }
   }
 
   public async addTransaction(transaction: Transaction): Promise<void> {
-    throw new Error('Method not implemented.');
+    try {
+      await this.connection.transaction.create({
+        data: {
+          id: transaction.id,
+          externalId: transaction.externalId,
+          status: transaction.status,
+          details: transaction.details,
+          payload: transaction.payload,
+          paymentId: transaction.paymentId,
+          registeredAt: transaction.registeredAt,
+        },
+      });
+    } catch (e) {
+      throw new RepositoryError(this.constructor.name, 'Erro ao cadastrar um transação.', {
+        cause: e,
+      });
+    }
+  }
+
+  private mapPayment(payment: ResultPayment) {
+    const transactions: Transaction[] = [];
+
+    for (const transaction of payment.transactions) {
+      transactions.push(new Transaction({
+        id: transaction.id,
+        details: transaction.details,
+        externalId: transaction.externalId,
+        payload: transaction.payload as string,
+        paymentId: transaction.paymentId,
+        registeredAt: transaction.registeredAt,
+        status: transaction.status as TransactionStatus,
+      }));
+    }
+
+    return new Payment({
+      id: payment.id,
+      gateway: payment.gateway,
+      method: payment.method as PaymentMethods,
+      purchaseOrderId: payment.purchaseOrderId,
+      status: payment.status as PaymentStatus,
+      value: payment.value,
+      transactions,
+    });
   }
 }
