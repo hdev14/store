@@ -9,7 +9,6 @@ type ResultPayment = PrismaPayment & {
   transactions: PrismaTransaction[];
 };
 
-// TODO: Finish implementation
 export default class PrismaPaymentRepository implements IPaymentRepository {
   private readonly connection: PrismaClient;
 
