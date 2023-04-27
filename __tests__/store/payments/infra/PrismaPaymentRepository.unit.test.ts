@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { PaymentStatus, PaymentMethods } from '@payments/domain/Payment';
-import { TransactionStatus } from '@payments/domain/Transaction';
+import Payment, { PaymentStatus, PaymentMethods } from '@payments/domain/Payment';
+import Transaction, { TransactionStatus } from '@payments/domain/Transaction';
 import PrismaPaymentRepository from '@payments/infra/persistence/PrismaPaymentRepository';
 import { PrismaClient } from '@prisma/client';
 import RepositoryError from '@shared/errors/RepositoryError';
@@ -67,11 +67,253 @@ describe("PrismaPaymentRepository's unit tests", () => {
     });
   });
 
-  test.todo('PrismaPaymentRepository.getPaymentById()');
+  describe('PrismaPaymentRepository.getPaymentById()', () => {
+    it('gets a payment', async () => {
+      expect.assertions(2);
 
-  test.todo('PrismaPaymentRepository.addPayment()');
+      const fakePaymentId = faker.datatype.uuid();
 
-  test.todo('PrismaPaymentRepository.updatePayment()');
+      const fakePayment = {
+        id: fakePaymentId,
+        purchaseOrderId: faker.datatype.uuid(),
+        value: faker.datatype.float(),
+        method: PaymentMethods.CREDIT_CARD,
+        status: PaymentStatus.IN_PROCCESS,
+        gateway: 'test',
+        transactions: [
+          {
+            id: faker.datatype.uuid(),
+            externalId: faker.datatype.uuid(),
+            status: TransactionStatus.PENDING,
+            details: faker.lorem.sentence(5),
+            payload: faker.datatype.json(),
+            paymentId: faker.datatype.uuid(),
+            registeredAt: new Date(),
+          },
+        ],
+      };
 
-  test.todo('PrismaPaymentRepository.addTransaction()');
+      prismaMock.payment.findUnique.mockResolvedValueOnce(fakePayment);
+
+      const payment = await paymentRepository.getPaymentById(fakePaymentId);
+
+      expect(prismaMock.payment.findUnique).toHaveBeenCalledWith({
+        where: { id: fakePaymentId },
+        include: { transactions: true },
+      });
+      expect(payment).toEqual(fakePayment);
+    });
+
+    it("returns null if payment doesn't exist", async () => {
+      expect.assertions(1);
+
+      const fakePaymentId = faker.datatype.uuid();
+
+      prismaMock.payment.findUnique.mockResolvedValueOnce(null);
+
+      const payment = await paymentRepository.getPaymentById(fakePaymentId);
+
+      expect(payment).toBeNull();
+    });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(1);
+
+      const fakePaymentId = faker.datatype.uuid();
+
+      prismaMock.payment.findUnique.mockRejectedValueOnce(new Error('test'));
+
+      return paymentRepository.getPaymentById(fakePaymentId).catch((e) => {
+        expect(e).toBeInstanceOf(RepositoryError);
+      });
+    });
+  });
+
+  describe('PrismaPaymentRepository.addPayment()', () => {
+    it('creates a new payment', async () => {
+      expect.assertions(1);
+
+      const payment = new Payment({
+        id: faker.datatype.uuid(),
+        purchaseOrderId: faker.datatype.uuid(),
+        value: faker.datatype.float(),
+        method: PaymentMethods.CREDIT_CARD,
+        status: PaymentStatus.IN_PROCCESS,
+        gateway: 'test',
+        transactions: [
+          {
+            id: faker.datatype.uuid(),
+            externalId: faker.datatype.uuid(),
+            status: TransactionStatus.PENDING,
+            details: faker.lorem.sentence(5),
+            payload: faker.datatype.json(),
+            paymentId: faker.datatype.uuid(),
+            registeredAt: new Date(),
+          },
+        ],
+      });
+
+      await paymentRepository.addPayment(payment);
+
+      expect(prismaMock.payment.create).toHaveBeenCalledWith({
+        data: {
+          id: payment.id,
+          purchaseOrderId: payment.purchaseOrderId,
+          value: payment.value,
+          method: payment.method,
+          status: payment.status,
+          gateway: payment.gateway,
+        },
+      });
+    });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(1);
+
+      const payment = new Payment({
+        id: faker.datatype.uuid(),
+        purchaseOrderId: faker.datatype.uuid(),
+        value: faker.datatype.float(),
+        method: PaymentMethods.CREDIT_CARD,
+        status: PaymentStatus.IN_PROCCESS,
+        gateway: 'test',
+        transactions: [
+          {
+            id: faker.datatype.uuid(),
+            externalId: faker.datatype.uuid(),
+            status: TransactionStatus.PENDING,
+            details: faker.lorem.sentence(5),
+            payload: faker.datatype.json(),
+            paymentId: faker.datatype.uuid(),
+            registeredAt: new Date(),
+          },
+        ],
+      });
+
+      prismaMock.payment.create.mockRejectedValueOnce(new Error('test'));
+
+      return paymentRepository.addPayment(payment).catch((e) => {
+        expect(e).toBeInstanceOf(RepositoryError);
+      });
+    });
+  });
+
+  describe('PrismaPaymentRepository.updatePayment()', () => {
+    it('updates a payment', async () => {
+      expect.assertions(1);
+
+      const payment = new Payment({
+        id: faker.datatype.uuid(),
+        purchaseOrderId: faker.datatype.uuid(),
+        value: faker.datatype.float(),
+        method: PaymentMethods.CREDIT_CARD,
+        status: PaymentStatus.IN_PROCCESS,
+        gateway: 'test',
+        transactions: [
+          {
+            id: faker.datatype.uuid(),
+            externalId: faker.datatype.uuid(),
+            status: TransactionStatus.PENDING,
+            details: faker.lorem.sentence(5),
+            payload: faker.datatype.json(),
+            paymentId: faker.datatype.uuid(),
+            registeredAt: new Date(),
+          },
+        ],
+      });
+
+      await paymentRepository.updatePayment(payment);
+
+      expect(prismaMock.payment.update).toHaveBeenCalledWith({
+        where: { id: payment.id },
+        data: {
+          purchaseOrderId: payment.purchaseOrderId,
+          value: payment.value,
+          method: payment.method,
+          status: payment.status,
+          gateway: payment.gateway,
+        },
+      });
+    });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(1);
+
+      const payment = new Payment({
+        id: faker.datatype.uuid(),
+        purchaseOrderId: faker.datatype.uuid(),
+        value: faker.datatype.float(),
+        method: PaymentMethods.CREDIT_CARD,
+        status: PaymentStatus.IN_PROCCESS,
+        gateway: 'test',
+        transactions: [
+          {
+            id: faker.datatype.uuid(),
+            externalId: faker.datatype.uuid(),
+            status: TransactionStatus.PENDING,
+            details: faker.lorem.sentence(5),
+            payload: faker.datatype.json(),
+            paymentId: faker.datatype.uuid(),
+            registeredAt: new Date(),
+          },
+        ],
+      });
+
+      prismaMock.payment.update.mockRejectedValueOnce(new Error('test'));
+
+      return paymentRepository.updatePayment(payment).catch((e) => {
+        expect(e).toBeInstanceOf(RepositoryError);
+      });
+    });
+  });
+
+  describe('PrismaPaymentRepository.addTransaction()', () => {
+    it('creates a new transaction', async () => {
+      expect.assertions(1);
+
+      const transaction = new Transaction({
+        id: faker.datatype.uuid(),
+        externalId: faker.datatype.uuid(),
+        status: TransactionStatus.PENDING,
+        details: faker.lorem.sentence(5),
+        payload: faker.datatype.json(),
+        paymentId: faker.datatype.uuid(),
+        registeredAt: new Date(),
+      });
+
+      await paymentRepository.addTransaction(transaction);
+
+      expect(prismaMock.transaction.create).toHaveBeenCalledWith({
+        data: {
+          id: transaction.id,
+          externalId: transaction.externalId,
+          status: transaction.status,
+          details: transaction.details,
+          payload: transaction.payload,
+          paymentId: transaction.paymentId,
+          registeredAt: transaction.registeredAt,
+        },
+      });
+    });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(1);
+
+      const transaction = new Transaction({
+        id: faker.datatype.uuid(),
+        externalId: faker.datatype.uuid(),
+        status: TransactionStatus.PENDING,
+        details: faker.lorem.sentence(5),
+        payload: faker.datatype.json(),
+        paymentId: faker.datatype.uuid(),
+        registeredAt: new Date(),
+      });
+
+      prismaMock.transaction.create.mockRejectedValueOnce(new Error('test'));
+
+      return paymentRepository.addTransaction(transaction).catch((e) => {
+        expect(e).toBeInstanceOf(RepositoryError);
+      });
+    });
+  });
 });
