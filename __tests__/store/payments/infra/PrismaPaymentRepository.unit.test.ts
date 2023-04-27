@@ -3,6 +3,7 @@ import { PaymentStatus, PaymentMethods } from '@payments/domain/Payment';
 import { TransactionStatus } from '@payments/domain/Transaction';
 import PrismaPaymentRepository from '@payments/infra/persistence/PrismaPaymentRepository';
 import { PrismaClient } from '@prisma/client';
+import RepositoryError from '@shared/errors/RepositoryError';
 import { DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended';
 
 const prismaMock = mockDeep<PrismaClient>() as unknown as DeepMockProxy<PrismaClient>;
@@ -51,6 +52,17 @@ describe("PrismaPaymentRepository's unit tests", () => {
       expect(prismaMock.payment.findMany).toHaveBeenCalledWith({
         where: { purchaseOrderId: fakePurchaseOrderId },
         include: { transactions: true },
+      });
+    });
+
+    it('throws a RepositoryError if occur an unexpected error', async () => {
+      expect.assertions(1);
+
+      const fakePurchaseOrderId = faker.datatype.uuid();
+      prismaMock.payment.findMany.mockRejectedValueOnce(new Error());
+
+      return paymentRepository.getPaymentsByPurchaseOrderId(fakePurchaseOrderId).catch((e) => {
+        expect(e).toBeInstanceOf(RepositoryError);
       });
     });
   });
