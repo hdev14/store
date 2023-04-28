@@ -33,7 +33,7 @@ export default class StartPurchaseOrderCommandHandler implements IHandler<StartP
         event.cardToken,
         event.installments,
         purchaseOrder.items.map((i) => ({
-          itemId: i.id,
+          id: i.id,
           productId: i.product.id,
           quantity: i.quantity,
         })),

@@ -9,7 +9,7 @@ export default class ChargePurchaseOrderEvent extends Event {
     readonly cardToken: string,
     readonly installments: number,
     readonly items: Array<{
-      itemId: string
+      id: string
       productId: string
       quantity: number
     }>,
