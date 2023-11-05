@@ -19,25 +19,25 @@ export default class CPF implements IValueObject {
   }
 
   private checkFirstNineNumbers() {
-    const firstNineNumbers = this.value.substring(0, this.value.length - 2).split('');
+    const first_nine_numbers = this.value.substring(0, this.value.length - 2).split('');
 
-    let firstSum = 0;
+    let first_sum = 0;
 
-    for (let index = 0, len = firstNineNumbers.length; index < len; index += 1) {
-      const number = firstNineNumbers[index];
+    for (let index = 0, len = first_nine_numbers.length; index < len; index += 1) {
+      const number = first_nine_numbers[index];
       const result = Number(number) * (10 - index);
-      firstSum += result;
+      first_sum += result;
     }
 
-    let restOfFirstSum = (firstSum * 10) % 11;
+    let rest_of_first_sum = (first_sum * 10) % 11;
 
-    if (restOfFirstSum === 10 || restOfFirstSum === 11) {
-      restOfFirstSum = 0;
+    if (rest_of_first_sum === 10 || rest_of_first_sum === 11) {
+      rest_of_first_sum = 0;
     }
 
-    const firstDigit = Number(this.digits[0]);
+    const first_digit = Number(this.digits[0]);
 
-    if (restOfFirstSum !== firstDigit) {
+    if (rest_of_first_sum !== first_digit) {
       return false;
     }
 
@@ -45,25 +45,25 @@ export default class CPF implements IValueObject {
   }
 
   private checkFirstTenNumbers() {
-    const firstTenNumbers = this.value.substring(0, this.value.length - 1).split('');
+    const first_ten_numbers = this.value.substring(0, this.value.length - 1).split('');
 
-    let secondSum = 0;
+    let second_sum = 0;
 
-    for (let index = 0, len = firstTenNumbers.length; index < len; index += 1) {
-      const number = firstTenNumbers[index];
+    for (let index = 0, len = first_ten_numbers.length; index < len; index += 1) {
+      const number = first_ten_numbers[index];
       const result = Number(number) * (10 - index);
-      secondSum += result;
+      second_sum += result;
     }
 
-    let restOfSecondSum = (secondSum * 10) % 11;
+    let rest_of_second_sum = (second_sum * 10) % 11;
 
-    if (restOfSecondSum === 10 || restOfSecondSum === 11) {
-      restOfSecondSum = 0;
+    if (rest_of_second_sum === 10 || rest_of_second_sum === 11) {
+      rest_of_second_sum = 0;
     }
 
-    const secondDigit = Number(this.digits[1]);
+    const second_digit = Number(this.digits[1]);
 
-    if (restOfSecondSum !== secondDigit) {
+    if (rest_of_second_sum !== second_digit) {
       return false;
     }
 

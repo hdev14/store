@@ -1,8 +1,8 @@
-import { PrismaClient, Product as PrismaProduct, Category as PrismaCategory } from '@prisma/client';
 import Category from '@catalog/domain/Category';
 import Dimensions from '@catalog/domain/Dimensions';
 import IProductRepository from '@catalog/domain/IProductRepository';
 import Product from '@catalog/domain/Product';
+import { Category as PrismaCategory, PrismaClient, Product as PrismaProduct } from '@prisma/client';
 import Prisma from '@shared/Prisma';
 import RepositoryError from '@shared/errors/RepositoryError';
 
@@ -52,10 +52,10 @@ export default class PrismaProductRepository implements IProductRepository {
     }
   }
 
-  public async getProductsByCategory(categoryId: string): Promise<Product[]> {
+  public async getProductsByCategory(category_id: string): Promise<Product[]> {
     try {
       const products = await this.connection.product.findMany({
-        where: { categoryId },
+        where: { categoryId: category_id },
         include: { category: true },
       });
 
@@ -101,12 +101,12 @@ export default class PrismaProductRepository implements IProductRepository {
           amount: product.amount,
           description: product.description,
           image: product.image,
-          stockQuantity: product.stockQuantity,
+          stockQuantity: product.stock_quantity,
           height: product.dimensions.height,
           width: product.dimensions.width,
           depth: product.dimensions.depth,
           categoryId: product.category.id,
-          createdAt: product.createdAt,
+          createdAt: product.created_at,
         },
         include: { category: true },
       });
@@ -143,12 +143,12 @@ export default class PrismaProductRepository implements IProductRepository {
           amount: product.amount,
           description: product.description,
           image: product.image,
-          stockQuantity: product.stockQuantity,
+          stockQuantity: product.stock_quantity,
           height: product.dimensions.height,
           width: product.dimensions.width,
           depth: product.dimensions.depth,
           categoryId: product.category.id,
-          createdAt: product.createdAt,
+          createdAt: product.created_at,
         },
         include: { category: true },
       });
@@ -210,7 +210,7 @@ export default class PrismaProductRepository implements IProductRepository {
       amount: product.amount,
       description: product.description,
       image: product.image,
-      stockQuantity: product.stockQuantity,
+      stock_quantity: product.stockQuantity,
       category: new Category({
         id: product.category.id,
         name: product.category.name,
@@ -221,7 +221,7 @@ export default class PrismaProductRepository implements IProductRepository {
         width: product.width,
         depth: product.depth,
       }),
-      createdAt: product.createdAt,
+      created_at: product.createdAt,
     });
   }
 

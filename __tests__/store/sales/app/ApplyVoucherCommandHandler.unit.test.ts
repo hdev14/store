@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
-import ApplyVoucherCommand from '@sales/app/commands/ApplyVoucherCommand';
-import ApplyVoucherCommandHandler from '@sales/app/handlers/ApplyVoucherCommandHandler';
 import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
 import VoucherInvalidError from '@sales/app/VoucherInvalidError';
 import VoucherNotFoundError from '@sales/app/VoucherNotFoundError';
+import ApplyVoucherCommand from '@sales/app/commands/ApplyVoucherCommand';
+import ApplyVoucherCommandHandler from '@sales/app/handlers/ApplyVoucherCommandHandler';
 import PurchaseOrder, { PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
@@ -24,7 +24,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     await handler.handle(command);
 
     expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledTimes(1);
-    expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledWith(command.customerId);
+    expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledWith(command.customer_id);
   });
 
   it("throws a PurchaseOrderNotFoundError if purchase order doesn't exist", () => {
@@ -50,9 +50,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
       .mockResolvedValueOnce(new PurchaseOrder({
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
-        createdAt: new Date(),
+        created_at: new Date(),
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
@@ -71,7 +71,7 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     await handler.handle(command);
 
     expect(getVoucherByCodeSpy).toHaveBeenCalledTimes(1);
-    expect(getVoucherByCodeSpy).toHaveBeenCalledWith(command.voucherCode);
+    expect(getVoucherByCodeSpy).toHaveBeenCalledWith(command.voucher_code);
   });
 
   it("throws a VoucherNotFoundError if voucher doesn't exist", () => {
@@ -79,9 +79,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
       .mockResolvedValueOnce(new PurchaseOrder({
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
-        createdAt: new Date(),
+        created_at: new Date(),
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
@@ -107,9 +107,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
       .mockResolvedValueOnce(new PurchaseOrder({
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
-        createdAt: new Date(),
+        created_at: new Date(),
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
@@ -118,12 +118,12 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(new Voucher({
       id: faker.datatype.uuid(),
-      percentageAmount: faker.datatype.float(),
-      rawDiscountAmount: faker.datatype.float(),
+      percentage_amount: faker.datatype.float(),
+      raw_discount_amount: faker.datatype.float(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
       type: VoucherDiscountTypes.ABSOLUTE,
-      createdAt: new Date(),
-      expiresAt: new Date(),
+      created_at: new Date(),
+      expires_at: new Date(),
       usedAt: new Date(),
       active: false,
       code: parseInt(faker.datatype.number().toString(), 10),
@@ -149,9 +149,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     repositoryStub.getDraftPurchaseOrderByCustomerId = jest.fn()
       .mockResolvedValueOnce(new PurchaseOrder({
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
-        createdAt: new Date(),
+        created_at: new Date(),
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
@@ -160,12 +160,12 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     repositoryStub.getVoucherByCode = jest.fn().mockResolvedValueOnce(new Voucher({
       id: faker.datatype.uuid(),
-      percentageAmount: faker.datatype.float(),
-      rawDiscountAmount: faker.datatype.float(),
+      percentage_amount: faker.datatype.float(),
+      raw_discount_amount: faker.datatype.float(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
       type: VoucherDiscountTypes.ABSOLUTE,
-      createdAt: new Date(),
-      expiresAt: pastDate,
+      created_at: new Date(),
+      expires_at: pastDate,
       usedAt: new Date(),
       active: true,
       code: parseInt(faker.datatype.number().toString(), 10),
@@ -195,12 +195,12 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const voucher = new Voucher({
       id: faker.datatype.uuid(),
-      percentageAmount: faker.datatype.float(),
-      rawDiscountAmount: faker.datatype.float(),
+      percentage_amount: faker.datatype.float(),
+      raw_discount_amount: faker.datatype.float(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
       type: VoucherDiscountTypes.ABSOLUTE,
-      createdAt: new Date(),
-      expiresAt: faker.date.future(),
+      created_at: new Date(),
+      expires_at: faker.date.future(),
       usedAt: new Date(),
       active: true,
       code: parseInt(faker.datatype.number().toString(), 10),
@@ -225,9 +225,9 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
     expect.assertions(2);
 
     const purchaseOrder = new PurchaseOrder({
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.random.numeric(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       id: faker.datatype.uuid(),
       status: PurchaseOrderStatus.DRAFT,
       voucher: null,
@@ -239,12 +239,12 @@ describe("ApplyVoucherCommandHandler's unit tests", () => {
 
     const voucher = new Voucher({
       id: faker.datatype.uuid(),
-      percentageAmount: faker.datatype.float(),
-      rawDiscountAmount: faker.datatype.float(),
+      percentage_amount: faker.datatype.float(),
+      raw_discount_amount: faker.datatype.float(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
       type: VoucherDiscountTypes.ABSOLUTE,
-      createdAt: new Date(),
-      expiresAt: faker.date.future(),
+      created_at: new Date(),
+      expires_at: faker.date.future(),
       usedAt: new Date(),
       active: true,
       code: parseInt(faker.datatype.number().toString(), 10),

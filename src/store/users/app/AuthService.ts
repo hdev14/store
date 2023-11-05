@@ -12,34 +12,34 @@ export default class AuthService implements IAuthService {
       .setRule('password', ['string', 'min:6'])
       .validate();
 
-    const tokenPayload = await this.IAM.auth(email, password);
+    const token_payload = await this.IAM.auth(email, password);
 
-    const expiredAt = new Date();
-    expiredAt.setSeconds(expiredAt.getSeconds() + tokenPayload.expiresIn);
+    const expired_at = new Date();
+    expired_at.setSeconds(expired_at.getSeconds() + token_payload.expires_in);
 
     return {
-      token: tokenPayload.accessToken,
-      expiredAt,
+      token: token_payload.access_token,
+      expired_at,
     };
   }
 
-  public async addPermission(userId: string, permission: string): Promise<void> {
-    const user = await this.IAM.getUser(userId);
+  public async addPermission(user_id: string, permission: string): Promise<void> {
+    const user = await this.IAM.getUser(user_id);
 
     if (!user) {
       throw new UserNotFoundError();
     }
 
-    await this.IAM.addRole(userId, permission);
+    await this.IAM.addRole(user_id, permission);
   }
 
-  public async removePermission(userId: string, permission: string): Promise<void> {
-    const user = await this.IAM.getUser(userId);
+  public async removePermission(user_id: string, permission: string): Promise<void> {
+    const user = await this.IAM.getUser(user_id);
 
     if (!user) {
       throw new UserNotFoundError();
     }
 
-    await this.IAM.removeRole(userId, permission);
+    await this.IAM.removeRole(user_id, permission);
   }
 }

@@ -2,13 +2,13 @@ import DomainEvent from '@shared/abstractions/DomainEvent';
 
 export default class AddDraftPurchaseOrderEvent extends DomainEvent {
   constructor(
-    readonly principalId: string,
-    readonly customerId: string,
-    readonly totalAmount: number,
-    readonly discountAmount: number,
-    readonly createdAt: Date,
+    readonly principal_id: string,
+    readonly customer_id: string,
+    readonly total_amount: number,
+    readonly discount_amount: number,
+    readonly created_at: Date,
     readonly code: number,
   ) {
-    super(principalId);
+    super(principal_id);
   }
 }

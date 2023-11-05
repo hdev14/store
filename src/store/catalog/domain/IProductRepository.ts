@@ -3,7 +3,7 @@ import Product from './Product';
 
 export interface ICategoryOperations {
   /** @throws {RepositoryError} */
-  getCategoryById(categoryId: string): Promise<Category | null>;
+  getCategoryById(category_id: string): Promise<Category | null>;
 
   /** @throws {RepositoryError} */
   getAllCategories(): Promise<Category[]>;
@@ -26,7 +26,7 @@ export interface IProductOperations {
   getProductById(id: string): Promise<Product | null>;
 
   /** @throws {RepositoryError} */
-  getProductsByCategory(categoryId: string): Promise<Product[]>;
+  getProductsByCategory(category_id: string): Promise<Product[]>;
 
   /** @throws {RepositoryError} */
   addProduct(product: Product): Promise<void>;

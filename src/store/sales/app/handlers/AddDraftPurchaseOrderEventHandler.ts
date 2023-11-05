@@ -10,19 +10,19 @@ export default class AddDraftPurchaseOrderEventHandler implements IHandler<AddDr
 
   public async handle(event: AddDraftPurchaseOrderEvent): Promise<any> {
     try {
-      const draftPurchaseOrder = PurchaseOrder.createDraft({
-        id: event.principalId,
+      const draft_purchase_order = PurchaseOrder.createDraft({
+        id: event.principal_id,
         code: event.code,
-        customerId: event.customerId,
-        totalAmount: event.totalAmount,
-        discountAmount: event.discountAmount,
-        createdAt: event.createdAt,
+        customer_id: event.customer_id,
+        total_amount: event.total_amount,
+        discount_amount: event.discount_amount,
+        created_at: event.created_at,
         status: null,
         voucher: null,
         items: [],
       });
 
-      await this.repository.addPurchaseOrder(draftPurchaseOrder);
+      await this.repository.addPurchaseOrder(draft_purchase_order);
     } catch (e: any) {
       console.error(e.stack);
       throw new EventHandlerError('Erro ao cadastrar o pedido.', { cause: e.stack });

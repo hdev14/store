@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker';
 import AddPurchaseOrderItemCommand from '@sales/app/commands/AddPurchaseOrderItemCommand';
 import AddPurchaseOrderItemCommandHandler from '@sales/app/handlers/AddPurchaseOrderItemCommandHandler';
-import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
-import { mock, mockClear } from 'jest-mock-extended';
-import IEventQueue from '@shared/abstractions/IEventQueue';
+import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
 import AddPurchaseOrderItemEvent from '@sales/domain/events/AddPurchaseOrderItemEvent';
-import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
 import UpdateDraftPurchaseOrderEvent from '@sales/domain/events/UpdateDraftPurchaseOrderEvent';
+import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
+import IEventQueue from '@shared/abstractions/IEventQueue';
+import { mock, mockClear } from 'jest-mock-extended';
 import { RepositoryStub } from '../../stubs/PurchaseOrderRepositoryStub';
 
 const eventQueueMock = mock<IEventQueue>();
@@ -44,7 +44,7 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
     await addPurchaseOrderItemCommandHandler.handle(command);
 
     expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledTimes(1);
-    expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledWith(command.customerId);
+    expect(getDraftPurchaseOrderByCustomerIdSpy).toHaveBeenCalledWith(command.customer_id);
   });
 
   it("calls repository.countPurchaseOrders if draftPurchaseOrder doesn't exist", async () => {
@@ -97,12 +97,12 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     expect(createDraftSpy).toHaveBeenCalledTimes(1);
     expect(createDraftSpy.mock.calls[0][0].id).toBeTruthy();
-    expect(createDraftSpy.mock.calls[0][0].customerId).toEqual(command.customerId);
+    expect(createDraftSpy.mock.calls[0][0].customer_id).toEqual(command.customer_id);
     expect(createDraftSpy.mock.calls[0][0].code).toBeTruthy();
     expect(createDraftSpy.mock.calls[0][0].voucher).toBeNull();
     expect(createDraftSpy.mock.calls[0][0].status).toBeNull();
     expect(createDraftSpy.mock.calls[0][0].code).toBeTruthy();
-    expect(createDraftSpy.mock.calls[0][0].createdAt instanceof Date).toBe(true);
+    expect(createDraftSpy.mock.calls[0][0].created_at instanceof Date).toBe(true);
   });
 
   it('adds a new PurchaseOrderItem in the new draftPurchaseOrder', async () => {
@@ -199,17 +199,17 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
       product: {
-        id: command.productId,
-        name: command.productName,
-        amount: command.productAmount,
+        id: command.product_id,
+        name: command.product_name,
+        amount: command.product_amount,
       },
     });
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],
@@ -246,9 +246,9 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],
@@ -283,9 +283,9 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],
@@ -376,17 +376,17 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
       product: {
-        id: command.productId,
-        name: command.productName,
-        amount: command.productAmount,
+        id: command.product_id,
+        name: command.product_name,
+        amount: command.product_amount,
       },
     });
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],
@@ -423,17 +423,17 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
       product: {
-        id: command.productId,
-        name: command.productName,
-        amount: command.productAmount,
+        id: command.product_id,
+        name: command.product_name,
+        amount: command.product_amount,
       },
     });
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],
@@ -468,9 +468,9 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],
@@ -503,9 +503,9 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],
@@ -537,9 +537,9 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],
@@ -572,9 +572,9 @@ describe("AddPurchaseOrderItemCommandHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],

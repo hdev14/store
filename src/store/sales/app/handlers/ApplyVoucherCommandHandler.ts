@@ -10,25 +10,25 @@ export default class ApplyVoucherCommandHandler implements IHandler<ApplyVoucher
   constructor(private readonly repository: IPurchaseOrderRepository) { }
 
   public async handle(event: ApplyVoucherCommand): Promise<void> {
-    const draftPurchaseOrder = await this.repository
-      .getDraftPurchaseOrderByCustomerId(event.customerId);
+    const draft_purchase_order = await this.repository
+      .getDraftPurchaseOrderByCustomerId(event.customer_id);
 
-    if (!draftPurchaseOrder) {
+    if (!draft_purchase_order) {
       throw new PurchaseOrderNotFoundError();
     }
 
-    const voucher = await this.repository.getVoucherByCode(event.voucherCode);
+    const voucher = await this.repository.getVoucherByCode(event.voucher_code);
 
     if (!voucher) {
       throw new VoucherNotFoundError();
     }
 
-    if (!voucher.active || (voucher.expiresAt.getTime() < new Date().getTime())) {
+    if (!voucher.active || (voucher.expires_at.getTime() < new Date().getTime())) {
       throw new VoucherInvalidError();
     }
 
-    draftPurchaseOrder.applyVoucher(voucher);
+    draft_purchase_order.applyVoucher(voucher);
 
-    await this.repository.updatePurchaseOrder(draftPurchaseOrder);
+    await this.repository.updatePurchaseOrder(draft_purchase_order);
   }
 }

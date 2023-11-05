@@ -8,7 +8,7 @@ export default class GetVoucherQueryHandler implements IHandler<GetVoucherQuery,
   constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 
   public async handle(event: GetVoucherQuery): Promise<VoucherProps> {
-    const voucher = await this.repository.getVoucherByCode(event.voucherCode);
+    const voucher = await this.repository.getVoucherByCode(event.voucher_code);
 
     if (!voucher) {
       throw new VoucherNotFoundError();

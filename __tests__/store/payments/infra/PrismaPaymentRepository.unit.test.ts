@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import Payment, { PaymentStatus, PaymentMethods } from '@payments/domain/Payment';
+import Payment, { PaymentMethods, PaymentStatus } from '@payments/domain/Payment';
 import Transaction, { TransactionStatus } from '@payments/domain/Transaction';
 import PrismaPaymentRepository from '@payments/infra/persistence/PrismaPaymentRepository';
 import { PrismaClient } from '@prisma/client';
@@ -135,7 +135,7 @@ describe("PrismaPaymentRepository's unit tests", () => {
 
       const payment = new Payment({
         id: faker.datatype.uuid(),
-        purchaseOrderId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
         value: faker.datatype.float(),
         method: PaymentMethods.CREDIT_CARD,
         status: PaymentStatus.IN_PROCCESS,
@@ -143,12 +143,12 @@ describe("PrismaPaymentRepository's unit tests", () => {
         transactions: [
           {
             id: faker.datatype.uuid(),
-            externalId: faker.datatype.uuid(),
+            external_id: faker.datatype.uuid(),
             status: TransactionStatus.PENDING,
             details: faker.lorem.sentence(5),
             payload: faker.datatype.json(),
-            paymentId: faker.datatype.uuid(),
-            registeredAt: new Date(),
+            payment_id: faker.datatype.uuid(),
+            registered_at: new Date(),
           },
         ],
       });
@@ -158,7 +158,7 @@ describe("PrismaPaymentRepository's unit tests", () => {
       expect(prismaMock.payment.create).toHaveBeenCalledWith({
         data: {
           id: payment.id,
-          purchaseOrderId: payment.purchaseOrderId,
+          purchaseOrderId: payment.purchase_order_id,
           value: payment.value,
           method: payment.method,
           status: payment.status,
@@ -172,7 +172,7 @@ describe("PrismaPaymentRepository's unit tests", () => {
 
       const payment = new Payment({
         id: faker.datatype.uuid(),
-        purchaseOrderId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
         value: faker.datatype.float(),
         method: PaymentMethods.CREDIT_CARD,
         status: PaymentStatus.IN_PROCCESS,
@@ -180,12 +180,12 @@ describe("PrismaPaymentRepository's unit tests", () => {
         transactions: [
           {
             id: faker.datatype.uuid(),
-            externalId: faker.datatype.uuid(),
+            external_id: faker.datatype.uuid(),
             status: TransactionStatus.PENDING,
             details: faker.lorem.sentence(5),
             payload: faker.datatype.json(),
-            paymentId: faker.datatype.uuid(),
-            registeredAt: new Date(),
+            payment_id: faker.datatype.uuid(),
+            registered_at: new Date(),
           },
         ],
       });
@@ -204,7 +204,7 @@ describe("PrismaPaymentRepository's unit tests", () => {
 
       const payment = new Payment({
         id: faker.datatype.uuid(),
-        purchaseOrderId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
         value: faker.datatype.float(),
         method: PaymentMethods.CREDIT_CARD,
         status: PaymentStatus.IN_PROCCESS,
@@ -212,12 +212,12 @@ describe("PrismaPaymentRepository's unit tests", () => {
         transactions: [
           {
             id: faker.datatype.uuid(),
-            externalId: faker.datatype.uuid(),
+            external_id: faker.datatype.uuid(),
             status: TransactionStatus.PENDING,
             details: faker.lorem.sentence(5),
             payload: faker.datatype.json(),
-            paymentId: faker.datatype.uuid(),
-            registeredAt: new Date(),
+            payment_id: faker.datatype.uuid(),
+            registered_at: new Date(),
           },
         ],
       });
@@ -227,7 +227,7 @@ describe("PrismaPaymentRepository's unit tests", () => {
       expect(prismaMock.payment.update).toHaveBeenCalledWith({
         where: { id: payment.id },
         data: {
-          purchaseOrderId: payment.purchaseOrderId,
+          purchaseOrderId: payment.purchase_order_id,
           value: payment.value,
           method: payment.method,
           status: payment.status,
@@ -241,7 +241,7 @@ describe("PrismaPaymentRepository's unit tests", () => {
 
       const payment = new Payment({
         id: faker.datatype.uuid(),
-        purchaseOrderId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
         value: faker.datatype.float(),
         method: PaymentMethods.CREDIT_CARD,
         status: PaymentStatus.IN_PROCCESS,
@@ -249,12 +249,12 @@ describe("PrismaPaymentRepository's unit tests", () => {
         transactions: [
           {
             id: faker.datatype.uuid(),
-            externalId: faker.datatype.uuid(),
+            external_id: faker.datatype.uuid(),
             status: TransactionStatus.PENDING,
             details: faker.lorem.sentence(5),
             payload: faker.datatype.json(),
-            paymentId: faker.datatype.uuid(),
-            registeredAt: new Date(),
+            payment_id: faker.datatype.uuid(),
+            registered_at: new Date(),
           },
         ],
       });
@@ -273,12 +273,12 @@ describe("PrismaPaymentRepository's unit tests", () => {
 
       const transaction = new Transaction({
         id: faker.datatype.uuid(),
-        externalId: faker.datatype.uuid(),
+        external_id: faker.datatype.uuid(),
         status: TransactionStatus.PENDING,
         details: faker.lorem.sentence(5),
         payload: faker.datatype.json(),
-        paymentId: faker.datatype.uuid(),
-        registeredAt: new Date(),
+        payment_id: faker.datatype.uuid(),
+        registered_at: new Date(),
       });
 
       await paymentRepository.addTransaction(transaction);
@@ -286,12 +286,12 @@ describe("PrismaPaymentRepository's unit tests", () => {
       expect(prismaMock.transaction.create).toHaveBeenCalledWith({
         data: {
           id: transaction.id,
-          externalId: transaction.externalId,
+          externalId: transaction.external_id,
           status: transaction.status,
           details: transaction.details,
           payload: transaction.payload,
-          paymentId: transaction.paymentId,
-          registeredAt: transaction.registeredAt,
+          paymentId: transaction.payment_id,
+          registeredAt: transaction.registered_at,
         },
       });
     });
@@ -301,12 +301,12 @@ describe("PrismaPaymentRepository's unit tests", () => {
 
       const transaction = new Transaction({
         id: faker.datatype.uuid(),
-        externalId: faker.datatype.uuid(),
+        external_id: faker.datatype.uuid(),
         status: TransactionStatus.PENDING,
         details: faker.lorem.sentence(5),
         payload: faker.datatype.json(),
-        paymentId: faker.datatype.uuid(),
-        registeredAt: new Date(),
+        payment_id: faker.datatype.uuid(),
+        registered_at: new Date(),
       });
 
       prismaMock.transaction.create.mockRejectedValueOnce(new Error('test'));

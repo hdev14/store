@@ -19,7 +19,7 @@ export default class NodemailerEmailService implements IEmailService {
   public async send(params: EmailParams): Promise<void> {
     try {
       if (process.env.NODE_ENV !== 'test') {
-        const messageInfo = await this.transporter.sendMail({
+        const message_info = await this.transporter.sendMail({
           from: params.from,
           to: typeof params.to === 'string' ? params.to : params.to.join(', '),
           subject: params.subject,
@@ -27,7 +27,7 @@ export default class NodemailerEmailService implements IEmailService {
           html: params.html,
         });
 
-        console.info(messageInfo);
+        console.info(message_info);
       }
     } catch (e: any) {
       console.error(e.stack);

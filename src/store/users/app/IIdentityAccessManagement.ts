@@ -1,8 +1,8 @@
 import User from 'src/store/users/domain/User';
 
 export type TokenPayload = {
-  accessToken: string;
-  expiresIn: number;
+  access_token: string;
+  expires_in: number;
 };
 
 export type PaginationOptions = {
@@ -17,13 +17,13 @@ interface IIdentityAccessManagement {
 
   updateUser(user: User): Promise<void>;
 
-  getUser(userId: string): Promise<User | null>;
+  getUser(user_id: string): Promise<User | null>;
 
   getUsers(pagination?: PaginationOptions): Promise<User[]>;
 
-  addRole(userId: string, role: string): Promise<void>;
+  addRole(user_id: string, role: string): Promise<void>;
 
-  removeRole(userId: string, role: string): Promise<void>;
+  removeRole(user_id: string, role: string): Promise<void>;
 }
 
 export default IIdentityAccessManagement;

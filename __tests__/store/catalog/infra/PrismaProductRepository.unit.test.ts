@@ -1,11 +1,11 @@
 /* eslint-disable import/prefer-default-export */
-import PrismaProductRepository from '@catalog/infra/persistence/PrismaProductRepository';
-import Product from '@catalog/domain/Product';
 import Category from '@catalog/domain/Category';
-import { PrismaClient } from '@prisma/client';
-import { DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended';
-import RepositoryError from '@shared/errors/RepositoryError';
+import Product from '@catalog/domain/Product';
+import PrismaProductRepository from '@catalog/infra/persistence/PrismaProductRepository';
 import { faker } from '@faker-js/faker';
+import { PrismaClient } from '@prisma/client';
+import RepositoryError from '@shared/errors/RepositoryError';
+import { DeepMockProxy, mockDeep, mockReset } from 'jest-mock-extended';
 
 const prismaMock = mockDeep<PrismaClient>() as unknown as DeepMockProxy<PrismaClient>;
 
@@ -35,13 +35,13 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
           depth: 3,
         },
         image: 'https://example.com',
-        stockQuantity: 10,
+        stock_quantity: 10,
         category: {
           id: 'test',
           name: 'test',
           code: 1234,
         },
-        createdAt: new Date(),
+        created_at: new Date(),
       });
 
       prismaMock.product.create.mockResolvedValue({
@@ -54,14 +54,14 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         width: product.dimensions.width,
         depth: product.dimensions.depth,
         image: product.image,
-        stockQuantity: product.stockQuantity,
+        stockQuantity: product.stock_quantity,
         categoryId: product.category.id,
         category: {
           id: product.category.id,
           name: product.category.name,
           code: product.category.code,
         },
-        createdAt: product.createdAt,
+        createdAt: product.created_at,
       } as any);
 
       await productRepository.addProduct(product);
@@ -78,9 +78,9 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
           width: product.dimensions.width,
           depth: product.dimensions.depth,
           image: product.image,
-          stockQuantity: product.stockQuantity,
+          stockQuantity: product.stock_quantity,
           categoryId: product.category.id,
-          createdAt: product.createdAt,
+          createdAt: product.created_at,
         },
         include: { category: true },
       });
@@ -100,13 +100,13 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
           depth: 3,
         },
         image: 'https://example.com',
-        stockQuantity: 10,
+        stock_quantity: 10,
         category: {
           id: 'test',
           name: 'test',
           code: 1234,
         },
-        createdAt: new Date(),
+        created_at: new Date(),
       });
 
       prismaMock.product.create.mockRejectedValueOnce(new Error('test'));
@@ -133,13 +133,13 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
           depth: 3,
         },
         image: 'https://example.com',
-        stockQuantity: 10,
+        stock_quantity: 10,
         category: {
           id: 'test',
           name: 'test',
           code: 1234,
         },
-        createdAt: new Date(),
+        created_at: new Date(),
       });
 
       prismaMock.product.update.mockResolvedValue({
@@ -152,14 +152,14 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
         width: product.dimensions.width,
         depth: product.dimensions.depth,
         image: product.image,
-        stockQuantity: product.stockQuantity,
+        stockQuantity: product.stock_quantity,
         categoryId: product.category.id,
         category: {
           id: product.category.id,
           name: product.category.name,
           code: product.category.code,
         },
-        createdAt: product.createdAt,
+        createdAt: product.created_at,
       } as any);
 
       await productRepository.updateProduct(product);
@@ -176,9 +176,9 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
           width: product.dimensions.width,
           depth: product.dimensions.depth,
           image: product.image,
-          stockQuantity: product.stockQuantity,
+          stockQuantity: product.stock_quantity,
           categoryId: product.category.id,
-          createdAt: product.createdAt,
+          createdAt: product.created_at,
         },
         include: { category: true },
       });
@@ -198,13 +198,13 @@ describe('PrismaProductRepository\'s Unit Tests', () => {
           depth: 3,
         },
         image: 'https://example.com',
-        stockQuantity: 10,
+        stock_quantity: 10,
         category: {
           id: 'test',
           name: 'test',
           code: 1234,
         },
-        createdAt: new Date(),
+        created_at: new Date(),
       });
 
       prismaMock.product.update.mockRejectedValueOnce(new Error('test'));

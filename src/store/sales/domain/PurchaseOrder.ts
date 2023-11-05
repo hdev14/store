@@ -16,12 +16,12 @@ export enum PurchaseOrderStatus {
 
 export type PurchaseOrderProps = {
   id: string;
-  customerId: string;
+  customer_id: string;
   code: number;
-  createdAt: Date;
+  created_at: Date;
   voucher: VoucherProps | null;
-  discountAmount?: number;
-  totalAmount?: number;
+  discount_amount?: number;
+  total_amount?: number;
   status: PurchaseOrderStatus | null;
   items: Array<PurchaseOrderItemProps>;
 }
@@ -29,15 +29,15 @@ export type PurchaseOrderProps = {
 export default class PurchaseOrder extends Entity<PurchaseOrderProps> implements IAggregateRoot {
   public readonly code: number;
 
-  public readonly customerId: string;
+  public readonly customer_id: string;
 
   public voucher: Voucher | null;
 
-  public discountAmount: number;
+  public discount_amount: number;
 
-  public totalAmount: number;
+  public total_amount: number;
 
-  public readonly createdAt: Date;
+  public readonly created_at: Date;
 
   public status: PurchaseOrderStatus;
 
@@ -45,12 +45,12 @@ export default class PurchaseOrder extends Entity<PurchaseOrderProps> implements
 
   constructor(props: PurchaseOrderProps) {
     super(props.id);
-    this.customerId = props.customerId;
-    this.createdAt = props.createdAt;
+    this.customer_id = props.customer_id;
+    this.created_at = props.created_at;
     this.code = props.code;
     this.voucher = props.voucher ? new Voucher(props.voucher) : null;
-    this.totalAmount = props.totalAmount || 0;
-    this.discountAmount = props.discountAmount || 0;
+    this.total_amount = props.total_amount || 0;
+    this.discount_amount = props.discount_amount || 0;
     this.status = props.status || PurchaseOrderStatus.DRAFT;
     for (const itemProps of props.items) {
       this._items.push(new PurchaseOrderItem(itemProps));
@@ -112,7 +112,7 @@ export default class PurchaseOrder extends Entity<PurchaseOrderProps> implements
   }
 
   public calculateTotalAmount() {
-    this.totalAmount = this._items.reduce((acc, item) => acc + item.calculateAmount(), 0);
+    this.total_amount = this._items.reduce((acc, item) => acc + item.calculateAmount(), 0);
     this.calculateTotalDiscountAmount();
   }
 
@@ -122,14 +122,14 @@ export default class PurchaseOrder extends Entity<PurchaseOrderProps> implements
     }
 
     if (this.voucher.type === VoucherDiscountTypes.PERCENTAGE) {
-      this.discountAmount = (this.totalAmount * this.voucher.percentageAmount) / 100;
-      this.totalAmount -= this.discountAmount;
+      this.discount_amount = (this.total_amount * this.voucher.percentage_amount) / 100;
+      this.total_amount -= this.discount_amount;
     } else {
-      this.discountAmount = this.voucher.rawDiscountAmount;
-      this.totalAmount -= this.discountAmount;
+      this.discount_amount = this.voucher.raw_discount_amount;
+      this.total_amount -= this.discount_amount;
     }
 
-    this.totalAmount = this.totalAmount < 0 ? 0 : this.totalAmount;
+    this.total_amount = this.total_amount < 0 ? 0 : this.total_amount;
   }
 
   public hasItem(item: PurchaseOrderItem) {
@@ -155,9 +155,9 @@ export default class PurchaseOrder extends Entity<PurchaseOrderProps> implements
   public validate(): boolean | void {
     Validator.setData(this)
       .setRule('code', ['number', 'integer'])
-      .setRule('customerId', ['required', 'string', 'uuid'])
-      .setRule('discountAmount', ['number'])
-      .setRule('totalAmount', ['number'])
+      .setRule('customer_id', ['required', 'string', 'uuid'])
+      .setRule('discount_amount', ['number'])
+      .setRule('total_amount', ['number'])
       .setRule('status', ['required', 'string'])
       .validate();
   }

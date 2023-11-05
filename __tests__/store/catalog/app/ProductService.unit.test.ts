@@ -1,12 +1,12 @@
-import ProductService from '@catalog/app/ProductService';
-import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
+import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 import { DefaultProductParams, UpdateProductParams } from '@catalog/app/IProductService';
+import ProductNotFoundError from '@catalog/app/ProductNotFoundError';
+import ProductService from '@catalog/app/ProductService';
 import StockError from '@catalog/app/StockError';
+import { faker } from '@faker-js/faker';
+import { fakeCategories, fakeProducts } from '@tests/store/fakes';
 import repositoryStub from '@tests/store/stubs/ProductRepositoryStub';
 import stockServiceStub from '@tests/store/stubs/StockServiceStub';
-import { fakeCategories, fakeProducts } from '@tests/store/fakes';
-import { faker } from '@faker-js/faker';
-import CategoryNotFoundError from '@catalog/app/CategoryNotFoundError';
 
 describe('ProductsService\'s unit tests', () => {
   describe('ProductService.getAllProducts()', () => {
@@ -44,8 +44,8 @@ describe('ProductsService\'s unit tests', () => {
       expect(product.description).toEqual(fakeProducts[0].description);
       expect(product.amount).toEqual(fakeProducts[0].amount);
       expect(product.image).toEqual(fakeProducts[0].image);
-      expect(product.stockQuantity).toEqual(fakeProducts[0].stockQuantity);
-      expect(product.createdAt).toEqual(fakeProducts[0].createdAt);
+      expect(product.stock_quantity).toEqual(fakeProducts[0].stockQuantity);
+      expect(product.created_at).toEqual(fakeProducts[0].createdAt);
       expect(product.dimensions).toEqual(fakeProducts[0].dimensions);
       expect(product.category).toEqual(fakeProducts[0].category);
     });
@@ -100,7 +100,7 @@ describe('ProductsService\'s unit tests', () => {
       const params: DefaultProductParams = {
         name: 'test_new_product',
         amount: Math.random() * 100,
-        categoryId: fakeCategories[0].id,
+        category_id: fakeCategories[0].id,
         description: 'test_new_product',
         dimensions: {
           height: Math.random() * 50,
@@ -108,13 +108,13 @@ describe('ProductsService\'s unit tests', () => {
           depth: Math.random() * 50,
         },
         image: 'http://example.com/new_product.jpg',
-        stockQuantity: parseInt((Math.random() * 10).toString(), 10),
+        stock_quantity: parseInt((Math.random() * 10).toString(), 10),
       };
 
       const product = await productService.createProduct(params);
 
       expect(product.id).toBeTruthy();
-      expect(product.createdAt).toBeInstanceOf(Date);
+      expect(product.created_at).toBeInstanceOf(Date);
       expect(fakeProducts.find((p) => p.id === product.id)).toBeTruthy();
       expect(addProductSpy).toHaveBeenCalled();
     });
@@ -131,7 +131,7 @@ describe('ProductsService\'s unit tests', () => {
       const params: DefaultProductParams = {
         name: 'test_new_product',
         amount: Math.random() * 100,
-        categoryId: fakeCategoryId,
+        category_id: fakeCategoryId,
         description: 'test_new_product',
         dimensions: {
           height: Math.random() * 50,
@@ -139,7 +139,7 @@ describe('ProductsService\'s unit tests', () => {
           depth: Math.random() * 50,
         },
         image: 'http://example.com/new_product.jpg',
-        stockQuantity: parseInt((Math.random() * 10).toString(), 10),
+        stock_quantity: parseInt((Math.random() * 10).toString(), 10),
       };
 
       return productService.createProduct(params).catch((e) => {
@@ -165,7 +165,7 @@ describe('ProductsService\'s unit tests', () => {
       const params: UpdateProductParams = {
         name: 'test_product_updated',
         amount: Math.random() * 100,
-        categoryId: fakeCategories[0].id,
+        category_id: fakeCategories[0].id,
         description: 'test_product_updated',
         dimensions: {
           height: Math.random() * 50,
@@ -173,7 +173,7 @@ describe('ProductsService\'s unit tests', () => {
           depth: Math.random() * 50,
         },
         image: 'http://example.com/product_updated.jpg',
-        stockQuantity: parseInt((Math.random() * 10).toString(), 10),
+        stock_quantity: parseInt((Math.random() * 10).toString(), 10),
       };
 
       await productService.updateProduct(fakeProducts[0].id, params);
@@ -184,7 +184,7 @@ describe('ProductsService\'s unit tests', () => {
       expect(updatedProduct!.amount).toEqual(params.amount);
       expect(updatedProduct!.description).toEqual(params.description);
       expect(updatedProduct!.image).toEqual(params.image);
-      expect(updatedProduct!.stockQuantity).toEqual(params.stockQuantity);
+      expect(updatedProduct!.stockQuantity).toEqual(params.stock_quantity);
       expect(updatedProduct!.category.id).toEqual(fakeCategories[0].id);
       expect(updatedProduct!.category.name).toEqual(fakeCategories[0].name);
       expect(updatedProduct!.category.code).toEqual(fakeCategories[0].code);
@@ -205,7 +205,7 @@ describe('ProductsService\'s unit tests', () => {
       const params: UpdateProductParams = {
         name: 'test_product_updated',
         amount: Math.random() * 100,
-        categoryId: fakeCategories[0].id,
+        category_id: fakeCategories[0].id,
         description: 'test_product_updated',
         dimensions: {
           height: Math.random() * 50,
@@ -213,7 +213,7 @@ describe('ProductsService\'s unit tests', () => {
           depth: Math.random() * 50,
         },
         image: 'http://example.com/product_updated.jpg',
-        stockQuantity: parseInt((Math.random() * 10).toString(), 10),
+        stock_quantity: parseInt((Math.random() * 10).toString(), 10),
       };
 
       return productService.updateProduct('wrong_id', params).catch((e) => {
@@ -237,7 +237,7 @@ describe('ProductsService\'s unit tests', () => {
       const params: UpdateProductParams = {
         name: 'test_product_updated',
         amount: Math.random() * 100,
-        categoryId: fakeCategoryId,
+        category_id: fakeCategoryId,
         description: 'test_product_updated',
         dimensions: {
           height: Math.random() * 50,
@@ -245,7 +245,7 @@ describe('ProductsService\'s unit tests', () => {
           depth: Math.random() * 50,
         },
         image: 'http://example.com/product_updated.jpg',
-        stockQuantity: parseInt((Math.random() * 10).toString(), 10),
+        stock_quantity: parseInt((Math.random() * 10).toString(), 10),
       };
 
       return productService.updateProduct(fakeProducts[0].id, params).catch((e) => {

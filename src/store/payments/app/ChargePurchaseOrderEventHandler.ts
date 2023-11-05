@@ -4,7 +4,7 @@ import ChargePurchaseOrderEvent from '@shared/events/ChargePurchaseOrderEvent';
 import IPaymentGateway from './IPaymentGateway';
 
 export default class ChargePuchaseOrderEventHandler implements IHandler<ChargePurchaseOrderEvent> {
-  constructor(private readonly paymentGateway: IPaymentGateway) { }
+  constructor(private readonly payment_gateway: IPaymentGateway) { }
 
   public async handle(event: ChargePurchaseOrderEvent): Promise<any> {
     // TODO: create the payment

@@ -75,20 +75,20 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const purchaseOrder = await repository.getPurchaseOrderById(purchaseOrderId);
 
       expect(purchaseOrder!.id).toEqual(fakePurchaseOrder.id);
-      expect(purchaseOrder!.customerId).toEqual(fakePurchaseOrder.customerId);
+      expect(purchaseOrder!.customer_id).toEqual(fakePurchaseOrder.customerId);
       expect(purchaseOrder!.code).toEqual(fakePurchaseOrder.code);
-      expect(purchaseOrder!.createdAt).toEqual(fakePurchaseOrder.createdAt);
-      expect(purchaseOrder!.discountAmount).toEqual(fakePurchaseOrder.discountAmount);
+      expect(purchaseOrder!.created_at).toEqual(fakePurchaseOrder.createdAt);
+      expect(purchaseOrder!.discount_amount).toEqual(fakePurchaseOrder.discountAmount);
       expect(purchaseOrder!.voucher!.id).toEqual(fakePurchaseOrder.voucher.id);
       expect(purchaseOrder!.voucher!.active).toEqual(fakePurchaseOrder.voucher.active);
       expect(purchaseOrder!.voucher!.code).toEqual(fakePurchaseOrder.voucher.code);
       expect(purchaseOrder!.voucher!.type).toEqual(fakePurchaseOrder.voucher.type);
-      expect(purchaseOrder!.voucher!.percentageAmount)
+      expect(purchaseOrder!.voucher!.percentage_amount)
         .toEqual(fakePurchaseOrder.voucher.percentageAmount);
-      expect(purchaseOrder!.voucher!.rawDiscountAmount)
+      expect(purchaseOrder!.voucher!.raw_discount_amount)
         .toEqual(fakePurchaseOrder.voucher.rawDiscountAmount);
-      expect(purchaseOrder!.voucher!.createdAt).toEqual(fakePurchaseOrder.voucher.createdAt);
-      expect(purchaseOrder!.voucher!.expiresAt).toEqual(fakePurchaseOrder.voucher.expiresAt);
+      expect(purchaseOrder!.voucher!.created_at).toEqual(fakePurchaseOrder.voucher.createdAt);
+      expect(purchaseOrder!.voucher!.expires_at).toEqual(fakePurchaseOrder.voucher.expiresAt);
       expect(purchaseOrder!.voucher!.usedAt).toEqual(null);
 
       for (let i = 0, len = purchaseOrder!.items.length; i < len; i += 1) {
@@ -98,7 +98,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         expect(item.product.name).toEqual(fakePurchaseOrder.items[i].product.name);
         expect(item.product.amount).toEqual(fakePurchaseOrder.items[i].product.amount);
         expect(item.quantity).toEqual(fakePurchaseOrder.items[i].quantity);
-        expect(item.purchaseOrderId).toEqual(fakePurchaseOrder.items[i].purchaseOrderId);
+        expect(item.purchase_order_id).toEqual(fakePurchaseOrder.items[i].purchaseOrderId);
       }
 
       expect(prismaMock.purchaseOrder.findUnique).toHaveBeenCalledTimes(1);
@@ -193,21 +193,21 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         const purchaseOrder = purchaseOrders[i];
 
         expect(purchaseOrder!.id).toEqual(fakePurchaseOrders[i].id);
-        expect(purchaseOrder!.customerId).toEqual(fakePurchaseOrders[i].customerId);
+        expect(purchaseOrder!.customer_id).toEqual(fakePurchaseOrders[i].customerId);
         expect(purchaseOrder!.code).toEqual(fakePurchaseOrders[i].code);
-        expect(purchaseOrder!.createdAt).toEqual(fakePurchaseOrders[i].createdAt);
-        expect(purchaseOrder!.discountAmount).toEqual(fakePurchaseOrders[i].discountAmount);
+        expect(purchaseOrder!.created_at).toEqual(fakePurchaseOrders[i].createdAt);
+        expect(purchaseOrder!.discount_amount).toEqual(fakePurchaseOrders[i].discountAmount);
         expect(purchaseOrder!.voucher!.id).toEqual(fakePurchaseOrders[i].voucher.id);
         expect(purchaseOrder!.voucher!.active).toEqual(fakePurchaseOrders[i].voucher.active);
         expect(purchaseOrder!.voucher!.code).toEqual(fakePurchaseOrders[i].voucher.code);
         expect(purchaseOrder!.voucher!.type).toEqual(fakePurchaseOrders[i].voucher.type);
-        expect(purchaseOrder!.voucher!.percentageAmount)
+        expect(purchaseOrder!.voucher!.percentage_amount)
           .toEqual(fakePurchaseOrders[i].voucher.percentageAmount);
-        expect(purchaseOrder!.voucher!.rawDiscountAmount)
+        expect(purchaseOrder!.voucher!.raw_discount_amount)
           .toEqual(fakePurchaseOrders[i].voucher.rawDiscountAmount);
-        expect(purchaseOrder!.voucher!.createdAt)
+        expect(purchaseOrder!.voucher!.created_at)
           .toEqual(fakePurchaseOrders[i].voucher.createdAt);
-        expect(purchaseOrder!.voucher!.expiresAt)
+        expect(purchaseOrder!.voucher!.expires_at)
           .toEqual(fakePurchaseOrders[i].voucher.expiresAt);
         expect(purchaseOrder!.voucher!.usedAt).toEqual(null);
 
@@ -218,7 +218,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
           expect(item.product.name).toEqual(fakePurchaseOrders[i].items[h].product.name);
           expect(item.product.amount).toEqual(fakePurchaseOrders[i].items[h].product.amount);
           expect(item.quantity).toEqual(fakePurchaseOrders[i].items[h].quantity);
-          expect(item.purchaseOrderId)
+          expect(item.purchase_order_id)
             .toEqual(fakePurchaseOrders[i].items[h].purchaseOrderId);
         }
       }
@@ -292,10 +292,10 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const purchaseOrder = await repository.getDraftPurchaseOrderByCustomerId(customerId);
 
       expect(purchaseOrder!.id).toEqual(fakeDraftPurchaseOrder.id);
-      expect(purchaseOrder!.customerId).toEqual(fakeDraftPurchaseOrder.customerId);
+      expect(purchaseOrder!.customer_id).toEqual(fakeDraftPurchaseOrder.customerId);
       expect(purchaseOrder!.code).toEqual(fakeDraftPurchaseOrder.code);
-      expect(purchaseOrder!.createdAt).toEqual(fakeDraftPurchaseOrder.createdAt);
-      expect(purchaseOrder!.discountAmount).toEqual(fakeDraftPurchaseOrder.discountAmount);
+      expect(purchaseOrder!.created_at).toEqual(fakeDraftPurchaseOrder.createdAt);
+      expect(purchaseOrder!.discount_amount).toEqual(fakeDraftPurchaseOrder.discountAmount);
 
       for (let i = 0, len = purchaseOrder!.items.length; i < len; i += 1) {
         const item = purchaseOrder!.items[i];
@@ -305,7 +305,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         expect(item.product.name).toEqual(fakeDraftPurchaseOrder.items[i].product.name);
         expect(item.product.amount).toEqual(fakeDraftPurchaseOrder.items[i].product.amount);
         expect(item.quantity).toEqual(fakeDraftPurchaseOrder.items[i].quantity);
-        expect(item.purchaseOrderId)
+        expect(item.purchase_order_id)
           .toEqual(fakeDraftPurchaseOrder.items[i].purchaseOrderId);
       }
 
@@ -348,22 +348,22 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
         voucher: {
           id: faker.datatype.uuid(),
-          percentageAmount: 0,
-          rawDiscountAmount: 0,
+          percentage_amount: 0,
+          raw_discount_amount: 0,
           quantity: parseInt(faker.datatype.number().toString(), 10),
           type: VoucherDiscountTypes.ABSOLUTE,
           active: faker.datatype.boolean(),
           code: parseInt(faker.datatype.number().toString(), 10),
-          expiresAt: new Date(),
-          createdAt: new Date(),
+          expires_at: new Date(),
+          created_at: new Date(),
           usedAt: null,
         },
-        createdAt: new Date(),
+        created_at: new Date(),
         items: [],
       });
 
@@ -372,13 +372,13 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(prismaMock.purchaseOrder.create).toHaveBeenCalledWith({
         data: {
           id: purchaseOrder.id,
-          customerId: purchaseOrder.customerId,
+          customerId: purchaseOrder.customer_id,
           code: purchaseOrder.code,
           status: purchaseOrder.status,
           voucherId: purchaseOrder.voucher!.id,
-          createdAt: purchaseOrder.createdAt,
-          totalAmount: purchaseOrder.totalAmount,
-          discountAmount: purchaseOrder.discountAmount,
+          createdAt: purchaseOrder.created_at,
+          totalAmount: purchaseOrder.total_amount,
+          discountAmount: purchaseOrder.discount_amount,
         },
         include: {
           voucher: true,
@@ -391,12 +391,12 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
-        totalAmount: 0,
-        discountAmount: 0,
-        createdAt: new Date(),
+        total_amount: 0,
+        discount_amount: 0,
+        created_at: new Date(),
         voucher: null,
         items: [],
       });
@@ -406,13 +406,13 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(prismaMock.purchaseOrder.create).toHaveBeenCalledWith({
         data: {
           id: purchaseOrder.id,
-          customerId: purchaseOrder.customerId,
+          customerId: purchaseOrder.customer_id,
           code: purchaseOrder.code,
           status: purchaseOrder.status,
           voucherId: undefined,
-          createdAt: purchaseOrder.createdAt,
-          totalAmount: purchaseOrder.totalAmount,
-          discountAmount: purchaseOrder.discountAmount,
+          createdAt: purchaseOrder.created_at,
+          totalAmount: purchaseOrder.total_amount,
+          discountAmount: purchaseOrder.discount_amount,
         },
         include: {
           voucher: true,
@@ -427,11 +427,11 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
-        createdAt: new Date(),
+        created_at: new Date(),
         items: [],
       });
 
@@ -448,12 +448,12 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
-        totalAmount: 0,
-        discountAmount: 0,
-        createdAt: new Date(),
+        total_amount: 0,
+        discount_amount: 0,
+        created_at: new Date(),
         voucher: null,
         items: [],
       });
@@ -463,12 +463,12 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(prismaMock.purchaseOrder.update).toHaveBeenCalledWith({
         where: { id: purchaseOrder.id },
         data: {
-          customerId: purchaseOrder.customerId,
+          customerId: purchaseOrder.customer_id,
           code: purchaseOrder.code,
           status: purchaseOrder.status,
           voucherId: undefined,
-          totalAmount: purchaseOrder.totalAmount,
-          discountAmount: purchaseOrder.discountAmount,
+          totalAmount: purchaseOrder.total_amount,
+          discountAmount: purchaseOrder.discount_amount,
         },
         include: {
           voucher: true,
@@ -494,11 +494,11 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       const purchaseOrder = new PurchaseOrder({
         id: faker.datatype.uuid(),
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.datatype.number().toString(), 10),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
-        createdAt: new Date(),
+        created_at: new Date(),
         items: [],
       });
 
@@ -530,7 +530,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
+      expect(purchaseOrderItem!.purchase_order_id).toEqual(fakePurchaseOrderItem.purchaseOrderId);
       expect(purchaseOrderItem!.product).toEqual(new Product({
         id: fakePurchaseOrderItem.product.id,
         name: fakePurchaseOrderItem.product.name,
@@ -618,7 +618,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
       expect(purchaseOrderItem!.quantity).toEqual(fakePurchaseOrderItem.quantity);
-      expect(purchaseOrderItem!.purchaseOrderId).toEqual(fakePurchaseOrderItem.purchaseOrderId);
+      expect(purchaseOrderItem!.purchase_order_id).toEqual(fakePurchaseOrderItem.purchaseOrderId);
       expect(purchaseOrderItem!.product).toEqual(new Product({
         id: fakePurchaseOrderItem.product.id,
         name: fakePurchaseOrderItem.product.name,
@@ -665,7 +665,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
-        purchaseOrderId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
         product: {
           id: faker.datatype.uuid(),
           name: faker.commerce.product(),
@@ -678,7 +678,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(prismaMock.purchaseOrderItem.create).toHaveBeenCalledWith({
         data: {
           id: purchaseOrderItem.id,
-          purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+          purchaseOrderId: purchaseOrderItem.purchase_order_id,
           quantity: purchaseOrderItem.quantity,
           productId: purchaseOrderItem.product.id,
         },
@@ -703,7 +703,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         new PurchaseOrderItem({
           id: faker.datatype.uuid(),
           quantity: parseInt(faker.datatype.number().toString(), 10),
-          purchaseOrderId: faker.datatype.uuid(),
+          purchase_order_id: faker.datatype.uuid(),
           product: {
             id: faker.datatype.uuid(),
             name: faker.commerce.product(),
@@ -724,7 +724,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const purchaseOrderItem = new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
-        purchaseOrderId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
         product: {
           id: faker.datatype.uuid(),
           name: faker.commerce.product(),
@@ -737,7 +737,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       expect(prismaMock.purchaseOrderItem.update).toHaveBeenCalledWith({
         where: { id: purchaseOrderItem.id },
         data: {
-          purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+          purchaseOrderId: purchaseOrderItem.purchase_order_id,
           quantity: purchaseOrderItem.quantity,
           productId: purchaseOrderItem.product.id,
         },
@@ -762,7 +762,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
         new PurchaseOrderItem({
           id: faker.datatype.uuid(),
           quantity: parseInt(faker.datatype.number().toString(), 10),
-          purchaseOrderId: faker.datatype.uuid(),
+          purchase_order_id: faker.datatype.uuid(),
           product: {
             id: faker.datatype.uuid(),
             name: faker.commerce.product(),
@@ -837,12 +837,12 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
 
       expect(voucher!.id).toEqual(fakeVoucher.id);
       expect(voucher!.code).toEqual(fakeVoucher.code);
-      expect(voucher!.percentageAmount).toEqual(fakeVoucher.percentageAmount);
-      expect(voucher!.rawDiscountAmount).toEqual(fakeVoucher.rawDiscountAmount);
+      expect(voucher!.percentage_amount).toEqual(fakeVoucher.percentageAmount);
+      expect(voucher!.raw_discount_amount).toEqual(fakeVoucher.rawDiscountAmount);
       expect(voucher!.quantity).toEqual(fakeVoucher.quantity);
       expect(voucher!.type).toEqual(fakeVoucher.type);
-      expect(voucher!.createdAt).toEqual(fakeVoucher.createdAt);
-      expect(voucher!.expiresAt).toEqual(fakeVoucher.expiresAt);
+      expect(voucher!.created_at).toEqual(fakeVoucher.createdAt);
+      expect(voucher!.expires_at).toEqual(fakeVoucher.expiresAt);
       expect(voucher!.usedAt).toBeNull();
 
       expect(prismaMock.voucher.findFirst).toHaveBeenCalledTimes(1);

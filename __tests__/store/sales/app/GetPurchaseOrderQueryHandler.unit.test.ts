@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import PurchaseOrderNotFoundError from '@sales/app/PurchaseOrderNotFoundError';
-import GetPurchaseOrderQuery from '@sales/app/queries/GetPurchaseOrderQuery';
 import GetPurchaseOrderQueryHandler from '@sales/app/handlers/GetPurchaseOrderQueryHandler';
+import GetPurchaseOrderQuery from '@sales/app/queries/GetPurchaseOrderQuery';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
@@ -17,7 +17,7 @@ describe("GetPurchaseOrderQueryHandler's unit tests", () => {
 
     await handler.handle(query);
 
-    expect(getPurchaseOrderByIdSpy).toHaveBeenCalledWith(query.purchaseOrderId);
+    expect(getPurchaseOrderByIdSpy).toHaveBeenCalledWith(query.purchase_order_id);
   });
 
   it('returns a PurchaseOrder if purchase order exists', async () => {
@@ -25,9 +25,9 @@ describe("GetPurchaseOrderQueryHandler's unit tests", () => {
 
     const purchaseOrder = new PurchaseOrder({
       id: faker.datatype.uuid(),
-      customerId: faker.datatype.uuid(),
+      customer_id: faker.datatype.uuid(),
       code: parseInt(faker.datatype.number().toString(), 10),
-      createdAt: new Date(),
+      created_at: new Date(),
       voucher: null,
       status: null,
       items: [],

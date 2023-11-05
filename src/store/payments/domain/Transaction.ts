@@ -13,16 +13,16 @@ export enum TransactionStatus {
 
 export type TransactionProps = {
   id: string;
-  externalId: string;
+  external_id: string;
   status: TransactionStatus;
   details: string;
   payload: string;
-  paymentId: string;
-  registeredAt: Date;
+  payment_id: string;
+  registered_at: Date;
 }
 
 export default class Transaction extends Entity {
-  public readonly externalId: string;
+  public readonly external_id: string;
 
   public readonly status: TransactionStatus;
 
@@ -30,18 +30,18 @@ export default class Transaction extends Entity {
 
   public readonly payload: string; // JSON
 
-  public readonly paymentId: string;
+  public readonly payment_id: string;
 
-  public readonly registeredAt: Date;
+  public readonly registered_at: Date;
 
   constructor(props: TransactionProps) {
     super(props.id);
-    this.externalId = props.externalId;
+    this.external_id = props.external_id;
     this.status = props.status;
     this.details = props.details;
     this.payload = props.payload;
-    this.paymentId = props.paymentId;
-    this.registeredAt = props.registeredAt;
+    this.payment_id = props.payment_id;
+    this.registered_at = props.registered_at;
   }
 
   public validate(): boolean | void {

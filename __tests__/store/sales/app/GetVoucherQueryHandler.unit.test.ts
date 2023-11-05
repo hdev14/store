@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
-import GetVoucherQuery from '@sales/app/queries/GetVoucherQuery';
-import GetVoucherQueryHandler from '@sales/app/handlers/GetVoucherQueryHandler';
 import VoucherNotFoundError from '@sales/app/VoucherNotFoundError';
+import GetVoucherQueryHandler from '@sales/app/handlers/GetVoucherQueryHandler';
+import GetVoucherQuery from '@sales/app/queries/GetVoucherQuery';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
@@ -17,7 +17,7 @@ describe("GetVoucherQueryHandler's unit tests", () => {
 
     await handler.handle(query);
 
-    expect(getVoucherByCodeSpy).toHaveBeenCalledWith(query.voucherCode);
+    expect(getVoucherByCodeSpy).toHaveBeenCalledWith(query.voucher_code);
   });
 
   it('returns a result if purchase order exists', async () => {
@@ -25,12 +25,12 @@ describe("GetVoucherQueryHandler's unit tests", () => {
 
     const voucher = new Voucher({
       id: faker.datatype.uuid(),
-      percentageAmount: faker.datatype.float(),
-      rawDiscountAmount: faker.datatype.float(),
+      percentage_amount: faker.datatype.float(),
+      raw_discount_amount: faker.datatype.float(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
       type: VoucherDiscountTypes.ABSOLUTE,
-      createdAt: new Date(),
-      expiresAt: new Date(),
+      created_at: new Date(),
+      expires_at: new Date(),
       usedAt: new Date(),
       active: false,
       code: parseInt(faker.datatype.number().toString(), 10),

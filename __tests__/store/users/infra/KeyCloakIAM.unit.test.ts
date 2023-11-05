@@ -80,8 +80,8 @@ describe("KeyCloakIAM's unit tests", () => {
 
       const payload = await iam.auth(fakeEmail, fakePassword);
 
-      expect(payload.accessToken).toEqual(fakeBody.access_token);
-      expect(payload.expiresIn).toEqual(fakeBody.expires_in);
+      expect(payload.access_token).toEqual(fakeBody.access_token);
+      expect(payload.expires_in).toEqual(fakeBody.expires_in);
     });
   });
 
@@ -111,7 +111,7 @@ describe("KeyCloakIAM's unit tests", () => {
           name: `${firstName} ${lastName}`,
           document: '69156949430',
           email: faker.internet.email(),
-          createdAt: new Date(),
+          created_at: new Date(),
           password: faker.random.alphaNumeric(10),
         });
 
@@ -132,7 +132,7 @@ describe("KeyCloakIAM's unit tests", () => {
               value: user.password,
               temporary: false,
             }],
-            createdTimestamp: user.createdAt.getTime(),
+            createdTimestamp: user.created_at.getTime(),
           },
           { headers: { Authorization: `Bearer ${fakeAccessToken}` } },
         );
@@ -162,7 +162,7 @@ describe("KeyCloakIAM's unit tests", () => {
         name: `${firstName} ${lastName}`,
         document: '69156949430',
         email: faker.internet.email(),
-        createdAt: new Date(),
+        created_at: new Date(),
         password: faker.random.alphaNumeric(10),
       });
 
@@ -265,7 +265,7 @@ describe("KeyCloakIAM's unit tests", () => {
       expect(user!.name).toEqual(`${fakeBody.firstName} ${fakeBody.lastName}`);
       expect(user!.email).toEqual(fakeBody.email);
       expect(user!.document.value).toEqual('69156949430');
-      expect(user!.createdAt).toEqual(new Date(fakeBody.createdTimestamp));
+      expect(user!.created_at).toEqual(new Date(fakeBody.createdTimestamp));
     });
 
     it('returns null if occur a HttpError with status code 404', async () => {
@@ -372,13 +372,13 @@ describe("KeyCloakIAM's unit tests", () => {
       expect(users[0].name).toEqual(`${fakeBody[0].firstName} ${fakeBody[0].lastName}`);
       expect(users[0].email).toEqual(fakeBody[0].email);
       expect(users[0].document.value).toEqual('69156949430');
-      expect(users[0].createdAt).toEqual(new Date(fakeBody[0].createdTimestamp));
+      expect(users[0].created_at).toEqual(new Date(fakeBody[0].createdTimestamp));
 
       expect(users[1].id).toEqual(fakeBody[1].id);
       expect(users[1].name).toEqual(`${fakeBody[1].firstName} ${fakeBody[1].lastName}`);
       expect(users[1].email).toEqual(fakeBody[1].email);
       expect(users[1].document.value).toEqual('37136409470');
-      expect(users[1].createdAt).toEqual(new Date(fakeBody[1].createdTimestamp));
+      expect(users[1].created_at).toEqual(new Date(fakeBody[1].createdTimestamp));
     });
 
     it('calls HttpClient.get with pagaintion options if pagination is passed', async () => {

@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
-import PurchaseOrder from '@sales/domain/PurchaseOrder';
-import EventHandlerError from '@shared/errors/EventHandlerError';
 import AddDraftPurchaseOrderEventHandler from '@sales/app/handlers/AddDraftPurchaseOrderEventHandler';
+import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
+import EventHandlerError from '@shared/errors/EventHandlerError';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("AddDraftPurchaseOrderEventHandler's unit tests", () => {
@@ -26,12 +26,12 @@ describe("AddDraftPurchaseOrderEventHandler's unit tests", () => {
     expect(addPurchaseOrderSpy).toHaveBeenCalledTimes(1);
     expect(addPurchaseOrderSpy).toHaveBeenCalledWith(
       PurchaseOrder.createDraft({
-        id: event.principalId,
+        id: event.principal_id,
         code: event.code,
-        customerId: event.customerId,
-        totalAmount: event.totalAmount,
-        discountAmount: event.discountAmount,
-        createdAt: event.createdAt,
+        customer_id: event.customer_id,
+        total_amount: event.total_amount,
+        discount_amount: event.discount_amount,
+        created_at: event.created_at,
         status: null,
         voucher: null,
         items: [],

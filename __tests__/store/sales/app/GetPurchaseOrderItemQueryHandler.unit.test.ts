@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
-import GetPurchaseOrderItemQuery from '@sales/app/queries/GetPurchaseOrderItemQuery';
 import GetPurchaseOrderItemQueryHandler from '@sales/app/handlers/GetPurchaseOrderItemQueryHandler';
+import GetPurchaseOrderItemQuery from '@sales/app/queries/GetPurchaseOrderItemQuery';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
@@ -17,7 +17,7 @@ describe("GetPurchaseOrderItemQueryHandler's unit tests", () => {
 
     await handler.handle(query);
 
-    expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledWith(query.purchaseOrderItemId);
+    expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledWith(query.purchase_order_item_id);
   });
 
   it('returns a PurchaseOrderItem if purchase order exists', async () => {

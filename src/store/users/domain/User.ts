@@ -7,7 +7,7 @@ export type UserProps = {
   name: string;
   email: string;
   document: string;
-  createdAt: Date;
+  created_at: Date;
   password?: string;
 }
 
@@ -18,7 +18,7 @@ export default class User extends Entity<UserProps> {
 
   public readonly email: string;
 
-  public readonly createdAt: Date;
+  public readonly created_at: Date;
 
   public readonly password?: string;
 
@@ -27,7 +27,7 @@ export default class User extends Entity<UserProps> {
     this.name = props.name;
     this.email = props.email;
     this.document = new CPF(props.document);
-    this.createdAt = props.createdAt;
+    this.created_at = props.created_at;
     this.password = props.password;
 
     this.validate();
@@ -38,7 +38,7 @@ export default class User extends Entity<UserProps> {
       .setRule('name', ['required', 'string'])
       .setRule('email', ['required', 'string', 'email'])
       .setRule('document', () => this.document.isValid())
-      .setRule('createdAt', ['date'])
+      .setRule('created_at', ['date'])
       .setRule('password', ['string', 'min:6'])
       .validate();
   }

@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
-import { mock, mockClear } from 'jest-mock-extended';
 import ValidationError from '@shared/errors/ValidationError';
 import IIdentityAccessManagement from '@users/app/IIdentityAccessManagement';
-import UserService from '@users/app/UserService';
-import User from '@users/domain/User';
 import UserNotFoundError from '@users/app/UserNotFoundError';
+import UserService from '@users/app/UserService';
 import CPF from '@users/domain/CPF';
+import User from '@users/domain/User';
+import { mock, mockClear } from 'jest-mock-extended';
 
 describe("UserService's unit tests", () => {
   const IAMMock = mock<IIdentityAccessManagement>();
@@ -63,7 +63,7 @@ describe("UserService's unit tests", () => {
       expect(user.name).toEqual(data.name);
       expect(user.email).toEqual(data.email);
       expect(user.document).toEqual(data.document);
-      expect(user.createdAt).toBeInstanceOf(Date);
+      expect(user.created_at).toBeInstanceOf(Date);
       expect(user.password).toBeUndefined();
     });
   });
@@ -96,7 +96,7 @@ describe("UserService's unit tests", () => {
         email: faker.internet.email(),
         document: '69156949430',
         password: faker.random.alphaNumeric(6),
-        createdAt: new Date(),
+        created_at: new Date(),
       });
 
       IAMMock.getUser.mockResolvedValueOnce(fakeUser);
@@ -127,7 +127,7 @@ describe("UserService's unit tests", () => {
         email: faker.internet.email(),
         document: '69156949430',
         password: faker.random.alphaNumeric(6),
-        createdAt: new Date(),
+        created_at: new Date(),
       });
 
       IAMMock.getUser.mockResolvedValueOnce(fakeUser);
@@ -158,7 +158,7 @@ describe("UserService's unit tests", () => {
         email: faker.internet.email(),
         document: '69156949430',
         password: faker.random.alphaNumeric(6),
-        createdAt: new Date(),
+        created_at: new Date(),
       });
 
       IAMMock.getUser.mockResolvedValueOnce(fakeUser);
@@ -204,7 +204,7 @@ describe("UserService's unit tests", () => {
         email: faker.internet.email(),
         document: '69156949430',
         password: faker.random.alphaNumeric(6),
-        createdAt: new Date(),
+        created_at: new Date(),
       });
 
       IAMMock.getUser.mockResolvedValueOnce(fakeUser);
@@ -229,7 +229,7 @@ describe("UserService's unit tests", () => {
           email: faker.internet.email(),
           document: '69156949430',
           password: faker.random.alphaNumeric(6),
-          createdAt: new Date(),
+          created_at: new Date(),
         }),
         new User({
           id: faker.datatype.uuid(),
@@ -237,7 +237,7 @@ describe("UserService's unit tests", () => {
           email: faker.internet.email(),
           document: '69156949430',
           password: faker.random.alphaNumeric(6),
-          createdAt: new Date(),
+          created_at: new Date(),
         }),
       ];
 

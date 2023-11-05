@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 import {
-  PrismaClient,
-  PurchaseOrder as PrismaPurchaseOrder,
-  Voucher as PrismaVoucher,
-  PurchaseOrderItem as PrismaPurchaseOrderItem,
+    PrismaClient,
+    PurchaseOrder as PrismaPurchaseOrder,
+    PurchaseOrderItem as PrismaPurchaseOrderItem,
+    Voucher as PrismaVoucher,
 } from '@prisma/client';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import PurchaseOrder, { PurchaseOrderProps, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
@@ -127,12 +127,12 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
         data: {
           id: purchaseOrder.id,
           code: purchaseOrder.code,
-          totalAmount: purchaseOrder.totalAmount,
-          discountAmount: purchaseOrder.discountAmount,
+          totalAmount: purchaseOrder.total_amount,
+          discountAmount: purchaseOrder.discount_amount,
           status: purchaseOrder.status,
-          customerId: purchaseOrder.customerId,
+          customerId: purchaseOrder.customer_id,
           voucherId: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
-          createdAt: purchaseOrder.createdAt,
+          createdAt: purchaseOrder.created_at,
         },
         include: {
           voucher: true,
@@ -150,10 +150,10 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
       await this.connection.purchaseOrder.update({
         where: { id: purchaseOrder.id },
         data: {
-          customerId: purchaseOrder.customerId,
+          customerId: purchaseOrder.customer_id,
           code: purchaseOrder.code,
-          totalAmount: purchaseOrder.totalAmount,
-          discountAmount: purchaseOrder.discountAmount,
+          totalAmount: purchaseOrder.total_amount,
+          discountAmount: purchaseOrder.discount_amount,
           status: purchaseOrder.status,
           voucherId: purchaseOrder.voucher ? purchaseOrder.voucher.id : undefined,
         },
@@ -230,7 +230,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
       await this.connection.purchaseOrderItem.create({
         data: {
           id: purchaseOrderItem.id,
-          purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+          purchaseOrderId: purchaseOrderItem.purchase_order_id,
           quantity: purchaseOrderItem.quantity,
           productId: purchaseOrderItem.product.id,
         },
@@ -256,7 +256,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
       await this.connection.purchaseOrderItem.update({
         where: { id: purchaseOrderItem.id },
         data: {
-          purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+          purchaseOrderId: purchaseOrderItem.purchase_order_id,
           quantity: purchaseOrderItem.quantity,
           productId: purchaseOrderItem.product.id,
         },
@@ -336,12 +336,12 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
   private mapPurchaseOrder(purchaseOrder: PurchaseOrderWithVoucherAndItems) {
     const props: PurchaseOrderProps = {
       id: purchaseOrder.id,
-      customerId: purchaseOrder.customerId,
+      customer_id: purchaseOrder.customerId,
       code: purchaseOrder.code,
-      totalAmount: purchaseOrder.totalAmount,
-      discountAmount: purchaseOrder.discountAmount,
+      total_amount: purchaseOrder.totalAmount,
+      discount_amount: purchaseOrder.discountAmount,
       status: purchaseOrder.status as PurchaseOrderStatus,
-      createdAt: purchaseOrder.createdAt,
+      created_at: purchaseOrder.createdAt,
       voucher: purchaseOrder.voucher ? this.mapVoucher(purchaseOrder.voucher) : null,
       items: [],
     };
@@ -362,12 +362,12 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
       id: voucher.id,
       active: voucher.active,
       code: voucher.code,
-      percentageAmount: voucher.percentageAmount,
-      rawDiscountAmount: voucher.rawDiscountAmount,
+      percentage_amount: voucher.percentageAmount,
+      raw_discount_amount: voucher.rawDiscountAmount,
       type: voucher.type,
       quantity: voucher.quantity,
-      createdAt: voucher.createdAt,
-      expiresAt: voucher.expiresAt,
+      created_at: voucher.createdAt,
+      expires_at: voucher.expiresAt,
       usedAt: voucher.usedAt,
     });
   }
@@ -376,7 +376,7 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     return new PurchaseOrderItem({
       id: purchaseOrderItem.id,
       quantity: purchaseOrderItem.quantity,
-      purchaseOrderId: purchaseOrderItem.purchaseOrderId,
+      purchase_order_id: purchaseOrderItem.purchaseOrderId,
       product: purchaseOrderItem.product,
     });
   }

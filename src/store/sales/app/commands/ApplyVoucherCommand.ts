@@ -3,8 +3,8 @@ import Validator from '@shared/utils/Validator';
 
 export default class ApplyVoucherCommand extends Command {
   constructor(
-    readonly customerId: string,
-    readonly voucherCode: number,
+    readonly customer_id: string,
+    readonly voucher_code: number,
   ) {
     super();
     this.validate();
@@ -12,8 +12,8 @@ export default class ApplyVoucherCommand extends Command {
 
   protected validate(): void {
     Validator.setData(this)
-      .setRule('customerId', ['required', 'string', 'uuid'])
-      .setRule('voucherCode', ['required', 'number', 'integer'])
+      .setRule('customer_id', ['required', 'string', 'uuid'])
+      .setRule('voucher_code', ['required', 'number', 'integer'])
       .validate();
   }
 }

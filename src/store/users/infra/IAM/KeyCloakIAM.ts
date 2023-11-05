@@ -5,10 +5,10 @@ import User from '@users/domain/User';
 
 type UserRepresentation = {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  createdTimestamp: number;
+  created_timestamp: number;
   attributes: {
     document: string;
   },
@@ -21,31 +21,31 @@ type UserRepresentation = {
 
 // TODO: add getAllRoles
 export default class KeyCloakIAM implements IIdentityAccessManagement {
-  private readonly baseUrl: string;
+  private readonly base_url: string;
 
   private readonly realm: string;
 
-  private readonly clientId: string;
+  private readonly client_id: string;
 
-  private readonly clientSecret: string;
+  private readonly client_secret: string;
 
-  private expiredAt?: Date;
+  private expired_at?: Date;
 
-  private clientAccessToken = '';
+  private client_access_token = '';
 
   constructor(private readonly httpClient: IHttpClient) {
-    this.baseUrl = process.env.KEYCLOAK_BASE_URL!;
+    this.base_url = process.env.KEYCLOAK_BASE_URL!;
     this.realm = process.env.KEYCLOAK_REALM_NAME!;
-    this.clientId = process.env.KEYCLOAK_CLIENT_ID!;
-    this.clientSecret = process.env.KEYCLOAK_CLIENT_SECRET!;
+    this.client_id = process.env.KEYCLOAK_CLIENT_ID!;
+    this.client_secret = process.env.KEYCLOAK_CLIENT_SECRET!;
   }
 
   public async auth(email: string, password: string): Promise<TokenPayload> {
     const response = await this.httpClient.post(
-      `${this.baseUrl}/realms/${this.realm}/protocol/openid-connect/token`,
+      `${this.base_url}/realms/${this.realm}/protocol/openid-connect/token`,
       new URLSearchParams({
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
+        client_id: this.client_id,
+        client_secret: this.client_secret,
         grant_type: 'password',
         username: email,
         password,
@@ -55,23 +55,23 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     );
 
     return {
-      accessToken: response.body.access_token,
-      expiresIn: response.body.expires_in,
+      access_token: response.body.access_token,
+      expires_in: response.body.expires_in,
     };
   }
 
   public async registerUser(user: User): Promise<void> {
     await this.authClient();
 
-    const [firstName, ...rest] = user.name.split(' ');
-    const lastName = rest.join(' ');
+    const [first_name, ...rest] = user.name.split(' ');
+    const last_name = rest.join(' ');
 
     await this.httpClient.post(
-      `${this.baseUrl}/admin/realms/${this.realm}/users`,
+      `${this.base_url}/admin/realms/${this.realm}/users`,
       {
         id: user.id,
-        firstName,
-        lastName,
+        firstName: first_name,
+        lastName: last_name,
         email: user.email,
         attributes: {
           document: user.document.value,
@@ -81,7 +81,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
           value: user.password,
           temporary: false,
         }],
-        createdTimestamp: user.createdAt.getTime(),
+        createdTimestamp: user.created_at.getTime(),
       },
       this.getDefaultHttpClientOptions(),
     );
@@ -90,12 +90,12 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
   public async updateUser(user: User): Promise<void> {
     await this.authClient();
 
-    const [firstName, ...rest] = user.name.split(' ');
-    const lastName = rest.join(' ');
+    const [first_name, ...rest] = user.name.split(' ');
+    const last_name = rest.join(' ');
 
     const data: any = {
-      firstName,
-      lastName,
+      firstName: first_name,
+      lastName: last_name,
       email: user.email,
       attributes: {
         document: user.document.value,
@@ -112,27 +112,27 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     }
 
     await this.httpClient.put(
-      `${this.baseUrl}/admin/realms/${this.realm}/users/${user.id}`,
+      `${this.base_url}/admin/realms/${this.realm}/users/${user.id}`,
       data,
       this.getDefaultHttpClientOptions(),
     );
   }
 
-  public async getUser(userId: string): Promise<User | null> {
+  public async getUser(user_id: string): Promise<User | null> {
     try {
       await this.authClient();
 
       const { body } = await this.httpClient.get<UserRepresentation>(
-        `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}`,
+        `${this.base_url}/admin/realms/${this.realm}/users/${user_id}`,
         this.getDefaultHttpClientOptions(),
       );
 
       return new User({
         id: body.id,
-        name: `${body.firstName} ${body.lastName}`,
+        name: `${body.first_name} ${body.last_name}`,
         email: body.email,
         document: body.attributes.document,
-        createdAt: new Date(body.createdTimestamp),
+        created_at: new Date(body.created_timestamp),
       });
     } catch (e: any) {
       if (e instanceof HttpError && e.statusCode === 404) {
@@ -152,7 +152,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     });
 
     const { body } = await this.httpClient.get<UserRepresentation[]>(
-      `${this.baseUrl}/admin/realms/${this.realm}/users`,
+      `${this.base_url}/admin/realms/${this.realm}/users`,
       this.getDefaultHttpClientOptions({ query }),
     );
 
@@ -161,10 +161,10 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     for (const userRep of body) {
       results.push(new User({
         id: userRep.id,
-        name: `${userRep.firstName} ${userRep.lastName}`,
+        name: `${userRep.first_name} ${userRep.last_name}`,
         email: userRep.email,
         document: userRep.attributes.document,
-        createdAt: new Date(userRep.createdTimestamp),
+        created_at: new Date(userRep.created_timestamp),
       }));
     }
 
@@ -175,7 +175,7 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     await this.authClient();
 
     await this.httpClient.post(
-      `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}/role-mappings/realm`,
+      `${this.base_url}/admin/realms/${this.realm}/users/${userId}/role-mappings/realm`,
       [{ name: role, containerId: this.realm }],
       this.getDefaultHttpClientOptions(),
     );
@@ -185,39 +185,39 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     await this.authClient();
 
     await this.httpClient.delete(
-      `${this.baseUrl}/admin/realms/${this.realm}/users/${userId}/role-mappings/realm`,
+      `${this.base_url}/admin/realms/${this.realm}/users/${userId}/role-mappings/realm`,
       [{ name: role, containerId: this.realm }],
       this.getDefaultHttpClientOptions(),
     );
   }
 
   private async authClient() {
-    if (this.clientAccessToken === '' || this.expiredAt === undefined || this.expiredAt < new Date()) {
+    if (this.client_access_token === '' || this.expired_at === undefined || this.expired_at < new Date()) {
       const { body } = await this.httpClient.post(
-        `${this.baseUrl}/realms/${this.realm}/protocol/openid-connect/token`,
+        `${this.base_url}/realms/${this.realm}/protocol/openid-connect/token`,
         new URLSearchParams({
-          client_id: this.clientId,
-          client_secret: this.clientSecret,
+          client_id: this.client_id,
+          client_secret: this.client_secret,
           grant_type: 'client_credentials',
           scope: 'openid',
         }),
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
       );
 
-      const expiredAt = new Date();
-      expiredAt.setDate(expiredAt.getDate() + (body.expires_in / 60));
+      const expired_at = new Date();
+      expired_at.setDate(expired_at.getDate() + (body.expires_in / 60));
 
-      this.clientAccessToken = body.access_token;
-      this.expiredAt = expiredAt;
+      this.client_access_token = body.access_token;
+      this.expired_at = expired_at;
     }
   }
 
   private getDefaultHttpClientOptions(options?: HttpOptions): HttpOptions {
-    const defaultOptions: HttpOptions = {
-      headers: { Authorization: `Bearer ${this.clientAccessToken}` },
+    const default_options: HttpOptions = {
+      headers: { Authorization: `Bearer ${this.client_access_token}` },
       ...(options || {}),
     };
 
-    return defaultOptions;
+    return default_options;
   }
 }

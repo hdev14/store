@@ -1,6 +1,6 @@
-import crypto from 'crypto';
 import Category, { CategoryProps } from '@catalog/domain/Category';
 import { ICategoryOperations } from '@catalog/domain/IProductRepository';
+import crypto from 'crypto';
 import CategoryNotFoundError from './CategoryNotFoundError';
 import ICategoryService, { CreateCategoryParams, UpdateCategoryParams } from './ICategoryService';
 
@@ -36,14 +36,14 @@ export default class CategoryService implements ICategoryService {
   }
 
   public async updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<CategoryProps> {
-    const currentCategory = await this.repository.getCategoryById(categoryId);
+    const current_category = await this.repository.getCategoryById(categoryId);
 
-    if (!currentCategory) {
+    if (!current_category) {
       throw new CategoryNotFoundError();
     }
 
     const props = {
-      ...currentCategory,
+      ...current_category,
       ...params,
     } as CategoryProps;
 

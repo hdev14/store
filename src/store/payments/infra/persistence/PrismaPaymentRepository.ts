@@ -1,8 +1,8 @@
-import { PrismaClient, Payment as PrismaPayment, Transaction as PrismaTransaction } from '@prisma/client';
-import Prisma from '@shared/Prisma';
 import IPaymentRepository from '@payments/domain/IPaymentRepository';
 import Payment, { PaymentMethods, PaymentStatus } from '@payments/domain/Payment';
 import Transaction, { TransactionStatus } from '@payments/domain/Transaction';
+import { PrismaClient, Payment as PrismaPayment, Transaction as PrismaTransaction } from '@prisma/client';
+import Prisma from '@shared/Prisma';
 import RepositoryError from '@shared/errors/RepositoryError';
 
 type ResultPayment = PrismaPayment & {
@@ -57,7 +57,7 @@ export default class PrismaPaymentRepository implements IPaymentRepository {
       await this.connection.payment.create({
         data: {
           id: payment.id,
-          purchaseOrderId: payment.purchaseOrderId,
+          purchaseOrderId: payment.purchase_order_id,
           value: payment.value,
           method: payment.method,
           status: payment.status,
@@ -76,7 +76,7 @@ export default class PrismaPaymentRepository implements IPaymentRepository {
       await this.connection.payment.update({
         where: { id: payment.id },
         data: {
-          purchaseOrderId: payment.purchaseOrderId,
+          purchaseOrderId: payment.purchase_order_id,
           value: payment.value,
           method: payment.method,
           status: payment.status,
@@ -95,12 +95,12 @@ export default class PrismaPaymentRepository implements IPaymentRepository {
       await this.connection.transaction.create({
         data: {
           id: transaction.id,
-          externalId: transaction.externalId,
+          externalId: transaction.external_id,
           status: transaction.status,
           details: transaction.details,
           payload: transaction.payload,
-          paymentId: transaction.paymentId,
-          registeredAt: transaction.registeredAt,
+          paymentId: transaction.payment_id,
+          registeredAt: transaction.registered_at,
         },
       });
     } catch (e) {
@@ -117,10 +117,10 @@ export default class PrismaPaymentRepository implements IPaymentRepository {
       transactions.push(new Transaction({
         id: transaction.id,
         details: transaction.details,
-        externalId: transaction.externalId,
+        external_id: transaction.externalId,
         payload: transaction.payload as string,
-        paymentId: transaction.paymentId,
-        registeredAt: transaction.registeredAt,
+        payment_id: transaction.paymentId,
+        registered_at: transaction.registeredAt,
         status: transaction.status as TransactionStatus,
       }));
     }
@@ -129,7 +129,7 @@ export default class PrismaPaymentRepository implements IPaymentRepository {
       id: payment.id,
       gateway: payment.gateway,
       method: payment.method as PaymentMethods,
-      purchaseOrderId: payment.purchaseOrderId,
+      purchase_order_id: payment.purchaseOrderId,
       status: payment.status as PaymentStatus,
       value: payment.value,
       transactions,

@@ -10,17 +10,17 @@ export default class UpdatePurchaseOrderItemEventHandler implements IHandler<Upd
 
   public async handle(event: UpdatePurchaseOrderItemEvent): Promise<any> {
     try {
-      const purchaseOrderItem = new PurchaseOrderItem({
-        id: event.principalId,
+      const purchase_order_item = new PurchaseOrderItem({
+        id: event.principal_id,
         quantity: event.quantity,
         product: {
-          id: event.productId,
-          name: event.productName,
-          amount: event.productAmount,
+          id: event.product_id,
+          name: event.product_name,
+          amount: event.product_amount,
         },
       });
 
-      await this.repository.updatePurchaseOrderItem(purchaseOrderItem);
+      await this.repository.updatePurchaseOrderItem(purchase_order_item);
     } catch (e: any) {
       console.error(e.stack);
       throw new EventHandlerError('Erro ao atualizar um item.', { cause: e.stack });

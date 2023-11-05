@@ -60,6 +60,7 @@
         "ignoreStrings": true
       }
     ],
-    "no-restricted-syntax": "off"
+    "no-restricted-syntax": "off",
+    "camelcase": "off"
   }
 }

@@ -1,127 +1,127 @@
-import crypto from 'crypto';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import IHandler from '@shared/abstractions/IHandler';
-import IEventQueue from '@shared/abstractions/IEventQueue';
 import AddDraftPurchaseOrderEvent from '@sales/domain/events/AddDraftPurchaseOrderEvent';
 import AddPurchaseOrderItemEvent from '@sales/domain/events/AddPurchaseOrderItemEvent';
-import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
 import UpdateDraftPurchaseOrderEvent from '@sales/domain/events/UpdateDraftPurchaseOrderEvent';
+import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
+import IEventQueue from '@shared/abstractions/IEventQueue';
+import IHandler from '@shared/abstractions/IHandler';
+import crypto from 'crypto';
 import AddPurchaseOrderItemCommand from '../commands/AddPurchaseOrderItemCommand';
 
 // eslint-disable-next-line max-len
 export default class AddPurchaseOrderItemCommandHandler implements IHandler<AddPurchaseOrderItemCommand, void> {
   constructor(
     private readonly repository: IPurchaseOrderRepository,
-    private readonly eventQueue: IEventQueue,
+    private readonly event_queue: IEventQueue,
   ) { }
 
   public async handle(event: AddPurchaseOrderItemCommand): Promise<void> {
-    const purchaseOrderItem = new PurchaseOrderItem({
+    const purchase_order_item = new PurchaseOrderItem({
       id: crypto.randomUUID(),
       product: {
-        id: event.productId,
-        name: event.productName,
-        amount: event.productAmount,
+        id: event.product_id,
+        name: event.product_name,
+        amount: event.product_amount,
       },
       quantity: event.quantity,
     });
 
-    const draftPurchaseOrder = await this.repository
-      .getDraftPurchaseOrderByCustomerId(event.customerId);
+    const draft_purchase_order = await this.repository
+      .getDraftPurchaseOrderByCustomerId(event.customer_id);
 
-    if (!draftPurchaseOrder) {
-      await this.createNewDraftPurcahseOrder(event.customerId, purchaseOrderItem);
+    if (!draft_purchase_order) {
+      await this.createNewDraftPurcahseOrder(event.customer_id, purchase_order_item);
       return;
     }
 
-    await this.updatePurchaseOrder(draftPurchaseOrder, purchaseOrderItem);
+    await this.updatePurchaseOrder(draft_purchase_order, purchase_order_item);
   }
 
   private async updatePurchaseOrder(
-    draftPurchaseOrder: PurchaseOrder,
-    purchaseOrderItem: PurchaseOrderItem,
+    draft_purchase_order: PurchaseOrder,
+    purchase_order_item: PurchaseOrderItem,
   ): Promise<void> {
-    const exists = draftPurchaseOrder.hasItem(purchaseOrderItem);
-    draftPurchaseOrder.addItem(purchaseOrderItem);
+    const exists = draft_purchase_order.hasItem(purchase_order_item);
+    draft_purchase_order.addItem(purchase_order_item);
 
     if (exists) {
-      const addedPurchaseOrderItem = draftPurchaseOrder.items.find(
-        (i) => i.product.id === purchaseOrderItem.product.id,
+      const added_purchase_order_item = draft_purchase_order.items.find(
+        (i) => i.product.id === purchase_order_item.product.id,
       )!;
 
-      await this.repository.updatePurchaseOrderItem(addedPurchaseOrderItem);
+      await this.repository.updatePurchaseOrderItem(added_purchase_order_item);
 
-      this.eventQueue.enqueue(new UpdatePurchaseOrderItemEvent(
-        addedPurchaseOrderItem.id,
-        addedPurchaseOrderItem.quantity,
-        addedPurchaseOrderItem.product.id,
-        addedPurchaseOrderItem.product.name,
-        addedPurchaseOrderItem.product.amount,
+      this.event_queue.enqueue(new UpdatePurchaseOrderItemEvent(
+        added_purchase_order_item.id,
+        added_purchase_order_item.quantity,
+        added_purchase_order_item.product.id,
+        added_purchase_order_item.product.name,
+        added_purchase_order_item.product.amount,
       )).catch(console.error.bind(console));
     } else {
-      await this.repository.addPurchaseOrderItem(purchaseOrderItem);
+      await this.repository.addPurchaseOrderItem(purchase_order_item);
 
-      this.eventQueue.enqueue(new AddPurchaseOrderItemEvent(
-        purchaseOrderItem.id,
-        purchaseOrderItem.purchaseOrderId,
-        purchaseOrderItem.quantity,
-        purchaseOrderItem.product.id,
-        purchaseOrderItem.product.name,
-        purchaseOrderItem.product.amount,
+      this.event_queue.enqueue(new AddPurchaseOrderItemEvent(
+        purchase_order_item.id,
+        purchase_order_item.purchase_order_id,
+        purchase_order_item.quantity,
+        purchase_order_item.product.id,
+        purchase_order_item.product.name,
+        purchase_order_item.product.amount,
       )).catch(console.error.bind(console));
     }
 
-    await this.repository.updatePurchaseOrder(draftPurchaseOrder);
+    await this.repository.updatePurchaseOrder(draft_purchase_order);
 
-    this.eventQueue.enqueue(new UpdateDraftPurchaseOrderEvent(
-      draftPurchaseOrder.id,
-      draftPurchaseOrder.customerId,
-      draftPurchaseOrder.code,
-      draftPurchaseOrder.totalAmount,
-      draftPurchaseOrder.discountAmount,
+    this.event_queue.enqueue(new UpdateDraftPurchaseOrderEvent(
+      draft_purchase_order.id,
+      draft_purchase_order.customer_id,
+      draft_purchase_order.code,
+      draft_purchase_order.total_amount,
+      draft_purchase_order.discount_amount,
     )).catch(console.error.bind(console));
   }
 
   private async createNewDraftPurcahseOrder(
-    customerId: string,
-    purchaseOrderItem: PurchaseOrderItem,
+    customer_id: string,
+    purchase_order_item: PurchaseOrderItem,
   ): Promise<void> {
     const code = await this.repository.countPurchaseOrders() + 1;
 
-    const newDraftPurchaseOrder = PurchaseOrder.createDraft({
+    const new_draft_purchase_order = PurchaseOrder.createDraft({
       id: crypto.randomUUID(),
-      customerId,
-      createdAt: new Date(),
+      customer_id,
+      created_at: new Date(),
       code,
       voucher: null,
       status: null,
       items: [],
     });
 
-    newDraftPurchaseOrder.addItem(purchaseOrderItem);
+    new_draft_purchase_order.addItem(purchase_order_item);
 
-    await this.repository.addPurchaseOrder(newDraftPurchaseOrder);
+    await this.repository.addPurchaseOrder(new_draft_purchase_order);
 
-    await this.repository.addPurchaseOrderItem(purchaseOrderItem);
+    await this.repository.addPurchaseOrderItem(purchase_order_item);
 
-    this.eventQueue.enqueueInBatch([
+    this.event_queue.enqueueInBatch([
       new AddDraftPurchaseOrderEvent(
-        newDraftPurchaseOrder.id,
-        newDraftPurchaseOrder.customerId,
-        newDraftPurchaseOrder.totalAmount,
-        newDraftPurchaseOrder.discountAmount,
-        newDraftPurchaseOrder.createdAt,
-        newDraftPurchaseOrder.code,
+        new_draft_purchase_order.id,
+        new_draft_purchase_order.customer_id,
+        new_draft_purchase_order.total_amount,
+        new_draft_purchase_order.discount_amount,
+        new_draft_purchase_order.created_at,
+        new_draft_purchase_order.code,
       ),
       new AddPurchaseOrderItemEvent(
-        purchaseOrderItem.id,
-        purchaseOrderItem.purchaseOrderId,
-        purchaseOrderItem.quantity,
-        purchaseOrderItem.product.id,
-        purchaseOrderItem.product.name,
-        purchaseOrderItem.product.amount,
+        purchase_order_item.id,
+        purchase_order_item.purchase_order_id,
+        purchase_order_item.quantity,
+        purchase_order_item.product.id,
+        purchase_order_item.product.name,
+        purchase_order_item.product.amount,
       ),
     ]).catch(console.error.bind(console));
   }

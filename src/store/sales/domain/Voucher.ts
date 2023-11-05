@@ -10,12 +10,12 @@ export enum VoucherDiscountTypes {
 export type VoucherProps = {
   id: string;
   code: number;
-  percentageAmount: number;
-  rawDiscountAmount: number;
+  percentage_amount: number;
+  raw_discount_amount: number;
   quantity: number;
   type: VoucherDiscountTypes;
-  createdAt: Date;
-  expiresAt: Date;
+  created_at: Date;
+  expires_at: Date;
   active: boolean;
   usedAt: Date | null;
 }
@@ -23,17 +23,17 @@ export type VoucherProps = {
 export default class Voucher extends Entity<VoucherProps> {
   public readonly code: number;
 
-  public readonly percentageAmount: number;
+  public readonly percentage_amount: number;
 
-  public readonly rawDiscountAmount: number;
+  public readonly raw_discount_amount: number;
 
   public readonly quantity: number;
 
   public readonly type: VoucherDiscountTypes;
 
-  public readonly createdAt: Date;
+  public readonly created_at: Date;
 
-  public readonly expiresAt: Date;
+  public readonly expires_at: Date;
 
   public readonly active: boolean;
 
@@ -42,13 +42,13 @@ export default class Voucher extends Entity<VoucherProps> {
   constructor(props: VoucherProps) {
     super(props.id);
     this.code = props.code;
-    this.percentageAmount = props.percentageAmount;
-    this.rawDiscountAmount = props.rawDiscountAmount;
+    this.percentage_amount = props.percentage_amount;
+    this.raw_discount_amount = props.raw_discount_amount;
     this.quantity = props.quantity;
     this.type = props.type;
-    this.createdAt = props.createdAt;
+    this.created_at = props.created_at;
     this.usedAt = props.usedAt || null;
-    this.expiresAt = props.expiresAt;
+    this.expires_at = props.expires_at;
     this.active = props.active;
 
     this.validate();
@@ -57,8 +57,8 @@ export default class Voucher extends Entity<VoucherProps> {
   public validate(): boolean | void {
     Validator.setData(this)
       .setRule('code', ['required', 'number', 'integer'])
-      .setRule('percentageAmount', ['number'])
-      .setRule('rawDiscountAmount', ['number'])
+      .setRule('percentage_amount', ['number'])
+      .setRule('raw_discount_amount', ['number'])
       .setRule('quantity', ['required', 'number', 'integer'])
       .setRule('active', ['boolean'])
       .validate();

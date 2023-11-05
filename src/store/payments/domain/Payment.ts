@@ -19,7 +19,7 @@ export enum PaymentStatus {
 
 export type PaymentProps = {
   id: string;
-  purchaseOrderId: string;
+  purchase_order_id: string;
   value: number;
   method: PaymentMethods;
   status: PaymentStatus;
@@ -28,7 +28,7 @@ export type PaymentProps = {
 };
 
 export default class Payment extends Entity<PaymentProps> implements IAggregateRoot {
-  public readonly purchaseOrderId: string;
+  public readonly purchase_order_id: string;
 
   public readonly value: number;
 
@@ -42,7 +42,7 @@ export default class Payment extends Entity<PaymentProps> implements IAggregateR
 
   constructor(props: PaymentProps) {
     super(props.id);
-    this.purchaseOrderId = props.purchaseOrderId;
+    this.purchase_order_id = props.purchase_order_id;
     this.value = props.value;
     this.method = props.method;
     this.status = props.status;
@@ -54,7 +54,7 @@ export default class Payment extends Entity<PaymentProps> implements IAggregateR
 
   public validate(): boolean | void {
     Validator.setData(this)
-      .setRule('purchaseOrderId', ['required', 'string', 'uuid'])
+      .setRule('purchase_order_id', ['required', 'string', 'uuid'])
       .setRule('value', ['required', 'number'])
       .setRule('method', ['required', 'string'])
       .setRule('status', ['required', 'string'])

@@ -3,7 +3,7 @@ import Validator from '@shared/utils/Validator';
 
 export default class UpdatePurchaseOrderItemQuantityCommand extends Command {
   constructor(
-    readonly purchaseOrderItemId: string,
+    readonly purchase_order_item_id: string,
     readonly quantity: number,
   ) {
     super();
@@ -12,7 +12,7 @@ export default class UpdatePurchaseOrderItemQuantityCommand extends Command {
 
   protected validate(): void {
     Validator.setData(this)
-      .setRule('purchaseOrderItemId', ['string', 'required', 'uuid'])
+      .setRule('purchase_order_item_id', ['string', 'required', 'uuid'])
       .setRule('quantity', ['number', 'integer'])
       .validate();
   }

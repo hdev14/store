@@ -10,8 +10,8 @@ export type ProductProps = {
   description: string;
   amount: number;
   image: string;
-  stockQuantity: number;
-  createdAt: Date;
+  stock_quantity: number;
+  created_at: Date;
   dimensions: DimensionsProps;
   category: CategoryProps;
 }
@@ -25,11 +25,11 @@ export default class Product extends Entity<ProductProps> implements IAggregateR
 
   public readonly amount: number;
 
-  public readonly createdAt: Date;
+  public readonly created_at: Date;
 
   public readonly image: string;
 
-  public stockQuantity: number;
+  public stock_quantity: number;
 
   public category: Category;
 
@@ -41,8 +41,8 @@ export default class Product extends Entity<ProductProps> implements IAggregateR
     this.description = props.description;
     this.amount = props.amount;
     this.image = props.image;
-    this.stockQuantity = props.stockQuantity;
-    this.createdAt = props.createdAt;
+    this.stock_quantity = props.stock_quantity;
+    this.created_at = props.created_at;
     this.dimensions = new Dimensions(props.dimensions);
     this.category = new Category(props.category);
 
@@ -66,15 +66,15 @@ export default class Product extends Entity<ProductProps> implements IAggregateR
   }
 
   public removeFromStock(quantity: number) {
-    this.stockQuantity -= Math.abs(quantity);
+    this.stock_quantity -= Math.abs(quantity);
   }
 
   public addToStock(quantity: number) {
-    this.stockQuantity += quantity;
+    this.stock_quantity += quantity;
   }
 
   public hasStockFor(quantity: number) {
-    return this.stockQuantity >= quantity;
+    return this.stock_quantity >= quantity;
   }
 
   public validate(): void {
@@ -85,7 +85,7 @@ export default class Product extends Entity<ProductProps> implements IAggregateR
       .setRule('category', ['required'])
       .setRule('amount', ['required', 'number', 'min:0'])
       .setRule('image', ['required', 'string', 'url'])
-      .setRule('stockQuantity', ['required', 'number', 'integer', 'min:0'])
+      .setRule('stock_quantity', ['required', 'number', 'integer', 'min:0'])
       .setRule('height', ['required', 'number', 'min:0'])
       .setRule('depth', ['required', 'number', 'min:0'])
       .setRule('width', ['required', 'number', 'min:0'])

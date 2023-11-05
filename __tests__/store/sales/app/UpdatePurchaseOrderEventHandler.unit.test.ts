@@ -23,12 +23,12 @@ describe("UpdateDraftPurchaseOrderEventHandler's unit tests", () => {
     await handler.handle(event);
 
     expect(updatePurchaseOrderSpy).toHaveBeenCalledTimes(1);
-    expect(updatePurchaseOrderSpy.mock.calls[0][0].id).toEqual(event.principalId);
+    expect(updatePurchaseOrderSpy.mock.calls[0][0].id).toEqual(event.principal_id);
     expect(updatePurchaseOrderSpy.mock.calls[0][0].code).toEqual(event.code);
-    expect(updatePurchaseOrderSpy.mock.calls[0][0].customerId).toEqual(event.customerId);
-    expect(updatePurchaseOrderSpy.mock.calls[0][0].totalAmount).toEqual(event.totalAmount);
-    expect(updatePurchaseOrderSpy.mock.calls[0][0].discountAmount)
-      .toEqual(event.discountAmount);
+    expect(updatePurchaseOrderSpy.mock.calls[0][0].customer_id).toEqual(event.customer_id);
+    expect(updatePurchaseOrderSpy.mock.calls[0][0].total_amount).toEqual(event.total_amount);
+    expect(updatePurchaseOrderSpy.mock.calls[0][0].discount_amount)
+      .toEqual(event.discount_amount);
   });
 
   it('throws an EventHandlerError when occurs an expected error', async () => {

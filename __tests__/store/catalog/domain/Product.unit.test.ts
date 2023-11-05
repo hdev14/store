@@ -14,9 +14,9 @@ describe("Product's Unit Tests", () => {
       amount: Math.random() * 100,
       category,
       dimensions,
-      createdAt: new Date(),
+      created_at: new Date(),
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
     })).not.toThrow(ValidationError);
   });
 
@@ -29,10 +29,10 @@ describe("Product's Unit Tests", () => {
       name: '',
       description: 'test',
       amount: Math.random() * 100,
-      createdAt: new Date(),
+      created_at: new Date(),
       dimensions,
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
       category,
     })).toThrow(ValidationError);
 
@@ -41,10 +41,10 @@ describe("Product's Unit Tests", () => {
       name: 'test',
       description: '',
       amount: Math.random() * 100,
-      createdAt: new Date(),
+      created_at: new Date(),
       dimensions,
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
       category,
     })).toThrow(ValidationError);
 
@@ -53,10 +53,10 @@ describe("Product's Unit Tests", () => {
       name: 'test',
       description: 'test',
       amount: Math.random() * 100,
-      createdAt: new Date(),
+      created_at: new Date(),
       dimensions,
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
       category: {} as Category,
     })).toThrow(ValidationError);
 
@@ -65,10 +65,10 @@ describe("Product's Unit Tests", () => {
       name: 'test',
       description: 'test',
       amount: Math.random() * 100,
-      createdAt: new Date(),
+      created_at: new Date(),
       dimensions,
       image: 'invalid',
-      stockQuantity: 10,
+      stock_quantity: 10,
       category,
     })).toThrow(ValidationError);
   });
@@ -81,9 +81,9 @@ describe("Product's Unit Tests", () => {
       amount: Math.random() * 100,
       category: { id: 'testid', name: 'test', code: 1 },
       dimensions: { height: 1, width: 1, depth: 1 },
-      createdAt: new Date(),
+      created_at: new Date(),
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
     });
 
     product.activeProduct();
@@ -99,9 +99,9 @@ describe("Product's Unit Tests", () => {
       amount: Math.random() * 100,
       category: { id: 'testid', name: 'test', code: 1 },
       dimensions: { height: 1, width: 1, depth: 1 },
-      createdAt: new Date(),
+      created_at: new Date(),
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
     });
 
     product.deactiveProduct();
@@ -117,9 +117,9 @@ describe("Product's Unit Tests", () => {
       amount: Math.random() * 100,
       category: { id: 'categoryid1', name: 'test', code: 1 },
       dimensions: { height: 1, width: 1, depth: 1 },
-      createdAt: new Date(),
+      created_at: new Date(),
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
     });
 
     product.changeCategory(new Category({ id: 'categoryid2', name: 'test', code: 2 }));
@@ -135,14 +135,14 @@ describe("Product's Unit Tests", () => {
       amount: Math.random() * 100,
       category: { id: 'testid', name: 'test', code: 1 },
       dimensions: { height: 1, width: 1, depth: 1 },
-      createdAt: new Date(),
+      created_at: new Date(),
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
     });
 
     product.removeFromStock(2);
 
-    expect(product.stockQuantity).toBe(8);
+    expect(product.stock_quantity).toBe(8);
   });
 
   it('adds product\'s quantity to stock ', () => {
@@ -153,14 +153,14 @@ describe("Product's Unit Tests", () => {
       amount: Math.random() * 100,
       category: { id: 'testid', name: 'test', code: 1 },
       dimensions: { height: 1, width: 1, depth: 1 },
-      createdAt: new Date(),
+      created_at: new Date(),
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
     });
 
     product.addToStock(2);
 
-    expect(product.stockQuantity).toBe(12);
+    expect(product.stock_quantity).toBe(12);
   });
 
   it('checks if has stock for a specific quantity', () => {
@@ -171,9 +171,9 @@ describe("Product's Unit Tests", () => {
       amount: Math.random() * 100,
       category: { id: 'testid', name: 'test', code: 1 },
       dimensions: { height: 1, width: 1, depth: 1 },
-      createdAt: new Date(),
+      created_at: new Date(),
       image: 'http://example.com/test',
-      stockQuantity: 10,
+      stock_quantity: 10,
     });
 
     expect(product.hasStockFor(10)).toBe(true);

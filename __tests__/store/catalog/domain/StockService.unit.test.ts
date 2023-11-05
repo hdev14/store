@@ -1,5 +1,4 @@
 import LowStockProductEvent from '@catalog/domain/LowStockProductEvent';
-import Product from '@catalog/domain/Product';
 import StockService from '@catalog/domain/StockService';
 import mediatorStub from '../../stubs/MediatorStub';
 import productRepositoryStub from '../../stubs/ProductRepositoryStub';
@@ -86,9 +85,9 @@ describe('StockService\'s Unit Tests', () => {
 
       const event = sendSpy.mock.calls[0][0] as LowStockProductEvent;
 
-      expect(event.principalId).toEqual('test_product_id_test');
+      expect(event.principal_id).toEqual('test_product_id_test');
       expect(event.productName).toEqual('test_product');
-      expect(event.productQuantity).toEqual(4);
+      expect(event.product_quantity).toEqual(4);
       expect(event.date).toBeInstanceOf(Date);
     });
   });

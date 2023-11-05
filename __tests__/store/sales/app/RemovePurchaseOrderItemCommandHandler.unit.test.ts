@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
+import PurchaseOrderItemNotDeletedError from '@sales/app/PurchaseOrderItemNotDeletedError.ts';
 import RemovePurchaseOrderItemCommand from '@sales/app/commands/RemovePurchaseOrderItemCommand';
 import RemovePurchaseOrderItemCommandHandler from '@sales/app/handlers/RemovePurchaseOrderItemCommandHandler';
-import PurchaseOrderItemNotDeletedError from '@sales/app/PurchaseOrderItemNotDeletedError.ts';
 import RemovePurchaseOrderItemEvent from '@sales/domain/events/RemovePurchaseOrderItemEvent';
 import IEventQueue from '@shared/abstractions/IEventQueue';
 import { mock } from 'jest-mock-extended';
@@ -24,7 +24,7 @@ describe("RemovePurchaseOrderItemCommandHandler's unit tests", () => {
     await handler.handle(command);
 
     expect(deletePurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
-    expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(command.purchaseOrderItemId);
+    expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(command.purchase_order_item_id);
   });
 
   it('throws a PurchaseOrderItemNotDeletedError if purchase order item was not deleted', async () => {

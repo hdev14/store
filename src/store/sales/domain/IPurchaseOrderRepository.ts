@@ -17,7 +17,7 @@ export interface IPurchaseOrderRepositoryQueries {
   getPurchaseOrderItemById(id: string): Promise<PurchaseOrderItem | null>;
 
   /** @throws {RepositoryError} */
-  getPurchaseOrderItem(params: { purchaseOrderId: string, productId: string }): Promise<PurchaseOrderItem | null>;
+  getPurchaseOrderItem(params: { purchase_order_id: string, product_id: string }): Promise<PurchaseOrderItem | null>;
 
   /** @throws {RepositoryError} */
   getVoucherByCode(code: number): Promise<Voucher | null>;
@@ -25,19 +25,19 @@ export interface IPurchaseOrderRepositoryQueries {
 
 export interface IPurchaseOrderRepositoryCommands {
   /** @throws {RepositoryError} */
-  addPurchaseOrder(purchaseOrder: PurchaseOrder): Promise<void>;
+  addPurchaseOrder(purchase_order: PurchaseOrder): Promise<void>;
 
   /** @throws {RepositoryError} */
-  updatePurchaseOrder(purchaseOrder: PurchaseOrder): Promise<void>;
+  updatePurchaseOrder(purchase_order: PurchaseOrder): Promise<void>;
 
   /** @throws {RepositoryError} */
-  addPurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<void>;
+  addPurchaseOrderItem(purchase_order_item: PurchaseOrderItem): Promise<void>;
 
   /** @throws {RepositoryError} */
-  updatePurchaseOrderItem(purchaseOrderItem: PurchaseOrderItem): Promise<void>;
+  updatePurchaseOrderItem(purchase_order_item: PurchaseOrderItem): Promise<void>;
 
   /** @throws {RepositoryError} */
-  deletePurchaseOrderItem(purchaseOrderItemId: string): Promise<void>;
+  deletePurchaseOrderItem(purchase_order_item_id: string): Promise<void>;
 }
 
 interface IPurchaseOrderRepository extends IPurchaseOrderRepositoryQueries, IPurchaseOrderRepositoryCommands {

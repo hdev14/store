@@ -1,5 +1,5 @@
-import crypto from 'crypto';
 import User, { UserProps } from '@users/domain/User';
+import crypto from 'crypto';
 import IIdentityAccessManagement from './IIdentityAccessManagement';
 import IUserService, { CreateUserData, UpdateUserData } from './IUserService';
 import UserNotFoundError from './UserNotFoundError';
@@ -14,7 +14,7 @@ export default class UserService implements IUserService {
       email: data.email,
       document: data.document,
       password: data.password,
-      createdAt: new Date(),
+      created_at: new Date(),
     });
 
     await this.IAM.registerUser(user);
@@ -22,22 +22,22 @@ export default class UserService implements IUserService {
     return user.toObject();
   }
 
-  public async updateUser(userId: string, data: UpdateUserData): Promise<UserProps> {
-    const user = await this.IAM.getUser(userId);
+  public async updateUser(user_id: string, data: UpdateUserData): Promise<UserProps> {
+    const user = await this.IAM.getUser(user_id);
 
     if (!user) {
       throw new UserNotFoundError();
     }
 
-    const updatedUser = new User({ ...user.toObject(), ...data });
+    const updated_user = new User({ ...user.toObject(), ...data });
 
-    await this.IAM.updateUser(updatedUser);
+    await this.IAM.updateUser(updated_user);
 
-    return updatedUser.toObject();
+    return updated_user.toObject();
   }
 
-  public async getUser(userId: string): Promise<UserProps> {
-    const user = await this.IAM.getUser(userId);
+  public async getUser(user_id: string): Promise<UserProps> {
+    const user = await this.IAM.getUser(user_id);
 
     if (!user) {
       throw new UserNotFoundError();

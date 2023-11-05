@@ -10,18 +10,18 @@ export default class AddPurchaseOrderItemEventHandler implements IHandler<AddPur
 
   public async handle(event: AddPurchaseOrderItemEvent): Promise<any> {
     try {
-      const purchaseOrderItem = new PurchaseOrderItem({
-        id: event.principalId,
+      const purchase_order_item = new PurchaseOrderItem({
+        id: event.principal_id,
         quantity: event.quantity,
-        purchaseOrderId: event.purchaseOrderId,
+        purchase_order_id: event.purchase_order_id,
         product: {
-          id: event.productId,
-          name: event.productName,
-          amount: event.productAmount,
+          id: event.product_id,
+          name: event.product_name,
+          amount: event.product_amount,
         },
       });
 
-      await this.repository.addPurchaseOrderItem(purchaseOrderItem);
+      await this.repository.addPurchaseOrderItem(purchase_order_item);
     } catch (e: any) {
       console.error(e.stack);
       throw new EventHandlerError('Erro ao cadastrar o item.', { cause: e.stack });

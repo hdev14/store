@@ -14,7 +14,7 @@ interface ICategoryService {
 
   createCategory(params: CreateCategoryParams): Promise<CategoryProps>;
 
-  updateCategory(categoryId: string, params: UpdateCategoryParams): Promise<CategoryProps>;
+  updateCategory(category_id: string, params: UpdateCategoryParams): Promise<CategoryProps>;
 }
 
 export default ICategoryService;

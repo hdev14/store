@@ -9,7 +9,7 @@ export default class RemovePurchaseOrderItemEventHandler implements IHandler<Rem
 
   public async handle(event: RemovePurchaseOrderItemEvent): Promise<any> {
     try {
-      await this.repository.deletePurchaseOrderItem(event.principalId);
+      await this.repository.deletePurchaseOrderItem(event.principal_id);
     } catch (e: any) {
       console.error(e.stack);
       throw new EventHandlerError('Erro ao excluir um item.');

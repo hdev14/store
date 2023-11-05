@@ -8,9 +8,9 @@ export class RepositoryStub implements IPurchaseOrderRepository {
   getPurchaseOrderById(_: string): Promise<PurchaseOrder | null> {
     return Promise.resolve(
       new PurchaseOrder({
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
-        createdAt: new Date(),
+        created_at: new Date(),
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.STARTED,
         voucher: null,
@@ -22,9 +22,9 @@ export class RepositoryStub implements IPurchaseOrderRepository {
   getPurchaseOrdersByCustomerId(_: string): Promise<PurchaseOrder[]> {
     return Promise.resolve([
       new PurchaseOrder({
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
-        createdAt: new Date(),
+        created_at: new Date(),
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.STARTED,
         voucher: null,
@@ -36,9 +36,9 @@ export class RepositoryStub implements IPurchaseOrderRepository {
   getDraftPurchaseOrderByCustomerId(_: string): Promise<PurchaseOrder | null> {
     return Promise.resolve(
       new PurchaseOrder({
-        customerId: faker.datatype.uuid(),
+        customer_id: faker.datatype.uuid(),
         code: parseInt(faker.random.numeric(), 10),
-        createdAt: new Date(),
+        created_at: new Date(),
         id: faker.datatype.uuid(),
         status: PurchaseOrderStatus.DRAFT,
         voucher: null,
@@ -60,7 +60,7 @@ export class RepositoryStub implements IPurchaseOrderRepository {
       new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        purchaseOrderId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
         product: {
           id: faker.datatype.uuid(),
           name: faker.commerce.product(),
@@ -81,7 +81,7 @@ export class RepositoryStub implements IPurchaseOrderRepository {
       new PurchaseOrderItem({
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        purchaseOrderId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
         product: {
           id: faker.datatype.uuid(),
           name: faker.commerce.product(),
@@ -107,14 +107,14 @@ export class RepositoryStub implements IPurchaseOrderRepository {
     return Promise.resolve(
       new Voucher({
         id: faker.datatype.uuid(),
-        percentageAmount: 0,
-        rawDiscountAmount: 0,
+        percentage_amount: 0,
+        raw_discount_amount: 0,
         quantity: parseInt(faker.datatype.number().toString(), 10),
         type: VoucherDiscountTypes.ABSOLUTE,
         active: true,
         code: parseInt(faker.datatype.number().toString(), 10),
-        expiresAt: faker.date.future(),
-        createdAt: new Date(),
+        expires_at: faker.date.future(),
+        created_at: new Date(),
         usedAt: null,
       }),
     );

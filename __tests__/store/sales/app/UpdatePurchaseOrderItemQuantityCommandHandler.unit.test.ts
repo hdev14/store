@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
+import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
 import UpdatePurchaseOrderItemQuantityCommand from '@sales/app/commands/UpdatePurchaseOrderItemQuantityCommand';
 import UpdatePurchaseOrderItemQuantityCommandHandler from '@sales/app/handlers/UpdatePurchaseOrderItemQuantityCommandHandler';
 import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import PurchaseOrderItemNotFoundError from '@sales/app/PurchaseOrderItemNotFoundError';
-import { mock } from 'jest-mock-extended';
-import IEventQueue from '@shared/abstractions/IEventQueue';
 import UpdatePurchaseOrderItemEvent from '@sales/domain/events/UpdatePurchaseOrderItemEvent';
+import IEventQueue from '@shared/abstractions/IEventQueue';
+import { mock } from 'jest-mock-extended';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 const eventQueueMock = mock<IEventQueue>();
@@ -31,7 +31,7 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
     await handler.handle(command);
 
     expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledTimes(1);
-    expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledWith(command.purchaseOrderItemId);
+    expect(getPurchaseOrderItemByIdSpy).toHaveBeenCalledWith(command.purchase_order_item_id);
   });
 
   it("return PurchaseOrderItemNotFoundError if purchase order item doesn't exist", async () => {
@@ -61,7 +61,7 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
     const fakePurchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
-      purchaseOrderId: faker.datatype.uuid(),
+      purchase_order_id: faker.datatype.uuid(),
       product: {
         id: faker.datatype.uuid(),
         name: faker.commerce.product(),
@@ -99,7 +99,7 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
     const fakePurchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
-      purchaseOrderId: faker.datatype.uuid(),
+      purchase_order_id: faker.datatype.uuid(),
       product: {
         id: faker.datatype.uuid(),
         name: faker.commerce.product(),
@@ -131,7 +131,7 @@ describe("UpdatePurchaseOrderItemQuantityCommandHandler's unit test", () => {
     const fakePurchaseOrderItem = new PurchaseOrderItem({
       id: faker.datatype.uuid(),
       quantity: parseInt(faker.datatype.number().toString(), 10),
-      purchaseOrderId: faker.datatype.uuid(),
+      purchase_order_id: faker.datatype.uuid(),
       product: {
         id: faker.datatype.uuid(),
         name: faker.commerce.product(),

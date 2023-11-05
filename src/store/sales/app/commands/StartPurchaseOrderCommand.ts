@@ -3,8 +3,8 @@ import Validator from '@shared/utils/Validator';
 
 export default class StartPurchaseOrderCommand extends Command {
   constructor(
-    readonly purchaseOrderId: string,
-    readonly cardToken: string,
+    readonly purchase_order_id: string,
+    readonly card_token: string,
     readonly installments: number,
   ) {
     super();
@@ -13,8 +13,8 @@ export default class StartPurchaseOrderCommand extends Command {
 
   protected validate(): void {
     Validator.setData(this)
-      .setRule('purchaseOrderId', ['string', 'uuid'])
-      .setRule('cardToken', ['string'])
+      .setRule('purchase_order_id', ['string', 'uuid'])
+      .setRule('card_token', ['string'])
       .setRule('installments', ['number', 'min:1'])
       .validate();
   }

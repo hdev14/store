@@ -8,13 +8,13 @@ export enum PaymentTypes {
 
 export type Item = {
   id: string;
-  productId: string;
+  product_id: string;
   quantity: number;
 }
 
 export type MakePaymentParams = {
   type: PaymentTypes,
-  customerId: string;
+  customer_id: string;
   items: Item[];
   payment: Payment
 }

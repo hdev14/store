@@ -1,9 +1,8 @@
 import { faker } from '@faker-js/faker';
-import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
-import Product from '@sales/domain/Product';
-import EventHandlerError from '@shared/errors/EventHandlerError';
 import AddPurchaseOrderItemEventHandler from '@sales/app/handlers/AddPurchaseOrderItemEventHandler';
+import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import AddPurchaseOrderItemEvent from '@sales/domain/events/AddPurchaseOrderItemEvent';
+import EventHandlerError from '@shared/errors/EventHandlerError';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
 describe("AddPurchaseOrderItemEventHandler's unit tests", () => {
@@ -28,13 +27,13 @@ describe("AddPurchaseOrderItemEventHandler's unit tests", () => {
     expect(addPurchaseOrderItemSpy).toHaveBeenCalledTimes(1);
     expect(addPurchaseOrderItemSpy).toHaveBeenCalledWith(
       new PurchaseOrderItem({
-        id: event.principalId,
+        id: event.principal_id,
         quantity: event.quantity,
-        purchaseOrderId: event.purchaseOrderId,
+        purchase_order_id: event.purchase_order_id,
         product: {
-          id: event.productId,
-          name: event.productName,
-          amount: event.productAmount,
+          id: event.product_id,
+          name: event.product_name,
+          amount: event.product_amount,
         },
       }),
     );

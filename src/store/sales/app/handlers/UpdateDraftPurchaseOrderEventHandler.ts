@@ -10,19 +10,19 @@ export default class UpdateDraftPurchaseOrderEventHandler implements IHandler<Up
 
   public async handle(event: UpdateDraftPurchaseOrderEvent): Promise<any> {
     try {
-      const purchaseOrder = PurchaseOrder.createDraft({
-        id: event.principalId,
+      const purchase_order = PurchaseOrder.createDraft({
+        id: event.principal_id,
         code: event.code,
-        discountAmount: event.discountAmount,
-        totalAmount: event.totalAmount,
-        customerId: event.customerId,
-        createdAt: new Date(),
+        discount_amount: event.discount_amount,
+        total_amount: event.total_amount,
+        customer_id: event.customer_id,
+        created_at: new Date(),
         status: null,
         voucher: null,
         items: [],
       });
 
-      await this.repository.updatePurchaseOrder(purchaseOrder);
+      await this.repository.updatePurchaseOrder(purchase_order);
     } catch (e: any) {
       console.error(e.stack);
       throw new EventHandlerError('Erro ao atualizar o pedido.', { cause: e.stack });

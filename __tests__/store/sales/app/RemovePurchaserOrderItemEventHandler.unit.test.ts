@@ -16,7 +16,7 @@ describe("RemovePurchaseOrderItemEventHandler's unit tests", () => {
 
     await handler.handle(event);
 
-    expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(event.principalId);
+    expect(deletePurchaseOrderItemSpy).toHaveBeenCalledWith(event.principal_id);
   });
 
   it('throws a EventHandlerError if occurs an expected error', () => {

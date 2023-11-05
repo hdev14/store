@@ -9,13 +9,13 @@ export default class GetPurchaseOrderItemQueryHandler implements IHandler<GetPur
   constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 
   public async handle(event: GetPurchaseOrderItemQuery): Promise<PurchaseOrderItemProps> {
-    const purchaseOrderItem = await this.repository
-      .getPurchaseOrderItemById(event.purchaseOrderItemId);
+    const purchase_order_item = await this.repository
+      .getPurchaseOrderItemById(event.purchase_order_item_id);
 
-    if (!purchaseOrderItem) {
+    if (!purchase_order_item) {
       throw new PurchaseOrderItemNotFoundError();
     }
 
-    return purchaseOrderItem.toObject();
+    return purchase_order_item.toObject();
   }
 }

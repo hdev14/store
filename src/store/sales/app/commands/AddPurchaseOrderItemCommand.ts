@@ -3,10 +3,10 @@ import Validator from '@shared/utils/Validator';
 
 export default class AddPurchaseOrderItemCommand extends Command {
   constructor(
-    readonly customerId: string,
-    readonly productId: string,
-    readonly productName: string,
-    readonly productAmount: number,
+    readonly customer_id: string,
+    readonly product_id: string,
+    readonly product_name: string,
+    readonly product_amount: number,
     readonly quantity: number,
   ) {
     super();
@@ -15,10 +15,10 @@ export default class AddPurchaseOrderItemCommand extends Command {
 
   protected validate(): void {
     Validator.setData(this)
-      .setRule('customerId', ['required', 'string', 'uuid'])
-      .setRule('productId', ['required', 'string', 'uuid'])
-      .setRule('productName', ['required', 'string'])
-      .setRule('productAmount', ['required', 'number'])
+      .setRule('customer_id', ['required', 'string', 'uuid'])
+      .setRule('product_id', ['required', 'string', 'uuid'])
+      .setRule('product_name', ['required', 'string'])
+      .setRule('product_amount', ['required', 'number'])
       .setRule('quantity', ['required', 'number', 'min:1', 'max:10'])
       .validate();
   }

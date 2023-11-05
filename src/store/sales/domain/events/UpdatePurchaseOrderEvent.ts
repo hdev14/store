@@ -5,16 +5,16 @@ import Voucher from '../Voucher';
 
 export default class UpdatePurchaseOrderEvent extends DomainEvent {
   constructor(
-    readonly principalId: string,
-    readonly customerId: string,
+    readonly principal_id: string,
+    readonly customer_id: string,
     readonly code: number,
-    readonly createdAt: Date,
+    readonly created_at: Date,
     readonly status: PurchaseOrderStatus,
-    readonly totalAmount: number,
-    readonly discountAmount: number,
+    readonly total_amount: number,
+    readonly discount_amount: number,
     readonly voucher: Voucher | null,
     readonly items: Array<PurchaseOrderItem>,
   ) {
-    super(principalId);
+    super(principal_id);
   }
 }

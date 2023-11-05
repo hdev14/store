@@ -19,7 +19,7 @@ describe("PurchaseOrderItem's unit tests", () => {
 
       purchaseOrderItem.setPurchaseOrder(fakePurchaseOrderId);
 
-      expect(purchaseOrderItem.purchaseOrderId).toEqual(fakePurchaseOrderId);
+      expect(purchaseOrderItem.purchase_order_id).toEqual(fakePurchaseOrderId);
     });
   });
 

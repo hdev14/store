@@ -7,11 +7,11 @@ export type PurchaseOrderItemProps = {
   id: string;
   product: ProductProps;
   quantity: number;
-  purchaseOrderId?: string;
+  purchase_order_id?: string;
 }
 
 export default class PurchaseOrderItem extends Entity<PurchaseOrderItemProps> {
-  public purchaseOrderId: string;
+  public purchase_order_id: string;
 
   public readonly product: Product;
 
@@ -21,13 +21,13 @@ export default class PurchaseOrderItem extends Entity<PurchaseOrderItemProps> {
     super(props.id);
     this.product = new Product(props.product);
     this.quantity = props.quantity;
-    this.purchaseOrderId = props.purchaseOrderId || '';
+    this.purchase_order_id = props.purchase_order_id || '';
 
     this.validate();
   }
 
   public setPurchaseOrder(purchaseOrderId: string) {
-    this.purchaseOrderId = purchaseOrderId;
+    this.purchase_order_id = purchaseOrderId;
   }
 
   public calculateAmount() {
@@ -42,17 +42,17 @@ export default class PurchaseOrderItem extends Entity<PurchaseOrderItemProps> {
     this.quantity += quantity;
   }
 
-  public updateQuantity(newQuantity: number) {
-    if (newQuantity < 0) {
+  public updateQuantity(new_quantity: number) {
+    if (new_quantity < 0) {
       throw new DomainError('Não é possível adicionar uma quantidade negativa de itens.');
     }
 
-    this.quantity = newQuantity;
+    this.quantity = new_quantity;
   }
 
   public validate(): boolean | void {
     Validator.setData(this)
-      .setRule('purchaseOrderId', ['string'])
+      .setRule('purchase_order_id', ['string'])
       .setRule('quantity', ['required', 'number'])
       .validate();
   }

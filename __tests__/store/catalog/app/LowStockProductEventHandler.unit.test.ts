@@ -1,5 +1,5 @@
 import IEmailService, { EmailParams } from '@catalog/app/IEmailService';
-import LowStockProductEventHandler, { } from '@catalog/app/LowStockProductEventHandler';
+import LowStockProductEventHandler from '@catalog/app/LowStockProductEventHandler';
 import LowStockProductEvent from '@catalog/domain/LowStockProductEvent';
 import { faker } from '@faker-js/faker';
 
@@ -31,8 +31,8 @@ describe("LowStockProductEventHandler's unit tests", () => {
       from: 'default@email.com',
       to: 'default@email.com',
       subject: 'Produto com baixo estoque!',
-      text: `O produto ${event.productName} com ID ${event.principalId}, está apenas com ${event.productQuantity} de quantitade.`,
-      html: `<p>O produto ${event.productName} com ID ${event.principalId}, está apenas com ${event.productQuantity} de quantitade.</p>`,
+      text: `O produto ${event.productName} com ID ${event.principal_id}, está apenas com ${event.product_quantity} de quantitade.`,
+      html: `<p>O produto ${event.productName} com ID ${event.principal_id}, está apenas com ${event.product_quantity} de quantitade.</p>`,
     });
   });
 });

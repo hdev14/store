@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import GetPurchaseOrdersQuery from '@sales/app/queries/GetPurchaseOrdersQuery';
 import GetPurchaseOrdersQueryHandler from '@sales/app/handlers/GetPurchaseOrdersQueryHandler';
+import GetPurchaseOrdersQuery from '@sales/app/queries/GetPurchaseOrdersQuery';
 import PurchaseOrder from '@sales/domain/PurchaseOrder';
 import repositoryStub from '../../stubs/PurchaseOrderRepositoryStub';
 
@@ -26,18 +26,18 @@ describe("GetPurchaseOrdersQueryHandler's unit tests", () => {
       .mockResolvedValueOnce([
         new PurchaseOrder({
           id: faker.datatype.uuid(),
-          customerId: faker.datatype.uuid(),
+          customer_id: faker.datatype.uuid(),
           code: parseInt(faker.datatype.number().toString(), 10),
-          createdAt: new Date(),
+          created_at: new Date(),
           voucher: null,
           status: null,
           items: [],
         }),
         new PurchaseOrder({
           id: faker.datatype.uuid(),
-          customerId: faker.datatype.uuid(),
+          customer_id: faker.datatype.uuid(),
           code: parseInt(faker.datatype.number().toString(), 10),
-          createdAt: new Date(),
+          created_at: new Date(),
           voucher: null,
           status: null,
           items: [],

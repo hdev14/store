@@ -5,12 +5,12 @@ import LowStockProductEvent from './LowStockProductEvent';
 
 export default class StockService implements IStockService {
   constructor(
-    private readonly productRepository: IProductOperations,
+    private readonly repository: IProductOperations,
     private readonly mediator: IMediator,
   ) { }
 
-  public async addToStock(productId: string, quantity: number): Promise<boolean> {
-    const product = await this.productRepository.getProductById(productId);
+  public async addToStock(product_id: string, quantity: number): Promise<boolean> {
+    const product = await this.repository.getProductById(product_id);
 
     if (!product) {
       return false;
@@ -18,13 +18,13 @@ export default class StockService implements IStockService {
 
     product.addToStock(quantity);
 
-    await this.productRepository.updateProduct(product);
+    await this.repository.updateProduct(product);
 
     return true;
   }
 
-  public async removeFromStock(productId: string, quantity: number): Promise<boolean> {
-    const product = await this.productRepository.getProductById(productId);
+  public async removeFromStock(product_id: string, quantity: number): Promise<boolean> {
+    const product = await this.repository.getProductById(product_id);
 
     if (!product || !product.hasStockFor(quantity)) {
       return false;
@@ -32,13 +32,13 @@ export default class StockService implements IStockService {
 
     product.removeFromStock(quantity);
 
-    await this.productRepository.updateProduct(product);
+    await this.repository.updateProduct(product);
 
-    if (product.stockQuantity < 5) {
+    if (product.stock_quantity < 5) {
       await this.mediator.send(new LowStockProductEvent(
         product.id,
         product.name,
-        product.stockQuantity,
+        product.stock_quantity,
       ));
     }
 
