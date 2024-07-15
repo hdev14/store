@@ -5,6 +5,21 @@ import PurchaseOrderItem from '@sales/domain/PurchaseOrderItem';
 import Voucher, { VoucherDiscountTypes } from '@sales/domain/Voucher';
 
 export class RepositoryStub implements IPurchaseOrderRepository {
+  getPurchaseOrderItem(params: { purchase_order_id: string; product_id: string; }): Promise<PurchaseOrderItem | null> {
+    return Promise.resolve(
+      new PurchaseOrderItem({
+        id: faker.datatype.uuid(),
+        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
+        purchase_order_id: faker.datatype.uuid(),
+        product: {
+          id: faker.datatype.uuid(),
+          name: faker.commerce.product(),
+          amount: faker.datatype.float(),
+        },
+      }),
+    );
+  }
+
   getPurchaseOrderById(_: string): Promise<PurchaseOrder | null> {
     return Promise.resolve(
       new PurchaseOrder({
@@ -56,27 +71,6 @@ export class RepositoryStub implements IPurchaseOrderRepository {
   }
 
   getPurchaseOrderItemById(_: string): Promise<PurchaseOrderItem | null> {
-    return Promise.resolve(
-      new PurchaseOrderItem({
-        id: faker.datatype.uuid(),
-        quantity: parseInt(faker.datatype.number({ min: 1 }).toString(), 10),
-        purchase_order_id: faker.datatype.uuid(),
-        product: {
-          id: faker.datatype.uuid(),
-          name: faker.commerce.product(),
-          amount: faker.datatype.float(),
-        },
-      }),
-    );
-  }
-
-  getPurchaseOrderItem(_: { purchaseOrderId: string; }): Promise<PurchaseOrderItem | null>;
-
-  getPurchaseOrderItem(_: { productId: string; }): Promise<PurchaseOrderItem | null>;
-
-  getPurchaseOrderItem(_: { purchaseOrderId?: string; productId?: string; }): Promise<PurchaseOrderItem | null>;
-
-  getPurchaseOrderItem(_: unknown): Promise<PurchaseOrderItem | null> {
     return Promise.resolve(
       new PurchaseOrderItem({
         id: faker.datatype.uuid(),

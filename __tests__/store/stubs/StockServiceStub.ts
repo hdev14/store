@@ -5,7 +5,7 @@ export class StockServiceStub implements IStockService {
   addToStock(productId: string, quantity: number): Promise<boolean> {
     const index = fakeProducts.findIndex((p) => p.id === productId);
 
-    fakeProducts[index].stockQuantity += quantity;
+    fakeProducts[index].stock_quantity += quantity;
 
     return Promise.resolve(true);
   }
@@ -13,7 +13,7 @@ export class StockServiceStub implements IStockService {
   removeFromStock(productId: string, quantity: number): Promise<boolean> {
     const index = fakeProducts.findIndex((p) => p.id === productId);
 
-    fakeProducts[index].stockQuantity -= quantity;
+    fakeProducts[index].stock_quantity -= quantity;
 
     return Promise.resolve(true);
   }

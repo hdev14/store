@@ -66,12 +66,12 @@ describe('StockService\'s Unit Tests', () => {
       productRepositoryStub.getProductById = jest.fn(() => Promise.resolve({
         id: 'test_product_id_test',
         name: 'test_product',
-        stockQuantity: 10,
+        stock_quantity: 10,
         addToStock(quantity: number) {
-          this.stockQuantity += quantity;
+          this.stock_quantity += quantity;
         },
         removeFromStock(quantity: number) {
-          this.stockQuantity -= quantity;
+          this.stock_quantity -= quantity;
         },
         hasStockFor: jest.fn(() => true),
       } as any));
@@ -86,7 +86,7 @@ describe('StockService\'s Unit Tests', () => {
       const event = sendSpy.mock.calls[0][0] as LowStockProductEvent;
 
       expect(event.principal_id).toEqual('test_product_id_test');
-      expect(event.productName).toEqual('test_product');
+      expect(event.product_name).toEqual('test_product');
       expect(event.product_quantity).toEqual(4);
       expect(event.date).toBeInstanceOf(Date);
     });

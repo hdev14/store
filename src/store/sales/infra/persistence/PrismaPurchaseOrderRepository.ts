@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 import {
-    PrismaClient,
-    PurchaseOrder as PrismaPurchaseOrder,
-    PurchaseOrderItem as PrismaPurchaseOrderItem,
-    Voucher as PrismaVoucher,
+  PrismaClient,
+  PurchaseOrder as PrismaPurchaseOrder,
+  PurchaseOrderItem as PrismaPurchaseOrderItem,
+  Voucher as PrismaVoucher,
 } from '@prisma/client';
 import IPurchaseOrderRepository from '@sales/domain/IPurchaseOrderRepository';
 import PurchaseOrder, { PurchaseOrderProps, PurchaseOrderStatus } from '@sales/domain/PurchaseOrder';
@@ -202,10 +202,10 @@ export default class PrismaPurchaseOrderRepository implements IPurchaseOrderRepo
     }
   }
 
-  public async getPurchaseOrderItem(params: { purchaseOrderId: string; productId: string; }): Promise<PurchaseOrderItem | null> {
+  public async getPurchaseOrderItem(params: { purchase_order_id: string; product_id: string; }): Promise<PurchaseOrderItem | null> {
     try {
       const purchaseOrderItem = await this.connection.purchaseOrderItem.findFirst({
-        where: params,
+        where: { purchaseOrderId: params.purchase_order_id, productId: params.product_id },
         include: {
           product: {
             select: {

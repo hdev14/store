@@ -8,7 +8,7 @@ export default class GetPurchaseOrdersQueryHandler implements IHandler<GetPurcha
   constructor(private readonly repository: IPurchaseOrderRepositoryQueries) { }
 
   public async handle(event: GetPurchaseOrdersQuery): Promise<PurchaseOrderProps[]> {
-    const purchase_orders = await this.repository.getPurchaseOrdersByCustomerId(event.customerId);
+    const purchase_orders = await this.repository.getPurchaseOrdersByCustomerId(event.customer_id);
 
     const results: PurchaseOrderProps[] = [];
 

@@ -44,8 +44,8 @@ describe('ProductsService\'s unit tests', () => {
       expect(product.description).toEqual(fakeProducts[0].description);
       expect(product.amount).toEqual(fakeProducts[0].amount);
       expect(product.image).toEqual(fakeProducts[0].image);
-      expect(product.stock_quantity).toEqual(fakeProducts[0].stockQuantity);
-      expect(product.created_at).toEqual(fakeProducts[0].createdAt);
+      expect(product.stock_quantity).toEqual(fakeProducts[0].stock_quantity);
+      expect(product.created_at).toEqual(fakeProducts[0].created_at);
       expect(product.dimensions).toEqual(fakeProducts[0].dimensions);
       expect(product.category).toEqual(fakeProducts[0].category);
     });
@@ -184,7 +184,7 @@ describe('ProductsService\'s unit tests', () => {
       expect(updatedProduct!.amount).toEqual(params.amount);
       expect(updatedProduct!.description).toEqual(params.description);
       expect(updatedProduct!.image).toEqual(params.image);
-      expect(updatedProduct!.stockQuantity).toEqual(params.stock_quantity);
+      expect(updatedProduct!.stock_quantity).toEqual(params.stock_quantity);
       expect(updatedProduct!.category.id).toEqual(fakeCategories[0].id);
       expect(updatedProduct!.category.name).toEqual(fakeCategories[0].name);
       expect(updatedProduct!.category.code).toEqual(fakeCategories[0].code);
@@ -266,11 +266,11 @@ describe('ProductsService\'s unit tests', () => {
         stockServiceStub,
       );
 
-      const currentQty = fakeProducts[2].stockQuantity;
+      const currentQty = fakeProducts[2].stock_quantity;
 
       await productService.updateProductStock(fakeProducts[2].id, -1);
 
-      expect(fakeProducts[2].stockQuantity).toEqual(currentQty - 1);
+      expect(fakeProducts[2].stock_quantity).toEqual(currentQty - 1);
       expect(removeFromStockSpy).toHaveBeenCalledTimes(1);
       expect(removeFromStockSpy).toHaveBeenCalledWith(fakeProducts[2].id, 1);
     });
@@ -285,11 +285,11 @@ describe('ProductsService\'s unit tests', () => {
         stockServiceStub,
       );
 
-      const currentQty = fakeProducts[2].stockQuantity;
+      const currentQty = fakeProducts[2].stock_quantity;
 
       await productService.updateProductStock(fakeProducts[2].id, 1);
 
-      expect(fakeProducts[2].stockQuantity).toEqual(currentQty + 1);
+      expect(fakeProducts[2].stock_quantity).toEqual(currentQty + 1);
       expect(addToStockSpy).toHaveBeenCalledTimes(1);
       expect(addToStockSpy).toHaveBeenCalledWith(fakeProducts[2].id, 1);
     });

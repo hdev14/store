@@ -16,7 +16,7 @@ describe("GetPurchaseOrdersQueryHandler's unit tests", () => {
 
     await handler.handle(query);
 
-    expect(getPurchaseOrdersByCustomerId).toHaveBeenCalledWith(query.customerId);
+    expect(getPurchaseOrdersByCustomerId).toHaveBeenCalledWith(query.customer_id);
   });
 
   it('returns an array of PurchaseOrder with purchase orders', async () => {

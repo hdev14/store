@@ -612,8 +612,8 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       prismaMock.purchaseOrderItem.findFirst.mockResolvedValueOnce(fakePurchaseOrderItem as any);
 
       const purchaseOrderItem = await repository.getPurchaseOrderItem({
-        purchaseOrderId: fakePurchaseOrderId,
-        productId: fakePurchaseOrderItem.product.id,
+        purchase_order_id: fakePurchaseOrderId,
+        product_id: fakePurchaseOrderItem.product.id,
       });
 
       expect(purchaseOrderItem!.id).toEqual(fakePurchaseOrderItem.id);
@@ -649,8 +649,8 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       prismaMock.purchaseOrderItem.findFirst.mockRejectedValueOnce(new Error('test'));
 
       return repository.getPurchaseOrderItem({
-        purchaseOrderId: faker.datatype.uuid(),
-        productId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
+        product_id: faker.datatype.uuid(),
       }).catch((e: any) => {
         expect(e).toBeInstanceOf(RepositoryError);
         expect(e.message).toEqual('PrismaPurchaseOrderRepository - test');
@@ -783,7 +783,7 @@ describe("PrismaPurchaseOrderRepository's unit tests", () => {
       const fakePurchaseOrderItem = {
         id: faker.datatype.uuid(),
         quantity: parseInt(faker.datatype.number().toString(), 10),
-        purchaseOrderId: faker.datatype.uuid(),
+        purchase_order_id: faker.datatype.uuid(),
         product: {
           id: faker.datatype.uuid(),
           name: faker.commerce.product(),

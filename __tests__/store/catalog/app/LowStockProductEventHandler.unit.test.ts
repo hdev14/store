@@ -31,8 +31,8 @@ describe("LowStockProductEventHandler's unit tests", () => {
       from: 'default@email.com',
       to: 'default@email.com',
       subject: 'Produto com baixo estoque!',
-      text: `O produto ${event.productName} com ID ${event.principal_id}, está apenas com ${event.product_quantity} de quantitade.`,
-      html: `<p>O produto ${event.productName} com ID ${event.principal_id}, está apenas com ${event.product_quantity} de quantitade.</p>`,
+      text: `O produto ${event.product_name} com ID ${event.principal_id}, está apenas com ${event.product_quantity} de quantitade.`,
+      html: `<p>O produto ${event.product_name} com ID ${event.principal_id}, está apenas com ${event.product_quantity} de quantitade.</p>`,
     });
   });
 });

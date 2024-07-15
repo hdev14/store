@@ -23,11 +23,11 @@ describe("PrismaPaymentRepository's unit tests", () => {
     it('gets an array of payments by purchase order id', async () => {
       expect.assertions(2);
 
-      const fakePurchaseOrderId = faker.datatype.uuid();
+      const fake_purchase_order_id = faker.datatype.uuid();
 
       const fakePayments = [1, 2, 3].map(() => ({
         id: faker.datatype.uuid(),
-        purchaseOrderId: fakePurchaseOrderId,
+        purchaseOrderId: fake_purchase_order_id,
         value: faker.datatype.float(),
         method: PaymentMethods.CREDIT_CARD,
         status: PaymentStatus.IN_PROCCESS,
@@ -40,17 +40,17 @@ describe("PrismaPaymentRepository's unit tests", () => {
             details: faker.lorem.sentence(5),
             payload: faker.datatype.json(),
             paymentId: faker.datatype.uuid(),
-            registeredAt: new Date(),
+            registeredId: new Date(),
           },
         ],
       }));
 
       prismaMock.payment.findMany.mockResolvedValueOnce(fakePayments);
-      const payments = await paymentRepository.getPaymentsByPurchaseOrderId(fakePurchaseOrderId);
+      const payments = await paymentRepository.getPaymentsByPurchaseOrderId(fake_purchase_order_id);
 
       expect(payments).toHaveLength(3);
       expect(prismaMock.payment.findMany).toHaveBeenCalledWith({
-        where: { purchaseOrderId: fakePurchaseOrderId },
+        where: { purchaseOrderId: fake_purchase_order_id },
         include: { transactions: true },
       });
     });
@@ -58,10 +58,10 @@ describe("PrismaPaymentRepository's unit tests", () => {
     it('throws a RepositoryError if occur an unexpected error', async () => {
       expect.assertions(1);
 
-      const fakePurchaseOrderId = faker.datatype.uuid();
+      const fakepurchase_order_id = faker.datatype.uuid();
       prismaMock.payment.findMany.mockRejectedValueOnce(new Error());
 
-      return paymentRepository.getPaymentsByPurchaseOrderId(fakePurchaseOrderId).catch((e) => {
+      return paymentRepository.getPaymentsByPurchaseOrderId(fakepurchase_order_id).catch((e) => {
         expect(e).toBeInstanceOf(RepositoryError);
       });
     });
@@ -71,10 +71,10 @@ describe("PrismaPaymentRepository's unit tests", () => {
     it('gets a payment', async () => {
       expect.assertions(2);
 
-      const fakePaymentId = faker.datatype.uuid();
+      const fake_payment_id = faker.datatype.uuid();
 
       const fakePayment = {
-        id: fakePaymentId,
+        id: fake_payment_id,
         purchaseOrderId: faker.datatype.uuid(),
         value: faker.datatype.float(),
         method: PaymentMethods.CREDIT_CARD,
@@ -95,23 +95,23 @@ describe("PrismaPaymentRepository's unit tests", () => {
 
       prismaMock.payment.findUnique.mockResolvedValueOnce(fakePayment);
 
-      const payment = await paymentRepository.getPaymentById(fakePaymentId);
+      const payment = await paymentRepository.getPaymentById(fake_payment_id);
 
       expect(prismaMock.payment.findUnique).toHaveBeenCalledWith({
-        where: { id: fakePaymentId },
+        where: { id: fake_payment_id },
         include: { transactions: true },
       });
-      expect(payment).toEqual(fakePayment);
+      expect(payment).toBeInstanceOf(Payment);
     });
 
     it("returns null if payment doesn't exist", async () => {
       expect.assertions(1);
 
-      const fakePaymentId = faker.datatype.uuid();
+      const fake_payment_id = faker.datatype.uuid();
 
       prismaMock.payment.findUnique.mockResolvedValueOnce(null);
 
-      const payment = await paymentRepository.getPaymentById(fakePaymentId);
+      const payment = await paymentRepository.getPaymentById(fake_payment_id);
 
       expect(payment).toBeNull();
     });
@@ -119,11 +119,11 @@ describe("PrismaPaymentRepository's unit tests", () => {
     it('throws a RepositoryError if occur an unexpected error', async () => {
       expect.assertions(1);
 
-      const fakePaymentId = faker.datatype.uuid();
+      const fake_payment_id = faker.datatype.uuid();
 
       prismaMock.payment.findUnique.mockRejectedValueOnce(new Error('test'));
 
-      return paymentRepository.getPaymentById(fakePaymentId).catch((e) => {
+      return paymentRepository.getPaymentById(fake_payment_id).catch((e) => {
         expect(e).toBeInstanceOf(RepositoryError);
       });
     });

@@ -24,8 +24,8 @@ export const fakeProducts = [
     description: 'test_product_1',
     amount: Math.random() * 100,
     image: 'http://example.com',
-    stockQuantity: parseInt((Math.random() * 10).toString(), 10),
-    createdAt: new Date(),
+    stock_quantity: parseInt((Math.random() * 10).toString(), 10),
+    created_at: new Date(),
     dimensions: {
       height: Math.random() * 50,
       width: Math.random() * 50,
@@ -42,8 +42,8 @@ export const fakeProducts = [
     description: 'test_product_2',
     amount: Math.random() * 100,
     image: 'http://example.com',
-    stockQuantity: parseInt((Math.random() * 10).toString(), 10),
-    createdAt: new Date(),
+    stock_quantity: parseInt((Math.random() * 10).toString(), 10),
+    created_at: new Date(),
     dimensions: {
       height: Math.random() * 50,
       width: Math.random() * 50,
@@ -60,8 +60,8 @@ export const fakeProducts = [
     description: 'test_product_3',
     amount: Math.random() * 100,
     image: 'http://example.com',
-    stockQuantity: parseInt((Math.random() * 10).toString(), 10),
-    createdAt: new Date(),
+    stock_quantity: parseInt((Math.random() * 10).toString(), 10),
+    created_at: new Date(),
     dimensions: {
       height: Math.random() * 50,
       width: Math.random() * 50,

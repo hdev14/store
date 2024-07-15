@@ -61,15 +61,15 @@ describe("AuthService's unit tests", () => {
       const seconds = parseInt(faker.datatype.number().toString(), 10);
 
       const fakeTokenPayload = {
-        accessToken: faker.random.alphaNumeric(10),
-        expiresIn: seconds,
+        access_token: faker.random.alphaNumeric(10),
+        expires_in: seconds,
       };
 
       IAMMock.auth.mockResolvedValueOnce(fakeTokenPayload);
 
       const payload = await authService.auth(faker.internet.email(), faker.datatype.string(6));
 
-      expect(payload.token).toEqual(fakeTokenPayload.accessToken);
+      expect(payload.token).toEqual(fakeTokenPayload.access_token);
       expect(payload.expired_at).toBeInstanceOf(Date);
     });
   });

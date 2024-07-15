@@ -210,8 +210,8 @@ describe("KeyCloakIAM's unit tests", () => {
         status: 200,
         body: {
           id: fakeUserId,
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          first_name: faker.name.firstName(),
+          last_name: faker.name.lastName(),
           email: faker.internet.email(),
           attributes: {
             document: '69156949430',
@@ -239,10 +239,10 @@ describe("KeyCloakIAM's unit tests", () => {
 
       const fakeBody = {
         id: fakeUserId,
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        first_name: faker.name.firstName(),
+        last_name: faker.name.lastName(),
         email: faker.internet.email(),
-        createdTimestamp: new Date().getTime(),
+        created_timestamp: new Date().getTime(),
         attributes: {
           document: '691.569.494-30',
         },
@@ -262,10 +262,10 @@ describe("KeyCloakIAM's unit tests", () => {
 
       expect(user).toBeInstanceOf(User);
       expect(user!.id).toEqual(fakeBody.id);
-      expect(user!.name).toEqual(`${fakeBody.firstName} ${fakeBody.lastName}`);
+      expect(user!.name).toEqual(`${fakeBody.first_name} ${fakeBody.last_name}`);
       expect(user!.email).toEqual(fakeBody.email);
       expect(user!.document.value).toEqual('69156949430');
-      expect(user!.created_at).toEqual(new Date(fakeBody.createdTimestamp));
+      expect(user!.created_at).toEqual(new Date(fakeBody.created_timestamp));
     });
 
     it('returns null if occur a HttpError with status code 404', async () => {
@@ -301,8 +301,8 @@ describe("KeyCloakIAM's unit tests", () => {
         status: 200,
         body: [{
           id: faker.datatype.uuid(),
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          first_name: faker.name.firstName(),
+          last_name: faker.name.lastName(),
           email: faker.internet.email(),
           attributes: {
             document: '69156949430',
@@ -329,10 +329,10 @@ describe("KeyCloakIAM's unit tests", () => {
       const fakeBody = [
         {
           id: faker.datatype.uuid(),
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          first_name: faker.name.firstName(),
+          last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          createdTimestamp: new Date().getTime(),
+          created_timestamp: new Date().getTime(),
           attributes: {
             document: '691.569.494-30',
           },
@@ -344,10 +344,10 @@ describe("KeyCloakIAM's unit tests", () => {
         },
         {
           id: faker.datatype.uuid(),
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          first_name: faker.name.firstName(),
+          last_name: faker.name.lastName(),
           email: faker.internet.email(),
-          createdTimestamp: new Date().getTime(),
+          created_timestamp: new Date().getTime(),
           attributes: {
             document: '371.364.094-70',
           },
@@ -369,16 +369,16 @@ describe("KeyCloakIAM's unit tests", () => {
       expect(users).toHaveLength(2);
 
       expect(users[0].id).toEqual(fakeBody[0].id);
-      expect(users[0].name).toEqual(`${fakeBody[0].firstName} ${fakeBody[0].lastName}`);
+      expect(users[0].name).toEqual(`${fakeBody[0].first_name} ${fakeBody[0].last_name}`);
       expect(users[0].email).toEqual(fakeBody[0].email);
       expect(users[0].document.value).toEqual('69156949430');
-      expect(users[0].created_at).toEqual(new Date(fakeBody[0].createdTimestamp));
+      expect(users[0].created_at).toEqual(new Date(fakeBody[0].created_timestamp));
 
       expect(users[1].id).toEqual(fakeBody[1].id);
-      expect(users[1].name).toEqual(`${fakeBody[1].firstName} ${fakeBody[1].lastName}`);
+      expect(users[1].name).toEqual(`${fakeBody[1].first_name} ${fakeBody[1].last_name}`);
       expect(users[1].email).toEqual(fakeBody[1].email);
       expect(users[1].document.value).toEqual('37136409470');
-      expect(users[1].created_at).toEqual(new Date(fakeBody[1].createdTimestamp));
+      expect(users[1].created_at).toEqual(new Date(fakeBody[1].created_timestamp));
     });
 
     it('calls HttpClient.get with pagaintion options if pagination is passed', async () => {
@@ -388,8 +388,8 @@ describe("KeyCloakIAM's unit tests", () => {
         status: 200,
         body: [{
           id: faker.datatype.uuid(),
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          first_name: faker.name.firstName(),
+          last_name: faker.name.lastName(),
           email: faker.internet.email(),
           attributes: {
             document: '69156949430',
