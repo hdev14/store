@@ -445,12 +445,12 @@ describe("Catalog's Integration Tests", () => {
   });
 
   describe('POST: /catalog/products', () => {
-    const categoryId = faker.datatype.uuid();
+    const category_id = faker.datatype.uuid();
 
     beforeAll(async () => {
       await globalThis.dbConnection.category.create({
         data: {
-          id: categoryId,
+          id: category_id,
           name: faker.word.verb(),
           code: parseInt(faker.random.numeric(5), 10),
         },
@@ -472,9 +472,9 @@ describe("Catalog's Integration Tests", () => {
         depth: faker.datatype.number(50),
         height: faker.datatype.number(50),
         width: faker.datatype.number(50),
-        stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+        stock_quantity: parseInt(faker.datatype.number(100).toString(), 10),
         image: faker.internet.url(),
-        categoryId,
+        category_id,
       };
 
       const response = await globalThis.request
@@ -487,7 +487,7 @@ describe("Catalog's Integration Tests", () => {
       expect(response.status).toEqual(201);
       expect(response.body.id).toBeTruthy();
       expect(response.body.name).toEqual(data.name);
-      expect(response.body.category.id).toEqual(categoryId);
+      expect(response.body.category.id).toEqual(category_id);
     });
 
     it("returns 400 if category doesn't exist", async () => {
@@ -502,9 +502,9 @@ describe("Catalog's Integration Tests", () => {
         depth: faker.datatype.number(50),
         height: faker.datatype.number(50),
         width: faker.datatype.number(50),
-        stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+        stock_quantity: parseInt(faker.datatype.number(100).toString(), 10),
         image: faker.internet.url(),
-        categoryId: fakeCategoryId,
+        category_id: fakeCategoryId,
       };
 
       const response = await globalThis.request
@@ -528,9 +528,9 @@ describe("Catalog's Integration Tests", () => {
         depth: 'abc', // number
         height: 'abc', // number
         width: 'abc', // number
-        stockQuantity: 'abc', // number
+        stock_quantity: 'abc', // number
         image: 'wrong_url',
-        categoryId,
+        category_id,
       };
 
       const response = await globalThis.request
@@ -551,7 +551,7 @@ describe("Catalog's Integration Tests", () => {
       expect(allFields.includes('depth')).toBe(true);
       expect(allFields.includes('height')).toBe(true);
       expect(allFields.includes('width')).toBe(true);
-      expect(allFields.includes('stockQuantity')).toBe(true);
+      expect(allFields.includes('stock_quantity')).toBe(true);
       expect(allFields.includes('image')).toBe(true);
     });
   });
@@ -633,7 +633,7 @@ describe("Catalog's Integration Tests", () => {
           height: faker.datatype.number(50),
           width: faker.datatype.number(50),
         },
-        stockQuantity: parseInt(faker.datatype.number(100).toString(), 10),
+        stock_quantity: parseInt(faker.datatype.number(100).toString(), 10),
         image: faker.internet.url(),
       };
 
@@ -648,7 +648,7 @@ describe("Catalog's Integration Tests", () => {
       expect(response.body.name).toEqual(data.name);
       expect(response.body.description).toEqual(data.description);
       expect(response.body.amount).toEqual(data.amount);
-      expect(response.body.stockQuantity).toEqual(data.stockQuantity);
+      expect(response.body.stock_quantity).toEqual(data.stock_quantity);
       expect(response.body.image).toEqual(data.image);
       expect(response.body.dimensions).toEqual(data.dimensions);
     });

@@ -95,7 +95,7 @@ describe("User's Integration Tests", () => {
       expect(response.body.email).toEqual(data.email);
       expect(response.body.document).toEqual(data.document);
       expect(response.body.password).toBeUndefined();
-      expect(response.body.createdAt).toBeTruthy();
+      expect(response.body.created_at).toBeTruthy();
     });
   });
 
@@ -219,7 +219,7 @@ describe("User's Integration Tests", () => {
         name: data.name,
         email: data.email,
         document: data.document,
-        createdAt: fakeCreatedAt.toISOString(),
+        created_at: fakeCreatedAt.toISOString(),
       });
     });
   });
@@ -286,7 +286,7 @@ describe("User's Integration Tests", () => {
         name: `${fakeData.firstName} ${fakeData.lastName}`,
         email: fakeData.email,
         document: fakeData.attributes.document,
-        createdAt: fakeCreatedAt.toISOString(),
+        created_at: fakeCreatedAt.toISOString(),
       });
     });
   });

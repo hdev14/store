@@ -5,10 +5,10 @@ import User from '@users/domain/User';
 
 type UserRepresentation = {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  created_timestamp: number;
+  createdTimestamp: number;
   attributes: {
     document: string;
   },
@@ -129,10 +129,10 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
 
       return new User({
         id: body.id,
-        name: `${body.first_name} ${body.last_name}`,
+        name: `${body.firstName} ${body.lastName}`,
         email: body.email,
         document: body.attributes.document,
-        created_at: new Date(body.created_timestamp),
+        created_at: new Date(body.createdTimestamp),
       });
     } catch (e: any) {
       if (e instanceof HttpError && e.statusCode === 404) {
@@ -161,10 +161,10 @@ export default class KeyCloakIAM implements IIdentityAccessManagement {
     for (const userRep of body) {
       results.push(new User({
         id: userRep.id,
-        name: `${userRep.first_name} ${userRep.last_name}`,
+        name: `${userRep.firstName} ${userRep.lastName}`,
         email: userRep.email,
         document: userRep.attributes.document,
-        created_at: new Date(userRep.created_timestamp),
+        created_at: new Date(userRep.createdTimestamp),
       }));
     }
 
